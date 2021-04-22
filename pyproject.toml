@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "dungeon-master-ai"
+version = "0.1.0"
+description = "Dungeon Master artificial intelligence agent"
+authors = ["Katie Baker <katie.m.baker87@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.9"
+rasa = {extras = ["spacy"], version = "^2.5.0"}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
