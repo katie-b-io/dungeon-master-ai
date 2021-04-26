@@ -1,0 +1,100 @@
+{
+    "languages": {
+        "abyssal": {
+            "name": "Abyssal",
+            "type": "exotic",
+            "typical_speakers": ["demon"],
+            "script": "infernal"
+        },
+        "celestial": {
+            "name": "Celestial",
+            "type": "exotic",
+            "typical_speakers": ["celestial"],
+            "script": "celestial"
+        },
+        "common": {
+            "name": "Common",
+            "type": "standard",
+            "typical_speakers": ["human"],
+            "script": "common"
+        },
+        "deep_speech": {
+            "name": "Deep Speech",
+            "type": "exotic",
+            "typical_speakers": ["aboleth", "cloaker"],
+            "script": ""
+        },
+        "draconic": {
+            "name": "Draconic",
+            "type": "exotic",
+            "typical_speakers": ["dragon", "dragonborn"],
+            "script": "draconic"
+        },
+        "dwarvish": {
+            "name": "Dwarvish",
+            "type": "standard",
+            "typical_speakers": ["dwarf"],
+            "script": "dwarvish"
+        },
+        "elvish": {
+            "name": "Elvish",
+            "type": "standard",
+            "typical_speakers": ["elf"],
+            "script": "elvish"
+        },
+        "giant": {
+            "name": "Giant",
+            "type": "standard",
+            "typical_speakers": ["ogre", "giant"],
+            "script": "dwarvish"
+        },
+        "gnomish": {
+            "name": "Gnomish",
+            "type": "standard",
+            "typical_speakers": ["gnome"],
+            "script": "dwarvish"
+        },
+        "goblin": {
+            "name": "Goblin",
+            "type": "standard",
+            "typical_speakers": ["goblinoid"],
+            "script": "dwarvish"
+        },
+        "halfling": {
+            "name": "Halfling",
+            "type": "standard",
+            "typical_speakers": ["halfling"],
+            "script": "common"
+        },
+        "infernal": {
+            "name": "Infernal",
+            "type": "exotic",
+            "typical_speakers": ["devil"],
+            "script": "infernal"
+        },
+        "orc": {
+            "name": "Orc",
+            "type": "standard",
+            "typical_speakers": ["orc"],
+            "script": "dwarvish"
+        },
+        "primordial": {
+            "name": "Primordial",
+            "type": "exotic",
+            "typical_speakers": ["elemental"],
+            "script": "dwarvish"
+        },
+        "sylvan": {
+            "name": "Sylvan",
+            "type": "exotic",
+            "typical_speakers": ["fey"],
+            "script": "elvish"
+        },
+        "undercommon": {
+            "name": "Undercommon",
+            "type": "exotic",
+            "typical_speakers": ["underworld"],
+            "script": "elvish"
+        }
+    }
+}
