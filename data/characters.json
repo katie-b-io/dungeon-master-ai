@@ -92,7 +92,7 @@
             "spellcasting_ability_cleric",
             "divine_domain",
             "disciple_of_life",
-            "darkvision",
+            "darkvision_dwarf",
             "dwarven_resilience",
             "dwarven_toughness",
             "stonecunning"
@@ -456,7 +456,7 @@
         "features": [
             "spellcasting_ability_wizard",
             "arcane_recovery",
-            "darkvision",
+            "darkvision_elf",
             "fey_ancestry",
             "trance"
         ],
