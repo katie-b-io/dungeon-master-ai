@@ -3,9 +3,17 @@
         "name": "Arcane Recovery",
         "description": "You have learned to regain some of your magical energy by studying your spellbook. Once per day when you finish a short rest, you can choose expended spell slots to recover. The spell slots can have a combined level that is equal to or less than half your wizard level (rounded up), and none of the slots can be 6th level or higher.\nFor example, if you're a 4th-level wizard, you can recover up to two levels worth of spell slots.You can recover either a 2nd-level spell slot or two 1st-level spell slots."
     },
+    "bonus_proficiency_life_domain": {
+        "name": "Bonus Proficiency",
+        "description": "When you choose this domain at 1st level, you gain proficiency with heavy armor."
+    },
     "brave": {
         "name": "Brave",
         "description": "You have advantage on saving throws against being frightened."
+    },
+    "cantrip_elf": {
+        "name": "Cantrip",
+        "description": "You know one cantrip of your choice from the wizard spell list. Intelligence is your spellcasting ability for it."
     },
     "darkvision_dwarf": {
         "name": "Darkvision",
@@ -23,6 +31,10 @@
         "name": "Divine Domain",
         "description": "Choose one domain related to your deity from the list of available domains. Each domain is detailed in their own feature, and each one provides examples of gods associated with it. Your choice grants you domain spells and other features when you choose it at 1st level. It also grants you additional ways to use Channel Divinity when you gain that feature at 2nd level, and additional benefits at 6th, 8th, and 17th levels."
     },
+    "dwarven_combat_training": {
+        "name": "Dwarven Combat Training",
+        "description": "You have proficiency with the battleaxe, handaxe, light hammer, and warhammer."
+    },
     "dwarven_resilience": {
         "name": "Dwarven Resilience",
         "description": "You have advantage on saving throws against poison, and you have resistance against poison damage."
@@ -31,9 +43,17 @@
         "name": "Dwarven Toughness",
         "description": "Your hit point maximum increases by 1, and it increases by 1 every time you gain a level."
     },
+    "elf_weapon_training": {
+        "name": "Elf weapon training",
+        "description": "You have proficiency with the longsword, shortsword, shortbow, and longbow."
+    },
     "expertise": {
         "name": "Expertise",
         "description": "At 1st level, choose two of your skill proficiencies, or one of your skill proficiencies and your proficiency with thieves' tools. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.\nAt 6th level, you can choose two more of your proficiencies (in skills or with thieves' tools) to gain this benefit."
+    },
+    "extra_language_elf": {
+        "name": "Extra language",
+        "description": "You can speak, read, and write one extra language of your choosing."
     },
     "fey_ancestry": {
         "name": "Fey Ancestry",
@@ -46,6 +66,10 @@
     "halfling_nimbleness": {
         "name": "Halfling Nimbleness",
         "description": "You can move through the space of any creature that is of a size larger than yours."
+    },
+    "keen_senses": {
+        "name": "Keen Senses",
+        "description": "You have proficiency in the Perception skill."
     },
     "lucky": {
         "name": "Lucky",
