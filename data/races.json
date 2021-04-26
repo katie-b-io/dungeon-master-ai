@@ -1,0 +1,108 @@
+{
+    "dwarf_hill": {
+        "name": "Hill dwarf",
+        "ability_scores": {
+            "str": 0,
+            "dex": 0,
+            "con": 2,
+            "int": 0,
+            "wis": 1,
+            "cha": 0
+        },
+        "size": "medium",
+        "speed": 25,
+        "languages": [
+            "common",
+            "dwarvish"
+        ],
+        "traits": [
+            "darkvision_dwarf",
+            "dwarven_resilience",
+            "dwarven_combat_training",
+            "tool_proficiency",
+            "stonecunning",
+            "dwarven_toughness"
+        ]
+    },
+    "elf_high": {
+        "name": "High elf",
+        "ability_scores": {
+            "str": 0,
+            "dex": 2,
+            "con": 0,
+            "int": 1,
+            "wis": 0,
+            "cha": 0
+        },
+        "size": "medium",
+        "speed": 30,
+        "languages": [
+            "common",
+            "elvish"
+        ],
+        "traits": [
+            "cantrip_elf",
+            "darkvision_elf",
+            "elf_weapon_training",
+            "extra_language_elf",
+            "fey_ancestry",
+            "keen_senses",
+            "trance"
+        ]
+    },
+    "halfling_lightfoot": {
+        "name": "Lightfoot halfling",
+        "ability_scores": {
+            "str": 0,
+            "dex": 2,
+            "con": 0,
+            "int": 0,
+            "wis": 0,
+            "cha": 1
+        },
+        "size": "small",
+        "speed": 25,
+        "languages": [
+            "common",
+            "halfling"
+        ],
+        "traits": [
+            "brave",
+            "halfling_nimbleness",
+            "lucky",
+            "naturally_stealthy"
+        ]
+    },
+    "human": {
+        "name": "Human",
+        "ability_scores": {
+            "str": 1,
+            "dex": 1,
+            "con": 1,
+            "int": 1,
+            "wis": 1,
+            "cha": 1
+        },
+        "size": "medium",
+        "speed": 30,
+        "languages": [
+            "common",
+            "abyssal",
+            "celestial",
+            "deep_speech",
+            "draconic",
+            "dwarvish",
+            "elvish",
+            "giant",
+            "gnomish",
+            "goblin",
+            "halfling",
+            "infernal",
+            "orc",
+            "primordial",
+            "sylvan",
+            "undercommon"
+        ],
+        "traits": []
+    }
+}
