@@ -74,7 +74,7 @@
         "30": "Nearly impossible"
     },
     "abilities": {
-        "strength": {
+        "str": {
             "name": "Strength",
             "short_name": "str",
             "desc": "Measuring physical power",
@@ -82,7 +82,7 @@
                 "athletics"
             ]
         },
-        "dexterity": {
+        "dex": {
             "name": "Dexterity",
             "short_name": "dex",
             "desc": "Measuring agility",
@@ -92,13 +92,13 @@
                 "stealth"
             ]
         },
-        "constitution": {
+        "con": {
             "name": "Constitution",
             "short_name": "con",
             "desc": "Measuring endurance",
             "skills": []
         },
-        "intelligence": {
+        "int": {
             "name": "Intelligence",
             "short_name": "int",
             "desc": "Measuring reasoning and memory",
@@ -110,7 +110,7 @@
                 "religion"
             ]
         },
-        "wisdom": {
+        "wis": {
             "name": "Wisdom",
             "short_name": "wis",
             "desc": "Measuring perception and insight",
@@ -122,7 +122,7 @@
                 "survival"
             ]
         },
-        "charisma": {
+        "cha": {
             "name": "Charisma",
             "short_name": "cha",
             "desc": "Measuring force of personality",

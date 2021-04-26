@@ -19,18 +19,18 @@
         },
         "hit_point_maximum": 11,
         "abilities": {
-            "strength": 14,
-            "dexterity": 8,
-            "constitution": 15,
-            "intelligence": 10,
-            "wisdom": 16,
-            "charisma": 12
+            "str": 14,
+            "dex": 8,
+            "con": 15,
+            "int": 10,
+            "wis": 16,
+            "cha": 12
         },
         "proficiency_bonus": 2,
         "proficiencies": {
             "saving_throws": [
-                "wisdom",
-                "charisma"
+                "wis",
+                "cha"
             ],
             "skills": [
                 "insight",
@@ -161,18 +161,18 @@
         },
         "hit_point_maximum": 12,
         "abilities": {
-            "strength": 16,
-            "dexterity": 9,
-            "constitution": 15,
-            "intelligence": 11,
-            "wisdom": 13,
-            "charisma": 14
+            "str": 16,
+            "dex": 9,
+            "con": 15,
+            "int": 11,
+            "wis": 13,
+            "cha": 14
         },
         "proficiency_bonus": 2,
         "proficiencies": {
             "saving_throws": [
-                "strength",
-                "constitution"
+                "str",
+                "con"
             ],
             "skills": [
                 "athletics",
@@ -292,18 +292,18 @@
         },
         "hit_point_maximum": 9,
         "abilities": {
-            "strength": 8,
-            "dexterity": 16,
-            "constitution": 12,
-            "intelligence": 13,
-            "wisdom": 10,
-            "charisma": 16
+            "str": 8,
+            "dex": 16,
+            "con": 12,
+            "int": 13,
+            "wis": 10,
+            "cha": 16
         },
         "proficiency_bonus": 2,
         "proficiencies": {
             "saving_throws": [
-                "dexterity",
-                "intelligence"
+                "dex",
+                "int"
             ],
             "skills": [
                 "acrobatics",
@@ -412,18 +412,18 @@
         },
         "hit_point_maximum": 8,
         "abilities": {
-            "strength": 10,
-            "dexterity": 15,
-            "constitution": 14,
-            "intelligence": 16,
-            "wisdom": 12,
-            "charisma": 8
+            "str": 10,
+            "dex": 15,
+            "con": 14,
+            "int": 16,
+            "wis": 12,
+            "cha": 8
         },
         "proficiency_bonus": 2,
         "proficiencies": {
             "saving_throws": [
-                "intelligence",
-                "wisdom"
+                "int",
+                "wis"
             ],
             "skills": [
                 "arcana",
