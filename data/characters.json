@@ -1,9 +1,152 @@
 {
+    "cleric": {
+        "class": [
+            {
+                "name": "Cleric",
+                "level": 1,
+                "subclass": "life_domain"
+            }
+        ],
+        "race": "dwarf_hill",
+        "alignment": [
+            "neutral",
+            "good"
+        ],
+        "speed": 25,
+        "hit_dice": {
+            "type": "d8",
+            "total": 1
+        },
+        "hit_point_maximum": 11,
+        "abilities": {
+            "strength": 14,
+            "dexterity": 8,
+            "constitution": 15,
+            "intelligence": 10,
+            "wisdom": 16,
+            "charisma": 12
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "saving_throws": [
+                "wisdom",
+                "charisma"
+            ],
+            "skills": [
+                "insight",
+                "medicine"
+            ],
+            "weapons": [
+                "club",
+                "dagger",
+                "greatclub",
+                "hammer_light",
+                "handaxe",
+                "javelin",
+                "mace",
+                "quarterstaff",
+                "sickle",
+                "spear",
+                "crossbow_light",
+                "dart",
+                "shortbow",
+                "sling",
+                "battleaxe",
+                "warhammer"
+            ],
+            "armor": [
+                "light",
+                "medium",
+                "shield"
+            ],
+            "tools": [
+                "masons_tools"
+            ]
+        },
+        "languages": [
+            "common",
+            "dwarvish"
+        ],
+        "money": {
+            "cp": 0,
+            "sp": 0,
+            "gp": 0,
+            "pp": 0
+        },
+        "weapons": {
+            "warhammer": 1,
+            "handaxe": 2
+        },
+        "armor": {
+            "scale_mail": 1
+        },
+        "equipment": {
+            "backpack": 1,
+            "bedroll": 1,
+            "masons_tools": 1,
+            "mess_kit": 1,
+            "ration": 10,
+            "rope_hemp": 50,
+            "set_of_common_clothes": 1,
+            "tinder_box": 1,
+            "torch": 10,
+            "waterskin": 1
+        },
+        "features": [
+            "spellcasting_ability_cleric",
+            "divine_domain",
+            "disciple_of_life",
+            "darkvision",
+            "dwarven_resilience",
+            "dwarven_toughness",
+            "stonecunning"
+        ],
+        "spells": {
+            "prepared_spells_max": 4,
+            "prepared_spells_default": [
+                "bless",
+                "cure_wounds",
+                "detect_magic",
+                "guiding_bolt",
+                "healing_word",
+                "shield_of_faith"
+            ],
+            "cantrips": {
+                "spell_slots": -1,
+                "spells_known": [
+                    "light",
+                    "sacred_flame",
+                    "thaumaturgy"
+                ]
+            },
+            "first_level": {
+                "spell_slots": 2,
+                "spells_known": [
+                    "bane",
+                    "bless",
+                    "command",
+                    "create or destroy water",
+                    "cure wounds",
+                    "detect evil and good",
+                    "detect magic",
+                    "detect poison and disease",
+                    "guiding bolt",
+                    "healing word",
+                    "inflict wounds",
+                    "protection from evil and good",
+                    "purify food and drink",
+                    "sanctuary",
+                    "shield of faith"
+                ]
+            }
+        }
+    },
     "fighter": {
         "class": [
             {
                 "name": "Fighter",
-                "level": 1
+                "level": 1,
+                "subclass": ""
             }
         ],
         "race": "human",
@@ -11,7 +154,6 @@
             "lawful",
             "neutral"
         ],
-        "initiative": -1,
         "speed": 30,
         "hit_dice": {
             "type": "d10",
@@ -107,7 +249,7 @@
             "bolts": 20,
             "mess_kit": 1,
             "ration": 10,
-            "rope_hemp": 1,
+            "rope_hemp": 50,
             "set_of_common_clothes": 1,
             "tinder_box": 1,
             "torch": 10,
@@ -134,7 +276,8 @@
         "class": [
             {
                 "name": "Rogue",
-                "level": 1
+                "level": 1,
+                "subclass": ""
             }
         ],
         "race": "halfling_lightfoot",
@@ -142,10 +285,9 @@
             "neutral",
             "neutral"
         ],
-        "initiative": 3,
         "speed": 25,
         "hit_dice": {
-            "type": "1d8",
+            "type": "d8",
             "total": 1
         },
         "hit_point_maximum": 9,
@@ -221,8 +363,9 @@
             "mess_kit": 1,
             "quiver": 1,
             "ration": 10,
-            "rope_hemp": 1,
+            "rope_hemp": 50,
             "set_of_common_clothes": 1,
+            "thieves_tools": 1,
             "tinder_box": 1,
             "torch": 10,
             "waterskin": 1
@@ -253,7 +396,8 @@
         "class": [
             {
                 "name": "Wizard",
-                "level": 1
+                "level": 1,
+                "subclass": ""
             }
         ],
         "race": "elf_high",
@@ -261,7 +405,6 @@
             "chaotic",
             "good"
         ],
-        "initiative": 2,
         "speed": 30,
         "hit_dice": {
             "type": "d6",
@@ -284,8 +427,7 @@
             ],
             "skills": [
                 "arcana",
-                "investigation",
-                "perception"
+                "investigation"
             ],
             "weapons": [
                 "crossbow_light",
