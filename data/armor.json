@@ -1,0 +1,77 @@
+{
+    "chain_mail": {
+        "name": "Chain mail",
+        "type": "heavy",
+        "cost": "75gp",
+        "ac": {
+            "base": 16,
+            "mod": "",
+            "mod_max": -1,
+            "bonus": 0
+        },
+        "min_str_requirement": 13,
+        "stealth_disadvantage": true,
+        "weight": "55lb",
+        "description": "Made of interlocking metal rings, chain mail includes a layer of quilted fabric worn underneath the mail to prevent chafing and to cushion the impact of blows. The suit includes gauntlets."
+    },
+    "leather": {
+        "name": "Leather",
+        "type": "light",
+        "cost": "10gp",
+        "ac": {
+            "base": 11,
+            "mod": "dex",
+            "mod_max": -1,
+            "bonus": 0
+        },
+        "min_str_requirement": -1,
+        "stealth_disadvantage": false,
+        "weight": "10lb",
+        "description": "The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil. The rest of the armor is made of softer and more flexible materials."
+    },
+    "padded": {
+        "name": "Padded",
+        "type": "light",
+        "cost": "5gp",
+        "ac": {
+            "base": 11,
+            "mod": "dex",
+            "mod_max": -1,
+            "bonus": 0
+        },
+        "min_str_requirement": -1,
+        "stealth_disadvantage": true,
+        "weight": "8lb",
+        "description": "Padded armor consists of quilted layers of cloth and batting."
+    },
+    "scale_mail": {
+        "name": "Scale mail",
+        "type": "medium",
+        "cost": "50gp",
+        "ac": {
+            "base": 14,
+            "mod": "dex",
+            "mod_max": 2,
+            "bonus": 0
+        },
+        "min_str_requirement": -1,
+        "stealth_disadvantage": true,
+        "weight": "45lb",
+        "description": "This armor consists of a coat and leggings (and perhaps a separate skirt) of leather covered with overlapping pieces of metal, much like the scales of a fish. The suit includes gauntlets."
+    },
+    "shield": {
+        "name": "Shield",
+        "type": "shield",
+        "cost": "10gp",
+        "ac": {
+            "base": -1,
+            "mod": "",
+            "mod_max": -1,
+            "bonus": 2
+        },
+        "min_str_requirement": -1,
+        "stealth_disadvantage": false,
+        "weight": "6lb",
+        "desc": "A shield is made from wood or metal and is carried in one hand. Wielding a shield increases your Armor Class by 2. You can benefit from only one shield at a time."
+    }
+}
