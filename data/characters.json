@@ -8,10 +8,7 @@
             }
         ],
         "race": "dwarf_hill",
-        "alignment": [
-            "neutral",
-            "good"
-        ],
+        "alignment": "neutral_good",
         "speed": 25,
         "hit_dice": {
             "type": "d8",
@@ -150,10 +147,7 @@
             }
         ],
         "race": "human",
-        "alignment": [
-            "lawful",
-            "neutral"
-        ],
+        "alignment": "lawful_neutral",
         "speed": 30,
         "hit_dice": {
             "type": "d10",
@@ -281,10 +275,7 @@
             }
         ],
         "race": "halfling_lightfoot",
-        "alignment": [
-            "neutral",
-            "neutral"
-        ],
+        "alignment": "neutral",
         "speed": 25,
         "hit_dice": {
             "type": "d8",
@@ -401,10 +392,7 @@
             }
         ],
         "race": "elf_high",
-        "alignment": [
-            "chaotic",
-            "good"
-        ],
+        "alignment": "chaotic_good",
         "speed": 30,
         "hit_dice": {
             "type": "d6",
