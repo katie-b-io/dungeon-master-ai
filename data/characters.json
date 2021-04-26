@@ -8,12 +8,6 @@
         },
         "race": "dwarf_hill",
         "alignment": "neutral_good",
-        "speed": 25,
-        "hit_dice": {
-            "type": "d8",
-            "total": 1
-        },
-        "hit_point_maximum": 11,
         "abilities": {
             "str": 14,
             "dex": 8,
@@ -24,45 +18,19 @@
         },
         "proficiency_bonus": 2,
         "proficiencies": {
-            "saving_throws": [
-                "wis",
-                "cha"
-            ],
-            "skills": [
-                "insight",
-                "medicine"
-            ],
-            "weapons": [
-                "club",
-                "dagger",
-                "greatclub",
-                "hammer_light",
-                "handaxe",
-                "javelin",
-                "mace",
-                "quarterstaff",
-                "sickle",
-                "spear",
-                "crossbow_light",
-                "dart",
-                "shortbow",
-                "sling",
-                "battleaxe",
-                "warhammer"
-            ],
-            "armor": [
-                "light",
-                "medium",
-                "shield"
-            ],
-            "tools": [
-                "masons_tools"
-            ]
+            "skills": {
+                "class": [
+                    "insight",
+                    "medicine"
+                ]
+            },
+            "tools": {
+                "race": [
+                    "masons_tools"
+                ]
+            }
         },
-        "languages": [
-            "common",
-            "dwarvish"
-        ],
+        "languages": {},
         "money": {
             "cp": 0,
             "sp": 0,
@@ -74,7 +42,7 @@
             "handaxe": 2
         },
         "armor": {
-            "scale_mail": 1
+            "chain_mail": 1
         },
         "equipment": {
             "backpack": 1,
@@ -88,17 +56,7 @@
             "torch": 10,
             "waterskin": 1
         },
-        "features": [
-            "spellcasting_ability_cleric",
-            "divine_domain",
-            "disciple_of_life",
-            "darkvision_dwarf",
-            "dwarven_resilience",
-            "dwarven_toughness",
-            "stonecunning"
-        ],
         "spells": {
-            "prepared_spells_max": 4,
             "prepared_spells_default": [
                 "bless",
                 "cure_wounds",
@@ -146,12 +104,6 @@
         },
         "race": "human",
         "alignment": "lawful_neutral",
-        "speed": 30,
-        "hit_dice": {
-            "type": "d10",
-            "total": 1
-        },
-        "hit_point_maximum": 12,
         "abilities": {
             "str": 16,
             "dex": 9,
@@ -162,65 +114,20 @@
         },
         "proficiency_bonus": 2,
         "proficiencies": {
-            "saving_throws": [
-                "str",
-                "con"
-            ],
-            "skills": [
-                "athletics",
-                "perception"
-            ],
-            "weapons": [
-                "club",
-                "dagger",
-                "greatclub",
-                "hammer_light",
-                "handaxe",
-                "javelin",
-                "mace",
-                "quarterstaff",
-                "sickle",
-                "spear",
-                "crossbow_light",
-                "dart",
-                "shortbow",
-                "sling",
-                "battleaxe",
-                "flail",
-                "glaive",
-                "greataxe",
-                "greatsword",
-                "halberd",
-                "lance",
-                "longsword",
-                "maul",
-                "morningstar",
-                "pike",
-                "rapier",
-                "scimitar",
-                "shortsword",
-                "trident",
-                "war_pick",
-                "warhammer",
-                "whip",
-                "blowgun",
-                "crossbow_hand",
-                "crossbow_heavy",
-                "longbow",
-                "net"
-            ],
-            "armor": [
-                "light",
-                "medium",
-                "heavy",
-                "shield"
-            ],
-            "tools": []
+            "skills": {
+                "class": [
+                    "athletics",
+                    "perception"
+                ]
+            },
+            "tools": {}
         },
-        "languages": [
-            "common",
-            "dwarvish"
-        ],
+        "languages": {
+            "race": [
+                "common",
+                "dwarvish"
+            ]
+        },
         "money": {
             "cp": 0,
             "sp": 0,
@@ -247,12 +154,7 @@
             "torch": 10,
             "waterskin": 1
         },
-        "features": [
-            "fighting_style_defense",
-            "second_wind"
-        ],
         "spells": {
-            "prepared_spells_max": 0,
             "prepared_spells_default": [],
             "cantrips": {
                 "spell_slots": 0,
@@ -273,12 +175,6 @@
         },
         "race": "halfling_lightfoot",
         "alignment": "neutral",
-        "speed": 25,
-        "hit_dice": {
-            "type": "d8",
-            "total": 1
-        },
-        "hit_point_maximum": 9,
         "abilities": {
             "str": 8,
             "dex": 16,
@@ -289,47 +185,17 @@
         },
         "proficiency_bonus": 2,
         "proficiencies": {
-            "saving_throws": [
-                "dex",
-                "int"
-            ],
-            "skills": [
-                "acrobatics",
-                "deception",
-                "investigation",
-                "stealth"
-            ],
-            "weapons": [
-                "club",
-                "dagger",
-                "greatclub",
-                "hammer_light",
-                "handaxe",
-                "javelin",
-                "mace",
-                "quarterstaff",
-                "sickle",
-                "spear",
-                "crossbow_light",
-                "dart",
-                "shortbow",
-                "sling",
-                "longsword",
-                "rapier",
-                "shortsword",
-                "crossbow_hand"
-            ],
-            "armor": [
-                "light"
-            ],
-            "tools": [
-                "thieves_tools"
-            ]
+            "skills": {
+                "class": [
+                    "acrobatics",
+                    "deception",
+                    "investigation",
+                    "stealth"
+                ]
+            },
+            "tools": {}
         },
-        "languages": [
-            "common",
-            "halfling"
-        ],
+        "languages": {},
         "money": {
             "cp": 0,
             "sp": 0,
@@ -358,15 +224,6 @@
             "torch": 10,
             "waterskin": 1
         },
-        "features": [
-            "expertise",
-            "sneak_attack",
-            "thieves_cant",
-            "lucky",
-            "brave",
-            "halfling_nimbleness",
-            "naturally_stealthy"
-        ],
         "spells": {
             "prepared_spells_max": 0,
             "prepared_spells_default": [],
@@ -389,12 +246,6 @@
         },
         "race": "elf_high",
         "alignment": "chaotic_good",
-        "speed": 30,
-        "hit_dice": {
-            "type": "d6",
-            "total": 1
-        },
-        "hit_point_maximum": 8,
         "abilities": {
             "str": 10,
             "dex": 15,
@@ -405,33 +256,21 @@
         },
         "proficiency_bonus": 2,
         "proficiencies": {
-            "saving_throws": [
-                "int",
-                "wis"
-            ],
-            "skills": [
-                "arcana",
-                "investigation"
-            ],
-            "weapons": [
-                "crossbow_light",
-                "dagger",
-                "dart",
-                "longbow",
-                "longsword",
-                "quaterstaff",
-                "shortbow",
-                "shortsword",
-                "sling"
-            ],
-            "armor": [],
-            "tools": []
+            "skills": {
+                "class": [
+                    "arcana",
+                    "investigation"
+                ]
+            },
+            "tools": {}
         },
-        "languages": [
-            "common",
-            "elvish",
-            "goblin"
-        ],
+        "languages": {
+            "race" :[
+                "common",
+                "elvish",
+                "goblin"
+            ]
+        },
         "money": {
             "cp": 0,
             "sp": 0,
@@ -453,15 +292,7 @@
             "small_knife": 1,
             "spellbook": 1
         },
-        "features": [
-            "spellcasting_ability_wizard",
-            "arcane_recovery",
-            "darkvision_elf",
-            "fey_ancestry",
-            "trance"
-        ],
         "spells": {
-            "prepared_spells_max": 4,
             "prepared_spells_default": [
                 "mage_armor",
                 "magic_missile",
