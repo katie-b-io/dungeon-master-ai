@@ -1,0 +1,137 @@
+{
+    "modifiers": {
+        "-5": {
+            "min": 1,
+            "max": 1
+        },
+        "-4": {
+            "min": 2,
+            "max": 3
+        },
+        "-3": {
+            "min": 4,
+            "max": 5
+        },
+        "-2": {
+            "min": 6,
+            "max": 7
+        },
+        "-1": {
+            "min": 8,
+            "max": 9
+        },
+        "0": {
+            "min": 10,
+            "max": 11
+        },
+        "1": {
+            "min": 12,
+            "max": 13
+        },
+        "2": {
+            "min": 14,
+            "max": 15
+        },
+        "3": {
+            "min": 16,
+            "max": 17
+        },
+        "4": {
+            "min": 18,
+            "max": 19
+        },
+        "5": {
+            "min": 20,
+            "max": 21
+        },
+        "6": {
+            "min": 22,
+            "max": 23
+        },
+        "7": {
+            "min": 24,
+            "max": 25
+        },
+        "8": {
+            "min": 26,
+            "max": 27
+        },
+        "9": {
+            "min": 28,
+            "max": 29
+        },
+        "10": {
+            "min": 30,
+            "max": 30
+        }
+    },
+    "difficulty_classes": {
+        "5": "Very easy",
+        "10": "Easy",
+        "15": "Medium",
+        "20": "Hard",
+        "25": "Very hard",
+        "30": "Nearly impossible"
+    },
+    "abilities": {
+        "strength": {
+            "name": "Strength",
+            "short_name": "str",
+            "desc": "Measuring physical power",
+            "skills": [
+                "athletics"
+            ]
+        },
+        "dexterity": {
+            "name": "Dexterity",
+            "short_name": "dex",
+            "desc": "Measuring agility",
+            "skills": [
+                "acrobatics",
+                "sleight_of_hand",
+                "stealth"
+            ]
+        },
+        "constitution": {
+            "name": "Constitution",
+            "short_name": "con",
+            "desc": "Measuring endurance",
+            "skills": []
+        },
+        "intelligence": {
+            "name": "Intelligence",
+            "short_name": "int",
+            "desc": "Measuring reasoning and memory",
+            "skills": [
+                "arcana",
+                "history",
+                "investigation",
+                "nature",
+                "religion"
+            ]
+        },
+        "wisdom": {
+            "name": "Wisdom",
+            "short_name": "wis",
+            "desc": "Measuring perception and insight",
+            "skills": [
+                "animal_handling",
+                "insight",
+                "medicine",
+                "perception",
+                "survival"
+            ]
+        },
+        "charisma": {
+            "name": "Charisma",
+            "short_name": "cha",
+            "desc": "Measuring force of personality",
+            "skills": [
+                "deception",
+                "intimidation",
+                "performance",
+                "persuasion"
+            ]
+        }
+    }
+}
