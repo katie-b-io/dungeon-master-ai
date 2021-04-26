@@ -1,0 +1,67 @@
+{
+    "wizard": {
+        "class": [
+            {
+                "name": "Wizard",
+                "level": 1
+            }
+        ],
+        "race": "high_elf",
+        "alignment": ["chaotic", "good"],
+        "initiative": 2,
+        "speed": 30,
+        "hit_dice": {
+            "type": "d6",
+            "total": 1
+        },
+        "hit_point_maximum": 8,
+        "abilities": {
+            "strength": 10,
+            "dexterity": 15,
+            "constitution": 14,
+            "intelligence": 16,
+            "wisdom": 12,
+            "charisma": 8
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "saving_throws": ["intelligence", "wisdom"],
+            "skills": ["arcana", "investigation", "perception"],
+            "weapons": ["dagger", "dart", "light_crossbow", "longbow", "longsword", "quaterstaff", "shortbow", "shortsword", "sling"],
+            "armor": [],
+            "tools": []
+        },
+        "languages": ["common", "elvish", "goblin"],
+        "money": {
+            "cp": 0,
+            "sp": 0,
+            "gp": 0,
+            "pp": 0
+        },
+        "weapons": ["quarterstaff"],
+        "equipment": {
+            "backpack": 1,
+            "book_of_lore": 1,
+            "bottle_of_ink": 1,
+            "component_pouch": 1,
+            "ink_pen": 1,
+            "set_of_common_clothes": 1,
+            "sheet_of_parchment": 10,
+            "small_knife": 1,
+            "spellbook": 1
+        },
+        "class_features": ["spellcasting_ability_wizard", "arcane_recovery", "darkvision", "fey_ancestry", "trance"],
+        "spells": {
+            "prepared_spells_max": 4,
+            "prepared_spells_default": ["mage_armor", "magic_missile", "shield", "sleep"],
+            "cantrips": {
+                "spell_slots": -1,
+                "spells_known": ["mage_hand", "prestidigitation", "ray_of_frost", "shocking_grasp"]
+            },
+            "first_level": {
+                "spell_slots": 2,
+                "spells_known": ["burning_hands", "detect_magic", "mage_armor", "magic_missile", "shield", "sleep"]
+            }
+        }
+    }
+}
