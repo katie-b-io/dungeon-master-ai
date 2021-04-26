@@ -1,0 +1,14 @@
+{
+    "cleric": {
+        "name": "Cleric"
+    },
+    "fighter": {
+        "name": "Fighter"
+    },
+    "rogue": {
+        "name": "Rogue"
+    },
+    "wizard": {
+        "name": "Wizard"
+    }
+}

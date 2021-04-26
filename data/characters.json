@@ -1,12 +1,11 @@
 {
     "cleric": {
-        "class": [
-            {
-                "name": "Cleric",
+        "class": {
+            "cleric": {
                 "level": 1,
                 "subclass": "life_domain"
             }
-        ],
+        },
         "race": "dwarf_hill",
         "alignment": "neutral_good",
         "speed": 25,
@@ -139,13 +138,12 @@
         }
     },
     "fighter": {
-        "class": [
-            {
-                "name": "Fighter",
+        "class": {
+            "fighter": {
                 "level": 1,
                 "subclass": ""
             }
-        ],
+        },
         "race": "human",
         "alignment": "lawful_neutral",
         "speed": 30,
@@ -267,13 +265,12 @@
         }
     },
     "rogue": {
-        "class": [
-            {
-                "name": "Rogue",
+        "class": {
+            "rogue": {
                 "level": 1,
                 "subclass": ""
             }
-        ],
+        },
         "race": "halfling_lightfoot",
         "alignment": "neutral",
         "speed": 25,
@@ -384,13 +381,12 @@
         }
     },
     "wizard": {
-        "class": [
-            {
-                "name": "Wizard",
+        "class": {
+            "wizard": {
                 "level": 1,
                 "subclass": ""
             }
-        ],
+        },
         "race": "elf_high",
         "alignment": "chaotic_good",
         "speed": 30,
