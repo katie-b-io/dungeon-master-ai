@@ -1,14 +1,299 @@
 {
     "cleric": {
-        "name": "Cleric"
+        "name": "Cleric",
+        "hit_dice": "d8",
+        "saving_throws": [
+            "wis",
+            "cha"
+        ],
+        "proficiencies": {
+            "skills": [
+                "history",
+                "insight",
+                "medicine",
+                "persuasion",
+                "religion"
+            ],
+            "weapons": [
+                "club",
+                "dagger",
+                "greatclub",
+                "hammer_light",
+                "handaxe",
+                "javelin",
+                "mace",
+                "quarterstaff",
+                "sickle",
+                "spear",
+                "crossbow_light",
+                "dart",
+                "shortbow",
+                "sling"
+            ],
+            "armor": [
+                "light",
+                "medium",
+                "shield"
+            ],
+            "tools": []
+        },
+        "features": [
+            "spellcasting_ability_cleric",
+            "divine_domain"
+        ],
+        "spells": {
+            "cantrips": {
+                "spell_list": [
+                    "guidance",
+                    "light",
+                    "mending",
+                    "resistance",
+                    "sacred_flame",
+                    "spare_the_dying",
+                    "thaumaturgy"
+                ]
+            },
+            "first_level": {
+                "spell_list": [
+                    "bane",
+                    "bless",
+                    "command",
+                    "create or destroy water",
+                    "cure wounds",
+                    "detect evil and good",
+                    "detect magic",
+                    "detect poison and disease",
+                    "guiding bolt",
+                    "healing word",
+                    "inflict wounds",
+                    "protection from evil and good",
+                    "purify food and drink",
+                    "sanctuary",
+                    "shield of faith"
+                ]
+            }
+        }
     },
     "fighter": {
-        "name": "Fighter"
+        "name": "Fighter",
+        "hit_dice": "d10",
+        "saving_throws": [
+            "str",
+            "con"
+        ],
+        "proficiencies": {
+            "skills": [
+                "acrobatics",
+                "animal_handling",
+                "athletics",
+                "history",
+                "insight",
+                "intimidation",
+                "perception",
+                "survival"
+            ],
+            "weapons": [
+                "club",
+                "dagger",
+                "greatclub",
+                "hammer_light",
+                "handaxe",
+                "javelin",
+                "mace",
+                "quarterstaff",
+                "sickle",
+                "spear",
+                "crossbow_light",
+                "dart",
+                "shortbow",
+                "sling",
+                "battleaxe",
+                "flail",
+                "glaive",
+                "greataxe",
+                "greatsword",
+                "halberd",
+                "lance",
+                "longsword",
+                "maul",
+                "morningstar",
+                "pike",
+                "rapier",
+                "scimitar",
+                "shortsword",
+                "trident",
+                "war_pick",
+                "warhammer",
+                "whip",
+                "blowgun",
+                "crossbow_hand",
+                "crossbow_heavy",
+                "longbow",
+                "net"
+            ],
+            "armor": [
+                "light",
+                "medium",
+                "heavy",
+                "shield"
+            ],
+            "tools": []
+        },
+        "features": [
+            "fighting_style_defense",
+            "second_wind"
+        ],
+        "spells": {
+            "cantrips": {
+                "spell_list": []
+            },
+            "first_level": {
+                "spell_list": []
+            }
+        }
     },
     "rogue": {
-        "name": "Rogue"
+        "name": "Rogue",
+        "hit_dice": "d8",
+        "saving_throws": [
+            "dex",
+            "int"
+        ],
+        "proficiencies": {
+            "skills": [
+                "acrobatics",
+                "athletics",
+                "deception",
+                "insight",
+                "intimidation",
+                "investigation",
+                "perception",
+                "performance",
+                "persuasion",
+                "sleight_of_hand",
+                "stealth"
+            ],
+            "weapons": [
+                "club",
+                "dagger",
+                "greatclub",
+                "hammer_light",
+                "handaxe",
+                "javelin",
+                "mace",
+                "quarterstaff",
+                "sickle",
+                "spear",
+                "crossbow_light",
+                "dart",
+                "shortbow",
+                "sling",
+                "longsword",
+                "rapier",
+                "shortsword",
+                "crossbow_hand"
+            ],
+            "armor": [
+                "light"
+            ],
+            "tools": [
+                "thieves_tools"
+            ]
+        },
+        "features": [
+            "expertise",
+            "sneak_attack",
+            "thieves_cant"
+        ],
+        "spells": {
+            "cantrips": {
+                "spell_list": []
+            },
+            "first_level": {
+                "spell_list": []
+            }
+        }
     },
     "wizard": {
-        "name": "Wizard"
+        "name": "Wizard",
+        "hit_dice": "d6",
+        "saving_throws": [
+            "int",
+            "wis"
+        ],
+        "proficiencies": {
+            "skills": [
+                "arcana",
+                "history",
+                "insight",
+                "investigation",
+                "medicine",
+                "religion"
+            ],
+            "weapons": [
+                "dagger",
+                "dart",
+                "sling",
+                "quarterstaff",
+                "crossbow_light"
+            ],
+            "armor": [],
+            "tools": []
+        },
+        "features": [
+            "spellcasting_ability_wizard",
+            "arcane_recovery"
+        ],
+        "spells": {
+            "cantrips": {
+                "spell_list": [
+                    "acid_splash",
+                    "chill_touch",
+                    "dancing_lights",
+                    "fire_bolt",
+                    "light",
+                    "mage_hand",
+                    "mending",
+                    "message",
+                    "minor_illustration",
+                    "poison_spray",
+                    "prestidigitation",
+                    "ray_of_frost",
+                    "shocking_grasp",
+                    "true_strike"
+                ]
+            },
+            "first_level": {
+                "spell_list": [
+                    "alarm",
+                    "burning_hands",
+                    "charm_person",
+                    "color_spray",
+                    "comprehend_languages",
+                    "detect_magic",
+                    "disguise_self",
+                    "expeditious_retreat",
+                    "false_life",
+                    "feather_fall",
+                    "find_familiar",
+                    "fog_cloud",
+                    "grease",
+                    "identify",
+                    "illusory_script",
+                    "jump",
+                    "longstrider",
+                    "mage_armor",
+                    "magic_missile",
+                    "protection_from_evil_and_good",
+                    "shield",
+                    "silent_image",
+                    "sleep",
+                    "tashas_hideous_laughter",
+                    "tensers_floating_disk",
+                    "thunderwave",
+                    "unseen_servant"
+                ]
+            }
+        }
     }
 }
