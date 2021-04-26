@@ -1,4 +1,132 @@
 {
+    "fighter": {
+        "class": [
+            {
+                "name": "Fighter",
+                "level": 1
+            }
+        ],
+        "race": "human",
+        "alignment": [
+            "lawful",
+            "neutral"
+        ],
+        "initiative": -1,
+        "speed": 30,
+        "hit_dice": {
+            "type": "d10",
+            "total": 1
+        },
+        "hit_point_maximum": 12,
+        "abilities": {
+            "strength": 16,
+            "dexterity": 9,
+            "constitution": 15,
+            "intelligence": 11,
+            "wisdom": 13,
+            "charisma": 14
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "saving_throws": [
+                "strength",
+                "constitution"
+            ],
+            "skills": [
+                "athletics",
+                "perception"
+            ],
+            "weapons": [
+                "club",
+                "dagger",
+                "greatclub",
+                "hammer_light",
+                "handaxe",
+                "javelin",
+                "mace",
+                "quarterstaff",
+                "sickle",
+                "spear",
+                "crossbow_light",
+                "dart",
+                "shortbow",
+                "sling",
+                "battleaxe",
+                "flail",
+                "glaive",
+                "greataxe",
+                "greatsword",
+                "halberd",
+                "lance",
+                "longsword",
+                "maul",
+                "morningstar",
+                "pike",
+                "rapier",
+                "scimitar",
+                "shortsword",
+                "trident",
+                "war_pick",
+                "warhammer",
+                "whip",
+                "blowgun",
+                "crossbow_hand",
+                "crossbow_heavy",
+                "longbow",
+                "net"
+            ],
+            "armor": [
+                "light",
+                "medium",
+                "heavy",
+                "shield"
+            ],
+            "tools": []
+        },
+        "languages": [
+            "common",
+            "dwarvish"
+        ],
+        "money": {
+            "cp": 0,
+            "sp": 0,
+            "gp": 0,
+            "pp": 0
+        },
+        "weapons": {
+            "greataxe": 1,
+            "javelin": 3,
+            "crossbow_light": 1
+        },
+        "armor": {
+            "chain_mail": 1
+        },
+        "equipment": {
+            "backpack": 1,
+            "bedroll": 1,
+            "bolts": 20,
+            "mess_kit": 1,
+            "ration": 10,
+            "rope_hemp": 1,
+            "set_of_common_clothes": 1,
+            "tinder_box": 1,
+            "torch": 10,
+            "waterskin": 1
+        },
+        "features": ["fighting_style_defense", "second_wind"],
+        "spells": {
+            "prepared_spells_max": 0,
+            "prepared_spells_default": [],
+            "cantrips": {
+                "spell_slots": 0,
+                "spells_known": []
+            },
+            "first_level": {
+                "spell_slots": 0,
+                "spells_known": []
+            }
+        }
+    },
     "wizard": {
         "class": [
             {
@@ -7,7 +135,10 @@
             }
         ],
         "race": "high_elf",
-        "alignment": ["chaotic", "good"],
+        "alignment": [
+            "chaotic",
+            "good"
+        ],
         "initiative": 2,
         "speed": 30,
         "hit_dice": {
@@ -25,20 +156,44 @@
         },
         "proficiency_bonus": 2,
         "proficiencies": {
-            "saving_throws": ["intelligence", "wisdom"],
-            "skills": ["arcana", "investigation", "perception"],
-            "weapons": ["dagger", "dart", "light_crossbow", "longbow", "longsword", "quaterstaff", "shortbow", "shortsword", "sling"],
+            "saving_throws": [
+                "intelligence",
+                "wisdom"
+            ],
+            "skills": [
+                "arcana",
+                "investigation",
+                "perception"
+            ],
+            "weapons": [
+                "crossbow_light",
+                "dagger",
+                "dart",
+                "longbow",
+                "longsword",
+                "quaterstaff",
+                "shortbow",
+                "shortsword",
+                "sling"
+            ],
             "armor": [],
             "tools": []
         },
-        "languages": ["common", "elvish", "goblin"],
+        "languages": [
+            "common",
+            "elvish",
+            "goblin"
+        ],
         "money": {
             "cp": 0,
             "sp": 0,
             "gp": 0,
             "pp": 0
         },
-        "weapons": ["quarterstaff"],
+        "weapons": {
+            "quarterstaff": 1
+        },
+        "armor": {},
         "equipment": {
             "backpack": 1,
             "book_of_lore": 1,
@@ -50,17 +205,40 @@
             "small_knife": 1,
             "spellbook": 1
         },
-        "class_features": ["spellcasting_ability_wizard", "arcane_recovery", "darkvision", "fey_ancestry", "trance"],
+        "features": [
+            "spellcasting_ability_wizard",
+            "arcane_recovery",
+            "darkvision",
+            "fey_ancestry",
+            "trance"
+        ],
         "spells": {
             "prepared_spells_max": 4,
-            "prepared_spells_default": ["mage_armor", "magic_missile", "shield", "sleep"],
+            "prepared_spells_default": [
+                "mage_armor",
+                "magic_missile",
+                "shield",
+                "sleep"
+            ],
             "cantrips": {
                 "spell_slots": -1,
-                "spells_known": ["mage_hand", "prestidigitation", "ray_of_frost", "shocking_grasp"]
+                "spells_known": [
+                    "mage_hand",
+                    "prestidigitation",
+                    "ray_of_frost",
+                    "shocking_grasp"
+                ]
             },
             "first_level": {
                 "spell_slots": 2,
-                "spells_known": ["burning_hands", "detect_magic", "mage_armor", "magic_missile", "shield", "sleep"]
+                "spells_known": [
+                    "burning_hands",
+                    "detect_magic",
+                    "mage_armor",
+                    "magic_missile",
+                    "shield",
+                    "sleep"
+                ]
             }
         }
     }
