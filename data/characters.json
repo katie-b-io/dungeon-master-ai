@@ -113,7 +113,129 @@
             "torch": 10,
             "waterskin": 1
         },
-        "features": ["fighting_style_defense", "second_wind"],
+        "features": [
+            "fighting_style_defense",
+            "second_wind"
+        ],
+        "spells": {
+            "prepared_spells_max": 0,
+            "prepared_spells_default": [],
+            "cantrips": {
+                "spell_slots": 0,
+                "spells_known": []
+            },
+            "first_level": {
+                "spell_slots": 0,
+                "spells_known": []
+            }
+        }
+    },
+    "rogue": {
+        "class": [
+            {
+                "name": "Rogue",
+                "level": 1
+            }
+        ],
+        "race": "halfling_lightfoot",
+        "alignment": [
+            "neutral",
+            "neutral"
+        ],
+        "initiative": 3,
+        "speed": 25,
+        "hit_dice": {
+            "type": "1d8",
+            "total": 1
+        },
+        "hit_point_maximum": 9,
+        "abilities": {
+            "strength": 8,
+            "dexterity": 16,
+            "constitution": 12,
+            "intelligence": 13,
+            "wisdom": 10,
+            "charisma": 16
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "saving_throws": [
+                "dexterity",
+                "intelligence"
+            ],
+            "skills": [
+                "acrobatics",
+                "deception",
+                "investigation",
+                "stealth"
+            ],
+            "weapons": [
+                "club",
+                "dagger",
+                "greatclub",
+                "hammer_light",
+                "handaxe",
+                "javelin",
+                "mace",
+                "quarterstaff",
+                "sickle",
+                "spear",
+                "crossbow_light",
+                "dart",
+                "shortbow",
+                "sling",
+                "longsword",
+                "rapier",
+                "shortsword",
+                "crossbow_hand"
+            ],
+            "armor": [
+                "light"
+            ],
+            "tools": [
+                "thieves_tools"
+            ]
+        },
+        "languages": [
+            "common",
+            "halfling"
+        ],
+        "money": {
+            "cp": 0,
+            "sp": 0,
+            "gp": 0,
+            "pp": 0
+        },
+        "weapons": {
+            "shortsword": 1,
+            "shortbow": 1,
+            "dagger": 2
+        },
+        "armor": {
+            "leather_armor": 1
+        },
+        "equipment": {
+            "arrows": 20,
+            "backpack": 1,
+            "bedroll": 1,
+            "mess_kit": 1,
+            "quiver": 1,
+            "ration": 10,
+            "rope_hemp": 1,
+            "set_of_common_clothes": 1,
+            "tinder_box": 1,
+            "torch": 10,
+            "waterskin": 1
+        },
+        "features": [
+            "expertise",
+            "sneak_attack",
+            "thieves_cant",
+            "lucky",
+            "brave",
+            "halfling_nimbleness",
+            "naturally_stealthy"
+        ],
         "spells": {
             "prepared_spells_max": 0,
             "prepared_spells_default": [],
@@ -134,7 +256,7 @@
                 "level": 1
             }
         ],
-        "race": "high_elf",
+        "race": "elf_high",
         "alignment": [
             "chaotic",
             "good"
