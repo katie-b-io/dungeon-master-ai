@@ -11,7 +11,7 @@
         },
         "min_str_requirement": -1,
         "stealth_disadvantage": false,
-        "weight": "5lb",
+        "weight": 5,
         "description": "Armor scraps."
     },
     "chain_mail": {
@@ -26,7 +26,7 @@
         },
         "min_str_requirement": 13,
         "stealth_disadvantage": true,
-        "weight": "55lb",
+        "weight": 55,
         "description": "Made of interlocking metal rings, chain mail includes a layer of quilted fabric worn underneath the mail to prevent chafing and to cushion the impact of blows. The suit includes gauntlets."
     },
     "leather": {
@@ -41,7 +41,7 @@
         },
         "min_str_requirement": -1,
         "stealth_disadvantage": false,
-        "weight": "10lb",
+        "weight": 10,
         "description": "The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil. The rest of the armor is made of softer and more flexible materials."
     },
     "padded": {
@@ -56,7 +56,7 @@
         },
         "min_str_requirement": -1,
         "stealth_disadvantage": true,
-        "weight": "8lb",
+        "weight": 8,
         "description": "Padded armor consists of quilted layers of cloth and batting."
     },
     "scale_mail": {
@@ -71,7 +71,7 @@
         },
         "min_str_requirement": -1,
         "stealth_disadvantage": true,
-        "weight": "45lb",
+        "weight": 45,
         "description": "This armor consists of a coat and leggings (and perhaps a separate skirt) of leather covered with overlapping pieces of metal, much like the scales of a fish. The suit includes gauntlets."
     },
     "shield": {
@@ -86,7 +86,7 @@
         },
         "min_str_requirement": -1,
         "stealth_disadvantage": false,
-        "weight": "6lb",
+        "weight": 6,
         "desc": "A shield is made from wood or metal and is carried in one hand. Wielding a shield increases your Armor Class by 2. You can benefit from only one shield at a time."
     }
 }
