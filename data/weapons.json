@@ -1,0 +1,179 @@
+{
+    "crossbow_light": {
+        "name": "Light crossbow",
+        "type": ["simple", "ranged"],
+        "cost": "25gp",
+        "damage": {
+            "die": "d8",
+            "total": 1,
+            "type": "piercing"
+        },
+        "weight": 5,
+        "range": {
+            "normal": 80,
+            "long": 320
+        },
+        "properties": [
+            "ammunition",
+            "loading",
+            "two_handed"
+        ]
+    },
+    "dagger": {
+        "name": "Dagger",
+        "type": ["simple", "melee"],
+        "cost": "2gp",
+        "damage": {
+            "die": "d4",
+            "total": 1,
+            "type": "piercing"
+        },
+        "weight": 1,
+        "range": {
+            "normal": 20,
+            "long": 60
+        },
+        "properties": [
+            "finesse",
+            "light",
+            "thrown"
+        ]
+    },
+    "greataxe": {
+        "name": "Greataxe",
+        "type": ["martial", "melee"],
+        "cost": "30gp",
+        "damage": {
+            "die": "d12",
+            "total": 1,
+            "type": "slashing"
+        },
+        "weight": 7,
+        "properties": [
+            "heavy",
+            "two_handed"
+        ]
+    },
+    "handaxe": {
+        "name": "Handaxe",
+        "type": ["simple", "melee"],
+        "cost": "5gp",
+        "damage": {
+            "die": "d6",
+            "total": 1,
+            "type": "slashing"
+        },
+        "weight": 2,
+        "range": {
+            "normal": 20,
+            "long": 60
+        },
+        "properties": [
+            "light",
+            "thrown"
+        ]
+    },
+    "javelin": {
+        "name": "Javelin",
+        "type": ["simple", "melee"],
+        "cost": "5sp",
+        "damage": {
+            "die": "d6",
+            "total": 1,
+            "type": "piercing"
+        },
+        "weight": 2,
+        "range": {
+            "normal": 30,
+            "long": 120
+        },
+        "properties": [
+            "thrown"
+        ]
+    },
+    "quarterstaff": {
+        "name": "Quarterstaff",
+        "type": ["simple", "melee"],
+        "cost": "2sp",
+        "damage": {
+            "die": "d6",
+            "total": 1,
+            "type": "bludgeoning"
+        },
+        "weight": 4,
+        "versatile": {
+            "die": "d8",
+            "total": 1
+        },
+        "properties": [
+            "versatile"
+        ]
+    },
+    "scimitar": {
+        "name": "Scimitar",
+        "type": ["martial", "melee"],
+        "cost": "25gp",
+        "damage": {
+            "die": "d6",
+            "total": 1,
+            "type": "slashing"
+        },
+        "weight": 3,
+        "properties": [
+            "finesse",
+            "light"
+        ]
+    },
+    "shortbow": {
+        "name": "Shortbow",
+        "type": ["simple", "ranged"],
+        "cost": "25gp",
+        "damage": {
+            "die": "d6",
+            "total": 1,
+            "type": "piercing"
+        },
+        "weight": 2,
+        "range": {
+            "normal": 80,
+            "long": 320
+        },
+        "properties": [
+            "ammunition",
+            "two_handed"
+        ]
+    },
+    "shortsword": {
+        "name": "Shortsword",
+        "type": ["martial", "melee"],
+        "cost": "10gp",
+        "damage": {
+            "die": "d6",
+            "total": 1,
+            "type": "piercing"
+        },
+        "weight": 2,
+        "properties": [
+            "finesse",
+            "light"
+        ]
+    },
+    "warhammer": {
+        "name": "Warhammer",
+        "type": ["martial", "melee"],
+        "cost": "15gp",
+        "damage": {
+            "die": "d8",
+            "total": 1,
+            "type": "bludgeoning"
+        },
+        "weight": 2,
+        "versatile": {
+            "die": "d10",
+            "total": 1
+        },
+        "properties": [
+            "versatile"
+        ]
+    }
+}
