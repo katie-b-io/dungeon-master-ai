@@ -1,7 +1,10 @@
 {
     "crossbow_light": {
         "name": "Light crossbow",
-        "type": ["simple", "ranged"],
+        "type": [
+            "simple",
+            "ranged"
+        ],
         "cost": 2500,
         "damage": {
             "die": "d8",
@@ -21,7 +24,10 @@
     },
     "dagger": {
         "name": "Dagger",
-        "type": ["simple", "melee"],
+        "type": [
+            "simple",
+            "melee"
+        ],
         "cost": 200,
         "damage": {
             "die": "d4",
@@ -41,7 +47,10 @@
     },
     "greataxe": {
         "name": "Greataxe",
-        "type": ["martial", "melee"],
+        "type": [
+            "martial",
+            "melee"
+        ],
         "cost": 3000,
         "damage": {
             "die": "d12",
@@ -56,7 +65,10 @@
     },
     "handaxe": {
         "name": "Handaxe",
-        "type": ["simple", "melee"],
+        "type": [
+            "simple",
+            "melee"
+        ],
         "cost": 500,
         "damage": {
             "die": "d6",
@@ -75,7 +87,10 @@
     },
     "javelin": {
         "name": "Javelin",
-        "type": ["simple", "melee"],
+        "type": [
+            "simple",
+            "melee"
+        ],
         "cost": 50,
         "damage": {
             "die": "d6",
@@ -93,7 +108,10 @@
     },
     "quarterstaff": {
         "name": "Quarterstaff",
-        "type": ["simple", "melee"],
+        "type": [
+            "simple",
+            "melee"
+        ],
         "cost": 20,
         "damage": {
             "die": "d6",
@@ -111,7 +129,10 @@
     },
     "scimitar": {
         "name": "Scimitar",
-        "type": ["martial", "melee"],
+        "type": [
+            "martial",
+            "melee"
+        ],
         "cost": 2500,
         "damage": {
             "die": "d6",
@@ -126,7 +147,10 @@
     },
     "shortbow": {
         "name": "Shortbow",
-        "type": ["simple", "ranged"],
+        "type": [
+            "simple",
+            "ranged"
+        ],
         "cost": 2500,
         "damage": {
             "die": "d6",
@@ -145,7 +169,10 @@
     },
     "shortsword": {
         "name": "Shortsword",
-        "type": ["martial", "melee"],
+        "type": [
+            "martial",
+            "melee"
+        ],
         "cost": 1000,
         "damage": {
             "die": "d6",
@@ -160,7 +187,10 @@
     },
     "warhammer": {
         "name": "Warhammer",
-        "type": ["martial", "melee"],
+        "type": [
+            "martial",
+            "melee"
+        ],
         "cost": 1500,
         "damage": {
             "die": "d8",

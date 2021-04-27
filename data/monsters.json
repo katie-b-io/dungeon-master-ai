@@ -164,7 +164,7 @@
                                         }
                                     },
                                     "effects": {
-                                        "short_rest_healing" : false,
+                                        "short_rest_healing": false,
                                         "long_rest_healing": false,
                                         "stabilised_healing": false,
                                         "nat20_death_saving_throw": false,

@@ -6,14 +6,14 @@
         "weight": 1,
         "description": "Arrows (20)"
     },
-    "backpack":{
+    "backpack": {
         "name": "Backpack",
         "type": "Adventuring gear",
         "cost": 200,
         "weight": 5,
         "description": "A backpack can hold one cubic foot or 30 pounds of gear. You can also strap items, such as a bedroll or a coil of rope, to the outside of a backpack."
     },
-    "bedroll":{
+    "bedroll": {
         "name": "Bedroll",
         "type": "Adventuring gear",
         "cost": 100,
@@ -27,42 +27,42 @@
         "weight": 1.5,
         "description": "Crossbow bolts (20)"
     },
-    "book":{
+    "book": {
         "name": "Book",
         "type": "Adventuring gear",
         "cost": 2500,
         "weight": 5,
         "description": "A book might contain poetry, historical accounts, information pertaining to a particular field of lore, diagrams and notes on gnomish contraptions, or just about anything else that can be represented using text or pictures. A book of spells is a spellbook."
     },
-    "component_pouch":{
+    "component_pouch": {
         "name": "Component pouch",
         "type": "Adventuring gear",
         "cost": 2500,
         "weight": 2,
         "description": "A component pouch is a small, watertight leather belt pouch that has compartments to hold all the material components and other special items you need to cast your spells, except for those components that have a specific cost (as indicated in a spell's description)."
     },
-    "ink":{
+    "ink": {
         "name": "Ink",
         "type": "Adventuring gear",
         "cost": 1000,
         "weight": 0,
         "description": "Ink (1 oz bottle)"
     },
-    "ink_pen":{
+    "ink_pen": {
         "name": "Ink pen",
         "type": "Adventuring gear",
         "cost": 2,
         "weight": 0,
         "description": "Ink pen"
     },
-    "masons_tools":{
+    "masons_tools": {
         "name": "Mason's tools",
         "type": "Artisan's tools",
         "cost": 1000,
         "weight": 8,
         "description": "Mason's tools"
     },
-    "mess_kit":{
+    "mess_kit": {
         "name": "Mess kit",
         "type": "Adventuring gear",
         "cost": 20,
@@ -90,7 +90,7 @@
         "weight": 10,
         "description": "Rope, whether made of hemp or silk, has 2 hit points and can be burst with a DC 17 Strength check."
     },
-    "set_of_common_clothes":{
+    "set_of_common_clothes": {
         "name": "Common clothes",
         "type": "Adventuring gear",
         "cost": 50,
@@ -104,21 +104,21 @@
         "weight": 0,
         "description": "Parchment (one sheet)"
     },
-    "small_knife":{
+    "small_knife": {
         "name": "Small knife",
         "type": "Adventuring gear",
         "cost": 100,
         "weight": 1,
         "description": "Small knife"
     },
-    "spellbook":{
+    "spellbook": {
         "name": "Spellbook",
         "type": "Adventuring gear",
         "cost": 5000,
         "weight": 3,
         "description": "Essential for wizards, a spellbook is a leather-bound tome with 100 blank vellum pages suitable for recording spells."
     },
-    "tinder_box":{
+    "tinder_box": {
         "name": "Tinderbox",
         "type": "Adventuring gear",
         "cost": 50,

@@ -6,7 +6,10 @@
                 "subclass": "life_domain"
             }
         },
-        "race": ["dwarf", "hill"],
+        "race": [
+            "dwarf",
+            "hill"
+        ],
         "alignment": "neutral_good",
         "abilities": {
             "str": 14,
@@ -96,7 +99,9 @@
                 "subclass": ""
             }
         },
-        "race": ["human"],
+        "race": [
+            "human"
+        ],
         "alignment": "lawful_neutral",
         "abilities": {
             "str": 16,
@@ -161,7 +166,10 @@
                 "subclass": ""
             }
         },
-        "race": ["halfling", "lightfoot"],
+        "race": [
+            "halfling",
+            "lightfoot"
+        ],
         "alignment": "neutral",
         "abilities": {
             "str": 8,
@@ -226,7 +234,10 @@
                 "subclass": ""
             }
         },
-        "race": ["elf", "high"],
+        "race": [
+            "elf",
+            "high"
+        ],
         "alignment": "chaotic_good",
         "abilities": {
             "str": 10,
@@ -247,7 +258,7 @@
             "tools": {}
         },
         "languages": {
-            "race" :[
+            "race": [
                 "common",
                 "elvish",
                 "goblin"
