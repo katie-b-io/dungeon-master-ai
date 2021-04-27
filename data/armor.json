@@ -1,4 +1,19 @@
 {
+    "armor_scraps": {
+        "name": "Armor scraps",
+        "type": "light",
+        "cost": "0gp",
+        "ac": {
+            "base": 10,
+            "mod": "dex",
+            "mod_max": -1,
+            "bonus": 1
+        },
+        "min_str_requirement": -1,
+        "stealth_disadvantage": false,
+        "weight": "5lb",
+        "description": "Armor scraps."
+    },
     "chain_mail": {
         "name": "Chain mail",
         "type": "heavy",
