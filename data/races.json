@@ -1,6 +1,6 @@
 {
-    "dwarf_hill": {
-        "name": "Hill dwarf",
+    "dwarf": {
+        "name": "Dwarf",
         "ability_scores": {
             "str": 0,
             "dex": 0,
@@ -20,12 +20,21 @@
             "dwarven_resilience",
             "dwarven_combat_training",
             "tool_proficiency",
-            "stonecunning",
-            "dwarven_toughness"
-        ]
+            "stonecunning"
+        ],
+        "subraces": {
+            "hill": {
+                "name": "Hill dwarf",
+                "description": "As a hill dwarf, you have keen senses, deep intuition, and remarkable resilience.",
+                "traits": [
+                    "ability_score_increase_wisdom",
+                    "dwarven_toughness"
+                ]
+            }
+        }
     },
-    "elf_high": {
-        "name": "High elf",
+    "elf": {
+        "name": "Elf",
         "ability_scores": {
             "str": 0,
             "dex": 2,
@@ -41,17 +50,26 @@
             "elvish"
         ],
         "traits": [
-            "cantrip_elf",
             "darkvision_elf",
-            "elf_weapon_training",
-            "extra_language_elf",
             "fey_ancestry",
             "keen_senses",
             "trance"
-        ]
+        ],
+        "subraces": {
+            "high": {
+                "name": "High elf",
+                "description": "As a high elf, you have a keen mind and a mastery of at least the basics of magic. In many fantasy gaming worlds, there are two kinds of high elves. One type is haughty and reclusive, believing themselves to be superior to non-elves and even other elves. The other type is more common and more friendly, and often encountered among humans and other races.",
+                "traits": [
+                    "ability_score_increase_intelligence",
+                    "cantrip_elf",
+                    "elf_weapon_training",
+                    "extra_language_elf"
+                ]
+            }
+        }
     },
-    "halfling_lightfoot": {
-        "name": "Lightfoot halfling",
+    "halfling": {
+        "name": "Halfling",
         "ability_scores": {
             "str": 0,
             "dex": 2,
@@ -69,9 +87,18 @@
         "traits": [
             "brave",
             "halfling_nimbleness",
-            "lucky",
-            "naturally_stealthy"
-        ]
+            "lucky"
+        ],
+        "subraces": {
+            "lightfoot": {
+                "name": "Lightfoot halfling",
+                "description": "As a lightfoot halfling, you can easily hide from notice, even using other people as cover. You’re inclined to be affable and get along well with others.\nLightfoots are more prone to wanderlust than other halflings, and often dwell alongside other races or take up a nomadic life.",
+                "traits": [
+                    "ability_score_increase_charisma",
+                    "naturally_stealthy"
+                ]
+            }
+        }
     },
     "human": {
         "name": "Human",

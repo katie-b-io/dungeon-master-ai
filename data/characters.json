@@ -6,7 +6,7 @@
                 "subclass": "life_domain"
             }
         },
-        "race": "dwarf_hill",
+        "race": ["dwarf", "hill"],
         "alignment": "neutral_good",
         "abilities": {
             "str": 14,
@@ -102,7 +102,7 @@
                 "subclass": ""
             }
         },
-        "race": "human",
+        "race": ["human"],
         "alignment": "lawful_neutral",
         "abilities": {
             "str": 16,
@@ -173,7 +173,7 @@
                 "subclass": ""
             }
         },
-        "race": "halfling_lightfoot",
+        "race": ["halfling", "lightfoot"],
         "alignment": "neutral",
         "abilities": {
             "str": 8,
@@ -244,7 +244,7 @@
                 "subclass": ""
             }
         },
-        "race": "elf_high",
+        "race": ["elf", "high"],
         "alignment": "chaotic_good",
         "abilities": {
             "str": 10,
