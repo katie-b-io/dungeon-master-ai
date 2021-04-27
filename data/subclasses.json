@@ -1,0 +1,16 @@
+{
+    "life_domain": {
+        "name": "Life Domain",
+        "type": "cleric",
+        "features": [
+            "bonus_proficiency_life_domain",
+            "disciple_of_life"
+        ],
+        "prepared_spells": {
+            "first_level": [
+                "bless",
+                "cure_wounds"
+            ]
+        }
+    }
+}

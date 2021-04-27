@@ -1,0 +1,22 @@
+{
+    "money": {
+        "cr": {
+            "min": 0,
+            "max": 0.5
+        },
+        "reward": {
+            "type": "cp",
+            "die": "d6",
+            "total": 5,
+            "mod": 0
+        }
+    },
+    "magic_items": {
+        "potion_of_healing": {
+            "drop_rate": 0.5
+        },
+        "wand_of_magic_missiles": {
+            "drop_rate": 0.02
+        }
+    }
+}

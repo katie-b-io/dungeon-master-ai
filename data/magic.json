@@ -1,0 +1,22 @@
+{
+    "schools": {
+        "abj": {
+            "name": "Abjuration"
+        },
+        "conj": {
+            "name": "Conjuration"
+        },
+        "divin": {
+            "name": "Divination"
+        },
+        "ench": {
+            "name": "Enchantment"
+        },
+        "evoc": {
+            "name": "Evocation"
+        },
+        "trans": {
+            "name": "Transmutation"
+        }
+    }
+}

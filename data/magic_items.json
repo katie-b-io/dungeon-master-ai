@@ -1,0 +1,50 @@
+{
+    "potion_of_healing": {
+        "name": "Potion of Healing",
+        "type": "potion",
+        "rarity": "common",
+        "description": "A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points. Drinking or administering a potion takes an action.",
+        "effects": {
+            "hit_point": {
+                "delta": {
+                    "type": "increase",
+                    "die": "d4",
+                    "total": 2,
+                    "mod": 2
+                }
+            }
+        }
+    },
+    "wand_of_magic_missiles": {
+        "name": "Wand of Magic Missiles",
+        "type": "wand",
+        "rarity": "uncommon",
+        "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 or more of its charges to cast the magic missile spell from it. For 1 charge, you cast the 1st-level version of the spell. You can increase the spell slot level by one for each additional charge you expend.\nThe wand regains 1d6 + 1 expended charges daily at dawn. If you expend the wand's last charge, roll a d20. On a 1, the wand crumbles into ashes and is destroyed.",
+        "effects": {
+            "magic_missile": {
+                "max_charges": 7,
+                "recharge_rate": {
+                    "delta": {
+                        "type": "increase",
+                        "die": "d6",
+                        "total": 1,
+                        "mod": 1
+                    },
+                    "frequency": {
+                        "unit": "hour",
+                        "total": 24
+                    }
+                },
+                "exhaust": {
+                    "conditions": {
+                        "charges": 0,
+                        "roll": {
+                            "die": "d20",
+                            "value": 1
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

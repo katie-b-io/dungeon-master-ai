@@ -1,0 +1,545 @@
+{
+    "bless": {
+        "name": "Bless",
+        "level": 1,
+        "school": "ench",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 30
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": [
+                {
+                    "name": "a sprinkling of holy water",
+                    "cost": 0,
+                    "consumed": false
+                }
+            ]
+        },
+        "duration": {
+            "unit": "minute",
+            "total": 1,
+            "concentration": true
+        },
+        "classes": [
+            "cleric"
+        ],
+        "description": "You bless up to three creatures of your choice within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target can roll a d4 and add the number rolled to the attack roll or saving throw.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st."
+    },
+    "burning_hands": {
+        "name": "Burning Hands",
+        "level": 1,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "cone",
+            "total": 15
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "instantaneous",
+            "total": 0,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "As you hold your hands with thumbs touching and fingers spread, a thin sheet of flames shoots forth from your outstretched fingertips. Each creature in a 15-foot cone must make a Dexterity saving throw. A creature takes 3d6 fire damage on a failed save, or half as much damage on a successful one.\nThe fire ignites any flammable objects in the area that aren't being worn or carried.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st."
+    },
+    "cure_wounds": {
+        "name": "Cure Wounds",
+        "level": 1,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "touch",
+            "total": 1
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "instantaneous",
+            "total": 0,
+            "concentration": false
+        },
+        "classes": [
+            "cleric"
+        ],
+        "description": "A creature you touch regains a number of hit points equal to 1d8 + your spellcasting ability modifier. This spell has no effect on undead or constructs.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the healing increases by 1d8 for each slot level above 1st."
+    },
+    "detect_magic": {
+        "name": "Detect Magic",
+        "level": 1,
+        "school": "divin",
+        "ritual": true,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "self",
+            "total": 1
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "minute",
+            "total": 10,
+            "concentration": true
+        },
+        "classes": [
+            "cleric",
+            "wizard"
+        ],
+        "description": "For the duration, you sense the presence of magic within 30 feet of you. If you sense magic in this way, you can use your action to see a faint aura around any visible creature or object in the area that bears magic, and you learn its school of magic, if any.\nThe spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt."
+    },
+    "guiding_bolt": {
+        "name": "Guiding Bolt",
+        "level": 1,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 120
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "round",
+            "total": 1,
+            "concentration": false
+        },
+        "classes": [
+            "cleric"
+        ],
+        "description": "A flash of light streaks toward a creature of your choice within range. Make a ranged spell attack against the target. On a hit, the target takes 4d6 radiant damage, and the next attack roll made against this target before the end of your next turn has advantage, thanks to the mystical dim light glittering on the target until then.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st."
+    },
+    "healing_word": {
+        "name": "Healing Word",
+        "level": 1,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "bonus_action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 60
+        },
+        "components": {
+            "v": true,
+            "s": false,
+            "m": []
+        },
+        "duration": {
+            "unit": "instantaneous",
+            "total": 0,
+            "concentration": false
+        },
+        "classes": [
+            "cleric"
+        ],
+        "description": "A creature of your choice that you can see within range regains hit points equal to 1d4 + your spellcasting ability modifier. This spell has no effect on undead or constructs.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the healing increases by 1d4 for each slot level above 1st."
+    },
+    "light": {
+        "name": "Light",
+        "level": 0,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "touch",
+            "total": 1
+        },
+        "components": {
+            "v": true,
+            "s": false,
+            "m": [
+                {
+                    "name": [
+                        "a firefly",
+                        "phosphorescent moss"
+                    ],
+                    "cost": 0,
+                    "consumed": false
+                }
+            ]
+        },
+        "duration": {
+            "unit": "hour",
+            "total": 1,
+            "concentration": false
+        },
+        "classes": [
+            "cleric",
+            "wizard"
+        ],
+        "description": "You touch one object that is no larger than 10 feet in any dimension. Until the spell ends, the object sheds bright light in a 20-foot radius and dim light for an additional 20 feet. The light can be colored as you like. Completely covering the object with something opaque blocks the light. The spell ends if you cast it again or dismiss it as an action.\nIf you target an object held or worn by a hostile creature, that creature must succeed on a Dexterity saving throw to avoid the spell."
+    },
+    "mage_armor": {
+        "name": "Mage Armor",
+        "level": 1,
+        "school": "abj",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "touch",
+            "total": 1
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": [
+                {
+                    "name": "a piece of cured leather",
+                    "cost": 0,
+                    "consumed": false
+                }
+            ]
+        },
+        "duration": {
+            "unit": "hour",
+            "total": 8,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "You touch a willing creature who isn't wearing armor, and a protective magical force surrounds it until the spell ends. The target's base AC becomes 13 + its Dexterity modifier. The spell ends if the target dons armor or if you dismiss the spell as an action."
+    },
+    "mage_hand": {
+        "name": "Mage Hand",
+        "level": 0,
+        "school": "conj",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 30
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "minute",
+            "total": 1,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "A spectral, floating hand appears at a point you choose within range. The hand lasts for the duration or until you dismiss it as an action. The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again.\nYou can use your action to control the hand. You can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial. You can move the hand up to 30 feet each time you use it.\nThe hand can't attack, activate magic items, or carry more than 10 pounds."
+    },
+    "magic_missile": {
+        "name": "Magic Missile",
+        "level": 1,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 120
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "instantaneous",
+            "total": 0,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4 + 1 force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the spell creates one more dart for each slot level above 1st."
+    },
+    "prestidigitation": {
+        "name": "Prestidigitation",
+        "level": 0,
+        "school": "trans",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 10
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "hour",
+            "total": 1,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "This spell is a minor magical trick that novice spellcasters use for practice. You create one of the following magical effects within range:\nYou create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor.\nYou instantaneously light or snuff out a candle, a torch, or a small campfire.\nYou instantaneously clean or soil an object no larger than 1 cubic foot.\nYou chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour.\nYou make a color, a small mark, or a symbol appear on an object or a surface for 1 hour.\nYou create a nonmagical trinket or an illusory image that can fit in your hand and that lasts until the end of your next turn.\nIf you cast this spell multiple times, you can have up to three of its non-instantaneous effects active at a time, and you can dismiss such an effect as an action."
+    },
+    "ray_of_frost": {
+        "name": "Ray of Frost",
+        "level": 0,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 60
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "instantaneous",
+            "total": 0,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "A frigid beam of blue-white light streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 1d8 cold damage, and its speed is reduced by 10 feet until the start of your next turn.\nThe spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+    },
+    "sacred_flame": {
+        "name": "Scared Flame",
+        "level": 0,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 60
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "instantaneous",
+            "total": 0,
+            "concentration": false
+        },
+        "classes": [
+            "cleric"
+        ],
+        "description": "Flame-like radiance descends on a creature that you can see within range. The target must succeed on a Dexterity saving throw or take 1d8 radiant damage. The target gains no benefit from cover for this saving throw.\nThe spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+    },
+    "shield": {
+        "name": "Shield",
+        "level": 1,
+        "school": "abj",
+        "ritual": false,
+        "casting_time": {
+            "unit": "reaction",
+            "total": 1
+        },
+        "range": {
+            "area": "self",
+            "total": 1
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "round",
+            "total": 1,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "An invisible barrier of magical force appears and protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack, and you take no damage from magic missile."
+    },
+    "shield_of_faith": {
+        "name": "Shield of Faith",
+        "level": 1,
+        "school": "abj",
+        "ritual": false,
+        "casting_time": {
+            "unit": "bonus_action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 60
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": [
+                {
+                    "name": "a small parchment with a bit of holy text written on it",
+                    "cost": 0,
+                    "consumed": false
+                }
+            ]
+        },
+        "duration": {
+            "unit": "minute",
+            "total": 10,
+            "concentration": true
+        },
+        "classes": [
+            "cleric"
+        ],
+        "description": "A shimmering field appears and surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration."
+    },
+    "shocking_grasp": {
+        "name": "Shocking Grasp",
+        "level": 0,
+        "school": "evoc",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "touch",
+            "total": 1
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": []
+        },
+        "duration": {
+            "unit": "instantaneous",
+            "total": 0,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "Lightning springs from your hand to deliver a shock to a creature you try to touch. Make a melee spell attack against the target. You have advantage on the attack roll if the target is wearing armor made of metal. On a hit, the target takes 1d8 lightning damage, and it can't take reactions until the start of its next turn.\nThe spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+    },
+    "sleep": {
+        "name": "Sleep",
+        "level": 1,
+        "school": "ench",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 90
+        },
+        "components": {
+            "v": true,
+            "s": true,
+            "m": [
+                {
+                    "name": [
+                        "a pinch of fine sand",
+                        "rose petals",
+                        "a cricket"
+                    ],
+                    "cost": 0,
+                    "consumed": false
+                }
+            ]
+        },
+        "duration": {
+            "unit": "minute",
+            "total": 1,
+            "concentration": false
+        },
+        "classes": [
+            "wizard"
+        ],
+        "description": "This spell sends creatures into a magical slumber. Roll 5d8; the total is how many hit points of creatures this spell can affect. Creatures within 20 feet of a point you choose within range are affected in ascending order of their current hit points (ignoring unconscious creatures).\nStarting with the creature that has the lowest current hit points, each creature affected by this spell falls unconscious until the spell ends, the sleeper takes damage, or someone uses an action to shake or slap the sleeper awake. Subtract each creature's hit points from the total before moving on to the creature with the next lowest hit points. A creature's hit points must be equal to or less than the remaining total for that creature to be affected.\nUndead and creatures immune to being charmed aren't affected by this spell.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, roll an additional 2d8 for each slot level above 1st."
+    },
+    "thaumaturgy": {
+        "name": "Thaumaturgy",
+        "level": 0,
+        "school": "trans",
+        "ritual": false,
+        "casting_time": {
+            "unit": "action",
+            "total": 1
+        },
+        "range": {
+            "area": "circle",
+            "total": 30
+        },
+        "components": {
+            "v": true,
+            "s": false,
+            "m": []
+        },
+        "duration": {
+            "unit": "minute",
+            "total": 1,
+            "concentration": false
+        },
+        "classes": [
+            "cleric"
+        ],
+        "description": "You manifest a minor wonder, a sign of supernatural power, within range. You create one of the following magical effects within range:\nYour voice booms up to three times as loud as normal for 1 minute.\nYou cause flames to flicker, brighten, dim, or change color for 1 minute.\nYou cause harmless tremors in the ground for 1 minute.\nYou create an instantaneous sound that originates from a point of your choice within range, such as a rumble of thunder, the cry of a raven, or ominous whispers.\nYou instantaneously cause an unlocked door or window to fly open or slam shut.\nYou alter the appearance of your eyes for 1 minute.\nIf you cast this spell multiple times, you can have up to three of its 1-minute effects active at a time, and you can dismiss such an effect as an action."
+    }
+}

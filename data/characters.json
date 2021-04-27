@@ -1,0 +1,311 @@
+{
+    "cleric": {
+        "class": {
+            "cleric": {
+                "level": 1,
+                "subclass": "life_domain"
+            }
+        },
+        "race": [
+            "dwarf",
+            "hill"
+        ],
+        "alignment": "neutral_good",
+        "abilities": {
+            "str": 14,
+            "dex": 8,
+            "con": 15,
+            "int": 10,
+            "wis": 16,
+            "cha": 12
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "skills": {
+                "class": [
+                    "insight",
+                    "medicine"
+                ]
+            },
+            "tools": {
+                "race": [
+                    "masons_tools"
+                ]
+            }
+        },
+        "languages": {},
+        "weapons": {
+            "warhammer": 1,
+            "handaxe": 2
+        },
+        "armor": {
+            "chain_mail": 1
+        },
+        "equipment": {
+            "backpack": 1,
+            "bedroll": 1,
+            "masons_tools": 1,
+            "mess_kit": 1,
+            "rations": 10,
+            "rope_hempen": 50,
+            "set_of_common_clothes": 1,
+            "tinder_box": 1,
+            "torch": 10,
+            "waterskin": 1
+        },
+        "spells": {
+            "prepared_spells_default": [
+                "bless",
+                "cure_wounds",
+                "detect_magic",
+                "guiding_bolt",
+                "healing_word",
+                "shield_of_faith"
+            ],
+            "cantrips": {
+                "spell_slots": -1,
+                "spells_known": [
+                    "light",
+                    "sacred_flame",
+                    "thaumaturgy"
+                ]
+            },
+            "first_level": {
+                "spell_slots": 2,
+                "spells_known": [
+                    "bane",
+                    "bless",
+                    "command",
+                    "create or destroy water",
+                    "cure wounds",
+                    "detect evil and good",
+                    "detect magic",
+                    "detect poison and disease",
+                    "guiding bolt",
+                    "healing word",
+                    "inflict wounds",
+                    "protection from evil and good",
+                    "purify food and drink",
+                    "sanctuary",
+                    "shield of faith"
+                ]
+            }
+        }
+    },
+    "fighter": {
+        "class": {
+            "fighter": {
+                "level": 1,
+                "subclass": ""
+            }
+        },
+        "race": [
+            "human"
+        ],
+        "alignment": "lawful_neutral",
+        "abilities": {
+            "str": 16,
+            "dex": 9,
+            "con": 15,
+            "int": 11,
+            "wis": 13,
+            "cha": 14
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "skills": {
+                "class": [
+                    "athletics",
+                    "perception"
+                ]
+            },
+            "tools": {}
+        },
+        "languages": {
+            "race": [
+                "common",
+                "dwarvish"
+            ]
+        },
+        "weapons": {
+            "greataxe": 1,
+            "javelin": 3,
+            "crossbow_light": 1
+        },
+        "armor": {
+            "chain_mail": 1
+        },
+        "equipment": {
+            "backpack": 1,
+            "bedroll": 1,
+            "bolts": 20,
+            "mess_kit": 1,
+            "rations": 10,
+            "rope_hempen": 50,
+            "set_of_common_clothes": 1,
+            "tinder_box": 1,
+            "torch": 10,
+            "waterskin": 1
+        },
+        "spells": {
+            "prepared_spells_default": [],
+            "cantrips": {
+                "spell_slots": 0,
+                "spells_known": []
+            },
+            "first_level": {
+                "spell_slots": 0,
+                "spells_known": []
+            }
+        }
+    },
+    "rogue": {
+        "class": {
+            "rogue": {
+                "level": 1,
+                "subclass": ""
+            }
+        },
+        "race": [
+            "halfling",
+            "lightfoot"
+        ],
+        "alignment": "neutral",
+        "abilities": {
+            "str": 8,
+            "dex": 16,
+            "con": 12,
+            "int": 13,
+            "wis": 10,
+            "cha": 16
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "skills": {
+                "class": [
+                    "acrobatics",
+                    "deception",
+                    "investigation",
+                    "stealth"
+                ]
+            },
+            "tools": {}
+        },
+        "languages": {},
+        "weapons": {
+            "shortsword": 1,
+            "shortbow": 1,
+            "dagger": 2
+        },
+        "armor": {
+            "leather": 1
+        },
+        "equipment": {
+            "arrows": 20,
+            "backpack": 1,
+            "bedroll": 1,
+            "mess_kit": 1,
+            "quiver": 1,
+            "rations": 10,
+            "rope_hempen": 50,
+            "set_of_common_clothes": 1,
+            "thieves_tools": 1,
+            "tinder_box": 1,
+            "torch": 10,
+            "waterskin": 1
+        },
+        "spells": {
+            "prepared_spells_max": 0,
+            "prepared_spells_default": [],
+            "cantrips": {
+                "spell_slots": 0,
+                "spells_known": []
+            },
+            "first_level": {
+                "spell_slots": 0,
+                "spells_known": []
+            }
+        }
+    },
+    "wizard": {
+        "class": {
+            "wizard": {
+                "level": 1,
+                "subclass": ""
+            }
+        },
+        "race": [
+            "elf",
+            "high"
+        ],
+        "alignment": "chaotic_good",
+        "abilities": {
+            "str": 10,
+            "dex": 15,
+            "con": 14,
+            "int": 16,
+            "wis": 12,
+            "cha": 8
+        },
+        "proficiency_bonus": 2,
+        "proficiencies": {
+            "skills": {
+                "class": [
+                    "arcana",
+                    "investigation"
+                ]
+            },
+            "tools": {}
+        },
+        "languages": {
+            "race": [
+                "common",
+                "elvish",
+                "goblin"
+            ]
+        },
+        "weapons": {
+            "quarterstaff": 1
+        },
+        "armor": {},
+        "equipment": {
+            "backpack": 1,
+            "book": 1,
+            "component_pouch": 1,
+            "ink": 1,
+            "ink_pen": 1,
+            "set_of_common_clothes": 1,
+            "sheet_of_parchment": 10,
+            "small_knife": 1,
+            "spellbook": 1
+        },
+        "spells": {
+            "prepared_spells_default": [
+                "mage_armor",
+                "magic_missile",
+                "shield",
+                "sleep"
+            ],
+            "cantrips": {
+                "spell_slots": -1,
+                "spells_known": [
+                    "mage_hand",
+                    "prestidigitation",
+                    "ray_of_frost",
+                    "shocking_grasp"
+                ]
+            },
+            "first_level": {
+                "spell_slots": 2,
+                "spells_known": [
+                    "burning_hands",
+                    "detect_magic",
+                    "mage_armor",
+                    "magic_missile",
+                    "shield",
+                    "sleep"
+                ]
+            }
+        }
+    }
+}

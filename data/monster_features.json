@@ -1,0 +1,18 @@
+{
+    "keen_smell": {
+        "name": "Keen Smell",
+        "description": "The {MONSTER} has advantage on Wisdom (Perception) checks that rely on smell."
+    },
+    "pack_tactics": {
+        "name": "Pack Tactics",
+        "description": "The {MONSTER} has advantage on an attack roll against a creature if at least one of the {MONSTER}'s allies is within 5 feet of the creature and the ally isn't incapacitated."
+    },
+    "nimble_escape": {
+        "name": "Nimble Escape",
+        "description": "The {MONSTER} can take the Disengage or Hide action as a bonus action on each of its turns."
+    },
+    "undead_fortitude": {
+        "name": "Undead Fortitude",
+        "description": "If damage reduces the zombie to 0 hit points, it must make a Constitution saving throw with a DC of 5 + the damage taken, unless the damage is radiant or from a critical hit. On a success, the zombie drops to 1 hit point instead."
+    }
+}
