@@ -41,7 +41,7 @@
                         "charges": 0,
                         "roll": {
                             "die": "d20",
-                            "value": 0
+                            "value": 1
                         }
                     }
                 }
