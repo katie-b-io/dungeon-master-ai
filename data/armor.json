@@ -2,7 +2,7 @@
     "armor_scraps": {
         "name": "Armor scraps",
         "type": "light",
-        "cost": "0gp",
+        "cost": 0,
         "ac": {
             "base": 10,
             "mod": "dex",
@@ -17,7 +17,7 @@
     "chain_mail": {
         "name": "Chain mail",
         "type": "heavy",
-        "cost": "75gp",
+        "cost": 7500,
         "ac": {
             "base": 16,
             "mod": "",
@@ -32,7 +32,7 @@
     "leather": {
         "name": "Leather",
         "type": "light",
-        "cost": "10gp",
+        "cost": 1000,
         "ac": {
             "base": 11,
             "mod": "dex",
@@ -47,7 +47,7 @@
     "padded": {
         "name": "Padded",
         "type": "light",
-        "cost": "5gp",
+        "cost": 500,
         "ac": {
             "base": 11,
             "mod": "dex",
@@ -62,7 +62,7 @@
     "scale_mail": {
         "name": "Scale mail",
         "type": "medium",
-        "cost": "50gp",
+        "cost": 5000,
         "ac": {
             "base": 14,
             "mod": "dex",
@@ -77,7 +77,7 @@
     "shield": {
         "name": "Shield",
         "type": "shield",
-        "cost": "10gp",
+        "cost": 1000,
         "ac": {
             "base": -1,
             "mod": "",

@@ -31,12 +31,6 @@
             }
         },
         "languages": {},
-        "money": {
-            "cp": 0,
-            "sp": 0,
-            "gp": 0,
-            "pp": 0
-        },
         "weapons": {
             "warhammer": 1,
             "handaxe": 2
@@ -128,12 +122,6 @@
                 "dwarvish"
             ]
         },
-        "money": {
-            "cp": 0,
-            "sp": 0,
-            "gp": 0,
-            "pp": 0
-        },
         "weapons": {
             "greataxe": 1,
             "javelin": 3,
@@ -196,12 +184,6 @@
             "tools": {}
         },
         "languages": {},
-        "money": {
-            "cp": 0,
-            "sp": 0,
-            "gp": 0,
-            "pp": 0
-        },
         "weapons": {
             "shortsword": 1,
             "shortbow": 1,
@@ -270,12 +252,6 @@
                 "elvish",
                 "goblin"
             ]
-        },
-        "money": {
-            "cp": 0,
-            "sp": 0,
-            "gp": 0,
-            "pp": 0
         },
         "weapons": {
             "quarterstaff": 1

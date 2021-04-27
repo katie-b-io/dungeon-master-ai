@@ -2,7 +2,7 @@
     "crossbow_light": {
         "name": "Light crossbow",
         "type": ["simple", "ranged"],
-        "cost": "25gp",
+        "cost": 2500,
         "damage": {
             "die": "d8",
             "total": 1,
@@ -22,7 +22,7 @@
     "dagger": {
         "name": "Dagger",
         "type": ["simple", "melee"],
-        "cost": "2gp",
+        "cost": 200,
         "damage": {
             "die": "d4",
             "total": 1,
@@ -42,7 +42,7 @@
     "greataxe": {
         "name": "Greataxe",
         "type": ["martial", "melee"],
-        "cost": "30gp",
+        "cost": 3000,
         "damage": {
             "die": "d12",
             "total": 1,
@@ -57,7 +57,7 @@
     "handaxe": {
         "name": "Handaxe",
         "type": ["simple", "melee"],
-        "cost": "5gp",
+        "cost": 500,
         "damage": {
             "die": "d6",
             "total": 1,
@@ -76,7 +76,7 @@
     "javelin": {
         "name": "Javelin",
         "type": ["simple", "melee"],
-        "cost": "5sp",
+        "cost": 50,
         "damage": {
             "die": "d6",
             "total": 1,
@@ -94,7 +94,7 @@
     "quarterstaff": {
         "name": "Quarterstaff",
         "type": ["simple", "melee"],
-        "cost": "2sp",
+        "cost": 20,
         "damage": {
             "die": "d6",
             "total": 1,
@@ -112,7 +112,7 @@
     "scimitar": {
         "name": "Scimitar",
         "type": ["martial", "melee"],
-        "cost": "25gp",
+        "cost": 2500,
         "damage": {
             "die": "d6",
             "total": 1,
@@ -127,7 +127,7 @@
     "shortbow": {
         "name": "Shortbow",
         "type": ["simple", "ranged"],
-        "cost": "25gp",
+        "cost": 2500,
         "damage": {
             "die": "d6",
             "total": 1,
@@ -146,7 +146,7 @@
     "shortsword": {
         "name": "Shortsword",
         "type": ["martial", "melee"],
-        "cost": "10gp",
+        "cost": 1000,
         "damage": {
             "die": "d6",
             "total": 1,
@@ -161,7 +161,7 @@
     "warhammer": {
         "name": "Warhammer",
         "type": ["martial", "melee"],
-        "cost": "15gp",
+        "cost": 1500,
         "damage": {
             "die": "d8",
             "total": 1,

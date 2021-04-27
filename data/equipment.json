@@ -2,140 +2,140 @@
     "arrows": {
         "name": "Arrows",
         "type": "Ammunition",
-        "cost": "1gp",
+        "cost": 100,
         "weight": 1,
         "description": "Arrows (20)"
     },
     "backpack":{
         "name": "Backpack",
         "type": "Adventuring gear",
-        "cost": "2gp",
+        "cost": 200,
         "weight": 5,
         "description": "A backpack can hold one cubic foot or 30 pounds of gear. You can also strap items, such as a bedroll or a coil of rope, to the outside of a backpack."
     },
     "bedroll":{
         "name": "Bedroll",
         "type": "Adventuring gear",
-        "cost": "1gp",
+        "cost": 100,
         "weight": 7,
         "description": "Bedroll"
     },
     "bolts": {
         "name": "Crossbow bolts",
         "type": "Ammunition",
-        "cost": "1gp",
+        "cost": 100,
         "weight": 1.5,
         "description": "Crossbow bolts (20)"
     },
     "book":{
         "name": "Book",
         "type": "Adventuring gear",
-        "cost": "25gp",
+        "cost": 2500,
         "weight": 5,
         "description": "A book might contain poetry, historical accounts, information pertaining to a particular field of lore, diagrams and notes on gnomish contraptions, or just about anything else that can be represented using text or pictures. A book of spells is a spellbook."
     },
     "component_pouch":{
         "name": "Component pouch",
         "type": "Adventuring gear",
-        "cost": "25gp",
+        "cost": 2500,
         "weight": 2,
         "description": "A component pouch is a small, watertight leather belt pouch that has compartments to hold all the material components and other special items you need to cast your spells, except for those components that have a specific cost (as indicated in a spell's description)."
     },
     "ink":{
         "name": "Ink",
         "type": "Adventuring gear",
-        "cost": "10gp",
+        "cost": 1000,
         "weight": 0,
         "description": "Ink (1 oz bottle)"
     },
     "ink_pen":{
         "name": "Ink pen",
         "type": "Adventuring gear",
-        "cost": "2cp",
+        "cost": 2,
         "weight": 0,
         "description": "Ink pen"
     },
     "masons_tools":{
         "name": "Mason's tools",
         "type": "Artisan's tools",
-        "cost": "10gp",
+        "cost": 1000,
         "weight": 8,
         "description": "Mason's tools"
     },
     "mess_kit":{
         "name": "Mess kit",
         "type": "Adventuring gear",
-        "cost": "2sp",
+        "cost": 20,
         "weight": 1,
         "description": "This tin box contains a cup and simple cutlery. The box clamps together, and one side can be used as a cooking pan and the other as a plate or shallow bowl."
     },
     "quiver": {
         "name": "Quiver",
         "type": "Adventuring gear",
-        "cost": "1gp",
+        "cost": 100,
         "weight": 1,
         "description": "A quiver can hold up to 20 arrows."
     },
     "rations": {
         "name": "Rations (1 day)",
         "type": "Adventuring gear",
-        "cost": "5sp",
+        "cost": 50,
         "weight": 2,
         "description": "Rations consist of dry foods suitable for extended travel, including jerky, dried fruit, hardtack, and nuts."
     },
     "rope_hempen": {
         "name": "Hempen rope (50 ft)",
         "type": "Adventuring gear",
-        "cost": "1gp",
+        "cost": 100,
         "weight": 10,
         "description": "Rope, whether made of hemp or silk, has 2 hit points and can be burst with a DC 17 Strength check."
     },
     "set_of_common_clothes":{
         "name": "Common clothes",
         "type": "Adventuring gear",
-        "cost": "5sp",
+        "cost": 50,
         "weight": 3,
         "description": "Set of common clothes"
     },
     "sheet_of_parchment": {
         "name": "Parchment",
         "type": "Adventuring gear",
-        "cost": "1sp",
+        "cost": 10,
         "weight": 0,
         "description": "Parchment (one sheet)"
     },
     "small_knife":{
         "name": "Small knife",
         "type": "Adventuring gear",
-        "cost": "1gp",
+        "cost": 100,
         "weight": 1,
         "description": "Small knife"
     },
     "spellbook":{
         "name": "Spellbook",
         "type": "Adventuring gear",
-        "cost": "50gp",
+        "cost": 5000,
         "weight": 3,
         "description": "Essential for wizards, a spellbook is a leather-bound tome with 100 blank vellum pages suitable for recording spells."
     },
     "tinder_box":{
         "name": "Tinderbox",
         "type": "Adventuring gear",
-        "cost": "5sp",
+        "cost": 50,
         "weight": 1,
         "description": "This small container holds flint, fire steel, and tinder (usually dry cloth soaked in light oil) used to kindle a fire. Using it to light a torch—or anything else with abundant, exposed fuel—takes an action. Lighting any other fire takes 1 minute."
     },
     "torch": {
         "name": "Torch",
         "type": "Adventuring gear",
-        "cost": "1cp",
+        "cost": 1,
         "weight": 1,
         "description": "A torch burns for 1 hour, providing bright light in a 20-foot radius and dim light for an additional 20 feet. If you make a melee attack with a burning torch and hit, it deals 1 fire damage."
     },
     "waterskin": {
         "name": "Waterskin",
         "type": "Adventuring gear",
-        "cost": "2sp",
+        "cost": 20,
         "weight": 5,
         "description": "A waterskin can hold up to 4 pints of liquid."
     }
