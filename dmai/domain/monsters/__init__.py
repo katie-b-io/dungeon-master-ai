@@ -1,0 +1,1 @@
+from .monster_collection import MonsterCollection
