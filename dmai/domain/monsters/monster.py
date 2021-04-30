@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 
 class Monster(ABC):
-    '''Monster abstract class'''
-
-    @abstractmethod
-    def __init__():
-        pass
     
-    @abstractmethod
-    def __str__():
-        pass
+    def __init__(self, monster_data: dict) -> None:
+        '''Monster abstract class'''
+        self.name = monster_data["name"]
+    
+    def __str__(self) -> str:
+        return "Monster: {n}".format(n=self.name)
+    

@@ -1,6 +1,6 @@
 import json
 
-def load_json(file):
+def load_json(file: str) -> dict:
     '''Loads a data structure from JSON file'''
     json_data = dict()
     try:
