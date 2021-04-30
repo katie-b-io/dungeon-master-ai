@@ -1,10 +1,5 @@
 from dmai.utils import Loader
-from .monster import Monster
-from .cat import Cat
-from .giant_rat import GiantRat
-from .goblin import Goblin
-from .skeleton import Skeleton
-from .zombie import Zombie
+from dmai.domain.monsters import Monster, Cat, GiantRat, Goblin, Skeleton, Zombie
 
 class MonsterCollection():
     
@@ -13,7 +8,7 @@ class MonsterCollection():
     
     def __init__(self) -> None:
         '''MonsterCollection class'''
-        self.set_monster_data(Loader.load_json("data/monsters.json"))
+        self._load_monster_data()
         self.monsters = dict()
     
     def __str__(self) -> str:
@@ -24,9 +19,9 @@ class MonsterCollection():
         return monster_str
     
     @classmethod
-    def set_monster_data(self, data: dict) -> None:
+    def _load_monster_data(self) -> None:
         '''Set the self.monster_data class variable data'''
-        self.monster_data = data
+        self.monster_data = Loader.load_json("data/monsters.json")
         
     def get_monster(self, monster: str) -> Monster:
         '''Return a monster of specified type'''
