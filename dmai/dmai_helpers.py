@@ -1,4 +1,4 @@
-from dmai.dm import DM
+from dmai import DM
 from dmai.ui import UserInterface
 
 def start() -> None:

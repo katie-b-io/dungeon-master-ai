@@ -1,4 +1,4 @@
-from dmai.dm import DM
+from dmai import DM
 
 class UserInterface():
     
