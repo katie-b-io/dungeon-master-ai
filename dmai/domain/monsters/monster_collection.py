@@ -1,4 +1,4 @@
-from dmai.utils.loader import load_json
+from dmai.utils import Loader
 from .monster import Monster
 from .cat import Cat
 from .giant_rat import GiantRat
@@ -13,7 +13,7 @@ class MonsterCollection():
     
     def __init__(self) -> None:
         '''MonsterCollection class'''
-        self.set_monster_data(load_json("data/monsters.json"))
+        self.set_monster_data(Loader.load_json("data/monsters.json"))
         self.monsters = dict()
     
     def __str__(self) -> str:
