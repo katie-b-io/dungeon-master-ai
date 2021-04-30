@@ -2,14 +2,16 @@ import argparse
 
 import dmai
 
-def build_arg_parser():
+def build_arg_parser() -> argparse.ArgumentParser:
+    '''Function constructs an argument parser'''
     description = "Play a game of D&D with the Dungeon Master AI"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("-i", "--interactive", action="store_true", 
                         help="Run in interactive mode")
     return parser
     
-def main():
+def main() -> None:
+    '''Main entry point to the DMAI'''
     print("Welcome to the Dungeon Master AI!")
     
     # get the command line arguments

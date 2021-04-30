@@ -1,5 +1,3 @@
-import dmai.domain.domain
-import dmai.ui.ui
-import dmai.dm
+from .dm import DM
 
-from dmai.dmai_helpers import start, run
+from .dmai_helpers import start, run

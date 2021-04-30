@@ -2,16 +2,13 @@ from dmai.domain.monsters import MonsterCollection
 
 class Domain():
     
-    # instance variables
-    monsters = None
-    
-    def __init__(self):
-        print("I'm the domain")
+    def __init__(self) -> None:
+        '''Domain holds all the information about the world'''
+        self.monsters = None
         
-    def load_all(self):
+    def load_all(self) -> None:
+        '''Function to load all the elements of the domain into the
+        Domain object'''
         self.monsters = MonsterCollection()
-    
         print(self.monsters)
-    
-    
     
