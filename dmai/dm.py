@@ -1,10 +1,10 @@
-from dmai.domain import Domain
+from dmai.nlg import NLG
 
 class DM():
     
     def __init__(self) -> None:
         '''Main DM class'''
-        self.dm_utter = "what do you do? "
+        self.dm_utter = None
         self.player_utter = None
     
     def input(self, player_utter: str) -> None:
@@ -22,4 +22,4 @@ class DM():
         if self.player_utter:
             self.dm_utter = f"{self.player_utter} - are you sure? "
         else:
-            self.dm_utter = "what do you do? "
+            self.dm_utter = NLG.get_action()

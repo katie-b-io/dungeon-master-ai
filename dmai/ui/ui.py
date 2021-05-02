@@ -8,8 +8,8 @@ class UserInterface():
         
     def execute(self) -> None:
         '''Execute function which allows CLI communication between
-        player and DM'''        
+        player and DM'''
         while True:
-            prompt = self.game.output()
+            prompt = "\n" + self.game.output() + "\n> "
             user_input = input(prompt)
             self.game.input(user_input)

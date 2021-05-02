@@ -1,7 +1,7 @@
 from dmai import DM
-from dmai import domain
 from dmai.game import Player
 from dmai.domain import Domain
+from dmai.nlg import NLG
 
 class Game():
     
@@ -22,7 +22,13 @@ class Game():
             # player is selecting a class
             player_utter = player_utter.lower()
             char_class = self.domain.get_character(player_utter)
-            self.player = Player(char_class)
+            if char_class:
+                self.player = Player(char_class)
+        
+        elif not self.player.name:
+            # player is entering a name
+            self.player.set_name(player_utter)
+            self.dm.input(player_utter)
             
         else:
             # relay the player utterance to the dm
@@ -30,7 +36,14 @@ class Game():
         
     def output(self) -> str:
         '''Return an output for the player'''
+        
+        # the player variable is not set at the beginning of the game
         if not self.player:
-            print("here")
-            return self.domain.char_class_select
+            # get the character options for player
+            return NLG.get_char_class()
+        
+        elif not self.player.name:
+            # get the player's name
+            return NLG.get_player_name()
+        
         return self.dm.output

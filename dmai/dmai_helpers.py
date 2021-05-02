@@ -1,10 +1,11 @@
-from dmai import DM
 from dmai.game import Game
 from dmai.ui import UserInterface
+from dmai.nlg import NLG
     
 def start() -> Game:
     '''Initialise the game'''
     game = Game()
+    NLG.set_game(game)
     return game
     
 def run(game: Game) -> None:
