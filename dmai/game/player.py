@@ -9,3 +9,7 @@ class Player():
         
     def set_name(self, name: str) -> None:
         self.name = name
+    
+    @property
+    def character_class(self) -> str:
+        return self.character.name
