@@ -17,12 +17,12 @@ def main() -> None:
     # get the command line arguments
     args = build_arg_parser().parse_args()
     
-    # fire up the DM
-    dm = dmai.start()
+    # start the game
+    game = dmai.start()
     
     # start an interactive session on the command line
     if args.interactive:
-        dmai.run(dm)
+        dmai.run(game)
     
 if __name__ == "__main__":
     main()

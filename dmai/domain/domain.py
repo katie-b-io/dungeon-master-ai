@@ -1,4 +1,5 @@
 from dmai.domain.monsters import MonsterCollection
+from dmai.domain.characters import Character, CharacterCollection
 
 class Domain():
     
@@ -10,5 +11,7 @@ class Domain():
         '''Function to load all the elements of the domain into the
         Domain object'''
         self.monsters = MonsterCollection()
-        print(self.monsters)
+        self.characters = CharacterCollection()
     
+    def get_character(self, character: str) -> Character:
+        return self.characters.get_character(character)

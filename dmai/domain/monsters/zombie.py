@@ -1,4 +1,4 @@
-from dmai.domain.monsters.monster import Monster
+from dmai.domain.monsters import Monster
 
 class Zombie(Monster):
     
