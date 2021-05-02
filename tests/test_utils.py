@@ -38,6 +38,15 @@ class TestDiceRoller(unittest.TestCase):
                 "min": 5,
                 "max": 26
             },
+            "d10": {
+                "specs": {
+                    "die": "d10",
+                    "total": 2,
+                    "mod": 0
+                },
+                "min": 2,
+                "max": 20
+            },
             "d12": {
                 "specs": {
                     "die": "d12",
@@ -55,6 +64,15 @@ class TestDiceRoller(unittest.TestCase):
                 },
                 "min": 4,
                 "max": 42
+            },
+            "d100": {
+                "specs": {
+                    "die": "d100",
+                    "total": 1,
+                    "mod": 0
+                },
+                "min": 1,
+                "max": 100
             }
         }
         
@@ -67,7 +85,7 @@ class TestDiceRoller(unittest.TestCase):
             DiceRoller.roll_die(bad_die2)
             
     def test_roll_dice_d4(self) -> None:
-        # roll D4 600 times
+        # roll d4 600 times
         total_rolls = 600
         rolls = [DiceRoller.roll_dice(self.dice["d4"]["specs"]) for _ in range(total_rolls)]
         self.assertGreaterEqual(min(rolls), self.dice["d4"]["min"])
@@ -77,7 +95,7 @@ class TestDiceRoller(unittest.TestCase):
                                places=1)
 
     def test_roll_dice_d6(self) -> None:
-        # roll D6 600 times
+        # roll d6 600 times
         total_rolls = 600
         rolls = [DiceRoller.roll_dice(self.dice["d6"]["specs"]) for _ in range(total_rolls)]
         self.assertGreaterEqual(min(rolls), self.dice["d6"]["min"])
@@ -96,8 +114,18 @@ class TestDiceRoller(unittest.TestCase):
                                rolls.count(self.dice["d8"]["max"])/total_rolls,
                                places=1)
         
+    def test_roll_dice_d10(self) -> None:
+        # roll d10 600 times
+        total_rolls = 600
+        rolls = [DiceRoller.roll_dice(self.dice["d10"]["specs"]) for _ in range(total_rolls)]
+        self.assertGreaterEqual(min(rolls), self.dice["d10"]["min"])
+        self.assertLessEqual(max(rolls), self.dice["d10"]["max"])
+        self.assertAlmostEqual(rolls.count(self.dice["d10"]["min"])/total_rolls,
+                               rolls.count(self.dice["d10"]["max"])/total_rolls,
+                               places=1)
+        
     def test_roll_dice_d12(self) -> None:
-        # roll D12 600 times
+        # roll d12 600 times
         total_rolls = 600
         rolls = [DiceRoller.roll_dice(self.dice["d12"]["specs"]) for _ in range(total_rolls)]
         self.assertGreaterEqual(min(rolls), self.dice["d12"]["min"])
@@ -107,13 +135,23 @@ class TestDiceRoller(unittest.TestCase):
                                places=1)
         
     def test_roll_dice_d20(self) -> None:
-        # roll D20 600 times
+        # roll d20 600 times
         total_rolls = 600
         rolls = [DiceRoller.roll_dice(self.dice["d20"]["specs"]) for _ in range(total_rolls)]
         self.assertGreaterEqual(min(rolls), self.dice["d20"]["min"])
         self.assertLessEqual(max(rolls), self.dice["d20"]["max"])
         self.assertAlmostEqual(rolls.count(self.dice["d20"]["min"])/total_rolls,
                                rolls.count(self.dice["d20"]["max"])/total_rolls,
+                               places=1)
+        
+    def test_roll_dice_d100(self) -> None:
+        # roll d100 600 times
+        total_rolls = 600
+        rolls = [DiceRoller.roll_dice(self.dice["d100"]["specs"]) for _ in range(total_rolls)]
+        self.assertGreaterEqual(min(rolls), self.dice["d100"]["min"])
+        self.assertLessEqual(max(rolls), self.dice["d100"]["max"])
+        self.assertAlmostEqual(rolls.count(self.dice["d100"]["min"])/total_rolls,
+                               rolls.count(self.dice["d100"]["max"])/total_rolls,
                                places=1)
         
     def test_roll_dice_malformed(self) -> None:
