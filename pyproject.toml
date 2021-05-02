@@ -7,6 +7,7 @@ authors = ["Katie Baker <katie.m.baker87@gmail.com>"]
 [tool.poetry.dependencies]
 python = ">=3.8,<3.9"
 rasa = {extras = ["spacy"], version = "^2.5.0"}
+coverage = "^5.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.3"
