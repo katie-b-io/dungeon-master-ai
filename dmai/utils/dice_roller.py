@@ -60,3 +60,6 @@ class DiceRoller(metaclass=DiceRollerMeta):
         total_roll = sum(rolls) + modifier
         return total_roll
     
+    @classmethod
+    def get_max(cls, die: str) -> int:
+        return cls.dice_map[die]
