@@ -24,9 +24,9 @@ class NLG():
         '''Return the utterance for getting player's name'''
         c = cls.game.player.character_class
         utters = [
-            "What is your name, great {c}?".format(c=c),
-            "Ahh, a {c}. Excellent choice! And what is your name?".format(c=c),
-            "A {c}, marvelous! And what do they call you?".format(c=c)
+            "What is your character's name, this great {c}?".format(c=c),
+            "Ahh, a {c}. Excellent choice! And what is your character's name?".format(c=c),
+            "A {c}, marvelous! And what do they call your character?".format(c=c)
         ]
         return random.choice(utters)
     
