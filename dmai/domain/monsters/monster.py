@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-from dmai.utils import DiceRoller
 from dmai.domain import Abilities, Actions, Alignment, Armor, Attacks, \
     Conditions, Equipment, Features, Languages, Skills, Spells
 
@@ -20,17 +19,17 @@ class Monster(ABC):
             self.attacks = Attacks(self.attacks)
             self.conditions = Conditions()
             self.equipment = Equipment(self.equipment)
-            self.features = Features(self.features)
+            self.features = Features(features = self.features)
             self.languages = Languages(self.languages)
-            self.skills = Skills(self.skills)
+            self.skills = Skills(skills = self.skills)
             self.spells = Spells(self.spells)
             
         except AttributeError as e:
             print("Cannot create monster, incorrect attribute: {e}".format(e=e))
             raise
     
-    def __str__(self) -> str:
-        return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
-    
-    def _calculate_hp(self) -> int:
-        return DiceRoller.roll_dice(self.hit_dice)
+    def __repr__(self) -> str:
+        return "Monster: {n}\nMax HP: {hp}".format(
+            n=self.name,
+            hp=self.hp_max)
+        

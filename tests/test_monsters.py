@@ -60,11 +60,6 @@ class TestMonster(unittest.TestCase):
             Monster(bad_monster1)
         with self.assertRaises(AttributeError):
             Monster(bad_monster2)
-    
-    def test_calculate_hp(self) -> None:
-        hp_max = self.cat._calculate_hp()
-        
-        self.assertIsInstance(hp_max, int)
         
 if __name__ == "__main__":
     unittest.main()
