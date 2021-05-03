@@ -11,7 +11,7 @@ class CharacterCollection():
         self._load_character_data()
         self.characters = dict()
     
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         character_list = self.characters.keys()
         character_str = "{c} is storing the following characters: {cl}".format(
             c=self.__class__.__name__,

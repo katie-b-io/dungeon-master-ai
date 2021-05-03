@@ -1,0 +1,26 @@
+{
+    "bite": {
+        "name": "Bite",
+        "description": "Melee attack with natural weapons."
+    },
+    "claws": {
+        "name": "Claws",
+        "description": "Melee attack with natural weapons."
+    },
+    "scimitar": {
+        "name": "Scimitar",
+        "description": "Melee attack with Scimitar."
+    },
+    "shortbow": {
+        "name": "Shortbow",
+        "description": "Ranged attack with Shortbow."
+    },
+    "shortsword": {
+        "name": "Shortsword",
+        "description": "Ranged attack with Shortsword."
+    },
+    "slam": {
+        "name": "Slam",
+        "description": "Melee attack with bodily appendage."
+    }
+}

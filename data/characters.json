@@ -1,7 +1,7 @@
 {
     "cleric": {
         "name": "Cleric",
-        "class": {
+        "char_class": {
             "cleric": {
                 "level": 1,
                 "subclass": "life_domain"
@@ -95,7 +95,7 @@
     },
     "fighter": {
         "name": "Fighter",
-        "class": {
+        "char_class": {
             "fighter": {
                 "level": 1,
                 "subclass": ""
@@ -163,7 +163,7 @@
     },
     "rogue": {
         "name": "Rogue",
-        "class": {
+        "char_class": {
             "rogue": {
                 "level": 1,
                 "subclass": ""
@@ -232,7 +232,7 @@
     },
     "wizard": {
         "name": "Wizard",
-        "class": {
+        "char_class": {
             "wizard": {
                 "level": 1,
                 "subclass": ""
