@@ -11,7 +11,7 @@ class Abilities():
         self._load_ability_data()
         self.modifiers = self._calculate_ability_modifiers()
         
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Abilities:\n{a}\nModifiers:\n{m}".format(a=self.abilities,
                                                          m=self.modifiers)
     
@@ -28,6 +28,10 @@ class Abilities():
                 mod_min = self.ability_data["modifiers"][mod]["min"]
                 mod_max = self.ability_data["modifiers"][mod]["max"]
                 if mod_min <= self.abilities[ability] <= mod_max:
-                    modifiers[ability] = mod
+                    modifiers[ability] = int(mod)
                     break
         return modifiers
+    
+    def get_modifier(self, mod: str) -> int:
+        '''Return the specified modifier'''
+        return self.modifiers[mod]
