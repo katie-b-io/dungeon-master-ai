@@ -1,26 +1,36 @@
 from abc import ABC, abstractmethod
 
 from dmai.utils import DiceRoller
-from dmai.domain import Abilities
+from dmai.domain import Abilities, Actions, Alignment, Armor, Attacks, \
+    Conditions, Equipment, Features, Languages, Skills, Spells
 
 class Monster(ABC):
     
     def __init__(self, monster_data: dict) -> None:
         '''Monster abstract class'''
-        self.name = monster_data["name"]
-        self.type = monster_data["type"]
-        self.size = monster_data["size"]
-        self.alignment = monster_data["alignment"]
-        self.ac = monster_data["ac"]
-        self.hit_dice = monster_data["hit_dice"]
-        self.hp_max = self._calculate_hp()
-        self.speed = monster_data["speed"]
-        self.climb = monster_data["climb"]
-        self.cr = monster_data["cr"]
-        self.abilities = Abilities(monster_data["abilities"])
+        try:
+            for key in monster_data:
+                self.__setattr__(key, monster_data[key])
+            
+            # replace the attributes values with objects where appropriate
+            self.abilities = Abilities(self.abilities)
+            self.actions = Actions()
+            self.alignment = Alignment(self.alignment)
+            self.armor = Armor(self.armor)
+            self.attacks = Attacks(self.attacks)
+            self.conditions = Conditions()
+            self.equipment = Equipment(self.equipment)
+            self.features = Features(self.features)
+            self.languages = Languages(self.languages)
+            self.skills = Skills(self.skills)
+            self.spells = Spells(self.spells)
+            
+        except AttributeError as e:
+            print("Cannot create monster, incorrect attribute: {e}".format(e=e))
+            raise
     
     def __str__(self) -> str:
-        return "Monster: {n}\nHP: {hp}".format(n=self.name, hp=self.hp)
+        return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
     
     def _calculate_hp(self) -> int:
         return DiceRoller.roll_dice(self.hit_dice)

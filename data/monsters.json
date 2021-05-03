@@ -5,7 +5,7 @@
         "size": "tiny",
         "alignment": "unaligned",
         "ac": 12,
-        "hp": 2,
+        "hp_max": 2,
         "hit_dice": {
             "die": "d4",
             "total": 1,
@@ -41,7 +41,7 @@
         "damage_vulnerabilities": [],
         "damage_immunities": [],
         "condition_immunities": [],
-        "actions": {
+        "attacks": {
             "claws": {
                 "name": "Claws",
                 "type": "melee_weapon",
@@ -72,7 +72,7 @@
         "size": "small",
         "alignment": "unaligned",
         "ac": 12,
-        "hp": 7,
+        "hp_max": 7,
         "hit_dice": {
             "die": "d6",
             "total": 2,
@@ -107,7 +107,7 @@
         "damage_vulnerabilities": [],
         "damage_immunities": [],
         "condition_immunities": [],
-        "actions": {
+        "attacks": {
             "bite": {
                 "name": "Bite",
                 "type": "melee_weapon",
@@ -134,7 +134,7 @@
             "diseased_giant_rat": {
                 "name": "Diseased Giant Rat",
                 "description": "Some giant rats carry vile diseases that they spread with their bites.",
-                "actions": {
+                "attacks": {
                     "bite": {
                         "name": "Bite",
                         "type": "melee_weapon",
@@ -200,7 +200,7 @@
         "size": "small",
         "alignment": "neutral_evil",
         "ac": 15,
-        "hp": 7,
+        "hp_max": 7,
         "hit_dice": {
             "die": "d6",
             "total": 2,
@@ -245,7 +245,7 @@
         "damage_vulnerabilities": [],
         "damage_immunities": [],
         "condition_immunities": [],
-        "actions": {
+        "attacks": {
             "scimitar": {
                 "name": "Scimitar",
                 "type": "melee_weapon",
@@ -300,7 +300,7 @@
         "size": "medium",
         "alignment": "lawful_evil",
         "ac": 13,
-        "hp": 13,
+        "hp_max": 13,
         "hit_dice": {
             "die": "d8",
             "total": 2,
@@ -344,7 +344,7 @@
             "exhaustion",
             "poisoned"
         ],
-        "actions": {
+        "attacks": {
             "shortsword": {
                 "name": "Shortsword",
                 "type": "melee_weapon",
@@ -399,7 +399,7 @@
         "size": "medium",
         "alignment": "neutral_evil",
         "ac": 8,
-        "hp": 22,
+        "hp_max": 22,
         "hit_dice": {
             "die": "d8",
             "total": 3,
@@ -439,7 +439,7 @@
         "condition_immunities": [
             "poisoned"
         ],
-        "actions": {
+        "attacks": {
             "slam": {
                 "name": "Slam",
                 "type": "melee_weapon",

@@ -5,8 +5,8 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + '/../')
 
-from dmai.domain.monsters import MonsterCollection, Cat, GiantRat, Goblin, \
-    Skeleton, Zombie
+from dmai.domain.monsters import Monster, MonsterCollection, Cat, \
+    GiantRat, Goblin, Skeleton, Zombie
 
 class TestMonsterCollection(unittest.TestCase):
     '''Test the MonsterCollection class'''
@@ -40,5 +40,31 @@ class TestMonsterCollection(unittest.TestCase):
     def test_get_monster_wrong(self) -> None:
         self.assertIsNone(self.monsters.get_monster("human"))
 
+class TestMonster(unittest.TestCase):
+    '''Test the Monster class and subclasses'''
+    def setUp(self) -> None:
+        self.monsters = MonsterCollection()
+        self.cat = self.monsters.get_monster("cat")
+    
+    def test_monster_malformed(self) -> None:
+        bad_monster1 = {
+            "name": "Cat",
+            "type": "beast",
+            "abilitie": {}
+        }
+        bad_monster2 = {
+            "name": "Cat",
+            "type": "beast"
+        }
+        with self.assertRaises(AttributeError):
+            Monster(bad_monster1)
+        with self.assertRaises(AttributeError):
+            Monster(bad_monster2)
+    
+    def test_calculate_hp(self) -> None:
+        hp_max = self.cat._calculate_hp()
+        
+        self.assertIsInstance(hp_max, int)
+        
 if __name__ == "__main__":
     unittest.main()
