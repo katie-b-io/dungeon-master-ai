@@ -10,7 +10,7 @@ class Actions():
         self.actions = dict()
         self._load_action_data()
         
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Actions:\n{a}".format(a=self.actions)
     
     @classmethod

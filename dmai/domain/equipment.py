@@ -10,7 +10,7 @@ class Equipment():
         self.equipment = equipment
         self._load_equipment_data()
         
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Equipment:\n{a}".format(a=self.equipment)
     
     @classmethod

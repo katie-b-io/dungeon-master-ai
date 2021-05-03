@@ -10,8 +10,8 @@ class Alignment():
         self.alignment = alignment
         self._load_alignment_data()
         
-    def __str__(self) -> str:
-        return "Alignment:\n{a}".format(a=self.alignment)
+    def __repr__(self) -> str:
+        return "Alignment: {a}".format(a=self.alignment)
     
     @classmethod
     def _load_alignment_data(self) -> None:

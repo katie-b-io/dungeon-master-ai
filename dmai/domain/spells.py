@@ -10,7 +10,7 @@ class Spells():
         self.spells = spells
         self._load_spell_data()
         
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Spells:\n{a}".format(a=self.spells)
     
     @classmethod

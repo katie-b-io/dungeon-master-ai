@@ -10,7 +10,7 @@ class Armor():
         self.armor = armor
         self._load_armor_data()
         
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Armor:\n{a}".format(a=self.armor)
     
     @classmethod

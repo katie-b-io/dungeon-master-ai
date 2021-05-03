@@ -11,7 +11,7 @@ class MonsterCollection():
         self._load_monster_data()
         self.monsters = dict()
     
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         monster_list = self.monsters.keys()
         monster_str = "{c} is storing the following monsters: {m}".format(
             c=self.__class__.__name__,

@@ -10,7 +10,7 @@ class Conditions():
         self.conditions = dict()
         self._load_condition_data()
         
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Conditions:\n{a}".format(a=self.conditions)
     
     @classmethod

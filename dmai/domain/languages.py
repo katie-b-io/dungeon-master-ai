@@ -10,7 +10,7 @@ class Languages():
         self.languages = languages
         self._load_language_data()
         
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Languages:\n{a}".format(a=self.languages)
     
     @classmethod
