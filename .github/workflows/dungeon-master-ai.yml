@@ -27,4 +27,4 @@ jobs:
         if [ -f poetry.lock ]; then poetry install -v; fi
     - name: Test with pytest
       run: |
-        pytest
+        pytest --cov=dmai tests/
