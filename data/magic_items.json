@@ -3,6 +3,7 @@
         "name": "Potion of Healing",
         "type": "potion",
         "rarity": "common",
+        "value": 5000,
         "description": "A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points. Drinking or administering a potion takes an action.",
         "effects": {
             "hit_point": {
@@ -19,29 +20,72 @@
         "name": "Wand of Magic Missiles",
         "type": "wand",
         "rarity": "uncommon",
+        "value": 50000,
         "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 or more of its charges to cast the magic missile spell from it. For 1 charge, you cast the 1st-level version of the spell. You can increase the spell slot level by one for each additional charge you expend.\nThe wand regains 1d6 + 1 expended charges daily at dawn. If you expend the wand's last charge, roll a d20. On a 1, the wand crumbles into ashes and is destroyed.",
         "effects": {
-            "magic_missile": {
-                "max_charges": 7,
-                "recharge_rate": {
+            "spell": {
+                "magic_missile": {
+                    "max_charges": 7,
+                    "recharge_rate": {
+                        "delta": {
+                            "type": "increase",
+                            "die": "d6",
+                            "total": 1,
+                            "mod": 1
+                        },
+                        "frequency": {
+                            "unit": "hour",
+                            "total": 24
+                        }
+                    },
+                    "exhaust": {
+                        "conditions": {
+                            "charges": 0,
+                            "roll": {
+                                "die": "d20",
+                                "value": 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dwarven_thrower": {
+        "name": "Dwarven Thrower",
+        "type": [
+            "weapon",
+            "warhammer"
+        ],
+        "rarity": "very_rare",
+        "value": 5000000,
+        "description": "You gain a +3 bonus to attack and damage rolls made with this magic weapon. It has the thrown property with a normal range of 20 feet and a long range of 60 feet. When you hit with a ranged attack using this weapon, it deals an extra 1d8 damage or, if the target is a giant, 2d8 damage. Immediately after the attack, the weapon flies back to your hand.",
+        "conditions": {
+            "race": "dwarf"
+        },
+        "effects": {
+            "roll": {
+                "attack": {
+                    "mod": 3
+                },
+                "damage": {
+                    "mod": 3
+                }
+            },
+            "properties": [
+                "thrown"
+            ],
+            "range": {
+                "normal": 20,
+                "long": 60
+            },
+            "damage": {
+                "ranged": {
                     "delta": {
                         "type": "increase",
-                        "die": "d6",
+                        "die": "d8",
                         "total": 1,
-                        "mod": 1
-                    },
-                    "frequency": {
-                        "unit": "hour",
-                        "total": 24
-                    }
-                },
-                "exhaust": {
-                    "conditions": {
-                        "charges": 0,
-                        "roll": {
-                            "die": "d20",
-                            "value": 1
-                        }
+                        "mod": 0
                     }
                 }
             }

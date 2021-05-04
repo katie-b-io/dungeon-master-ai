@@ -2,17 +2,20 @@ from dmai import DM
 from dmai.game import Player
 from dmai.domain import Domain
 from dmai.nlg import NLG
+from dmai.game import Adventure
 
 class Game():
     
-    def __init__(self):
+    def __init__(self) -> None:
         '''Main class for the game'''
         self.player = None
         self.dm = DM()
         self.domain = Domain()
+        self.adventure = Adventure("the_tomb_of_baradin_stormfury")
         
         # Load the domain data
         self.domain.load_all()
+        self.adventure.build_world()
     
     def input(self, player_utter: str) -> None:
         '''Receive a player input'''

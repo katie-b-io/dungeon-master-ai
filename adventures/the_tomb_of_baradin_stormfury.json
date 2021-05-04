@@ -1,0 +1,395 @@
+{
+    "title": "The Tomb of Baradin Stormfury",
+    "author": "Rena Silver",
+    "text": {
+        "intro": "Greyforge, the mountain city in the north of the Kaldarian lands is home to the proud dwarves who settled in the area over 8,000 years ago, led by a silver dragon, according to some stories.\nFamous for their expertise in crafting and artifice, the Greyforge dwarves use giant lava powered furnaces, deep underground, to process the toughest metals.\nScholars and mages travel here from all over the continent in search of ancient lore in the dusty tomes of the Greyforge library, which is famed as the largest library in all Aradia.\nMost of the city lies safely under the surface of the mountain making it easily defensible. A strong military force is ready to defend the city at all times from threats of goblinoid clans vying for control of the natural resources of the area and hungry herds of monstrous beasts.\nQueen Mabaegar Thunderarmour is the recently appointed Queen after her predecessor was found dead under mysterious circumstances. Young but wise, she seeks advice from the older members of the Council of Twelve. She is honest and honourable and wants the best of her people.\nApart from dwarves, many other ancestries call Greyforge home: humans, gnomes, halflings, tieflings and dragonborn.\nMore than anything, Greyforge is your home. You spend your whole life in the sheltered walls of the great stone city. Today, a day like any other, you are summoned by Corvus Stouthammer, proprietor of the Stout Meal Inn, one of the oldest establishments in the city. He said he has a quick job for you.",
+        "conclusion": {
+            "good_ending": "",
+            "bad_ending": ""
+        }
+    },
+    "npcs": {
+        "corvus": {
+            "name": "Corvus Stouthammer",
+            "short_name": "Corvus",
+            "race": [
+                "dwarf",
+                "hill"
+            ],
+            "attitude": "friendly"
+        },
+        "anvil": {
+            "name": "Anvil-Jumper",
+            "short_name": "Anvil-Jumper",
+            "monster": "cat",
+            "attitude": "indifferent"
+        }
+    },
+    "rooms": {
+        "stout_meal_inn": {
+            "name": "Stout Meal Inn",
+            "init": true,
+            "connections": {
+                "inn_cellar": true
+            },
+            "npcs": {
+                "corvus": {
+                    "status": [
+                        "alive"
+                    ],
+                    "treasure": [
+                        []
+                    ]
+                }
+            },
+            "puzzles": {},
+            "treasure": [],
+            "text": {
+                "enter": "You find yourself at the Stout Meal Inn..."
+            }
+        },
+        "inns_cellar": {
+            "name": "Inn's Cellar",
+            "init": false,
+            "connections": {
+                "stout_meal_inn": true,
+                "storage_room": true
+            },
+            "npcs": {
+                "anvil": {
+                    "status": [
+                        "alive"
+                    ],
+                    "treasure": [
+                        []
+                    ]
+                },
+                "giant_rat": {
+                    "status": [
+                        "alive",
+                        "alive",
+                        "alive",
+                        "alive"
+                    ],
+                    "treasure": [
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                }
+            },
+            "puzzles": {},
+            "treasure": [],
+            "text": {
+                "enter": "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness.\nThe landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus’ stock and the loud protesting meows of Anvil-Jumper, Corvus’ cat.",
+                "exit": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises.\nSome 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that’s not part of the cellar."
+            }
+        },
+        "storage_room": {
+            "name": "Storage Room",
+            "init": false,
+            "connections": {
+                "inns_cellar": true,
+                "burial_chamber": false,
+                "western_corridor": false
+            },
+            "npcs": {
+                "zombie": {
+                    "status": [
+                        "alive"
+                    ],
+                    "treasure": [
+                        []
+                    ]
+                },
+                "goblin": {
+                    "status": [
+                        "dead"
+                    ],
+                    "treasure": [
+                        [
+                            "potion_of_healing",
+                            {
+                                "pouch": 7
+                            }
+                        ]
+                    ]
+                }
+            },
+            "puzzles": {
+                "portcullis": {
+                    "hp": 27,
+                    "ac": 19,
+                    "solutions": {
+                        "force": {
+                            "ability": "str",
+                            "dc": 15
+                        },
+                        "switch": {
+                            "skill": "perception",
+                            "dc": 10
+                        }
+                    }
+                }
+            },
+            "treasure": [],
+            "text": {
+                "enter": "The air in this area is cold, dry and stale and reeks of death.\nThe architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs.\nThere are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling.\nTwo exits from this room, one to the east and one to the south are blocked by lowered portcullises.\nThere are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about.\nThe source of the disturbing noises is a humanoid form hunched over the far corner of the room. Another smaller humanoid form appears to be lying motionless in front of the hunched one."
+            }
+        },
+        "burial_chamber": {
+            "name": "Burial Chamber",
+            "init": false,
+            "connections": {
+                "storage_room": false
+            },
+            "npcs": {
+                "skeleton": {
+                    "status": [
+                        "alive"
+                    ],
+                    "treasure": [
+                        []
+                    ]
+                }
+            },
+            "puzzles": {
+                "vault": {
+                    "solutions": {
+                        "force": {
+                            "ability": "str",
+                            "dc": 15
+                        }
+                    }
+                },
+                "silver_key": {
+                    "solutions": "look"
+                },
+                "altar": {
+                    "description": "The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol.",
+                    "solutions": {
+                        "inspect": {
+                            "skill": "religion",
+                            "dc": 10,
+                            "advantage": {
+                                "race": "dwarf"
+                            }
+                        }
+                    }
+                },
+                "false_door_trap": {
+                    "spell": "glyph_of_warding_explosive_runes",
+                    "trigger": "touch",
+                    "effect": {
+                        "explosion": {
+                            "range": 20,
+                            "area": "sphere",
+                            "saving_throw": {
+                                "dex": {
+                                    "dc": 13,
+                                    "fail": 0.5
+                                }
+                            },
+                            "damage": {
+                                "die": "d8",
+                                "total": 5,
+                                "type": "lightning"
+                            }
+                        }
+                    },
+                    "solutions": {
+                        "detect": {
+                            "skill": "investigation",
+                            "dc": 13
+                        },
+                        "detect_magic": {
+                            "skill": "arcana",
+                            "dc": 18,
+                            "advantage": {
+                                "class": "wizard"
+                            }
+                        },
+                        "dispel": {
+                            "spell": "dispel_magic"
+                        }
+                    }
+                }
+            },
+            "treasure": [],
+            "text": {
+                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open.\nOn the eastern wall there’s a double metal door with a large grinning skull engraved on the centre.\nThere are simple unadorned stone pedestals on either side of the door. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil."
+            }
+        },
+        "western_corridor": {
+            "name": "Western Corridor",
+            "init": false,
+            "connections": {
+                "storage_room": true,
+                "antechamber": true
+            },
+            "npcs": {},
+            "puzzles": {},
+            "treasure": [],
+            "text": {
+                "enter": "You make your way deeper into the darkness, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side. There are sconces with torches on the pillars but they are all unlit.\nYou can see a light on the far side of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance.\n You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the next area, appear to be speaking in hushed voices and it’s hard to distinguish what they are saying from here."
+            }
+        },
+        "antechamber": {
+            "name": "Antechamber",
+            "init": false,
+            "connections": {
+                "western_room": true,
+                "southern_corridor": false
+            },
+            "npcs": {
+                "goblin": {
+                    "status": [
+                        "alive",
+                        "alive"
+                    ],
+                    "treasure": [
+                        [
+                            "potion_of_healing"
+                        ],
+                        [
+                            {
+                                "pouch": 39
+                            }
+                        ]
+                    ]
+                }
+            },
+            "puzzles": {
+                "reinforced_door": {
+                    "hp": 39,
+                    "ac": 19,
+                    "solutions": {
+                        "force": {
+                            "ability": "str",
+                            "dc": 21
+                        },
+                        "unlock": {
+                            "item": "silver_key"
+                        },
+                        "lockpick": {
+                            "equipment": "thieves_tools",
+                            "dc": 15
+                        }
+                    }
+                }
+            },
+            "treasure": [],
+            "text": {
+                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster.\nAn open door leads to another corridor to the north. On the south there is a wooden door reinforced with iron."
+            }
+        },
+        "southern_corridor": {
+            "name": "Southern Corridor",
+            "init": false,
+            "connections": {
+                "antechamber": false,
+                "baradins_crypt": false
+            },
+            "npcs": {},
+            "puzzles": {
+                "magic_stone_face": {
+                    "trigger": 5,
+                    "stages": [
+                        {
+                            "utterance": "Speak these names and you shall pass."
+                        },
+                        {
+                            "utterance": "I am the father of the children of metal born from the heart of the world. My anvil and hammer a sign for those who craft and learn.",
+                            "response": "Thorogrin",
+                            "hints": [
+                                {
+                                    "skill": "history",
+                                    "dc": 10,
+                                    "text": "You know that \"children\" of metal is another name for dwarves."
+                                },
+                                {
+                                    "skill": "history",
+                                    "dc": 15,
+                                    "text": "You recognise the reference to the creation myth of the dwarves."
+                                },
+                                {
+                                    "skill": "religion",
+                                    "dc": 10,
+                                    "text": "You identify the anvil and hammer as a reference to Thorogrin's holy symbol and divine domains, the forge and knowledge."
+                                }
+                            ]
+                        },
+                        {
+                            "utterance": "On mighty silver wings I fly, my breath cold as ice. Relics of old and treasures adorn my home. Secret guardian under the mountain.",
+                            "response": "Rizoarithra",
+                            "hints": [
+                                {
+                                    "skill": [
+                                        "history",
+                                        "arcana",
+                                        "nature"
+                                    ],
+                                    "dc": 10,
+                                    "text": "You recognise the references to a silver dragon."
+                                },
+                                {
+                                    "skill": "history",
+                                    "dc": 10,
+                                    "text": "You know that the \"secret guardian under the mountain\" refers to the founding of Greyforge and the guardian dragon that led the dwarf settlers to the mountain that would become their home."
+                                },
+                                {
+                                    "skill": "history",
+                                    "dc": 15,
+                                    "text": "You remember the myths about Rizoarithra, the silver dragon guardian of Greyforge."
+                                }
+                            ]
+                        },
+                        {
+                            "utterance": "Name me and so you shall break me.",
+                            "response": "Baradin"
+                        }
+                    ]
+                },
+                "wand_of_magic_missiles_trap": {
+                    "trigger": "pressure",
+                    "solutions": {
+                        "reveal": {
+                            "skill": "arcana",
+                            "dc": 10
+                        },
+                        "detect": {
+                            "skill": "perception",
+                            "dc": 15
+                        },
+                        "inspect": {
+                            "skill": "investigation",
+                            "dc": 15
+                        }
+                    }
+                }
+            },
+            "treasure": [
+                "wand_of_magic_missiles"
+            ],
+            "text": {
+                "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the wall to the south."
+            }
+        },
+        "baradins_crypt": {
+            "name": "Baradin's Crypt",
+            "init": false,
+            "connections": {
+                "southern_corridor": false
+            },
+            "npcs": {},
+            "puzzles": {},
+            "treasure": [
+                "dwarven_thrower"
+            ],
+            "text": {
+                "enter": "This large room is occupied by a single open sarcophagus without a lid. The sarcophagus is tilted upwards at an angle so that its contents are visible as you enter the room.\nInside the sarcophagus lie the skeletal remains of a dwarven warrior in a dusty metal armor. The warrior is holding a warhammer. The warhammer’s head is made of white stone and framed with gold. An emerald is in the centre of the hammer head. The warhammer appears completely clean and free of dust and cobwebs, almost as if it was placed there moments and not centuries ago.\nThere are dwarven runes inscribed around the perimeter of the sarcophagus, on the along the top of each side.\nLarge iron candle holders sit on either side of the sarcophagus with five melted candles on each. Fire braziers adorn the western and eastern walls of the room.\nOn the southern wall, behind the sarcophagus, there is a large round engraving of a hammer in front of an anvil."
+            }
+        }
+    }
+}
