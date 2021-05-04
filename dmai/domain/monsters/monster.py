@@ -21,7 +21,8 @@ class Monster(ABC):
             self.equipment = Equipment(self.equipment)
             self.features = Features(features = self.features)
             self.languages = Languages(self.languages)
-            self.skills = Skills(skills = self.skills)
+            self.skills = Skills(abilities = self.abilities,
+                                 skills = self.skills)
             self.spells = Spells(self.spells)
             
         except AttributeError as e:

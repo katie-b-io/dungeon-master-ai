@@ -25,7 +25,7 @@
             "skills": {
                 "class": [
                     "insight",
-                    "medicine"
+                    "history"
                 ]
             },
             "tools": {
@@ -118,7 +118,7 @@
             "skills": {
                 "class": [
                     "athletics",
-                    "perception"
+                    "history"
                 ]
             },
             "tools": {}
@@ -190,9 +190,16 @@
                     "deception",
                     "investigation",
                     "stealth"
+                ],
+                "expertise": [
+                    "stealth"
                 ]
             },
-            "tools": {}
+            "tools": {
+                "expertise": [
+                    "thieves_tools"
+                ]
+            }
         },
         "languages": {},
         "weapons": {
@@ -256,7 +263,7 @@
             "skills": {
                 "class": [
                     "arcana",
-                    "investigation"
+                    "history"
                 ]
             },
             "tools": {}
