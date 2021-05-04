@@ -1,0 +1,12 @@
+{
+    "attitudes": [
+        "friendly",
+        "indifferent",
+        "hostile"
+    ],
+    "conversation_reactions": {
+        "friendly": 1.0,
+        "indifferent": 0.5,
+        "hostile": 0.0
+    }
+}
