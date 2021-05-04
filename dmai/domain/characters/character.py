@@ -26,10 +26,10 @@ class Character(ABC):
             self.equipment = Equipment(self.equipment)
             self.languages = Languages(self.languages)
             self.race = Race(self.race)
-            self.spells = Spells(self.spells)
             self.skills = Skills(abilities = self.abilities,
                                  pro_bonus = self.proficiency_bonus,
-                                 proficiencies = self.proficiencies)
+                                 proficiencies = self.proficiencies["skills"])
+            self.spells = Spells(self.spells)
             self.features = Features(char_class = self.char_class,
                                      race = self.race)
             
