@@ -78,8 +78,7 @@ class TestDiceRoller(unittest.TestCase):
         
     def test_roll_die(self) -> None:
         bad_die1 = "d3"
-        bad_die2 = "20"
-        
+        bad_die2 = "22"
         with self.assertRaises(KeyError):
             DiceRoller.roll_die(bad_die1)
         with self.assertRaises(KeyError):
