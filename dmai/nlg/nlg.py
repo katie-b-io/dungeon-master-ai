@@ -38,3 +38,14 @@ class NLG():
             "{n}, what do you do?".format(n=n)
         ]
         return random.choice(utters)
+    
+    @classmethod
+    def get_title(cls) -> str:
+        '''Return the utterance for introducing the adventure title'''
+        t = cls.game.adventure.title
+        utters = [
+            "Welcome adventurer, today we're going to play {t}! Let me set the scene...".format(t=t),
+            "Today we'll play {t}, an exciting tale of adventure! Let me set the scene...".format(t=t),
+            "The title of the adventure we're about to play is: {t}. Let me set the scene...".format(t=t)
+        ]
+        return random.choice(utters)

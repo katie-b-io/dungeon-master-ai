@@ -6,6 +6,7 @@ def start() -> Game:
     '''Initialise the game'''
     game = Game()
     NLG.set_game(game)
+    print(NLG.get_title())
     return game
     
 def run(game: Game) -> None:
