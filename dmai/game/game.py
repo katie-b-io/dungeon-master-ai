@@ -1,25 +1,18 @@
-from dmai import DM
 from dmai.game import Player
-from dmai.domain import Domain
 from dmai.nlg import NLG
-from dmai.game import Adventure
+from dmai.dm import DM
 
 class Game():
     
     def __init__(self) -> None:
         '''Main class for the game'''
+        adventure = "the_tomb_of_baradin_stormfury"
+        self.dm = DM(adventure)
         self.intro = True
         self.player = None
-        self.dm = DM()
-        self.domain = Domain()
-        self.adventure = Adventure("the_tomb_of_baradin_stormfury")
         
-        # Load the domain data
-        self.domain.load_all()
-        self.adventure.build_world()
-        
-        # text generators
-        self.intro_text = self.adventure.intro_text
+        # intro text generator
+        self.intro_text = self.dm.get_intro_text()
     
     def input(self, player_utter: str) -> None:
         '''Receive a player input'''
@@ -34,7 +27,7 @@ class Game():
             if not player_utter:
                 return
             player_utter = player_utter.lower()
-            char_class = self.domain.get_character(player_utter)
+            char_class = self.dm.get_character(player_utter)
             if char_class:
                 self.player = Player(char_class)
         
