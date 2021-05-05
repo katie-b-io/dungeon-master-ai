@@ -1,4 +1,4 @@
-from dmai.utils import Loader
+from dmai.utils import Loader, Text
 
 from dmai.game.world import Room
 
@@ -37,3 +37,8 @@ class Adventure():
             room_data = self.adventure_data["rooms"][room_name]
             room = Room(room_data)
             self.rooms[room_name] = room
+    
+    @property
+    def intro_text(self) -> None:
+        return Text.yield_text(self.text["intro"], "\n")
+    

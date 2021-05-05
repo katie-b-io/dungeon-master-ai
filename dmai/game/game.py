@@ -8,6 +8,7 @@ class Game():
     
     def __init__(self) -> None:
         '''Main class for the game'''
+        self.intro = True
         self.player = None
         self.dm = DM()
         self.domain = Domain()
@@ -16,12 +17,19 @@ class Game():
         # Load the domain data
         self.domain.load_all()
         self.adventure.build_world()
+        
+        # text generators
+        self.intro_text = self.adventure.intro_text
     
     def input(self, player_utter: str) -> None:
         '''Receive a player input'''
-        
+            
+        # the game has started, the introduction is being read
+        if self.intro:
+            return
+            
         # the player variable is not set at the beginning of the game
-        if not self.player:
+        elif not self.player:
             # player is selecting a class
             player_utter = player_utter.lower()
             char_class = self.domain.get_character(player_utter)
@@ -40,6 +48,13 @@ class Game():
     def output(self) -> str:
         '''Return an output for the player'''
         
+        # the game starts
+        if self.intro:
+            try:
+                return next(self.intro_text)
+            except StopIteration:
+                self.intro = False
+            
         # the player variable is not set at the beginning of the game
         if not self.player:
             # get the character options for player
@@ -49,4 +64,5 @@ class Game():
             # get the player's name
             return NLG.get_player_name()
         
+        # get the DM's utterance
         return self.dm.output
