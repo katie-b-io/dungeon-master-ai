@@ -7,8 +7,8 @@ class Skills():
     # class variables
     skill_data = dict()
     
-    def __init__(self, abilities: Abilities, pro_bonus = None, proficiencies = None,
-                 skills: dict = None) -> None:
+    def __init__(self, abilities: Abilities, pro_bonus = None,
+                 proficiencies = None, skills: dict = None) -> None:
         '''Skills class'''
         self._load_skill_data()
         self.skills = dict()

@@ -19,6 +19,8 @@ Welcome to the Dungeon Master AI!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is an MSc project created by Katie Baker at Heriot-Watt University.
 You are reminded not to input any identifying or confidential information.
+This interaction will be logged for analysis.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """)
     
     # get the command line arguments

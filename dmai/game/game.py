@@ -1,37 +1,50 @@
-from dmai import DM
 from dmai.game import Player
-from dmai.domain import Domain
 from dmai.nlg import NLG
-from dmai.game import Adventure
+from dmai.nlu import NLU
+from dmai.dm import DM
 
 class Game():
     
     def __init__(self) -> None:
         '''Main class for the game'''
+        adventure = "the_tomb_of_baradin_stormfury"
+        self.dm = DM(adventure)
+        self.intro = True
         self.player = None
-        self.dm = DM()
-        self.domain = Domain()
-        self.adventure = Adventure("the_tomb_of_baradin_stormfury")
+        self.pause = False
         
-        # Load the domain data
-        self.domain.load_all()
-        self.adventure.build_world()
+        # intro text generator
+        self.intro_text = self.dm.get_intro_text()
     
     def input(self, player_utter: str) -> None:
         '''Receive a player input'''
         
+        # first check for commands, if we have a command - pause the story telling if necessary
+        if player_utter:
+            self.pause = NLU.process_player_command(player_utter)
+            if self.pause:
+                return
+        else:
+            self.pause = False
+
+        # the game has started, the introduction is being read, ignore utterances
+        if self.intro:
+            return
+            
         # the player variable is not set at the beginning of the game
-        if not self.player:
+        elif not self.player:
             # player is selecting a class
+            if not player_utter:
+                return
             player_utter = player_utter.lower()
-            char_class = self.domain.get_character(player_utter)
+            char_class = self.dm.get_character(player_utter)
             if char_class:
                 self.player = Player(char_class)
         
         elif not self.player.name:
             # player is entering a name
             self.player.set_name(player_utter)
-            self.dm.input(player_utter)
+            self.dm.input(player_utter, utter_type="name")
             
         else:
             # relay the player utterance to the dm
@@ -40,6 +53,16 @@ class Game():
     def output(self) -> str:
         '''Return an output for the player'''
         
+        if self.pause:
+            return ""
+        
+        # the game starts
+        if self.intro:
+            try:
+                return next(self.intro_text)
+            except StopIteration:
+                self.intro = False
+            
         # the player variable is not set at the beginning of the game
         if not self.player:
             # get the character options for player
@@ -49,4 +72,5 @@ class Game():
             # get the player's name
             return NLG.get_player_name()
         
+        # get the DM's utterance
         return self.dm.output

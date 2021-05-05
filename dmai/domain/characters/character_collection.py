@@ -51,7 +51,7 @@ class CharacterCollection():
                 }
             character_obj = character_map[character]
         else:
-            msg = "Cannot construct character {c} - it does not exist!".format(
+            msg = "Cannot create character class {c} - it does not exist!".format(
                 c=character)
             raise ValueError(msg)
         return character_obj(self.character_data[character])

@@ -1,4 +1,5 @@
-from dmai.utils import Loader
+from typing import Generator
+from dmai.utils import Loader, Text
 
 from dmai.game.world import Room
 
@@ -37,3 +38,13 @@ class Adventure():
             room_data = self.adventure_data["rooms"][room_name]
             room = Room(room_data)
             self.rooms[room_name] = room
+    
+    @property
+    def intro_text(self) -> Generator:
+        return Text.yield_text(self.text["intro"], "\n")
+    
+    def get_init_room(self) -> str:
+        '''Method to get the starting room'''
+        for room in self.rooms:
+            if self.rooms[room].init:
+                return room
