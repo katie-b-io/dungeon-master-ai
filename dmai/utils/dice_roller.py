@@ -20,7 +20,14 @@ class DiceRoller(metaclass=DiceRollerMeta):
         "d10": 10,
         "d12": 12,
         "d20": 20,
-        "d100": 100
+        "d100": 100,
+        "4": "d4",
+        "6": "d6",
+        "8": "d8",
+        "10": "d10",
+        "12": "d12",
+        "20": "d20",
+        "100": "d100"
     }
     
     def __init__(self) -> None:
@@ -32,12 +39,17 @@ class DiceRoller(metaclass=DiceRollerMeta):
         '''Roll singular specified die'''
         die = die.lower()
         try:
-            max = cls.dice_map[die]
+            max_val = cls.dice_map[die]
+            if type(max_val) == str:
+                die = max_val
+                max_val = cls.dice_map[max_val]
+            val = random.randint(1, max_val)
+            print("Rolling {d}... {v}".format(d=die, v=val))
         except KeyError:
             print("Cannot roll die: {d}".format(d=die))
             raise
         
-        return random.randint(1, max)
+        return val
     
     @classmethod
     def roll_dice(cls, dice_spec: dict) -> int:
@@ -50,13 +62,13 @@ class DiceRoller(metaclass=DiceRollerMeta):
         '''
         try:
             dice = range(dice_spec["total"])
-            max = cls.dice_map[dice_spec["die"]]
+            max_val = cls.dice_map[dice_spec["die"]]
             modifier = dice_spec["mod"]
         except (KeyError, TypeError):
             print("Cannot roll dice with spec: {d}".format(d=dice_spec))
             raise
         
-        rolls = [random.randint(1, max) for _ in dice]
+        rolls = [random.randint(1, max_val) for _ in dice]
         total_roll = sum(rolls) + modifier
         return total_roll
     

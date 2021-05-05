@@ -1,5 +1,6 @@
 from dmai.game import Player
 from dmai.nlg import NLG
+from dmai.nlu import NLU
 from dmai.dm import DM
 
 class Game():
@@ -10,14 +11,23 @@ class Game():
         self.dm = DM(adventure)
         self.intro = True
         self.player = None
+        self.pause = False
         
         # intro text generator
         self.intro_text = self.dm.get_intro_text()
     
     def input(self, player_utter: str) -> None:
         '''Receive a player input'''
-            
-        # the game has started, the introduction is being read
+        
+        # first check for commands, if we have a command - pause the story telling if necessary
+        if player_utter:
+            self.pause = NLU.process_player_command(player_utter)
+            if self.pause:
+                return
+        else:
+            self.pause = False
+
+        # the game has started, the introduction is being read, ignore utterances
         if self.intro:
             return
             
@@ -42,6 +52,9 @@ class Game():
         
     def output(self) -> str:
         '''Return an output for the player'''
+        
+        if self.pause:
+            return ""
         
         # the game starts
         if self.intro:

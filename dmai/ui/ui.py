@@ -10,6 +10,10 @@ class UserInterface():
         '''Execute function which allows CLI communication between
         player and DM'''
         while True:
-            prompt = "\n" + self.game.output() + "\n> "
+            output = self.game.output()
+            if output:
+                prompt = "\n" + output + "\n> "
+            else:
+                prompt = "\n> "
             user_input = input(prompt)
             self.game.input(user_input)
