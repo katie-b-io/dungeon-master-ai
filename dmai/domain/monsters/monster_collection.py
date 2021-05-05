@@ -46,7 +46,7 @@ class MonsterCollection():
                 }
             monster_obj = monster_map[monster]
         else:
-            msg = "Cannot construct monster {m} - it does not exist!".format(
+            msg = "Cannot create monster {m} - it does not exist!".format(
                 m=monster)
             raise ValueError(msg)
         return monster_obj(self.monster_data[monster])

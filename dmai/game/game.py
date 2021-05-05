@@ -31,6 +31,8 @@ class Game():
         # the player variable is not set at the beginning of the game
         elif not self.player:
             # player is selecting a class
+            if not player_utter:
+                return
             player_utter = player_utter.lower()
             char_class = self.domain.get_character(player_utter)
             if char_class:
@@ -39,7 +41,7 @@ class Game():
         elif not self.player.name:
             # player is entering a name
             self.player.set_name(player_utter)
-            self.dm.input(player_utter)
+            self.dm.input(player_utter, utter_type="name")
             
         else:
             # relay the player utterance to the dm

@@ -49,3 +49,14 @@ class NLG():
             "The title of the adventure we're about to play is: {t}. Let me set the scene...".format(t=t)
         ]
         return random.choice(utters)
+    
+    @classmethod
+    def acknowledge_name(cls) -> str:
+        '''Return the utterance for acknowledging player's name'''
+        n = cls.game.player.name
+        utters = [
+            "{n}, simply majestic!".format(n=n),
+            "{n}, the finest name in all the lands!".format(n=n),
+            "{n}, that's a good one!".format(n=n)
+        ]
+        return random.choice(utters)
