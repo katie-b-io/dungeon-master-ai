@@ -1,4 +1,4 @@
-from dmai.utils import DiceRoller
+from dmai.utils import DiceFormatError, DiceRoller
 import dmai
 
 class NLUMeta(type):
@@ -32,7 +32,7 @@ class NLU(metaclass=NLUMeta):
             {
                 "text": "/roll [die]",
                 "help": "Roll a specified die, options: d4, d6, d8, d10, d12, d20, d100 (d20 by default)",
-                "cmd": "cls._roll_die(param)",
+                "cmd": "roll_die(param)",
                 "default_param": "d20"
             }
         }
@@ -44,11 +44,16 @@ class NLU(metaclass=NLUMeta):
     @classmethod
     def set_game(cls, game) -> None:
         cls.game = game
-    
-    @classmethod
-    def _roll_die(cls, die: str) -> None:
-        DiceRoller.roll_die(die)
         
+    @classmethod
+    def show_commands(cls) -> str:
+        '''Return the command list'''
+        cmd_str = "\nCommands:\n"
+        for cmd in cls.commands:
+            cmd_str += "{c:<16}".format(c=cls.commands[cmd]["text"])
+            cmd_str += "{h}\n".format(h=cls.commands[cmd]["help"])
+        return cmd_str
+  
     @classmethod
     def process_player_command(cls, player_cmd: str) -> bool:
         '''Method to process the player command'''
@@ -78,6 +83,13 @@ class NLU(metaclass=NLUMeta):
                     c=player_cmd))
             return
         
+        # define a local function for wrapping the DiceRoller
+        def roll_die(die: str) -> None:
+            try:
+                DiceRoller.roll(die)
+            except DiceFormatError as e:
+                print(e)
+                
         try:
             exec(command)
         except Exception:
@@ -85,12 +97,3 @@ class NLU(metaclass=NLUMeta):
         
         return True
     
-    @classmethod
-    def show_commands(cls) -> str:
-        '''Return the command list'''
-        cmd_str = "\nCommands:\n"
-        for cmd in cls.commands:
-            cmd_str += "{c:<16}".format(c=cls.commands[cmd]["text"])
-            cmd_str += "{h}\n".format(h=cls.commands[cmd]["help"])
-        return cmd_str
-

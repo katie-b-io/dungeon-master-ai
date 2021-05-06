@@ -1,5 +1,7 @@
 import random
 
+from dmai.utils import DiceFormatError
+
 class DiceRollerMeta(type):
     _instances = {}
     
@@ -20,14 +22,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
         "d10": 10,
         "d12": 12,
         "d20": 20,
-        "d100": 100,
-        "4": "d4",
-        "6": "d6",
-        "8": "d8",
-        "10": "d10",
-        "12": "d12",
-        "20": "d20",
-        "100": "d100"
+        "d100": 100
     }
     
     def __init__(self) -> None:
@@ -35,18 +30,61 @@ class DiceRoller(metaclass=DiceRollerMeta):
         pass
     
     @classmethod
+    def roll(cls, die: str) -> int:
+        '''Roll a die supplied by the user'''
+        die = die.lower()
+        
+        # identify d, plus and minus
+        d = die.find("d")
+        plus = die.find("+")
+        minus = die.find("-")
+        
+        if d == -1:
+            msg = ("Cannot roll dice: \"{d}\"\nUse format /roll d4 or /roll 2d12+2 for example".format(
+                d=die))
+            raise DiceFormatError(msg)
+
+        try:
+            # convert the string into a die spec and pass to roll_dice
+            total = 1 if not die[0:d] else int(die[0:d])
+            if plus != -1:
+                dice_spec = {
+                    "die": die[d:plus],
+                    "total": total,
+                    "mod": int(die[plus:])
+                }
+            elif minus != -1:
+                dice_spec = {
+                    "die": die[d:minus],
+                    "total": total,
+                    "mod": int(die[minus:])
+                }
+            else:
+                dice_spec = {
+                    "die": die[d:],
+                    "total": total,
+                    "mod": 0
+                }
+        
+            dice_val = cls.roll_dice(dice_spec)
+        
+        except (KeyError, TypeError, ValueError):
+            msg = ("Cannot roll dice: \"{d}\"\nUse format /roll d4 or /roll 2d12+2 for example".format(
+                d=die))
+            raise DiceFormatError(msg)
+        
+        return dice_val
+    
+    @classmethod
     def roll_die(cls, die: str) -> int:
         '''Roll singular specified die'''
         die = die.lower()
+        
         try:
             max_val = cls.dice_map[die]
-            if type(max_val) == str:
-                die = max_val
-                max_val = cls.dice_map[max_val]
             val = random.randint(1, max_val)
             print("Rolling {d}... {v}".format(d=die, v=val))
-        except KeyError:
-            print("Cannot roll die: {d}".format(d=die))
+        except KeyError as e:
             raise
         
         return val
@@ -64,14 +102,32 @@ class DiceRoller(metaclass=DiceRollerMeta):
             dice = range(dice_spec["total"])
             max_val = cls.dice_map[dice_spec["die"]]
             modifier = dice_spec["mod"]
-        except (KeyError, TypeError):
-            print("Cannot roll dice with spec: {d}".format(d=dice_spec))
+            rolls = [random.randint(1, max_val) for _ in dice]
+            total_roll = sum(rolls) + modifier
+            die = cls.construct_dice_spec_string(dice_spec)
+            print("Rolling {d}... {t}".format(d=die, t=total_roll))
+        except (KeyError, TypeError, ValueError):
             raise
-        
-        rolls = [random.randint(1, max_val) for _ in dice]
-        total_roll = sum(rolls) + modifier
+            
         return total_roll
     
     @classmethod
     def get_max(cls, die: str) -> int:
         return cls.dice_map[die]
+
+    @classmethod
+    def construct_dice_spec_string(cls, dice_spec: dict) -> str:
+        # construct the spec string
+        d = dice_spec["die"]
+        
+        t = dice_spec["total"]
+        if t == 1:
+            t = ""
+        
+        m = dice_spec["mod"]
+        if m == 0:
+            m = ""
+        elif m > 0:
+            m = "+{m}".format(m=dice_spec["mod"])
+        
+        return "{t}{d}{m}".format(t=t, d=d, m=m)

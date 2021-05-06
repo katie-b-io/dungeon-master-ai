@@ -25,7 +25,8 @@ class Game():
             if self.pause:
                 return
         else:
-            self.pause = False
+            if self.pause:
+                self.pause = False
 
         # the game has started, the introduction is being read, ignore utterances
         if self.intro:
