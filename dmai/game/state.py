@@ -21,9 +21,12 @@ class State:
 
     def travel_allowed(self, current: str, destination: str) -> bool:
         """Method to determine if travel is allowed between specified rooms."""
-        if destination not in self.rooms[current].connections:
-            return False
-        return self.rooms[current].connections[destination]
+        try:
+            if destination not in self.rooms[current].connections:
+                return False
+            return self.rooms[current].connections[destination]
+        except KeyError:
+            raise
 
     def lock(self, room1: str, room2: str) -> None:
         """Method to lock the connection between two given rooms."""
