@@ -1,4 +1,4 @@
-from dmai.utils import DiceFormatError, DiceRoller
+from dmai.utils import DiceFormatError, UnrecognisedCommandError, DiceRoller
 import dmai
 
 
@@ -59,7 +59,10 @@ class NLU(metaclass=NLUMeta):
 
         # first check if the user is issuing a command
         if player_cmd[0] == "/":
-            cls._regex(player_cmd)
+            try:
+                cls._regex(player_cmd)
+            except UnrecognisedCommandError as e:
+                print(e)
             return True
 
         return False
@@ -79,12 +82,10 @@ class NLU(metaclass=NLUMeta):
 
             command = cls.commands[cmd]["cmd"]
         except KeyError:
-            print(
-                "Command not recognised: {c}\nUse /help to get list of available commands".format(
-                    c=player_cmd
-                )
+            msg = "Command not recognised: {c}\nUse /help to get list of available commands".format(
+                c=player_cmd
             )
-            return
+            raise UnrecognisedCommandError(msg)
 
         # define a local function for wrapping the DiceRoller
         def roll_die(die: str) -> None:
