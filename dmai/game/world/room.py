@@ -1,3 +1,4 @@
+from dmai.nlg import NLG
 
 class Room():
     
@@ -13,3 +14,15 @@ class Room():
 
     def __repr__(self) -> str:
         return "Room: {a}".format(a=self.name)
+    
+    def enter(self) -> str:
+        '''Method for entering a room'''
+        if not self.visited:
+            self.visited = True
+            return self.text["enter"]
+        else:
+            return NLG.enter_room(self.name)
+        
+    def cannot_enter(self, reason: str = None) -> str:
+        '''Method for not entering a room'''
+        return NLG.cannot_move(self.name, reason)

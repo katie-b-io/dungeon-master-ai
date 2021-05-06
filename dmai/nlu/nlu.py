@@ -57,6 +57,7 @@ class NLU(metaclass=NLUMeta):
     @classmethod
     def process_player_command(cls, player_cmd: str) -> bool:
         '''Method to process the player command'''
+        
         # first check if the user is issuing a command
         if player_cmd[0] == "/":
             cls._regex(player_cmd)
@@ -97,3 +98,16 @@ class NLU(metaclass=NLUMeta):
         
         return True
     
+    @classmethod
+    def process_player_utterance(cls, player_utter: str) -> tuple:
+        '''Method to process the player utterance'''
+        return cls._determine_intent(player_utter)
+
+    @classmethod
+    def _determine_intent(cls, player_utter: str) -> str:
+        '''Method to determine the player intent'''
+        # TODO replace with proper NLU
+        player_utter = player_utter.lower()
+        if player_utter.startswith("move"):
+            return ("move", {"destination": "inns_cellar"})
+        

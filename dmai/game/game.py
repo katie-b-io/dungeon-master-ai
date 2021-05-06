@@ -47,9 +47,14 @@ class Game():
             self.player.set_name(player_utter)
             self.dm.input(player_utter, utter_type="name")
             
-        else:
+        elif player_utter:
+            # attempt to determine the player's intent
+            (intent, params) = NLU.process_player_utterance(player_utter)
+            
             # relay the player utterance to the dm
-            self.dm.input(player_utter)
+            self.dm.input(player_utter, intent=intent, kwargs=params)
+        
+        return
         
     def output(self) -> str:
         '''Return an output for the player'''

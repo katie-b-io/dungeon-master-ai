@@ -75,3 +75,19 @@ class NLG(metaclass=NLGMeta):
             "{n}, that's a good one!".format(n=n)
         ]
         return random.choice(utters)
+
+    @classmethod
+    def enter_room(cls, room: str) -> str:
+        '''Return the utterance for entering a room previously visited'''
+        return "You entered {r}".format(r=room)
+
+    @classmethod
+    def cannot_move(cls, room: str, reason: str) -> str:
+        '''Return the utterance for not allowing movement'''
+        if not reason:
+            return "You cannot move to {room}".format(room=room)
+        elif reason == "same":
+            return "You cannot move to {room} because you're already there!".format(room=room)
+        elif reason == "locked":
+            return "You cannot move to {room} because the way is blocked!".format(room=room)
+        

@@ -48,3 +48,6 @@ class Adventure():
         for room in self.rooms:
             if self.rooms[room].init:
                 return room
+    
+    def get_room(self, room: str) -> Room:
+        return self.rooms[room]

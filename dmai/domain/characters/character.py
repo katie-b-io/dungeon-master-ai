@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from dmai.domain import Abilities, Actions, Alignment, Armor, Attacks, \
+from dmai.domain import Abilities, Alignment, Armor, Attacks, \
     Conditions, Equipment, Features, Languages, Skills, Spells
 from dmai.domain.characters import CharacterClass, Race
 from dmai.utils import DiceRoller
@@ -17,7 +17,6 @@ class Character(ABC):
                 
             # replace the attributes values with objects where appropriate
             self.abilities = Abilities(self.abilities)
-            self.actions = Actions()
             self.alignment = Alignment(self.alignment)
             self.armor = Armor(self.armor)
             self.attacks = Attacks()
