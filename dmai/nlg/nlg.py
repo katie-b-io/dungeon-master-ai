@@ -90,7 +90,7 @@ class NLG(metaclass=NLGMeta):
         return "You entered {r}".format(r=room)
 
     @classmethod
-    def cannot_move(cls, room: str, reason: str) -> str:
+    def cannot_move(cls, room: str, reason: str = None) -> str:
         """Return the utterance for not allowing movement"""
         if not reason:
             return "You cannot move to {room}".format(room=room)
@@ -99,6 +99,6 @@ class NLG(metaclass=NLGMeta):
                 room=room
             )
         elif reason == "locked":
-            return "You cannot move to {room} because the way is blocked!".format(
+            return "You cannot move to {room} because the way is locked!".format(
                 room=room
             )
