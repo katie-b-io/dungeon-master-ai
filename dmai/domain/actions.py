@@ -33,10 +33,13 @@ class Actions:
         if current == destination:
             return (False, "same")
 
-        if self.state.travel_allowed(current, destination):
-            return (True, "")
-        else:
-            return (False, "locked")
+        try:
+            if self.state.travel_allowed(current, destination):
+                return (True, "")
+            else:
+                return (False, "locked")
+        except KeyError as e:
+            print("Room not recognised: {e}".format(e=e))
 
     def move(self, entity: str, destination: str) -> str:
         """Attempt to move an entity to the specified destination.
@@ -46,6 +49,6 @@ class Actions:
         (can_move, reason) = self._can_move(entity, destination)
         if can_move:
             self.state.set_current_room(entity, destination)
-            return self.adventure.get_room(destination).enter(reason)
+            return self.adventure.get_room(destination).enter()
         else:
             return self.adventure.get_room(destination).cannot_enter(reason)
