@@ -1,27 +1,29 @@
 from dmai.utils import Loader
 
-class Abilities():
-    
+
+class Abilities:
+
     # class variables
     ability_data = dict()
-    
+
     def __init__(self, abilities: dict) -> None:
-        '''Abilities class'''
+        """Abilities class"""
         self.abilities = abilities
         self._load_ability_data()
         self.modifiers = self._calculate_ability_modifiers()
-        
+
     def __repr__(self) -> str:
-        return "Abilities:\n{a}\nModifiers:\n{m}".format(a=self.abilities,
-                                                         m=self.modifiers)
-    
+        return "Abilities:\n{a}\nModifiers:\n{m}".format(
+            a=self.abilities, m=self.modifiers
+        )
+
     @classmethod
     def _load_ability_data(self) -> None:
-        '''Set the self.ability_data class variable data'''
+        """Set the self.ability_data class variable data"""
         self.ability_data = Loader.load_json("data/abilities.json")
-        
+
     def _calculate_ability_modifiers(self) -> dict:
-        '''Calculate the ability modifiers'''
+        """Calculate the ability modifiers"""
         modifiers = dict()
         for ability in self.abilities:
             for mod in self.ability_data["modifiers"]:
@@ -31,7 +33,7 @@ class Abilities():
                     modifiers[ability] = int(mod)
                     break
         return modifiers
-    
+
     def get_modifier(self, mod: str) -> int:
-        '''Return the specified modifier'''
+        """Return the specified modifier"""
         return self.modifiers[mod]

@@ -27,10 +27,12 @@
     },
     "rooms": {
         "stout_meal_inn": {
+            "id": "stout_meal_inn",
             "name": "Stout Meal Inn",
             "init": true,
+            "visited": false,
             "connections": {
-                "inn_cellar": true
+                "inns_cellar": true
             },
             "npcs": {
                 "corvus": {
@@ -49,8 +51,10 @@
             }
         },
         "inns_cellar": {
+            "id": "inns_cellar",
             "name": "Inn's Cellar",
             "init": false,
+            "visited": false,
             "connections": {
                 "stout_meal_inn": true,
                 "storage_room": true
@@ -82,13 +86,15 @@
             "puzzles": {},
             "treasure": [],
             "text": {
-                "enter": "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness.\nThe landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus’ stock and the loud protesting meows of Anvil-Jumper, Corvus’ cat.",
-                "exit": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises.\nSome 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that’s not part of the cellar."
+                "enter": "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness.\nThe landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus' stock and the loud protesting meows of Anvil-Jumper, Corvus' cat.",
+                "exit": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises.\nSome 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar."
             }
         },
         "storage_room": {
+            "id": "storage_room",
             "name": "Storage Room",
             "init": false,
+            "visited": false,
             "connections": {
                 "inns_cellar": true,
                 "burial_chamber": false,
@@ -139,8 +145,10 @@
             }
         },
         "burial_chamber": {
+            "id": "burial_chamber",
             "name": "Burial Chamber",
             "init": false,
+            "visited": false,
             "connections": {
                 "storage_room": false
             },
@@ -218,12 +226,14 @@
             },
             "treasure": [],
             "text": {
-                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open.\nOn the eastern wall there’s a double metal door with a large grinning skull engraved on the centre.\nThere are simple unadorned stone pedestals on either side of the door. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil."
+                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open.\nOn the eastern wall there's a double metal door with a large grinning skull engraved on the centre.\nThere are simple unadorned stone pedestals on either side of the door. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil."
             }
         },
         "western_corridor": {
+            "id": "western_corridor",
             "name": "Western Corridor",
             "init": false,
+            "visited": false,
             "connections": {
                 "storage_room": true,
                 "antechamber": true
@@ -232,10 +242,11 @@
             "puzzles": {},
             "treasure": [],
             "text": {
-                "enter": "You make your way deeper into the darkness, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side. There are sconces with torches on the pillars but they are all unlit.\nYou can see a light on the far side of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance.\n You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the next area, appear to be speaking in hushed voices and it’s hard to distinguish what they are saying from here."
+                "enter": "You make your way deeper into the darkness, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side. There are sconces with torches on the pillars but they are all unlit.\nYou can see a light on the far side of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance.\n You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the next area, appear to be speaking in hushed voices and it's hard to distinguish what they are saying from here."
             }
         },
         "antechamber": {
+            "id": "antechamber",
             "name": "Antechamber",
             "init": false,
             "connections": {
@@ -285,8 +296,10 @@
             }
         },
         "southern_corridor": {
+            "id": "southern_corridor",
             "name": "Southern Corridor",
             "init": false,
+            "visited": false,
             "connections": {
                 "antechamber": false,
                 "baradins_crypt": false
@@ -377,8 +390,10 @@
             }
         },
         "baradins_crypt": {
+            "id": "baradins_crypt",
             "name": "Baradin's Crypt",
             "init": false,
+            "visited": false,
             "connections": {
                 "southern_corridor": false
             },
@@ -388,7 +403,7 @@
                 "dwarven_thrower"
             ],
             "text": {
-                "enter": "This large room is occupied by a single open sarcophagus without a lid. The sarcophagus is tilted upwards at an angle so that its contents are visible as you enter the room.\nInside the sarcophagus lie the skeletal remains of a dwarven warrior in a dusty metal armor. The warrior is holding a warhammer. The warhammer’s head is made of white stone and framed with gold. An emerald is in the centre of the hammer head. The warhammer appears completely clean and free of dust and cobwebs, almost as if it was placed there moments and not centuries ago.\nThere are dwarven runes inscribed around the perimeter of the sarcophagus, on the along the top of each side.\nLarge iron candle holders sit on either side of the sarcophagus with five melted candles on each. Fire braziers adorn the western and eastern walls of the room.\nOn the southern wall, behind the sarcophagus, there is a large round engraving of a hammer in front of an anvil."
+                "enter": "This large room is occupied by a single open sarcophagus without a lid. The sarcophagus is tilted upwards at an angle so that its contents are visible as you enter the room.\nInside the sarcophagus lie the skeletal remains of a dwarven warrior in a dusty metal armor. The warrior is holding a warhammer. The warhammer's head is made of white stone and framed with gold. An emerald is in the centre of the hammer head. The warhammer appears completely clean and free of dust and cobwebs, almost as if it was placed there moments and not centuries ago.\nThere are dwarven runes inscribed around the perimeter of the sarcophagus, on the along the top of each side.\nLarge iron candle holders sit on either side of the sarcophagus with five melted candles on each. Fire braziers adorn the western and eastern walls of the room.\nOn the southern wall, behind the sarcophagus, there is a large round engraving of a hammer in front of an anvil."
             }
         }
     }
