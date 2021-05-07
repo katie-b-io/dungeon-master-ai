@@ -1,6 +1,7 @@
 from dmai.game import State, Adventure
-from dmai.domain import Domain, Actions
-from dmai.domain.characters import Character
+from dmai.domain import Actions
+from dmai.domain.characters import Character, CharacterCollection
+from dmai.domain.monsters import MonsterCollection
 from dmai.nlg import NLG
 
 
@@ -11,13 +12,11 @@ class DM:
 
     def __init__(self, adventure: str) -> None:
         """Main DM class"""
-        self.dm_utter = None
-        self.player_utter = None
-        self.domain = Domain()
+        self._dm_utter = None
+        self._player_utter = None
+        self.monsters = MonsterCollection()
+        self.characters = CharacterCollection()
         self.adventure = Adventure(adventure)
-
-        # Load the domain data
-        self.domain.load_all()
 
         # Build the adventure world
         self.adventure.build_world()
@@ -29,7 +28,7 @@ class DM:
         self.actions = Actions(self.state, self.adventure)
 
         # Initialise the player intent map
-        self.player_intent_map = {"move": self.move}
+        self.player_intent_map = {"move": self.move, "attack": self.attack}
 
     def input(
         self,
@@ -37,47 +36,52 @@ class DM:
         utter_type: str = None,
         intent: str = None,
         kwargs: dict = {},
-    ) -> None:
-        """Receive a player input"""
-        self.player_utter = player_utter
+    ) -> bool:
+        """Receive a player input.
+        Returns whether the utterance was successful."""
+        self._player_utter = player_utter
         if utter_type:
             self._generate_utterance(utter_type=utter_type)
+            return True
         if intent:
             # look up intent in map
             try:
-                self.player_intent_map[intent](**kwargs)
+                return self.player_intent_map[intent](**kwargs)
             except KeyError:
                 print("Intent not in map: {i}".format(i=intent))
                 raise
+        return True
 
     @property
     def output(self) -> str:
         """Return an output for the player"""
-        return self.dm_utter
+        return self._dm_utter
 
     def _generate_utterance(self, utter: str = None, utter_type: str = None) -> str:
         """Generate an utterance for the player"""
         if utter:
-            self.dm_utter = utter
+            self._dm_utter = utter
         elif not utter_type:
-            self.dm_utter = NLG.get_action()
+            self._dm_utter = NLG.get_action()
         else:
             try:
-                self.dm_utter = self.utter_type_map[utter_type]()
+                self._dm_utter = self.utter_type_map[utter_type]()
             except KeyError as e:
                 print("Utterance type does not exist: {e}".format(e=e))
-                self.dm_utter = NLG.get_action()
+                self._dm_utter = NLG.get_action()
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
 
     def get_character(self, character: str) -> Character:
-        return self.domain.get_character(character)
+        return self.characters.get_character(character)
 
-    def move(self, destination: str, entity: str = None) -> str:
+    def move(self, destination: str, entity: str = None) -> bool:
         """Attempt to move an entity to a specified destination.
-        Return a string with the utterance to output to the players"""
+        Returns whether the move was successful."""
         if not entity:
             entity = "player"
         print("Moving {e} to {d}!".format(e=entity, d=destination))
-        self._generate_utterance(utter=self.actions.move(entity, destination))
+        (moved, utterance) = self.actions.move(entity, destination)
+        self._generate_utterance(utter=utterance)
+        return moved

@@ -9,4 +9,3 @@ from .features import Features
 from .languages import Languages
 from .skills import Skills
 from .spells import Spells
-from .domain import Domain
