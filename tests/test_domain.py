@@ -8,6 +8,7 @@ sys.path.insert(0, p + "/../")
 from dmai.domain import Domain, Actions
 from dmai.domain.characters import Fighter
 from dmai.game import State, Adventure
+from dmai.utils import UnrecognisedRoomError
 
 class TestDomain(unittest.TestCase):
     """Test the Domain class"""
@@ -43,7 +44,7 @@ class TestActions(unittest.TestCase):
     def test_move_bad_destination(self) -> None:
         entity = "player"
         destination = "the_moon"
-        with self.assertRaises(KeyError):
+        with self.assertRaises(UnrecognisedRoomError):
             self.actions.move(entity, destination)
 
 if __name__ == "__main__":

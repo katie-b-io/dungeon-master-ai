@@ -2,7 +2,7 @@ from typing import Generator
 from dmai.utils import Loader, Text
 
 from dmai.game.world import Room
-
+from dmai.utils import UnrecognisedRoomError
 
 class Adventure:
 
@@ -46,9 +46,14 @@ class Adventure:
 
     def get_init_room(self) -> str:
         """Method to get the starting room"""
-        for room in self.rooms:
-            if self.rooms[room].init:
-                return room
+        for room_id in self.rooms:
+            if self.rooms[room_id].init:
+                return room_id
 
-    def get_room(self, room: str) -> Room:
-        return self.rooms[room]
+    def get_room(self, room_id: str) -> Room:
+        try:
+            return self.rooms[room_id]
+        except KeyError as e:
+            msg = "Room not recognised: {e}".format(e=e)
+            raise UnrecognisedRoomError(msg)
+    
