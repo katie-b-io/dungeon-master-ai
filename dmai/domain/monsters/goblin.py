@@ -1,4 +1,4 @@
-from dmai.domain.monsters import Monster
+from dmai.domain.monsters.monster import Monster
 
 
 class Goblin(Monster):

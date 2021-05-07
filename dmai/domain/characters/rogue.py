@@ -1,4 +1,4 @@
-from dmai.domain.characters import Character
+from dmai.domain.characters.character import Character
 
 
 class Rogue(Character):

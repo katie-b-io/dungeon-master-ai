@@ -1,5 +1,9 @@
-from dmai.utils import Loader
-from dmai.domain.characters import Character, Fighter, Wizard, Rogue, Cleric
+from dmai.utils.loader import Loader
+from dmai.domain.characters.character import Character
+from dmai.domain.characters.fighter import Fighter
+from dmai.domain.characters.wizard import Wizard
+from dmai.domain.characters.rogue import Rogue
+from dmai.domain.characters.cleric import Cleric
 
 
 class CharacterCollection:

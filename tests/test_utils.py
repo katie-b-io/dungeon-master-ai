@@ -5,7 +5,8 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.utils import DiceRoller, Loader
+from dmai.utils.dice_roller import DiceRoller
+from dmai.utils.loader import Loader
 
 
 class TestDiceRoller(unittest.TestCase):

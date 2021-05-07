@@ -1,5 +1,10 @@
-from dmai.utils import Loader
-from dmai.domain.monsters import Monster, Cat, GiantRat, Goblin, Skeleton, Zombie
+from dmai.utils.loader import Loader
+from dmai.domain.monsters.monster import Monster
+from dmai.domain.monsters.cat import Cat
+from dmai.domain.monsters.giant_rat import GiantRat
+from dmai.domain.monsters.goblin import Goblin
+from dmai.domain.monsters.skeleton import Skeleton
+from dmai.domain.monsters.zombie import Zombie
 
 
 class MonsterCollection:

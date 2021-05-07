@@ -1,18 +1,15 @@
 from abc import ABC, abstractmethod
 
-from dmai.domain import (
-    Abilities,
-    Alignment,
-    Armor,
-    Attacks,
-    Conditions,
-    Equipment,
-    Features,
-    Languages,
-    Skills,
-    Spells,
-)
-
+from dmai.domain.abilities import Abilities
+from dmai.domain.alignment import Alignment
+from dmai.domain.armor import Armor
+from dmai.domain.attacks import Attacks
+from dmai.domain.conditions import Conditions
+from dmai.domain.equipment import Equipment
+from dmai.domain.features import Features
+from dmai.domain.languages import Languages
+from dmai.domain.skills import Skills
+from dmai.domain.spells import Spells
 
 class Monster(ABC):
     def __init__(self, monster_data: dict) -> None:

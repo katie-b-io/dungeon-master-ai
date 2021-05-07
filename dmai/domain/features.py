@@ -1,4 +1,4 @@
-from dmai.utils import Loader
+from dmai.utils.loader import Loader
 
 
 class Features:

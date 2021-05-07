@@ -5,9 +5,8 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.nlg import NLG
-from dmai.utils import UnrecognisedCommandError
-from dmai.game import Game
+from dmai.nlg.nlg import NLG
+from dmai.game.game import Game
 
 
 class TestNLG(unittest.TestCase):

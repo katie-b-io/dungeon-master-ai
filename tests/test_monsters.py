@@ -5,15 +5,13 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.domain.monsters import (
-    Monster,
-    MonsterCollection,
-    Cat,
-    GiantRat,
-    Goblin,
-    Skeleton,
-    Zombie,
-)
+from dmai.domain.monsters.monster import Monster
+from dmai.domain.monsters.monster_collection import MonsterCollection
+from dmai.domain.monsters.cat import Cat
+from dmai.domain.monsters.giant_rat import GiantRat
+from dmai.domain.monsters.goblin import Goblin
+from dmai.domain.monsters.skeleton import Skeleton
+from dmai.domain.monsters.zombie import Zombie
 
 
 class TestMonsterCollection(unittest.TestCase):

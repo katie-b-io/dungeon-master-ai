@@ -5,52 +5,50 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.domain.characters import (
-    Character,
-    CharacterCollection,
-    Cleric,
-    Fighter,
-    Rogue,
-    Wizard,
-)
+from dmai.domain.characters.character import Character
+from dmai.domain.characters.character_collection import CharacterCollection
+from dmai.domain.characters.cleric import Cleric
+from dmai.domain.characters.fighter import Fighter
+from dmai.domain.characters.rogue import Rogue
+from dmai.domain.characters.wizard import Wizard
 
 
 class TestCharacterCollection(unittest.TestCase):
     """Test the CharacterCollection class"""
 
     def setUp(self) -> None:
-        self.characters = CharacterCollection()
+        self.character_collection = CharacterCollection()
 
     def test_character_factory_error(self) -> None:
         with self.assertRaises(ValueError):
-            self.characters._character_factory("human")
+            self.character_collection._character_factory("human")
 
     def test_get_character_cleric(self) -> None:
-        self.assertIsInstance(self.characters.get_character("cleric"), Cleric)
-        self.assertIsInstance(self.characters.get_character("CLERIC"), Cleric)
+        self.assertIsInstance(self.character_collection.get_character("cleric"), Cleric)
+        self.assertIsInstance(self.character_collection.get_character("CLERIC"), Cleric)
 
     def test_get_character_fighter(self) -> None:
-        self.assertIsInstance(self.characters.get_character("fighter"), Fighter)
-        self.assertIsInstance(self.characters.get_character("FIGHTER"), Fighter)
+        self.assertIsInstance(self.character_collection.get_character("fighter"), Fighter)
+        self.assertIsInstance(self.character_collection.get_character("FIGHTER"), Fighter)
 
     def test_get_character_rogue(self) -> None:
-        self.assertIsInstance(self.characters.get_character("rogue"), Rogue)
-        self.assertIsInstance(self.characters.get_character("ROGUE"), Rogue)
+        self.assertIsInstance(self.character_collection.get_character("rogue"), Rogue)
+        self.assertIsInstance(self.character_collection.get_character("ROGUE"), Rogue)
 
     def test_get_character_wizard(self) -> None:
-        self.assertIsInstance(self.characters.get_character("wizard"), Wizard)
-        self.assertIsInstance(self.characters.get_character("WIZARD"), Wizard)
+        self.assertIsInstance(self.character_collection.get_character("wizard"), Wizard)
+        self.assertIsInstance(self.character_collection.get_character("WIZARD"), Wizard)
 
     def test_get_character_wrong(self) -> None:
-        self.assertIsNone(self.characters.get_character("ninja"))
+        self.assertIsNone(self.character_collection.get_character("ninja"))
 
 
 class TestCharacter(unittest.TestCase):
     """Test the Character class and subclasses"""
 
     def setUp(self) -> None:
-        self.characters = CharacterCollection()
-        self.fighter = self.characters.get_character("fighter")
+        self.character_collection = CharacterCollection()
+        self.fighter = self.character_collection.get_character("fighter")
 
     def test_character_malformed(self) -> None:
         bad_character1 = {

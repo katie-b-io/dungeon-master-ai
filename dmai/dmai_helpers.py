@@ -1,7 +1,7 @@
-from dmai.game import Game
-from dmai.ui import UserInterface
-from dmai.nlg import NLG
-from dmai.nlu import NLU
+from dmai.game.game import Game
+from dmai.ui.ui import UserInterface
+from dmai.nlg.nlg import NLG
+from dmai.nlu.nlu import NLU
 
 
 def start() -> Game:

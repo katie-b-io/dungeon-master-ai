@@ -28,7 +28,7 @@ class NLG(metaclass=NLGMeta):
     @classmethod
     def get_char_class(cls) -> str:
         """Return utterance for character selection"""
-        c = "\n".join(cls.game.dm.domain.characters.get_all_names())
+        c = "\n".join(cls.game.dm.character_collection.get_all_names())
         utters = [
             "Which character class would you like to play?\n{c}".format(c=c),
             "Select a character class you like the sound of:\n{c}".format(c=c),

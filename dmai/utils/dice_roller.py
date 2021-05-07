@@ -1,6 +1,6 @@
 import random
 
-from dmai.utils import DiceFormatError
+from dmai.utils.exceptions import DiceFormatError
 
 
 class DiceRollerMeta(type):
