@@ -5,10 +5,10 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.domain import Actions
-from dmai.domain.characters import Fighter
-from dmai.game import State, Adventure
-from dmai.utils import UnrecognisedRoomError
+from dmai.domain.actions import Actions
+from dmai.game.state import State
+from dmai.game.adventure import Adventure
+from dmai.utils.exceptions import UnrecognisedRoomError
 
 
 class TestActions(unittest.TestCase):

@@ -1,8 +1,12 @@
 from typing import Generator
-from dmai.utils import Loader, Text
 
-from dmai.game.world import Room
-from dmai.utils import UnrecognisedRoomError
+from dmai.utils.loader import Loader
+from dmai.utils.text import Text
+from dmai.game.world.room import Room
+from dmai.utils.exceptions import UnrecognisedRoomError
+from dmai.domain.monsters.monster_collection import MonsterCollection
+from dmai.game.npcs.npc_collection import NPCCollection
+
 
 class Adventure:
 
@@ -11,6 +15,7 @@ class Adventure:
 
     def __init__(self, adventure: str) -> None:
         """Main class for the adventure"""
+        self.monster_collection = MonsterCollection()
         self.adventure = adventure
         self._load_adventure_data(self.adventure)
 
@@ -34,6 +39,7 @@ class Adventure:
     def build_world(self) -> None:
         """Method to build the world"""
         self.rooms = dict()
+        self.npcs = dict()
 
         for room_name in self.adventure_data["rooms"]:
             room_data = self.adventure_data["rooms"][room_name]

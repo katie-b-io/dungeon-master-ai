@@ -1,6 +1,6 @@
-from dmai.game import Player
-from dmai.nlg import NLG
-from dmai.nlu import NLU
+from dmai.game.player import Player
+from dmai.nlg.nlg import NLG
+from dmai.nlu.nlu import NLU
 from dmai.dm import DM
 
 
@@ -45,14 +45,14 @@ class Game:
         elif not self.player.name:
             # player is entering a name
             self.player.set_name(player_utter)
-            self.dm.input(player_utter, utter_type="name")
+            succeed = self.dm.input(player_utter, utter_type="name")
 
         elif player_utter:
             # attempt to determine the player's intent
             (intent, params) = NLU.process_player_utterance(player_utter)
 
             # relay the player utterance to the dm
-            self.dm.input(player_utter, intent=intent, kwargs=params)
+            succeed = self.dm.input(player_utter, intent=intent, kwargs=params)
 
         return
 

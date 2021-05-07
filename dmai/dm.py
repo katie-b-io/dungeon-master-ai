@@ -1,8 +1,9 @@
-from dmai.game import State, Adventure
-from dmai.domain import Actions
-from dmai.domain.characters import Character, CharacterCollection
-from dmai.domain.monsters import MonsterCollection
-from dmai.nlg import NLG
+from dmai.game.state import State
+from dmai.game.adventure import Adventure
+from dmai.domain.characters.character import Character
+from dmai.domain.characters.character_collection import CharacterCollection
+from dmai.domain.actions import Actions
+from dmai.nlg.nlg import NLG
 
 
 class DM:
@@ -14,8 +15,7 @@ class DM:
         """Main DM class"""
         self._dm_utter = None
         self._player_utter = None
-        self.monsters = MonsterCollection()
-        self.characters = CharacterCollection()
+        self.character_collection = CharacterCollection()
         self.adventure = Adventure(adventure)
 
         # Build the adventure world
@@ -74,7 +74,7 @@ class DM:
         return self.adventure.intro_text
 
     def get_character(self, character: str) -> Character:
-        return self.characters.get_character(character)
+        return self.character_collection.get_character(character)
 
     def move(self, destination: str, entity: str = None) -> bool:
         """Attempt to move an entity to a specified destination.

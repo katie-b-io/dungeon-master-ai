@@ -1,4 +1,4 @@
-from dmai.nlg import NLG
+from dmai.nlg.nlg import NLG
 
 
 class Room:

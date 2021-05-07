@@ -5,9 +5,9 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.game import State, Adventure
-from dmai.game.world import Room
-from dmai.utils import UnrecognisedEntityError, UnrecognisedRoomError
+from dmai.game.state import State
+from dmai.game.adventure import Adventure
+from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 
 class TestState(unittest.TestCase):
     """Test the State class"""

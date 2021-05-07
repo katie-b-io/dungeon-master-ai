@@ -1,4 +1,5 @@
-from dmai.utils import DiceFormatError, UnrecognisedCommandError, DiceRoller
+from dmai.utils.exceptions import DiceFormatError, UnrecognisedCommandError
+from dmai.utils.dice_roller import DiceRoller
 import dmai
 
 
@@ -113,3 +114,7 @@ class NLU(metaclass=NLUMeta):
         player_utter = player_utter.lower()
         if player_utter.startswith("move"):
             return ("move", {"destination": "inns_cellar"})
+        if player_utter.startswith("attack"):
+            return ("attack", {"target": "giant_rat"})
+        else:
+            return (None, {})

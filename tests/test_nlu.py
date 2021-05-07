@@ -5,8 +5,8 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.nlu import NLU
-from dmai.utils import UnrecognisedCommandError
+from dmai.nlu.nlu import NLU
+from dmai.utils.exceptions import UnrecognisedCommandError
 
 
 class TestNLU(unittest.TestCase):

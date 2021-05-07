@@ -6,7 +6,7 @@ p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
 from dmai.dm import DM
-from dmai.domain.characters import Fighter
+from dmai.domain.characters.fighter import Fighter
 
 class TestDM(unittest.TestCase):
     """Test the DM class"""
@@ -15,8 +15,7 @@ class TestDM(unittest.TestCase):
         self.dm = DM("the_tomb_of_baradin_stormfury")
 
     def test_init(self) -> None:
-        self.assertIn("monsters", self.dm.__dict__)
-        self.assertIn("characters", self.dm.__dict__)
+        self.assertIn("character_collection", self.dm.__dict__)
 
     def test_get_character(self) -> None:
         self.assertIsInstance(self.dm.get_character("fighter"), Fighter)

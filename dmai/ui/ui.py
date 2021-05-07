@@ -1,4 +1,4 @@
-from dmai.game import Game
+from dmai.game.game import Game
 
 
 class UserInterface:

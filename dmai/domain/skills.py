@@ -1,5 +1,5 @@
 from dmai.domain.abilities import Abilities
-from dmai.utils import Loader
+from dmai.utils.loader import Loader
 
 from dmai.domain.abilities import Abilities
 
