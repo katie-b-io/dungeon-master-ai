@@ -1,13 +1,12 @@
 from dmai.nlg.nlg import NLG
 
-
 class Room:
     def __init__(self, room_data: dict) -> None:
         """Main class for a room"""
         try:
             for key in room_data:
                 self.__setattr__(key, room_data[key])
-
+            
         except AttributeError as e:
             print("Cannot create room, incorrect attribute: {e}".format(e=e))
             raise

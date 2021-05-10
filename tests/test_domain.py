@@ -16,9 +16,8 @@ class TestActions(unittest.TestCase):
     
     def setUp(self) -> None:
         self.adventure = Adventure("the_tomb_of_baradin_stormfury")
-        self.adventure.build_world()
-        self.state = State(self.adventure)
-        self.actions = Actions(self.state, self.adventure)
+        State.set_adventure(self.adventure)
+        self.actions = Actions(self.adventure)
         
     def test_move_good_destination(self) -> None:
         entity = "player"

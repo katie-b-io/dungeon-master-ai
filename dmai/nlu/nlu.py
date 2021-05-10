@@ -115,6 +115,6 @@ class NLU(metaclass=NLUMeta):
         if player_utter.startswith("move"):
             return ("move", {"destination": "inns_cellar"})
         if player_utter.startswith("attack"):
-            return ("attack", {"target": "giant_rat"})
+            return ("attack", {"target": "1_giant_rat"})
         else:
             return (None, {})

@@ -1,5 +1,6 @@
 {
     "cat": {
+        "id": "cat",
         "name": "Cat",
         "type": "beast",
         "size": "tiny",
@@ -67,6 +68,7 @@
         "variants": {}
     },
     "giant_rat": {
+        "id": "giant_rat",
         "name": "Giant Rat",
         "type": "beast",
         "size": "small",
@@ -132,6 +134,7 @@
         },
         "variants": {
             "diseased_giant_rat": {
+                "id": "diseased_giant_rat",
                 "name": "Diseased Giant Rat",
                 "description": "Some giant rats carry vile diseases that they spread with their bites.",
                 "attacks": {
@@ -195,6 +198,7 @@
         }
     },
     "goblin": {
+        "id": "goblin",
         "name": "Goblin",
         "type": "goblinoid",
         "size": "small",
@@ -295,6 +299,7 @@
         "variants": {}
     },
     "skeleton": {
+        "id": "skeleton",
         "name": "Skeleton",
         "type": "undead",
         "size": "medium",
@@ -394,6 +399,7 @@
         "variants": {}
     },
     "zombie": {
+        "id": "zombie",
         "name": "Zombie",
         "type": "undead",
         "size": "medium",

@@ -24,7 +24,7 @@ class Features:
         return "Features:\n{a}".format(a=self.features)
 
     @classmethod
-    def _load_feature_data(self) -> None:
-        """Set the self.feature_data class variable data"""
-        self.feature_data = Loader.load_json("data/features.json")
-        self.feature_data.update(Loader.load_json("data/monster_features.json"))
+    def _load_feature_data(cls) -> None:
+        """Set the cls.feature_data class variable data"""
+        cls.feature_data = Loader.load_json("data/features.json")
+        cls.feature_data.update(Loader.load_json("data/monster_features.json"))

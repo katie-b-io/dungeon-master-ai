@@ -15,6 +15,6 @@ class Armor:
         return "Armor:\n{a}".format(a=self.armor)
 
     @classmethod
-    def _load_armor_data(self) -> None:
-        """Set the self.armor_data class variable data"""
-        self.armor_data = Loader.load_json("data/armor.json")
+    def _load_armor_data(cls) -> None:
+        """Set the cls.armor_data class variable data"""
+        cls.armor_data = Loader.load_json("data/armor.json")

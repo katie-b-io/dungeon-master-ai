@@ -10,7 +10,7 @@
     },
     "npcs": {
         "corvus": {
-            "name": "Corvus Stouthammer",
+            "long_name": "Corvus Stouthammer",
             "short_name": "Corvus",
             "race": [
                 "dwarf",
@@ -19,7 +19,7 @@
             "attitude": "friendly"
         },
         "anvil": {
-            "name": "Anvil-Jumper",
+            "long_name": "Anvil-Jumper",
             "short_name": "Anvil-Jumper",
             "monster": "cat",
             "attitude": "indifferent"
@@ -44,6 +44,7 @@
                     ]
                 }
             },
+            "monsters": {},
             "puzzles": {},
             "treasure": [],
             "text": {
@@ -67,7 +68,9 @@
                     "treasure": [
                         []
                     ]
-                },
+                }
+            },
+            "monsters": {
                 "giant_rat": {
                     "status": [
                         "alive",
@@ -100,7 +103,8 @@
                 "burial_chamber": false,
                 "western_corridor": false
             },
-            "npcs": {
+            "npcs": {},
+            "monsters": {
                 "zombie": {
                     "status": [
                         "alive"
@@ -152,7 +156,8 @@
             "connections": {
                 "storage_room": false
             },
-            "npcs": {
+            "npcs": {},
+            "monsters": {
                 "skeleton": {
                     "status": [
                         "alive"
@@ -239,6 +244,7 @@
                 "antechamber": true
             },
             "npcs": {},
+            "monsters": {},
             "puzzles": {},
             "treasure": [],
             "text": {
@@ -253,7 +259,8 @@
                 "western_room": true,
                 "southern_corridor": false
             },
-            "npcs": {
+            "npcs": {},
+            "monsters": {
                 "goblin": {
                     "status": [
                         "alive",
@@ -305,6 +312,7 @@
                 "baradins_crypt": false
             },
             "npcs": {},
+            "monsters": {},
             "puzzles": {
                 "magic_stone_face": {
                     "trigger": 5,
@@ -398,6 +406,7 @@
                 "southern_corridor": false
             },
             "npcs": {},
+            "monsters": {},
             "puzzles": {},
             "treasure": [
                 "dwarven_thrower"

@@ -31,6 +31,6 @@ class Race:
         return "Race: {r}".format(r=self.name)
 
     @classmethod
-    def _load_race_data(self) -> None:
-        """Set the self.race_data class variable data"""
-        self.race_data = Loader.load_json("data/races.json")
+    def _load_race_data(cls) -> None:
+        """Set the cls.race_data class variable data"""
+        cls.race_data = Loader.load_json("data/races.json")

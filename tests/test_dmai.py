@@ -15,11 +15,7 @@ class TestDM(unittest.TestCase):
         self.dm = DM("the_tomb_of_baradin_stormfury")
 
     def test_init(self) -> None:
-        self.assertIn("character_collection", self.dm.__dict__)
-
-    def test_get_character(self) -> None:
-        self.assertIsInstance(self.dm.get_character("fighter"), Fighter)
-        self.assertIsInstance(self.dm.get_character("FIGHTER"), Fighter)
+        self.assertIn("adventure", self.dm.__dict__)
         
 if __name__ == "__main__":
     unittest.main()

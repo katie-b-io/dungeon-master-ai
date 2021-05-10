@@ -15,6 +15,6 @@ class Spells:
         return "Spells:\n{a}".format(a=self.spells)
 
     @classmethod
-    def _load_spell_data(self) -> None:
-        """Set the self.spell_data class variable data"""
-        self.spell_data = Loader.load_json("data/spells.json")
+    def _load_spell_data(cls) -> None:
+        """Set the cls.spell_data class variable data"""
+        cls.spell_data = Loader.load_json("data/spells.json")

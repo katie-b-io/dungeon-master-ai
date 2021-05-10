@@ -15,6 +15,6 @@ class Conditions:
         return "Conditions:\n{a}".format(a=self.conditions)
 
     @classmethod
-    def _load_condition_data(self) -> None:
-        """Set the self.condition_data class variable data"""
-        self.condition_data = Loader.load_json("data/conditions.json")
+    def _load_condition_data(cls) -> None:
+        """Set the cls.condition_data class variable data"""
+        cls.condition_data = Loader.load_json("data/conditions.json")

@@ -47,6 +47,6 @@ class Skills:
         return repr_str
 
     @classmethod
-    def _load_skill_data(self) -> None:
-        """Set the self.skill_data class variable data"""
-        self.skill_data = Loader.load_json("data/skills.json")
+    def _load_skill_data(cls) -> None:
+        """Set the cls.skill_data class variable data"""
+        cls.skill_data = Loader.load_json("data/skills.json")

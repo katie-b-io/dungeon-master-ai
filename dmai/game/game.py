@@ -1,3 +1,4 @@
+from dmai.domain.characters.character_collection import CharacterCollection
 from dmai.game.player import Player
 from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
@@ -38,7 +39,7 @@ class Game:
             if not player_utter:
                 return
             player_utter = player_utter.lower()
-            char_class = self.dm.get_character(player_utter)
+            char_class = CharacterCollection.get_character(player_utter)
             if char_class:
                 self.player = Player(char_class)
 

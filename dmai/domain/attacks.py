@@ -15,6 +15,6 @@ class Attacks:
         return "Attacks:\n{a}".format(a=self.attacks)
 
     @classmethod
-    def _load_attack_data(self) -> None:
-        """Set the self.attack_data class variable data"""
-        self.attack_data = Loader.load_json("data/attacks.json")
+    def _load_attack_data(cls) -> None:
+        """Set the cls.attack_data class variable data"""
+        cls.attack_data = Loader.load_json("data/attacks.json")

@@ -4,8 +4,6 @@ from dmai.utils.loader import Loader
 from dmai.utils.text import Text
 from dmai.game.world.room import Room
 from dmai.utils.exceptions import UnrecognisedRoomError
-from dmai.domain.monsters.monster_collection import MonsterCollection
-from dmai.game.npcs.npc_collection import NPCCollection
 
 
 class Adventure:
@@ -15,7 +13,6 @@ class Adventure:
 
     def __init__(self, adventure: str) -> None:
         """Main class for the adventure"""
-        self.monster_collection = MonsterCollection()
         self.adventure = adventure
         self._load_adventure_data(self.adventure)
 
@@ -25,21 +22,22 @@ class Adventure:
         except AttributeError as e:
             print("Cannot create adventure, incorrect attribute: {e}".format(e=e))
             raise
+        
+        self._build_world()
 
     def __repr__(self) -> str:
         return "Adventure: {a}".format(a=self.title)
 
     @classmethod
-    def _load_adventure_data(self, adventure) -> None:
-        """Set the self.adventure_data class variable data"""
-        self.adventure_data = Loader.load_json(
+    def _load_adventure_data(cls, adventure) -> None:
+        """Set the cls.adventure_data class variable data"""
+        cls.adventure_data = Loader.load_json(
             "adventures/{a}.json".format(a=adventure)
         )
 
-    def build_world(self) -> None:
+    def _build_world(self) -> None:
         """Method to build the world"""
         self.rooms = dict()
-        self.npcs = dict()
 
         for room_name in self.adventure_data["rooms"]:
             room_data = self.adventure_data["rooms"][room_name]
