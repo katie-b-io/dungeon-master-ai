@@ -6,48 +6,58 @@ from dmai.domain.characters.rogue import Rogue
 from dmai.domain.characters.cleric import Cleric
 
 
-class CharacterCollection:
+class CharacterCollectionMeta(type):
+    _instances = {}
+
+    def __new__(cls, name, bases, dict):
+        instance = super().__new__(cls, name, bases, dict)
+        instance.character_data = Loader.load_json("data/characters.json")
+        return instance
+
+    def __call__(cls, *args, **kwargs) -> None:
+        """CharacterCollection static singleton metaclass"""
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+    
+    
+class CharacterCollection(metaclass=CharacterCollectionMeta):
 
     # class variables
     character_data = dict()
 
     def __init__(self) -> None:
         """CharacterCollection class"""
-        self._load_character_data()
-        self.characters = dict()
+        pass
 
-    def __repr__(self) -> str:
-        character_list = self.characters.keys()
+    @classmethod
+    def __repr__(cls) -> str:
+        character_list = cls.character_data.keys()
         character_str = "{c} is storing the following characters: {cl}".format(
-            c=self.__class__.__name__, cl=", ".join(character_list)
+            c=cls.__class__.__name__, cl=", ".join(character_list)
         )
         return character_str
 
     @classmethod
-    def _load_character_data(self) -> None:
-        """Set the self.character_data class variable data"""
-        self.character_data = Loader.load_json("data/characters.json")
+    def get_all_names(cls) -> list:
+        return [cls.character_data[c]["name"] for c in cls.character_data]
 
-    def get_all(self) -> dict:
-        return self.character_data
-
-    def get_all_names(self) -> list:
-        return [self.character_data[c]["name"] for c in self.character_data]
-
-    def get_character(self, character: str) -> Character:
+    @classmethod
+    def get_character(cls, character: str) -> Character:
         """Return a character of specified type"""
         character_obj = None
         try:
-            character_obj = self._character_factory(character)
-            self.characters[character_obj.name] = character_obj
+            character_obj = cls._character_factory(character)
         except ValueError as e:
             print(e)
         return character_obj
 
-    def _character_factory(self, character: str) -> Character:
+    @classmethod
+    def _character_factory(cls, character: str) -> Character:
         """Construct a character of specified type"""
         character = character.lower()
-        if character in self.character_data.keys():
+        if character in cls.character_data.keys():
             character_map = {
                 "cleric": Cleric,
                 "fighter": Fighter,
@@ -60,4 +70,4 @@ class CharacterCollection:
                 c=character
             )
             raise ValueError(msg)
-        return character_obj(self.character_data[character])
+        return character_obj(cls.character_data[character])
