@@ -1,9 +1,8 @@
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
-from dmai.domain.characters.character import Character
-from dmai.domain.characters.character_collection import CharacterCollection
 from dmai.domain.actions import Actions
 from dmai.nlg.nlg import NLG
+from dmai.game.npcs.npc_collection import NPCCollection
 
 
 class DM:
@@ -15,17 +14,16 @@ class DM:
         """Main DM class"""
         self._dm_utter = None
         self._player_utter = None
-        self.character_collection = CharacterCollection()
         self.adventure = Adventure(adventure)
 
-        # Build the adventure world
-        self.adventure.build_world()
-
         # Initialise the state with the adventure data
-        self.state = State(self.adventure)
+        State.set_adventure(self.adventure)
 
         # Initialise the actions with the state and adventure data
-        self.actions = Actions(self.state, self.adventure)
+        self.actions = Actions(self.adventure)
+        
+        # Initialise the NPC Collection with the adventure data
+        self.npcs = NPCCollection(self.adventure)
 
         # Initialise the player intent map
         self.player_intent_map = {"move": self.move, "attack": self.attack}
@@ -72,10 +70,7 @@ class DM:
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
-
-    def get_character(self, character: str) -> Character:
-        return self.character_collection.get_character(character)
-
+    
     def move(self, destination: str, entity: str = None) -> bool:
         """Attempt to move an entity to a specified destination.
         Returns whether the move was successful."""
@@ -85,3 +80,14 @@ class DM:
         (moved, utterance) = self.actions.move(entity, destination)
         self._generate_utterance(utter=utterance)
         return moved
+
+    def attack(self, target: str, attacker: str = None) -> bool:
+        """Attempt an attack by attacker against specified target.
+        Returns whether the attack was successful."""
+        if not attacker:
+            attacker = "player"
+        print("{a} is attacking {t}!".format(a=attacker, t=target))
+        (attacked, utterance) = self.actions.attack(attacker, target)
+        print(State.current_game_mode)
+        self._generate_utterance(utter=utterance)
+        return attacked

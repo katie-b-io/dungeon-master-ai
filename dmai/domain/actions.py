@@ -1,6 +1,7 @@
-from dmai.game import Adventure
-from dmai.utils import Loader
-from dmai.game import State, Adventure
+from dmai.utils.loader import Loader
+from dmai.utils.exceptions import UnrecognisedRoomError
+from dmai.game.state import State
+from dmai.game.adventure import Adventure
 
 
 class Actions:
@@ -8,9 +9,8 @@ class Actions:
     # class variables
     action_data = dict()
 
-    def __init__(self, state: State, adventure: Adventure) -> None:
+    def __init__(self, adventure: Adventure) -> None:
         """Actions class"""
-        self.state = state
         self.adventure = adventure
         self.actions = dict()
         self._load_action_data()
@@ -19,36 +19,62 @@ class Actions:
         return "Actions:\n{a}".format(a=self.actions)
 
     @classmethod
-    def _load_action_data(self) -> None:
-        """Set the self.action_data class variable data"""
-        self.action_data = Loader.load_json("data/actions.json")
+    def _load_action_data(cls) -> None:
+        """Set the cls.action_data class variable data"""
+        cls.action_data = Loader.load_json("data/actions.json")
 
     def _can_move(self, entity: str, destination: str) -> tuple:
         """Check if an entity can be moved to a specified destination.
-        Returns boolean to indicate whether movement was successful."""
+        Returns tuple (bool, str) to indicate whether movement is possible
+        and reason why not if not."""
 
         # check if destination is accessible
-        current = self.state.get_current_room_id(entity)
+        current = State.get_current_room_id(entity)
 
         if current == destination:
             return (False, "same")
 
         try:
-            if self.state.travel_allowed(current, destination):
+            if State.travel_allowed(current, destination):
                 return (True, "")
             else:
                 return (False, "locked")
-        except KeyError as e:
-            print("Room not recognised: {e}".format(e=e))
+        except UnrecognisedRoomError:
+            raise
 
-    def move(self, entity: str, destination: str) -> str:
+    def move(self, entity: str, destination: str) -> tuple:
         """Attempt to move an entity to the specified destination.
-        Returns the room enter/cannot_enter text."""
+        Returns a tuple with the action status and room enter/cannot_enter text."""
 
         # check if entity can move
         (can_move, reason) = self._can_move(entity, destination)
         if can_move:
-            self.state.set_current_room(entity, destination)
-            return self.adventure.get_room(destination).enter()
+            State.set_current_room(entity, destination)
+            utterance = self.adventure.get_room(destination).enter()
         else:
-            return self.adventure.get_room(destination).cannot_enter(reason)
+            utterance = self.adventure.get_room(destination).cannot_enter(reason)
+        return (can_move, utterance)
+
+    def _can_attack(self, attacker: str, target: str) -> tuple:
+        """Check if a target can be attacked by an attacker.
+        Returns tuple (bool, str) to indicate whether attack is possible
+        and reason why not if not."""
+        
+        # check if attacker and target are within attack range
+        if not State.get_current_room(attacker) == State.get_current_room(target):
+            return (False, "Different location")
+        return (True, "")
+
+    def attack(self, attacker: str, target: str) -> tuple:
+        """Attempt to attack a specified target.
+        Returns a tuple with the attack status and attack resolution text."""
+
+        # check if attack can happen
+        (can_attack, reason) = self._can_attack(attacker, target)
+        if can_attack:
+            utterance = "{a} attacked {t}!".format(a=attacker, t=target)
+            State.set_current_game_mode("combat")
+            return (can_attack, utterance)
+        else:
+            utterance ="{a} can't attack {t}!\n{r}".format(a=attacker, t=target, r=reason)
+            return (can_attack, utterance)
