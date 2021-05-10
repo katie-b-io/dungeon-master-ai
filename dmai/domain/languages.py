@@ -15,6 +15,6 @@ class Languages:
         return "Languages:\n{a}".format(a=self.languages)
 
     @classmethod
-    def _load_language_data(self) -> None:
-        """Set the self.language_data class variable data"""
-        self.language_data = Loader.load_json("data/languages.json")
+    def _load_language_data(cls) -> None:
+        """Set the cls.language_data class variable data"""
+        cls.language_data = Loader.load_json("data/languages.json")

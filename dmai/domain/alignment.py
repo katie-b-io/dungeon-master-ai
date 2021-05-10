@@ -15,6 +15,6 @@ class Alignment:
         return "Alignment: {a}".format(a=self.alignment)
 
     @classmethod
-    def _load_alignment_data(self) -> None:
-        """Set the self.alignment_data class variable data"""
-        self.alignment_data = Loader.load_json("data/alignments.json")
+    def _load_alignment_data(cls) -> None:
+        """Set the cls.alignment_data class variable data"""
+        cls.alignment_data = Loader.load_json("data/alignments.json")
