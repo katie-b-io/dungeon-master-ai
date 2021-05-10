@@ -1,5 +1,4 @@
-from abc import ABC, abstractmethod
-
+from dmai.game.npcs.npc import NPC
 from dmai.domain.abilities import Abilities
 from dmai.domain.alignment import Alignment
 from dmai.domain.armor import Armor
@@ -11,9 +10,12 @@ from dmai.domain.languages import Languages
 from dmai.domain.skills import Skills
 from dmai.domain.spells import Spells
 
-class Monster(ABC):
-    def __init__(self, monster_data: dict) -> None:
+class Monster(NPC):
+    def __init__(self, monster_data: dict, npc_data: dict = None) -> None:
         """Monster abstract class"""
+        if npc_data:
+            NPC.__init__(self, npc_data)
+            
         try:
             for key in monster_data:
                 self.__setattr__(key, monster_data[key])
@@ -33,6 +35,13 @@ class Monster(ABC):
         except AttributeError as e:
             print("Cannot create monster, incorrect attribute: {e}".format(e=e))
             raise
+        
+        # Initialise additional variables
+        self.treasure = None
 
     def __repr__(self) -> str:
         return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
+
+    def set_treasure(self, treasure: str) -> None:
+        """Method to set treasure."""
+        self.treasure = treasure

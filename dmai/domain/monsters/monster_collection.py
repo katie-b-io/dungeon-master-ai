@@ -1,3 +1,4 @@
+from dmai.game.npcs.npc import NPC
 from dmai.utils.loader import Loader
 from dmai.domain.monsters.monster import Monster
 from dmai.domain.monsters.cat import Cat
@@ -27,6 +28,13 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
 
     # class variables
     monster_data = dict()
+    monster_map = {
+        "cat": Cat,
+        "giant_rat": GiantRat,
+        "goblin": Goblin,
+        "skeleton": Skeleton,
+        "zombie": Zombie,
+    }
 
     def __init__(self) -> None:
         """MonsterCollection static class"""
@@ -38,32 +46,35 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
             c=self.__class__.__name__, m=", ".join(monster_list)
         )
         return monster_str
-    
-    @classmethod
-    def get_monster(cls, monster_id: str) -> Monster:
-        """Return a monster of specified type"""
-        monster = None
-        try:
-            monster = cls._monster_factory(monster_id)
-            cls.monster_data[monster.name] = monster
-        except ValueError as e:
-            print(e)
-        return monster
 
     @classmethod
-    def _monster_factory(cls, monster: str) -> Monster:
+    def get_monster(cls, monster_cls: str) -> Monster:
+        """Return an instance of a monster of specified type"""
+        try:
+            return cls._monster_factory(monster_cls = monster_cls)
+        except ValueError as e:
+            print(e)
+    
+    @classmethod
+    def get_monster_npc(cls, npc_data: dict) -> NPC:
+        """Return an instance of a monster of specified NPC."""
+        try:
+            return cls._monster_factory(npc_data = npc_data)
+        except ValueError as e:
+            print(e)
+    
+    @classmethod
+    def _monster_factory(cls, monster_cls: str = None, npc_data: dict = None) -> Monster:
         """Construct a monster of specified type"""
-        monster_id = monster.lower()
-        if monster_id in cls.monster_data.keys():
-            monster_map = {
-                "cat": Cat,
-                "giant_rat": GiantRat,
-                "goblin": Goblin,
-                "skeleton": Skeleton,
-                "zombie": Zombie,
-            }
-            monster_obj = monster_map[monster_id]
-        else:
-            msg = "Cannot create monster_id {m} - it does not exist!".format(m=monster_id)
+        try:
+            if monster_cls:
+                monster_cls = monster_cls.lower()
+            else:
+                monster_cls = npc_data["monster"].lower()
+                
+            monster = cls.monster_map[monster_cls]
+            return monster(cls.monster_data[monster_cls], npc_data)
+        except (ValueError, KeyError) as e:
+            msg = "Cannot create monster {m} - it does not exist!".format(m=monster_cls)
             raise ValueError(msg)
-        return monster_obj(cls.monster_data[monster_id])
+
