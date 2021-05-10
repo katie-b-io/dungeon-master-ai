@@ -7,42 +7,54 @@ from dmai.domain.monsters.skeleton import Skeleton
 from dmai.domain.monsters.zombie import Zombie
 
 
-class MonsterCollection:
+class MonsterCollectionMeta(type):
+    _instances = {}
+
+    def __new__(cls, name, bases, dict):
+        instance = super().__new__(cls, name, bases, dict)
+        instance.monster_data = Loader.load_json("data/monsters.json")
+        return instance
+    
+    def __call__(cls, *args, **kwargs) -> None:
+        """MonsterCollection static singleton metaclass"""
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+    
+    
+class MonsterCollection(metaclass=MonsterCollectionMeta):
 
     # class variables
     monster_data = dict()
 
     def __init__(self) -> None:
-        """MonsterCollection class"""
-        self._load_monster_data()
-        self.monsters = dict()
+        """MonsterCollection static class"""
+        pass
 
     def __repr__(self) -> str:
-        monster_list = self.monsters.keys()
+        monster_list = self.monster_data.keys()
         monster_str = "{c} is storing the following monsters: {m}".format(
             c=self.__class__.__name__, m=", ".join(monster_list)
         )
         return monster_str
-
+    
     @classmethod
-    def _load_monster_data(self) -> None:
-        """Set the self.monster_data class variable data"""
-        self.monster_data = Loader.load_json("data/monsters.json")
-
-    def get_monster(self, monster: str) -> Monster:
+    def get_monster(cls, monster_id: str) -> Monster:
         """Return a monster of specified type"""
-        monster_obj = None
+        monster = None
         try:
-            monster_obj = self._monster_factory(monster)
-            self.monsters[monster_obj.name] = monster_obj
+            monster = cls._monster_factory(monster_id)
+            cls.monster_data[monster.name] = monster
         except ValueError as e:
             print(e)
-        return monster_obj
+        return monster
 
-    def _monster_factory(self, monster: str) -> Monster:
+    @classmethod
+    def _monster_factory(cls, monster: str) -> Monster:
         """Construct a monster of specified type"""
-        monster = monster.lower()
-        if monster in self.monster_data.keys():
+        monster_id = monster.lower()
+        if monster_id in cls.monster_data.keys():
             monster_map = {
                 "cat": Cat,
                 "giant_rat": GiantRat,
@@ -50,8 +62,8 @@ class MonsterCollection:
                 "skeleton": Skeleton,
                 "zombie": Zombie,
             }
-            monster_obj = monster_map[monster]
+            monster_obj = monster_map[monster_id]
         else:
-            msg = "Cannot create monster {m} - it does not exist!".format(m=monster)
+            msg = "Cannot create monster_id {m} - it does not exist!".format(m=monster_id)
             raise ValueError(msg)
-        return monster_obj(self.monster_data[monster])
+        return monster_obj(cls.monster_data[monster_id])
