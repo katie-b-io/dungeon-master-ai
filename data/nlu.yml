@@ -1,0 +1,261 @@
+version: "2.0"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - good afternoon
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you an AI?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to an AI?
+    - am I talking to a human?
+
+- intent: roll_die
+  examples: |
+    - roll
+    - I roll my [d4](die)
+    - I roll the [d6](die)
+    - I roll my [d8](die)
+    - I roll the [d12](die)
+    - roll [d20](die)
+    - roll the [d100](die)
+    - [d4](die)
+    - [d6](die)
+    - [d8](die)
+    - [d10](die)
+    - [d12](die)
+    - [d20](die)
+    - [d100](die)
+
+- intent: move
+  examples: |
+    - move to the next room
+    - advance to the door
+    - move into the neighbouring room
+    - crawl through the door
+    - progress to the next room
+    - go there
+    - relocate over there
+    - proceed to the next room
+    - I want to run through the door
+    - I want to step through the doorway
+    - I travel to the next room
+    - I walk to the next room
+    - cross to the [cellar](location)
+    - jump to the [inns cellar](location)
+    - maneuver to the [inn's cellar](location)
+    - go to [inn cellar](location)
+    - move to the [antechamber](location)
+    - go to the [inn](location)
+    - proceed to the [stout meal inn](location)
+    - go [upstairs](location)
+    - go to the [storage room](location)
+    - head to [storage](location)
+    - travel to [store room](location)
+    - progress to [store](location)
+    - go to the [burial chamber](location)
+    - move to the [chamber](location)
+    - run to the [western corridor](location)
+    - walk into the [west corridor](location)
+    - jump into the [southern corridor](location)
+    - cross to the [south corridor](location)
+    - cross to the [crypt](location)
+    - jump to [baradins crypt](location)
+    - maneuver to [baradin's crypt](location)
+    - go to [baradin crypt](location)
+
+- intent: explore
+  examples: |
+    - explore
+    - examine
+    - investigate
+    - look around
+    - look
+    - explore the room
+    - examine the [storage room](location)
+    - investigate [antechamber](location)
+    - look around the [cellar](location)
+    - explore [baradin's crypt](location)
+    - look at [western corridor](location)
+    - examine [burial chamber](location)
+    - investigate the [southern corridor](location)
+    - investigate [stout meal inn](location)
+    - examine [corvus](npc)
+    - look at [corvus stouthammer](npc)
+    - examine [the dwarf](npc)
+    
+- intent: roleplay_neutral
+  examples: |
+    - say
+    - I say
+    - talk to [corvus](npc)
+    - I talk to [anvil-jumper](npc)
+    - say to [cat](monster)
+    - I say to [giant rat](monster)
+    - talk to [goblin](monster)
+    - talk to [first](id) [goblin](monster)
+    - talk to [second](id) [goblin](monster)
+    - talk to [skeleton](monster)
+    - talk to [zombie](monster)
+
+- intent: roleplay_negative
+  examples: |
+    - shout 
+    - shout at [corvus](npc)
+
+- intent: roleplay_positive
+  examples: |
+    - laugh
+    - laugh at [corvus](npc)
+
+- intent: attack
+  examples: |
+    - attack [corvus](npc)
+    - I ambush [the dwarf](npc)
+    - assail [corvus stouthammer](npc)
+    - assault [stouthammer](npc)
+    - beat [anvil-jumper](npc)
+    - blast [cat](monster)
+    - charge [giant rat](monster)
+    - harm [first](id) [giant rat](monster)
+    - hit [second](id) [giant rat](monster)
+    - hurt [third](id) [giant rat](monster)
+    - stab [fourth](id) [giant rat](monster)
+    - strike the [1st](id) [giant rat](monster)
+    - bash the [2nd](id) [giant rat](monster)
+    - beat the [3rd](id) [giant rat](monster)
+    - beset the [4th](id) [giant rat](monster)
+    - bust the [goblin](monster)
+    - clock [primary](id) [goblin](monster)
+    - club [secondary](id) [goblin](monster)
+    - combat [initial](id) [goblin](monster)
+    - kick [skeleton](monster)
+    - overwhelm [zombie](monster)
+    - punch [skeleton](monster)
+    - wallop [zombie](monster)
+    - pounce the [cat](monster)
+
+- synonym: stout_meal_inn
+  examples: |
+    - inn
+    - stout meal inn
+    - upstairs
+
+- synonym: inns_cellar
+  examples: |
+    - cellar
+    - inn's cellar
+    - inns cellar
+    - inn cellar
+
+- synonym: storage_room
+  examples: |
+    - storage room
+    - storage
+    - store room
+    - store
+
+- synonym: burial_chamber
+  examples: |
+    - burial chamber
+    - chamber
+
+- synonym: western_corridor
+  examples: |
+    - western corridor
+    - west corridor
+
+- synonym: southern_corridor
+  examples: |
+    - southern corridor
+    - south corridor
+
+- synonym: baradins_crypt
+  examples: |
+    - baradins crypt
+    - baradin's crypt
+    - baradin crypt
+    - crypt
+
+- synonym: corvus
+  examples: |
+    - corvus stouthammer
+    - stouthammer
+    - the dwarf
+
+- synonym: giant_rat
+  examples: |
+    - giant rat
+    - rat
+
+- synonym: "1"
+  examples: |
+    - 1st
+    - first
+    - initial
+    - primary
+
+- synonym: "2"
+  examples: |
+    - 2nd
+    - second
+    - secondary
+
+- synonym: "3"
+  examples: |
+    - 3rd
+    - third
+
+- synonym: "4"
+  examples: |
+    - 4th
+    - fourth
