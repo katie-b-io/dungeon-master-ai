@@ -14,7 +14,6 @@ class Status(Enum):
     ALIVE = "alive"
     DEAD = "dead"
 
-
 class StateMeta(type):
     _instances = {}
 
@@ -53,7 +52,16 @@ class State(metaclass=StateMeta):
     def set_current_game_mode(cls, game_mode: str) -> None:
         """Method to set the current game mode."""
         cls.current_game_mode = GameMode(game_mode)
-    
+
+    @classmethod
+    def get_current_status(cls, entity: str) -> None:
+        """Method to get the current status for specified entity."""
+        try:
+            return cls.current_status[entity]
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+            
     ############################################################
     # METHODS RELATING TO LOCATION
     @classmethod
@@ -62,7 +70,7 @@ class State(metaclass=StateMeta):
         cls.current_room[entity] = room_id
         
     @classmethod
-    def get_current_room_id(cls, entity: str) -> str:
+    def get_current_room_id(cls, entity: str = "player") -> str:
         """Method to get the current room id for specified entity."""
         try:
             return cls.current_room[entity]
@@ -71,7 +79,7 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
     
     @classmethod
-    def get_current_room(cls, entity: str) -> Room:
+    def get_current_room(cls, entity: str = "player") -> Room:
         """Method to get the current room for specified entity."""
         try:
             return cls.adventure.get_room(cls.get_current_room_id(entity))
