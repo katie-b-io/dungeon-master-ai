@@ -34,4 +34,4 @@ class CharacterClass:
     @classmethod
     def _load_char_class_data(cls) -> None:
         """Set the cls.char_class_data class variable data"""
-        cls.char_class_data = Loader.load_json("data/classes.json")
+        cls.char_class_data = Loader.load_json("data/domain/classes.json")

@@ -17,4 +17,4 @@ class Equipment:
     @classmethod
     def _load_equipment_data(cls) -> None:
         """Set the cls.equipment_data class variable data"""
-        cls.equipment_data = Loader.load_json("data/equipment.json")
+        cls.equipment_data = Loader.load_json("data/domain/equipment.json")

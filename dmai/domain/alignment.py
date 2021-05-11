@@ -17,4 +17,4 @@ class Alignment:
     @classmethod
     def _load_alignment_data(cls) -> None:
         """Set the cls.alignment_data class variable data"""
-        cls.alignment_data = Loader.load_json("data/alignments.json")
+        cls.alignment_data = Loader.load_json("data/domain/alignments.json")

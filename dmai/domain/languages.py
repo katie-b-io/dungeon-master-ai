@@ -17,4 +17,4 @@ class Languages:
     @classmethod
     def _load_language_data(cls) -> None:
         """Set the cls.language_data class variable data"""
-        cls.language_data = Loader.load_json("data/languages.json")
+        cls.language_data = Loader.load_json("data/domain/languages.json")

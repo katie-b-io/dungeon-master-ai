@@ -17,4 +17,4 @@ class Attacks:
     @classmethod
     def _load_attack_data(cls) -> None:
         """Set the cls.attack_data class variable data"""
-        cls.attack_data = Loader.load_json("data/attacks.json")
+        cls.attack_data = Loader.load_json("data/domain/attacks.json")
