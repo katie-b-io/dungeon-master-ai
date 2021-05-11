@@ -1,7 +1,8 @@
+from dmai.utils.exceptions import UnrecognisedEntityError
 from dmai.domain.monsters.monster_collection import MonsterCollection
 from dmai.game.adventure import Adventure
 from dmai.game.npcs.npc import NPC
-from dmai.game.state import State
+from dmai.game.state import State, Status
 
 
 class NPCCollection:
@@ -46,7 +47,8 @@ class NPCCollection:
                     # create a monster with unique id
                     monster = MonsterCollection.get_monster(monster_id)
                     monster.set_treasure(treasure)
-                    unique_id = "{i}_{m}".format(i=len(monsters), m=monster_id)
+                    i = 1 + sum(1 for m in monsters.values() if m.name == monster.name)
+                    unique_id = "{m}_{i}".format(i=i, m=monster_id)
                     monsters[unique_id] = monster
                     # update state with monster location and status
                     State.set_init_room(unique_id, room)
@@ -69,3 +71,27 @@ class NPCCollection:
                 monster = self.get_monster(monster_type)
                 monster_id = "monster_{i}".format(i=i)
                 self.monsters[monster_id] = monster
+    
+    def get_monster_id(self, monster_type: str, status: str = None, location: str = None) -> None:
+        """Method to find a monster of specified type and status.
+        Returns a string with the monster id matching requirements."""
+        print(monster_type)
+        for monster_id in self.monsters:
+            monster = self.monsters[monster_id]
+            if monster.id == monster_type:
+                try:
+                    select = True
+                    if status:
+                        print(Status(status))
+                        print(State.get_current_status(monster_id))
+                        if Status(status) != State.get_current_status(monster_id):
+                            select = False
+                    if location:
+                        print(location)
+                        print(State.get_current_room_id(monster_id))
+                        if location != State.get_current_room_id(monster_id):
+                            select = False
+                    if select:
+                        return monster_id
+                except UnrecognisedEntityError as e:
+                    print(e)

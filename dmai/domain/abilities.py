@@ -20,7 +20,7 @@ class Abilities:
     @classmethod
     def _load_ability_data(cls) -> None:
         """Set the cls.ability_data class variable data"""
-        cls.ability_data = Loader.load_json("data/abilities.json")
+        cls.ability_data = Loader.load_json("data/domain/abilities.json")
 
     def _calculate_ability_modifiers(self) -> dict:
         """Calculate the ability modifiers"""

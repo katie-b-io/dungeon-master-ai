@@ -1,0 +1,29 @@
+version: "2.0"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - bot_challenge
+  - roll_die
+  - move
+  - explore
+  - roleplay_neutral
+  - roleplay_negative
+  - roleplay_positive
+  - attack
+
+responses:
+  utter_greet:
+  - text: "Greetings, adventurer!"
+
+  utter_goodbye:
+  - text: "Farewell"
+
+  utter_iamabot:
+  - text: "I am an AI, created by Katie Baker for an MSc project at Heriot-Watt University."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

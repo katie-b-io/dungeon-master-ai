@@ -1,5 +1,6 @@
 from dmai.utils.exceptions import DiceFormatError, UnrecognisedCommandError
 from dmai.utils.dice_roller import DiceRoller
+from dmai.nlu.rasa_adapter import RasaAdapter
 import dmai
 
 
@@ -110,11 +111,14 @@ class NLU(metaclass=NLUMeta):
     @classmethod
     def _determine_intent(cls, player_utter: str) -> str:
         """Method to determine the player intent"""
-        # TODO replace with proper NLU
         player_utter = player_utter.lower()
-        if player_utter.startswith("move"):
-            return ("move", {"destination": "inns_cellar"})
-        if player_utter.startswith("attack"):
-            return ("attack", {"target": "1_giant_rat"})
+        print("Thinking...")
+        (intent, entities) = RasaAdapter.get_intent(player_utter)
+        if entities:
+            print(entities)
+        if intent == "move":
+            return ("move", {"nlu_entities": entities})
+        if intent == "attack":
+            return ("attack", {"nlu_entities": entities})
         else:
             return (None, {})
