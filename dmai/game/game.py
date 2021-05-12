@@ -19,10 +19,14 @@ class Game:
 
     def input(self, player_utter: str) -> None:
         """Receive a player input"""
-
+        
+        # reset the talking state
+        if State.talking:
+            State.stop_talking()
+            
         # first check for commands, if we have a command - pause the story telling if necessary
         if player_utter:
-            pause = NLU.process_player_command(player_utter)
+            (pause, player_utter) = NLU.process_player_command(player_utter)
             if pause:
                 State.pause()
                 return
@@ -31,7 +35,7 @@ class Game:
         else:
             if State.paused:
                 State.play()
-
+        
         # the game has started, the introduction is being read, ignore utterances
         if self.intro:
             return

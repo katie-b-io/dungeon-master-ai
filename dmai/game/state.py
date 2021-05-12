@@ -30,6 +30,7 @@ class State(metaclass=StateMeta):
     # class variables
     started = False
     paused = False
+    talking = False
     adventure = None
     current_room = {}
     current_status = {}
@@ -51,6 +52,14 @@ class State(metaclass=StateMeta):
     def play(cls) -> None:
         cls.paused = False
 
+    @classmethod
+    def talk(cls) -> None:
+        cls.talking = True
+
+    @classmethod
+    def stop_talking(cls) -> None:
+        cls.talking = False
+        
     @classmethod
     def set_adventure(cls, adventure) -> None:
         cls.adventure = adventure

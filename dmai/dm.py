@@ -9,7 +9,7 @@ class DM:
 
     # class variables
     utter_type_map = {"name": NLG.acknowledge_name, "action": NLG.get_action, "start": NLG.enter_room}
-    ENTITY_CONFIDENCE = 0.95
+    ENTITY_CONFIDENCE = 0.75
 
     def __init__(self, adventure: str) -> None:
         """Main DM class"""
