@@ -84,11 +84,14 @@ class NLG(metaclass=NLGMeta):
             "{n}, that's a good one!".format(n=n),
         ]
         return random.choice(utters)
-
+    
     @classmethod
-    def enter_room(cls, room: str) -> str:
+    def enter_room(cls, room: str, adventure = None) -> str:
         """Return the utterance for entering a room previously visited"""
-        return "You entered {r}".format(r=room)
+        if not adventure:
+            return "You entered {r}".format(r=room)
+        else:
+            return adventure.get_room(room).enter()
 
     @classmethod
     def cannot_move(cls, room: str, reason: str = None) -> str:

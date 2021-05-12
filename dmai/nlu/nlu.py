@@ -112,7 +112,7 @@ class NLU(metaclass=NLUMeta):
     def _determine_intent(cls, player_utter: str) -> str:
         """Method to determine the player intent"""
         player_utter = player_utter.lower()
-        print("Thinking...")
+        print("I'm thinking...")
         (intent, entities) = RasaAdapter.get_intent(player_utter)
         if entities:
             print(entities)

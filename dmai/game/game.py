@@ -3,6 +3,7 @@ from dmai.game.player import Player
 from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.dm import DM
+from dmai.game.state import State
 
 
 class Game:
@@ -12,8 +13,7 @@ class Game:
         self.dm = DM(adventure)
         self.intro = True
         self.player = None
-        self.pause = False
-
+        
         # intro text generator
         self.intro_text = self.dm.get_intro_text()
 
@@ -22,12 +22,15 @@ class Game:
 
         # first check for commands, if we have a command - pause the story telling if necessary
         if player_utter:
-            self.pause = NLU.process_player_command(player_utter)
-            if self.pause:
+            pause = NLU.process_player_command(player_utter)
+            if pause:
+                State.pause()
                 return
+            else:
+                State.play()
         else:
-            if self.pause:
-                self.pause = False
+            if State.paused:
+                State.play()
 
         # the game has started, the introduction is being read, ignore utterances
         if self.intro:
@@ -47,6 +50,10 @@ class Game:
             # player is entering a name
             self.player.set_name(player_utter)
             succeed = self.dm.input(player_utter, utter_type="name")
+        
+        elif not State.started:
+            # start the game by relaying description of starting room 
+            succeed = self.dm.input(player_utter, utter_type="start")
 
         elif player_utter:
             # attempt to determine the player's intent
@@ -60,15 +67,17 @@ class Game:
     def output(self) -> str:
         """Return an output for the player"""
 
-        if self.pause:
-            return ""
-
         # the game starts
         if self.intro:
             try:
+                State.pause()
                 return next(self.intro_text)
             except StopIteration:
+                State.play()
                 self.intro = False
+        
+        if State.paused:
+            return ""
 
         # the player variable is not set at the beginning of the game
         if not self.player:
