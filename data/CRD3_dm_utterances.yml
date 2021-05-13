@@ -1,0 +1,83 @@
+Ability check:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 285: Make an intelligence check!
+      - 343: Make a persuasion roll.
+      - 373: Make a persuasion check.
+      - 378: Roll your persuasion.
+      - 452: This would be insight. Go ahead and roll insight.
+      - 697: All right, roll stealth, both of you guys.
+      - 699: Make a constitution check!
+      - 732: Nice! Go ahead and make a perception check.
+      - 738: Go ahead and roll a dexterity saving throw.
+      - 796: Make intimidation check.
+      - 858: Make a general charism check.
+      - 897: Go ahead and make a stealth check.
+      - 939: Go ahead and make an acrobatics check; it's probably your best score anyway.
+      - 1002: He's drunk, you're offering him ale, and he's been laughing at a bear for two minutes. Make a persuasion roll with advantage.
+      - 1210: Make a persuasion check for that. It's a very persuasion based encounter.
+      - 1313: Make a stealth check.
+      - 1316: Because you're invisible, I'll give you advantage on that. Go ahead and roll.
+      - 1360: Okay you have disadvantage on this.
+      - 1362: So roll twice, and we'll consider this a straight dexterity check.
+      - 1500: Sleight of hand check.
+      - 1824: Make an intimidation check.
+      - 1847: Roll stealth both of you.
+      - 1988: Go ahead and roll an athletics check.
+      - 2045: Tiberius you take 13 points of damage halved by Stoneskin so you take a total of seven. Also make a constitution saving throw. Whatcha got?
+        
+Initiative:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 1573: Everyone roll initiative. (cheering).
+
+Combat:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 1550: Roll for attack.
+      - 1623: Top of the round, Percy you're up.
+      - 1630: All right, roll for your attack with Bad News.
+      - 1709: Okay. You pull out your arrow and as you pull it back, a little bit of energy courses through your fingers, strikes through your arrow. You can now see this crackling energy as you're pulling it taut in your bow. You let it loose, roll for attack.
+      - 1720: Go ahead a roll damage for other ogre.
+      - 1758: All right. Go ahead and roll for attack on the first one.
+      - 1766: Its head and upper torso rolling off to the side before rolling to a stop. However, the inertia of your axe still keeps through to the one on the other side of you. Go ahead and roll for your second attack on that.
+      - 1788: All right. As you dodge to the side, this blur of shadow and speed, you coast up to the side of your sister, dagger both plunge towards the side of the ogre. Go ahead and roll for an attack.
+      - 1916: Then you have to roll for the attack. Roll a d20 and add your--
+      - 1978: He comes running around, rears back, and takes his double-handed great axe and lobs it overhand. The chain, that's wrapped around your wrist, keeping it attached to you, in some degree. Go ahead and roll for the attack.
+
+Damage check:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 916: That'll hit. Go ahead and roll sneak attack damage on this, of course.
+      - 1635: Yep, that'll do it. Go ahead and roll damage.
+      - 1696: Go ahead and roll 2d6 impact damage for the force of the throw.
+      - 1760: That definitively hits. Go ahead and roll damage.
+      - 1768: Also hits, go ahead and roll damage.
+      - 1926: Okay, so you fire one beam off and it slams into the side of one of the naga heads. The second you bring back and as you do there's a flicker of arcane instability. His arm shakes as he releases the surge of scorching energy as it blasts into the side of the naga. Also, does not make a saving throw again! Roll full damage.
+      - 1971: That hits, go ahead and roll damage.
+      - 2116: You don't have to roll to hit. You just roll damage on that. I make a saving throw.
+      - 2121: 17? That's a failure on its saving throw. Go ahead and roll 8d6.
+          
+Query player:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 948: You're a bear, you want to do anything?
+      - 1057: You bring Trinket back down. Do you release your polymorph?
+      - 1065: Anything you want to do in preparation for the next day?
+      - 1099: Hello, everyone. Welcome back. We've had our pee breaks. We've had our refills of our drinks. We've got Fireball, so I think we're good for the next venture. Anyway, the party has taken their rest for the evening. Once again, this is one of those weird experiences where you wake up, not because of the sun rising, because you can't see it in the dwarven city of Kraghammer, but eventually you all come to consciousness naturally. What is your plan of action?
+      - 1198: Well, what's your business, if I might ask again? You already seen the statue.
+      - 1349: Do you have on your person any sort of thieve' tools?
+      - 1357: Do you wish to pick one of the doors?
+      - 1665: These guys here are entangled. These front goblins are not. Scorching Ray you said at which ones?
+      - 1688: Okay. Which one? The one left here?
+      - 1698: Ten damage to each of them?
+      - 1705: All right. Do you want to move a little closer?
+      - 1756: Right over here?
+      - 1857: Whatcha got? Well, let's see. Keyleth, that's your turn, Stoneskin and moving up. Anywhere else you want to go? Right now, we're technically not in combat.
+      - 1883: There you go. That's what a shawm sounds like, apparently. You can use it on attack roll, a saving throw, or an ability check. Any skill. Tiberius, are you going to stay where you are, are you moving anywhere? Last chance.
+      - 1914: It's an aimed ray attack?
+      - 1938: Next week, you can donate to then. All right, so that brings us to the end of Tiberius' turn. You want to move at all, are you staying where you are?
+      - 1943: What did you roll for stealth, by the way?
+      - 1959: What was your to hit roll on that?
+      - 2114: Okay! Straight line that way?
+      - 2130: How do you want to do this? (yelling)

@@ -1,0 +1,221 @@
+Move:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 530: I want to head in that direction.
+      - 816: Okay, I'm going to head back to the inn, then. I'm not going to poke the bear.
+      - 1382: Let's go where the guards are.
+      - 1383: Let's walk towards the guards.
+      - 1651: I move within 60 feet of those big fellows.
+      - 1755: I would like to rage! And I would like to move to the right of all those stinking goblins!
+      - 1757: Yeah, a little more to the right. Yeah, a little more. Yeah, keep going. All the way flanking it there. Yeah. Yeah, and then I would like to give them the cleanest shave possible with my greataxe.
+      - 1839: I'm running right now diagonally towards the wall and I press against the wall.
+      - 1870: I'll move up to the right near where Grog is. No one's has taken any damage yet, right?
+      - 1976: Right, I would like to run around the other side of the rock, raging, spit flying out my of my mouth! I would like to use the chain of returning, also crafted by Tiberius, attach it to the end of the greataxe, and throw it from where I am at the snake.
+
+Action:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 1904: I'm taking my round to aim.
+          
+Stealth:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 695: Then we stealth and--
+      - 1294: And I'm sneaking into the house.
+      - 1319: I'm snooping around, trying to see if there's any lords or higher ranking individuals in the area.
+      - 1786: Excellent. I'm going to take a run towards my sister, since she's right close to him, he's distracted so I'm going to turn just as I get to her, so my back presses against hers and swing around and sneak attack two daggers up in his belly.
+      - 1846: We're stealthing, I'm stealthing.
+
+Pick lock:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 1348: I might as well try one of the doors that's locked, and see if I can pick it, but I'm not good at that, so I'll try.
+          
+Attack:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 893: In the fog I somersault over some random dwarf and pull out my dagger, but turn it around in my hand and whack Balgus in the back of the head as hard as I can, just to try and knock him out.
+      - 1543: We should attack them! I string my bow.
+      - 1546: I take a shot. Right now.
+      - 1547: I take a shot. I shoot it!
+      - 1549: I throw a dagger.
+      - 1563: We run straight in.
+      - 1755: I would like to rage! And I would like to move to the right of all those stinking goblins!
+      - 1757: Yeah, a little more to the right. Yeah, a little more. Yeah, keep going. All the way flanking it there. Yeah. Yeah, and then I would like to give them the cleanest shave possible with my greataxe.
+      - 1786: Excellent. I'm going to take a run towards my sister, since she's right close to him, he's distracted so I'm going to turn just as I get to her, so my back presses against hers and swing around and sneak attack two daggers up in his belly.
+
+Cast spell:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 326: I take out my flute and I play a little Healing Words spell and try to heal him of his drunkenness.
+      - 768: I'm going to-- okay. I'm going to shoot a Fireball. Right in front of me, roll it like a bowling ball. Just right to the door.
+      - 782: I use Mage Hand. I knock on the door.
+      - 784: Damn these runes. Okay, fine. I will do Glacial Blast right up to the door.
+      - 871: I cast a fog. Over the ring.
+      - 877: Wait. First, I Polymorph Trinket into a squirrel.
+      - 962: I'm going to cast Prestidigitation and do fireworks on top of that.
+      - 1291: I'm going to turn invisible.
+      - 1367: I become un-invisible and I cast Dimension Door.
+      - 1394: I'm going to take this opportunity to cast Stoneskin on myself.
+      - 1555: I'm going to throw a little Fireball, right there where those guys are.
+      - 1565: I throw Entangle up, in the distance wherever they're coming from.
+      - 1610: To be fair I just cast Entangle. It works. I'm distracted holding Entangle.
+      - 1658: I'm going to shoot a Scorching Ray at the big guy.
+      - 1666: Actually, oh there's a bunch of those dudes, aren't there? I'm going to do a Fireball instead, right in the center of the juiciness where I can get a couple little guys and both the big guys.
+      - 1687: I'm going to use my second spell and do Telekinesis and pick one up and try to hurl him into the other one.
+      - 1702: Oh! Well, all right. I'm going to cast Hunter's Mark on the most damaged one.
+      - 1704: All right. Then I'm going to shoot Lightning Arrow.
+      - 1708: All right, cool. I'm going to shoot Lightning Arrow at them.
+      - 1817: Wall of Stone-- boom.
+      - 1845: I cast Stoneskin on myself.
+      - 1886: I'll get behind the cover. I'm going to peek out and I'm going to cast Blur.
+      - 1911: Okay! I'll do a Scorching Ray.
+      - 1950: "Okay. Trinket's going to hang out because I don't want to-- you know. I'm going to shoot Conjure Barrage. No, I'm just going to shoot him twice.
+      - 2088: Okay, so I'm really upset, really hurting. Out of anger I take my staff and I go (bam) and I crack and do Thunderwave pushing him back 15 feet.
+      - 2113: Yes. Them I'm going to cast Lightning Bolt at him.
+
+Disengage:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 936: Bonus action to disengage. Disengage as a rogue.
+      
+Enquire:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 200: We might have business with you, if you've seen a halfling come through.
+      - 204: How long ago would you say this was?
+      - 233: Sorry, about that. You're very welcoming. We appreciate that. How welcoming would you say the city is to outsiders? Would we stick out like a sore thumb?
+      - 235: So the lower levels would have the mithral mines?
+      - 252: Oh. Where is he located, exactly?
+      - 256: Down at the quarry?
+      - 258: How did your friend get this nasty cut?
+      - 296: Yes, fellows, what should we do?
+      - 333: We were wondering if we might, perchance, acquire your knowledge about town, for a bit of a search.
+      - 337: Right. How often do you get challengers in this tavern?
+      - 402: No, I've heard they're terrible. What do you do, Balgus?
+      - 480: Where might that door be?
+
+Recruit:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 421: Would you like to accompany us on this journey that we're taking? We're trying to find the Greyspines and you seem like you would want to come in on this.
+
+Roleplay neutral:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 127: We grab a table next to the dwarves with Grog.
+      - 135: I would like a cask of ale.
+      - 136: I'll need your largest bowl of ale for this one here.
+      - 137: Cask. Cask of ale. Cask.
+      - 268: Excuse me, one thing, Adra, are there any mystics in this particular town that study any arcane arts?
+      - 316: I would like to get the largest goblet you have of ale, and I would like to go over to, what was his name? Bulbous?
+      - 453: I'm going to go walk over to Grog really quickly.
+      - 457: Tell you what, Balgus. We have some very rare items with us that I think you might be interested in.
+      - 885: I say Scanlan! Catch Trinket!
+      - 1272: What was your name, again?
+      - 1743: Recites poetry
+      - 1819: We don't know what's in there, we should talk about this for a second, and I bought us some time. I'm sure it's going to try to beat through that door in a second.
+      - 1834: What kind of things. From where?
+      
+Roleplay positive:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 102: I bring out a piece of gold. Please, sir, we're looking for a place to stay that isn't covered in mud.
+      - 106: I like your armor by the way.
+      - 126: My kind of people, see you later! I go grab the drink with the lovely dwarves.
+      - 146: Adra! You run a fantastic establishment.
+      - 148: Thank you for welcoming us and allowing us to buy this round.
+      - 206: Thank you. Perfect.
+      - 272: Interesting.
+      - 275: Thank you for your time, Adra. Carry on with your evening. We'll seek you out if we have any more questions.
+      - 331: I'm sorry to disturb you, your name is of great repute around these parts.
+      - 335: Right, I hear you're a good fighter. You look strong.
+      - 366: We just heard you're so impressive and masculine.
+      - 368: We really wanted to talk to you.
+      - 390: We've heard that no fighter can match your skill.
+      - 392: We've heard that you know more about this town than anyone else.
+      - 408: This ale is amazing, that I'm drinking right now.
+      - 502: Thank you so much.
+      - 1001: Take this! You are an impressive specimen, my good man. I have never had a fight that amazing in at least a week. That was something to see. Here, take this, and after this one there's three more.
+      - 1020: I grab a half a mug of ale off the table and say, \"Dwarven compatriots, we could not have expected a better welcome here in Kraghammer! We'll see you tomorrow night for round two. Thank you, one and all.\".
+      - 1021: Huzzah!
+      - 1380: We point at the ale and give him a thumbs up.
+      - 1695: I turn to Grog. They're all yours, buddy!
+      - 1782: We should just let it pass.
+      
+Roleplay negative:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 124: What're you looking at?
+      - 1542: Ah, I don't like these guys.
+      - 1588: Fellows. I don't like goblins.
+      - 1591: I don't like goblins.
+      - 1593: No, they will all die. Don't spare any of them.
+      - 1823: I throw up my wall and turn around and I say: What's coming?! Tell us! You know what's coming. What's coming?!
+      - 1832: We are about to die. It is in your best interest to tell us.
+      
+Roleplay flirty:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 372: I reach out and I stroke his bicep because I can't hear that.
+
+Rest:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 520: All right, yes, let's go sleep.
+      - 521: Let's sleep.
+      - 526: I want to take short rest.
+      - 905: I'm taking a short rest, you all can do this.
+      - 1064: Take a nap.
+
+Query DM:
+  - file: C1E001_2_0.json
+    utterances: |
+      - 280: What time of day is it?
+      - 288: 18, plus, what is that? Investigation? Or insight?
+      - 451: Can I do a persuasion check-- a perception check to see if he's lying?
+      - 498: Can I stop Adra then and ask her where Greyspine Manor is? Keep, manor, whatever.
+      - 515: Do we want to do the manor right now? What time is it?
+      - 524: How long is a short rest?
+      - 700: Constitution check?
+      - 766: What do I see around the place? Do I see any large rocks, or any large pillars that I can--?
+      - 810: Just going to watch, that's all. Do I see any security details? See who's guarding the place.
+      - 812: No Carvers or any sort of guard detail outside the house? Anything like that?
+      - 814: Okay. Heavily heavily guarded by the looks of what's inside and what's outside the gate?
+      - 894: Can you see in fog?
+      - 912: Oh, that's no good. Oh, I have advantage on the attack roll for this?
+      - 1003: Yeah! Persuasion, you say? 15.
+      - 1036: How big is the room?
+      - 1043: How long can I keep her a mouse?
+      - 1169: How many are there?
+      - 1204: A thimble of it because if any of it goes missing-- Is it sealed? Can we tell if it's sealed?
+      - 1230: I want to double check, see if there's a bell to ring or there seems to be some sort of calling--
+      - 1405: Can I use my perception to see which one of them looks maybe the most interested or weakest?
+      - 1553: Is there a clear area where there's a bunch of goblins running?
+      - 1636: Does that critical for you?
+      - 1641: That does critical for me. I've never criticaled with this either. What does this mean?
+      - 1646: Is that doubled?
+      - 1685: He's a large creature isn't he?
+      - 1712: All right. Then I do something else. 1d8. Right?
+      - 1723: I can reassign my Hunter's Mark to him now?
+      - 1794: Critical hit, too, as well, wouldn't it?
+      - 1796: Five, plus- and the double goes to the sneak attack damage?
+      - 1810: There are two goblins left?
+      - 1821: Are there any guards around still? Any dwarven guards?
+      - 1848: How tall are the walls? I mean the ceiling.
+      - 1852: What's in the middle? Are those fires?
+      - 1861: Can I move up behind that pillar?
+      - 1870: I'll move up to the right near where Grog is. No one's has taken any damage yet, right?
+      - 1874: Can I inspire everyone?
+      - 1880: I know, some beautiful song for us! Wait, what for all of us? We all get a d8?
+      - 1884: Is that cover right there next to me?
+      - 1892: What the fuck is that?
+      - 1893: What is it?
+      - 1895: Do naga heads do something if you look at them?
+      - 1898: Wait! I got a question! My Hunter's Mark, can I transfer it to that thing or do I have to--
+      - 1902: Do I have to take new aim or can I have myself already trained on--
+      - 1908: Did we roll initiative again?
+      - 1995: Plus what?
+      - 2054: Can I sneak attack while prone?
+      - 2063: Because you're a rogue, isn't that critical for you?
+      - 2073: (counting) 20. 20 times--is 40 plus four. 44, that's the first dagger?
