@@ -1,4 +1,9 @@
 {
+    "acrobatics": {
+        "name": "Acrobatics",
+        "ability": "dex",
+        "description": " Your Dexterity (Acrobatics) check covers your attempt to stay on your feet in a tricky situation, such as when you’re trying to run across a sheet of ice, balance on a tightrope, or stay upright on a rocking ship’s deck. The GM might also call for a Dexterity (Acrobatics) check to see if you can perform acrobatic stunts, including dives, rolls, somersaults, and flips"
+    },
     "animal_handling": {
         "name": "Animal Handling",
         "ability": "wis",
@@ -13,11 +18,6 @@
         "name": "Athletics",
         "ability": "str",
         "description": "Your Strength (Athletics) check covers difficult situations you encounter while climbing, jumping, or swimming."
-    },
-    "acrobatics": {
-        "name": "Acrobatics",
-        "ability": "dex",
-        "description": " Your Dexterity (Acrobatics) check covers your attempt to stay on your feet in a tricky situation, such as when you’re trying to run across a sheet of ice, balance on a tightrope, or stay upright on a rocking ship’s deck. The GM might also call for a Dexterity (Acrobatics) check to see if you can perform acrobatic stunts, including dives, rolls, somersaults, and flips"
     },
     "deception": {
         "name": "Deception",

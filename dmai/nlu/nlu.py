@@ -38,6 +38,12 @@ class NLU(metaclass=NLUMeta):
             "cmd": "roll_die(cls.param)",
             "default_param": "d20"
         },
+        "stats": {
+            "text": "/stats",
+            "help": "Show your character stats in a character sheet",
+            "cmd": "print(cls.game.player.get_character_sheet())"
+            
+        },
         "say": {
             "text": "/say [utterance]",
             "help": "Have your character say specified utterance",

@@ -24,6 +24,7 @@ class TestNLU(unittest.TestCase):
         actual += "/help               Show these commands\n"
         actual += "/exit               Exit the game\n"
         actual += "/roll [die]         Roll a specified die, options: d4, d6, d8, d10, d12, d20, d100 (d20 by default)\n"
+        actual += "/stats              Show your character stats in a character sheet\n"
         actual += "/say [utterance]    Have your character say specified utterance\n"
 
         self.assertEqual(NLU.show_commands(), actual)

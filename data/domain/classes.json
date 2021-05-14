@@ -2,11 +2,11 @@
     "cleric": {
         "name": "Cleric",
         "hit_dice": "d8",
-        "saving_throws": [
-            "wis",
-            "cha"
-        ],
         "proficiencies": {
+            "saving_throws": [
+                "wis",
+                "cha"
+            ],
             "skills": [
                 "history",
                 "insight",
@@ -77,11 +77,11 @@
     "fighter": {
         "name": "Fighter",
         "hit_dice": "d10",
-        "saving_throws": [
-            "str",
-            "con"
-        ],
         "proficiencies": {
+            "saving_throws": [
+                "str",
+                "con"
+            ],
             "skills": [
                 "acrobatics",
                 "animal_handling",
@@ -155,11 +155,11 @@
     "rogue": {
         "name": "Rogue",
         "hit_dice": "d8",
-        "saving_throws": [
-            "dex",
-            "int"
-        ],
         "proficiencies": {
+            "saving_throws": [
+                "dex",
+                "int"
+            ],
             "skills": [
                 "acrobatics",
                 "athletics",
@@ -217,11 +217,11 @@
     "wizard": {
         "name": "Wizard",
         "hit_dice": "d6",
-        "saving_throws": [
-            "int",
-            "wis"
-        ],
         "proficiencies": {
+            "saving_throws": [
+                "int",
+                "wis"
+            ],
             "skills": [
                 "arcana",
                 "history",

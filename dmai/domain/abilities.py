@@ -22,6 +22,12 @@ class Abilities:
         """Set the cls.ability_data class variable data"""
         cls.ability_data = Loader.load_json("data/domain/abilities.json")
 
+    @classmethod
+    def get_all_abilities(cls) -> list:
+        """Method to return a list of all abilities in tuple (id, name)"""
+        abilities = cls.ability_data["abilities"]
+        return [(ability, abilities[ability]["name"]) for ability in abilities]
+            
     def _calculate_ability_modifiers(self) -> dict:
         """Calculate the ability modifiers"""
         modifiers = dict()
@@ -34,6 +40,10 @@ class Abilities:
                     break
         return modifiers
 
+    def get_score(self, ability: str) -> int:
+        """Return the specified ability score"""
+        return self.abilities[ability]
+
     def get_modifier(self, mod: str) -> int:
-        """Return the specified modifier"""
+        """Return the specified ability modifier"""
         return self.modifiers[mod]

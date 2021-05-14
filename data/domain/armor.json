@@ -12,7 +12,8 @@
         "min_str_requirement": -1,
         "stealth_disadvantage": false,
         "weight": 5,
-        "description": "Armor scraps."
+        "description": "Armor scraps.",
+        "slot": "body"
     },
     "chain_mail": {
         "name": "Chain mail",
@@ -27,7 +28,8 @@
         "min_str_requirement": 13,
         "stealth_disadvantage": true,
         "weight": 55,
-        "description": "Made of interlocking metal rings, chain mail includes a layer of quilted fabric worn underneath the mail to prevent chafing and to cushion the impact of blows. The suit includes gauntlets."
+        "description": "Made of interlocking metal rings, chain mail includes a layer of quilted fabric worn underneath the mail to prevent chafing and to cushion the impact of blows. The suit includes gauntlets.",
+        "slot": "body"
     },
     "leather": {
         "name": "Leather",
@@ -42,7 +44,8 @@
         "min_str_requirement": -1,
         "stealth_disadvantage": false,
         "weight": 10,
-        "description": "The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil. The rest of the armor is made of softer and more flexible materials."
+        "description": "The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil. The rest of the armor is made of softer and more flexible materials.",
+        "slot": "body"
     },
     "padded": {
         "name": "Padded",
@@ -57,7 +60,8 @@
         "min_str_requirement": -1,
         "stealth_disadvantage": true,
         "weight": 8,
-        "description": "Padded armor consists of quilted layers of cloth and batting."
+        "description": "Padded armor consists of quilted layers of cloth and batting.",
+        "slot": "body"
     },
     "scale_mail": {
         "name": "Scale mail",
@@ -72,7 +76,8 @@
         "min_str_requirement": -1,
         "stealth_disadvantage": true,
         "weight": 45,
-        "description": "This armor consists of a coat and leggings (and perhaps a separate skirt) of leather covered with overlapping pieces of metal, much like the scales of a fish. The suit includes gauntlets."
+        "description": "This armor consists of a coat and leggings (and perhaps a separate skirt) of leather covered with overlapping pieces of metal, much like the scales of a fish. The suit includes gauntlets.",
+        "slot": "body"
     },
     "shield": {
         "name": "Shield",
@@ -87,6 +92,7 @@
         "min_str_requirement": -1,
         "stealth_disadvantage": false,
         "weight": 6,
-        "desc": "A shield is made from wood or metal and is carried in one hand. Wielding a shield increases your Armor Class by 2. You can benefit from only one shield at a time."
+        "desc": "A shield is made from wood or metal and is carried in one hand. Wielding a shield increases your Armor Class by 2. You can benefit from only one shield at a time.",
+        "slot": "shield"
     }
 }

@@ -1,8 +1,6 @@
 from dmai.domain.abilities import Abilities
 from dmai.utils.loader import Loader
 
-from dmai.domain.abilities import Abilities
-
 
 class Skills:
 
@@ -50,3 +48,14 @@ class Skills:
     def _load_skill_data(cls) -> None:
         """Set the cls.skill_data class variable data"""
         cls.skill_data = Loader.load_json("data/domain/skills.json")
+
+    @classmethod
+    def get_all_skills(cls) -> list:
+        """Method to return a list of all skills in tuple (id, name)"""
+        skills = cls.skill_data
+        return [(skill, skills[skill]["name"]) for skill in skills]
+    
+    def get_modifier(self, skill: str) -> int:
+        """Return the specified skill modifier"""
+        return self.skills[skill]
+    

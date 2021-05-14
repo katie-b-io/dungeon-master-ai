@@ -49,6 +49,7 @@ class Game:
             char_class = CharacterCollection.get_character(player_utter)
             if char_class:
                 self.player = Player(char_class)
+                State.set_player(self.player)
 
         elif not self.player.name:
             # player is entering a name

@@ -15,7 +15,7 @@ class Text(metaclass=TextMeta):
         pass
 
     @staticmethod
-    def yield_text(text: str, delimiter: str = "\n") -> dict:
+    def yield_text(text: str, delimiter: str = "\n") -> str:
         """Creates a generator object for splitting text"""
         tokens = text.split(delimiter)
         for token in tokens:
