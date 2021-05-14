@@ -1,4 +1,5 @@
 from dmai.game.game import Game
+from dmai.game.state import State
 
 
 class UserInterface:
@@ -15,5 +16,7 @@ class UserInterface:
                 prompt = "\n" + output + "\n> "
             else:
                 prompt = "\n> "
+            if State.paused:
+                prompt += "Press enter to continue... "
             user_input = input(prompt)
             self.game.input(user_input)

@@ -28,6 +28,9 @@ class StateMeta(type):
 class State(metaclass=StateMeta):
     
     # class variables
+    started = False
+    paused = False
+    talking = False
     adventure = None
     current_room = {}
     current_status = {}
@@ -36,7 +39,27 @@ class State(metaclass=StateMeta):
     def __init__(self) -> None:
         """Main class for the game state"""
         pass
+    
+    @classmethod
+    def start(cls) -> None:
+        cls.started = True
+        
+    @classmethod
+    def pause(cls) -> None:
+        cls.paused = True
+    
+    @classmethod
+    def play(cls) -> None:
+        cls.paused = False
 
+    @classmethod
+    def talk(cls) -> None:
+        cls.talking = True
+
+    @classmethod
+    def stop_talking(cls) -> None:
+        cls.talking = False
+        
     @classmethod
     def set_adventure(cls, adventure) -> None:
         cls.adventure = adventure

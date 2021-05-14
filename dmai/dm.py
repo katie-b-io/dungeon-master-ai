@@ -8,8 +8,8 @@ from dmai.game.npcs.npc_collection import NPCCollection
 class DM:
 
     # class variables
-    utter_type_map = {"name": NLG.acknowledge_name, "action": NLG.get_action}
-    ENTITY_CONFIDENCE = 0.95
+    utter_type_map = {"name": NLG.acknowledge_name, "action": NLG.get_action, "start": NLG.enter_room}
+    ENTITY_CONFIDENCE = 0.75
 
     def __init__(self, adventure: str) -> None:
         """Main DM class"""
@@ -40,7 +40,10 @@ class DM:
         Returns whether the utterance was successful."""
         self._player_utter = player_utter
         if utter_type:
-            self._generate_utterance(utter_type=utter_type)
+            if utter_type == "start":
+                self._start_game()
+            else:
+                self._generate_utterance(utter_type=utter_type)
             return True
         if intent:
             # look up intent in map
@@ -56,7 +59,13 @@ class DM:
         """Return an output for the player"""
         return self._dm_utter
 
-    def _generate_utterance(self, utter: str = None, utter_type: str = None) -> str:
+    def _start_game(self) -> None:
+        """Start the game"""
+        starting_room = State.get_current_room_id()
+        self._generate_utterance(utter_type="start", kwargs={"room": starting_room, "adventure": self.adventure})
+        State.start()
+        
+    def _generate_utterance(self, utter: str = None, utter_type: str = None, kwargs: dict = {}) -> str:
         """Generate an utterance for the player"""
         if utter:
             self._dm_utter = utter
@@ -64,7 +73,7 @@ class DM:
             self._dm_utter = NLG.get_action()
         else:
             try:
-                self._dm_utter = self.utter_type_map[utter_type]()
+                self._dm_utter = self.utter_type_map[utter_type](**kwargs)
             except KeyError as e:
                 print("Utterance type does not exist: {e}".format(e=e))
                 self._dm_utter = NLG.get_action()
@@ -85,7 +94,6 @@ class DM:
         monster = None
         i = None
         for entity in nlu_entities:
-            print(entity)
             if entity["entity"] == "monster" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
                 monster = entity["value"]
             if entity["entity"] == "id" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
@@ -93,7 +101,6 @@ class DM:
                 
         # monsters are indexed by a unique id, determine it if possible
         if monster:
-            print(monster)
             if i:
                 # player appeared to specify particular individual, get it's id
                 monster_id = "{m}_{i}".format(m=monster, i=i)
