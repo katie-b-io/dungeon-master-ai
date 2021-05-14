@@ -13,10 +13,9 @@ class CharacterClass:
         try:
             self.char_class = list(char_class.keys())[0]
             self.level = char_class[self.char_class]["level"]
-            if char_class[self.char_class]["subclass"]:
-                self.subclass = char_class[self.char_class]["subclass"]
-            else:
-                self.subclass = None
+            self.subclass = char_class[self.char_class]["subclass"]
+            if self.subclass:
+                self.subclass = self.char_subclass_data[self.subclass]
 
             for key in self.char_class_data[self.char_class]:
                 self.__setattr__(key, self.char_class_data[self.char_class][key])
@@ -35,3 +34,11 @@ class CharacterClass:
     def _load_char_class_data(cls) -> None:
         """Set the cls.char_class_data class variable data"""
         cls.char_class_data = Loader.load_json("data/domain/classes.json")
+        cls.char_subclass_data = Loader.load_json("data/domain/subclasses.json")
+    
+    def get_formatted_class(self) -> str:
+        """Return fully formatted character class"""
+        if self.subclass:
+            return "{n} ({s}) {l}".format(n=self.name, s=self.subclass["name"], l=self.level)
+        else:
+            return "{n} {l}".format(n=self.name, l=self.level)

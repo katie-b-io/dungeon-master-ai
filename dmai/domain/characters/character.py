@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from dmai.domain.abilities import Abilities
 from dmai.domain.alignment import Alignment
@@ -51,6 +51,68 @@ class Character(ABC):
 
     @property
     def hp_max(self) -> int:
+        """Method to return the maximum hit points"""
         hp = DiceRoller.get_max(self.char_class.hit_dice)
         mod = self.abilities.get_modifier("con")
         return hp + mod
+
+    @property
+    def passive_wisdom(self) -> int:
+        """Method to return the passive wisdom attribute"""
+        return 10 + self.abilities.get_modifier("wis")
+
+    def get_class(self) -> str:
+        """Method to return character class in string"""
+        return self.char_class.get_formatted_class()
+
+    def get_race(self) -> str:
+        """Method to return character race in string"""
+        return self.race.name
+
+    def get_alignment(self) -> str:
+        """Method to return character race in string"""
+        return self.alignment.name
+
+    def get_ability_score(self, ability: str) -> int:
+        """Method to return the specified ability score"""
+        return self.abilities.get_score(ability)
+
+    def get_ability_modifier(self, ability: str) -> int:
+        """Method to return the specified ability modifier"""
+        return self.abilities.get_modifier(ability)
+
+    def get_formatted_ability(self, ability: str) -> str:
+        """Method to return the specified ability string"""
+        return "{m} ({a})".format(
+            m=self.get_ability_modifier(ability), a=self.get_ability_score(ability)
+        )
+
+    def get_saving_throw(self, ability: str) -> int:
+        """Method to return the specified saving throw"""
+        if ability in self.char_class.proficiencies["saving_throws"]:
+            return self.proficiency_bonus + self.get_ability_modifier(ability)
+        else:
+            return self.get_ability_modifier(ability)
+
+    def get_formatted_saving_throw(self, ability: str) -> str:
+        """Method to return the specified saving throw formatted string"""
+        if ability in self.char_class.proficiencies["saving_throws"]:
+            return "{s} (proficiency)".format(s=self.get_saving_throw(ability))
+        else:
+            return "{s}".format(s=self.get_saving_throw(ability))
+
+    def get_skill_modifier(self, skill: str) -> int:
+        """Method to return the specified skill modifier"""
+        return self.skills.get_modifier(skill)
+
+    def get_formatted_skill_modifier(self, skill: str) -> str:
+        """Method to return the specified skill modifier formatted string"""
+        if (
+            "expertise" in self.proficiencies["skills"]
+            and skill in self.proficiencies["skills"]["expertise"]
+        ):
+            return "{m} (expertise)".format(m=self.get_skill_modifier(skill))
+        elif skill in self.proficiencies["skills"]["class"]:
+            return "{m} (proficiency)".format(m=self.get_skill_modifier(skill))
+        else:
+            return "{m}".format(m=self.get_skill_modifier(skill))
