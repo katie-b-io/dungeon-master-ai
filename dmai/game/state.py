@@ -32,8 +32,10 @@ class State(metaclass=StateMeta):
     paused = False
     talking = False
     adventure = None
+    player = None
     current_room = {}
     current_status = {}
+    current_hp = {}
     current_game_mode = GameMode.EXPLORE
     
     def __init__(self) -> None:
@@ -63,8 +65,13 @@ class State(metaclass=StateMeta):
     @classmethod
     def set_adventure(cls, adventure) -> None:
         cls.adventure = adventure
-        cls.current_status = {"player": Status.ALIVE}
-        cls.current_room = {"player": adventure.get_init_room()}
+        cls.current_room["player"] = adventure.get_init_room()
+    
+    @classmethod
+    def set_player(cls, player) -> None:
+        cls.player = player
+        cls.current_hp["player"] = player.character.hp_max
+        cls.current_status["player"] = Status.ALIVE
 
     @classmethod
     def set_init_status(cls, entity: str, status: str) -> str:
@@ -77,7 +84,16 @@ class State(metaclass=StateMeta):
         cls.current_game_mode = GameMode(game_mode)
 
     @classmethod
-    def get_current_status(cls, entity: str) -> None:
+    def get_current_hp(cls, entity: str = "player") -> None:
+        """Method to get the current hp for specified entity."""
+        try:
+            return cls.current_hp[entity]
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
+    @classmethod
+    def get_current_status(cls, entity: str = "player") -> None:
         """Method to get the current status for specified entity."""
         try:
             return cls.current_status[entity]

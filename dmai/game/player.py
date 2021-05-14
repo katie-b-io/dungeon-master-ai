@@ -1,6 +1,7 @@
 from dmai.domain.characters.character import Character
 from dmai.domain.skills import Skills
 from dmai.domain.abilities import Abilities
+from dmai.game.state import State
 
 
 class Player:
@@ -19,6 +20,8 @@ class Player:
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
         div = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+        
+        # Character background
         char_str = div
         char_str += "Character Sheet:\n"
         char_str += "{l:<20} {v:<30}\n".format(l="Name:", v=self.name)
@@ -29,6 +32,21 @@ class Player:
         char_str += "{l:<20} {v:<30}\n".format(
             l="Alignment:", v=self.character.get_alignment()
         )
+        
+        # Character stats
+        char_str += div
+        char_str += "Stats:\n"
+        char_str += "{l:<20} {v:<30}\n".format(l="Armor class:", v=self.character.armor_class)
+        char_str += "{l:<20} {v:<30}\n".format(l="Initiative:", v=self.character.get_formatted_initiative())
+        char_str += "{l:<20} {v:<30}\n".format(l="Speed:", v=self.character.get_formatted_speed())
+        
+        # Health
+        char_str += div
+        char_str += "Health:\n"
+        char_str += "{l:<20} {v:<30}\n".format(l="Hit point maximum:", v=self.character.hp_max)
+        char_str += "{l:<20} {v:<30}\n".format(l="Current hit points:", v=State.get_current_hp())
+        
+        # Abilities
         char_str += div
         char_str += "{l:<20} {v:<30}\n".format(l="Abilities:", v="Modifier (score)")
         for (ability, name) in Abilities.get_all_abilities():
@@ -36,6 +54,7 @@ class Player:
                 l=name + ":", v=self.character.get_formatted_ability(ability)
             )
 
+        # Saving throws
         char_str += div
         char_str += "{l:<20} {v:<30}\n".format(
             l="Saving throws:", v="Modifier (proficiency)"
@@ -45,6 +64,7 @@ class Player:
                 l=name + ":", v=self.character.get_formatted_saving_throw(ability)
             )
 
+        # Skills
         char_str += div
         char_str += "{l:<20} {v:<30}\n".format(
             l="Skills:", v="Modifier (proficiency/expertise)"

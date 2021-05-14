@@ -57,9 +57,24 @@ class Character(ABC):
         return hp + mod
 
     @property
+    def initiative(self) -> int:
+        """Method to return the initiative attribute"""
+        return self.get_ability_modifier("dex")
+
+    @property
+    def speed(self) -> int:
+        """Method to return the speed attribute"""
+        return self.race.speed
+
+    @property
     def passive_wisdom(self) -> int:
         """Method to return the passive wisdom attribute"""
         return 10 + self.abilities.get_modifier("wis")
+
+    @property
+    def armor_class(self) -> int:
+        """Method to return the armor class (AC) attribute"""
+        return self.armor.calculate_armor_class(self.get_ability_modifier("dex"))
 
     def get_class(self) -> str:
         """Method to return character class in string"""
@@ -83,9 +98,12 @@ class Character(ABC):
 
     def get_formatted_ability(self, ability: str) -> str:
         """Method to return the specified ability string"""
-        return "{m} ({a})".format(
-            m=self.get_ability_modifier(ability), a=self.get_ability_score(ability)
-        )
+        m = self.get_ability_modifier(ability)
+        if m > 0:
+            m = "+{m}".format(m=m)
+        elif m == 0:
+            m = " {m}".format(m=m)
+        return "{m} ({a})".format(m=m, a=self.get_ability_score(ability))
 
     def get_saving_throw(self, ability: str) -> int:
         """Method to return the specified saving throw"""
@@ -96,10 +114,15 @@ class Character(ABC):
 
     def get_formatted_saving_throw(self, ability: str) -> str:
         """Method to return the specified saving throw formatted string"""
+        s = self.get_saving_throw(ability)
+        if s > 0:
+            s = "+{s}".format(s=s)
+        elif s == 0:
+            s = " {s}".format(s=s)
         if ability in self.char_class.proficiencies["saving_throws"]:
-            return "{s} (proficiency)".format(s=self.get_saving_throw(ability))
+            return "{s} (proficiency)".format(s=s)
         else:
-            return "{s}".format(s=self.get_saving_throw(ability))
+            return "{s}".format(s=s)
 
     def get_skill_modifier(self, skill: str) -> int:
         """Method to return the specified skill modifier"""
@@ -107,12 +130,30 @@ class Character(ABC):
 
     def get_formatted_skill_modifier(self, skill: str) -> str:
         """Method to return the specified skill modifier formatted string"""
+        m = self.get_skill_modifier(skill)
+        if m > 0:
+            m = "+{m}".format(m=m)
+        elif m == 0:
+            m = " {m}".format(m=m)
         if (
             "expertise" in self.proficiencies["skills"]
             and skill in self.proficiencies["skills"]["expertise"]
         ):
-            return "{m} (expertise)".format(m=self.get_skill_modifier(skill))
+            return "{m} (expertise)".format(m=m)
         elif skill in self.proficiencies["skills"]["class"]:
-            return "{m} (proficiency)".format(m=self.get_skill_modifier(skill))
+            return "{m} (proficiency)".format(m=m)
         else:
-            return "{m}".format(m=self.get_skill_modifier(skill))
+            return "{m}".format(m=m)
+    
+    def get_formatted_initiative(self) -> str:
+        """Method to return the initiative formatted string"""
+        i = self.initiative
+        if i > 0:
+            i = "+{i}".format(i=i)
+        elif i == 0:
+            i = " {i}".format(i=i)
+        return i
+    
+    def get_formatted_speed(self) -> str:
+        """Method to return the speed formatted string"""
+        return "{s} ft".format(s=self.speed)
