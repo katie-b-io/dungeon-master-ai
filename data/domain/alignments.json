@@ -1,4 +1,9 @@
 {
+    "unaligned": {
+        "name": "Unaligned",
+        "abbreviation": "U",
+        "description": "Unaligned (U) creatures lack the capacity for making moral decisions."
+    },
     "lawful_good": {
         "name": "Lawful good",
         "abbreviation": "LG",
