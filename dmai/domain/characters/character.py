@@ -14,12 +14,14 @@ from dmai.domain.weapons import Weapons
 from dmai.domain.characters.character_class import CharacterClass
 from dmai.domain.characters.race import Race
 from dmai.utils.dice_roller import DiceRoller
+from dmai.utils.money import Money
 
 
 class Character(ABC):
     def __init__(self, character_data: dict) -> None:
         """Character abstract class"""
         self.name = None
+        self.cp = 0
 
         try:
             for key in character_data:
@@ -198,3 +200,7 @@ class Character(ABC):
     def get_formatted_equipment(self) -> str:
         """Method to return the equipment formatted string"""
         return ", ".join([self.equipment.get_formatted(e) for e in self.equipment.get_all()])
+    
+    def get_formatted_money(self) -> str:
+        """Method to return the money formatted string"""
+        return Money.get_formatted(self.cp)

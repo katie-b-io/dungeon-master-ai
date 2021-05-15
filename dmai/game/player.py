@@ -101,5 +101,10 @@ class Player:
         char_str += "Equipment:\n"
         char_str += "{e}\n".format(e=self.character.get_formatted_equipment())
 
+        # Money
+        char_str += div
+        char_str += "Money:\n"
+        char_str += "{e}\n".format(e=self.character.get_formatted_money())
+        
         char_str += div
         return char_str
