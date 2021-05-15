@@ -28,3 +28,14 @@ class Features:
         """Set the cls.feature_data class variable data"""
         cls.feature_data = Loader.load_json("data/domain/features.json")
         cls.feature_data.update(Loader.load_json("data/domain/monster_features.json"))
+
+    def get_all(self) -> list:
+        """Method to return all the features"""
+        print("also")
+        print(self.features)
+        return [self.feature_data[feature] for feature in self.features]
+    
+    def get_description(self, feature_id):
+        """Method to return the feature description"""
+        if feature_id in self.feature_data:
+            return self.feature_data[feature_id]["description"]

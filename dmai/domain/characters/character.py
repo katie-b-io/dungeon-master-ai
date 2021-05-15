@@ -1,4 +1,5 @@
 from abc import ABC
+import textwrap
 
 from dmai.domain.abilities import Abilities
 from dmai.domain.alignment import Alignment
@@ -177,9 +178,7 @@ class Character(ABC):
 
     def get_all_weapons(self) -> list:
         """Method to return a list of character's weapons in tuple (id, name)"""
-        weapons = self.weapons.get_all()
-        ret = [(weapon["id"], weapon["name"]) for weapon in weapons]
-        return ret
+        return [(weapon["id"], weapon["name"]) for weapon in self.weapons.get_all()]
 
     def get_formatted_attack(self, weapon_id: str) -> str:
         """Method to return the attack formatted string"""
@@ -204,3 +203,16 @@ class Character(ABC):
     def get_formatted_money(self) -> str:
         """Method to return the money formatted string"""
         return Money.get_formatted(self.cp)
+    
+    def get_all_features(self) -> list:
+        """Method to return a list of character's features in tuple (id, name)"""
+        print("here")
+        ret = [(feature["id"], feature["name"]) for feature in self.features.get_all()]
+        print(ret)
+        return [(feature["id"], feature["name"]) for feature in self.features.get_all()]
+    
+    def get_feature_description(self, feature_id: str, indent_length: int = 20) -> str:
+        """Method to return the feature description string"""
+        desc = self.features.get_description(feature_id)
+        empty_string = " " * indent_length
+        return "\n".join(textwrap.wrap(desc, 100, subsequent_indent=empty_string))

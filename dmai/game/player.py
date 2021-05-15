@@ -91,7 +91,7 @@ class Player:
         )
         for (weapon, name) in self.character.get_all_weapons():
             char_str += "{l:<20} {a:<20} {v:<30}\n".format(
-                l=name,
+                l=name + ":",
                 a=self.character.get_signed_attack_bonus(weapon),
                 v=self.character.get_formatted_attack(weapon),
             )
@@ -105,6 +105,14 @@ class Player:
         char_str += div
         char_str += "Money:\n"
         char_str += "{e}\n".format(e=self.character.get_formatted_money())
+        
+        # Features
+        char_str += div
+        char_str += "Features:\n"
+        for (feature, name) in self.character.get_all_features():
+            char_str += "{l:<25} {v:<30}\n".format(
+                l=name + ":", v=self.character.get_feature_description(feature, indent_length=26)
+            )
         
         char_str += div
         return char_str
