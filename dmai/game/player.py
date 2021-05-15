@@ -95,6 +95,11 @@ class Player:
                 a=self.character.get_signed_attack_bonus(weapon),
                 v=self.character.get_formatted_attack(weapon),
             )
+            
+        # Equipment
+        char_str += div
+        char_str += "Equipment:\n"
+        char_str += "{e}\n".format(e=self.character.get_formatted_equipment())
 
         char_str += div
         return char_str

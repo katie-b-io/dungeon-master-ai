@@ -84,7 +84,7 @@
         "description": "Rations consist of dry foods suitable for extended travel, including jerky, dried fruit, hardtack, and nuts."
     },
     "rope_hempen": {
-        "name": "Hempen rope (50 ft)",
+        "name": "Hempen rope",
         "type": "Adventuring gear",
         "cost": 100,
         "weight": 10,
@@ -117,6 +117,13 @@
         "cost": 5000,
         "weight": 3,
         "description": "Essential for wizards, a spellbook is a leather-bound tome with 100 blank vellum pages suitable for recording spells."
+    },
+    "thieves_tools": {
+        "name": "Thieves' tools",
+        "type": "Tools",
+        "cost": 2500,
+        "weight": 1,
+        "description": "This set of tools includes a small file, a set of lock picks, a small mirror mounted on a metal handle, a set of narrow-bladed scissors, and a pair of pliers. Proficiency with these tools lets you add your proficiency bonus to any ability checks you make to disarm traps or open locks."
     },
     "tinder_box": {
         "name": "Tinderbox",

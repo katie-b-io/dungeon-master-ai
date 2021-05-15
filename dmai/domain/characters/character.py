@@ -194,3 +194,7 @@ class Character(ABC):
             return "{d} ({t})".format(d=d, t=t)
         else: 
             return "{d} {m} ({t})".format(d=d, m=m, t=t)
+    
+    def get_formatted_equipment(self) -> str:
+        """Method to return the equipment formatted string"""
+        return ", ".join([self.equipment.get_formatted(e) for e in self.equipment.get_all()])
