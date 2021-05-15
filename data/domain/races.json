@@ -92,7 +92,7 @@
         "subraces": {
             "lightfoot": {
                 "name": "Lightfoot halfling",
-                "description": "As a lightfoot halfling, you can easily hide from notice, even using other people as cover. You’re inclined to be affable and get along well with others.\nLightfoots are more prone to wanderlust than other halflings, and often dwell alongside other races or take up a nomadic life.",
+                "description": "As a lightfoot halfling, you can easily hide from notice, even using other people as cover. You're inclined to be affable and get along well with others.\nLightfoots are more prone to wanderlust than other halflings, and often dwell alongside other races or take up a nomadic life.",
                 "traits": [
                     "ability_score_increase_charisma",
                     "naturally_stealthy"

@@ -18,3 +18,19 @@ class Equipment:
     def _load_equipment_data(cls) -> None:
         """Set the cls.equipment_data class variable data"""
         cls.equipment_data = Loader.load_json("data/domain/equipment.json")
+    
+    def get_all(self) -> list:
+        """Return a list with all the equipment ids"""
+        return self.equipment.keys()
+    
+    def get_formatted(self, equipment_id) -> str:
+        """Return the formatted equipment with quantities"""
+        if equipment_id in self.equipment_data:
+            quantity = self.equipment[equipment_id]
+            equipment = self.equipment_data[equipment_id]
+            if equipment_id == "rope_hempen":
+                return "{q} ft {e}".format(q=quantity, e=equipment["name"])
+            if self.equipment[equipment_id] == 1:
+                return equipment["name"]
+            else:
+                return "{q} {e}".format(q=quantity, e=equipment["name"])

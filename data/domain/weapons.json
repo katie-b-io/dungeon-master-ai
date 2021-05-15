@@ -1,5 +1,6 @@
 {
     "crossbow_light": {
+        "id": "crossbow_light",
         "name": "Light crossbow",
         "type": [
             "simple",
@@ -23,6 +24,7 @@
         ]
     },
     "dagger": {
+        "id": "dagger",
         "name": "Dagger",
         "type": [
             "simple",
@@ -46,6 +48,7 @@
         ]
     },
     "greataxe": {
+        "id": "greataxe",
         "name": "Greataxe",
         "type": [
             "martial",
@@ -64,6 +67,7 @@
         ]
     },
     "handaxe": {
+        "id": "handaxe",
         "name": "Handaxe",
         "type": [
             "simple",
@@ -86,6 +90,7 @@
         ]
     },
     "javelin": {
+        "id": "javelin",
         "name": "Javelin",
         "type": [
             "simple",
@@ -107,6 +112,7 @@
         ]
     },
     "quarterstaff": {
+        "id": "quarterstaff",
         "name": "Quarterstaff",
         "type": [
             "simple",
@@ -128,6 +134,7 @@
         ]
     },
     "scimitar": {
+        "id": "scimitar",
         "name": "Scimitar",
         "type": [
             "martial",
@@ -146,6 +153,7 @@
         ]
     },
     "shortbow": {
+        "id": "shortbow",
         "name": "Shortbow",
         "type": [
             "simple",
@@ -168,6 +176,7 @@
         ]
     },
     "shortsword": {
+        "id": "shortsword",
         "name": "Shortsword",
         "type": [
             "martial",
@@ -186,6 +195,7 @@
         ]
     },
     "warhammer": {
+        "id": "warhammer",
         "name": "Warhammer",
         "type": [
             "martial",
