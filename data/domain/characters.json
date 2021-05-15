@@ -203,9 +203,9 @@
         },
         "languages": {},
         "weapons": {
+            "dagger": 2,
             "shortsword": 1,
-            "shortbow": 1,
-            "dagger": 2
+            "shortbow": 1
         },
         "armor": {
             "leather": 1

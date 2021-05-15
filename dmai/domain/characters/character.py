@@ -10,6 +10,7 @@ from dmai.domain.features import Features
 from dmai.domain.languages import Languages
 from dmai.domain.skills import Skills
 from dmai.domain.spells import Spells
+from dmai.domain.weapons import Weapons
 from dmai.domain.characters.character_class import CharacterClass
 from dmai.domain.characters.race import Race
 from dmai.utils.dice_roller import DiceRoller
@@ -28,7 +29,6 @@ class Character(ABC):
             self.abilities = Abilities(self.abilities)
             self.alignment = Alignment(self.alignment)
             self.armor = Armor(self.armor)
-            self.attacks = Attacks()
             self.char_class = CharacterClass(self.char_class)
             self.conditions = Conditions()
             self.equipment = Equipment(self.equipment)
@@ -40,6 +40,8 @@ class Character(ABC):
                 proficiencies=self.proficiencies["skills"],
             )
             self.spells = Spells(self.spells)
+            self.weapons = Weapons(self.weapons)
+            self.attacks = Attacks()
             self.features = Features(char_class=self.char_class, race=self.race)
 
         except AttributeError as e:
@@ -96,14 +98,43 @@ class Character(ABC):
         """Method to return the specified ability modifier"""
         return self.abilities.get_modifier(ability)
 
-    def get_formatted_ability(self, ability: str) -> str:
-        """Method to return the specified ability string"""
-        m = self.get_ability_modifier(ability)
-        if m > 0:
-            m = "+{m}".format(m=m)
-        elif m == 0:
-            m = " {m}".format(m=m)
-        return "{m} ({a})".format(m=m, a=self.get_ability_score(ability))
+    def get_skill_modifier(self, skill: str) -> int:
+        """Method to return the specified skill modifier"""
+        return self.skills.get_modifier(skill)
+
+    def get_signed_value(self, value) -> str:
+        """Method to convert an integer to a signed string"""
+        if value > 0:
+            value = "+{v}".format(v=value)
+        elif value == 0:
+            value = " {v}".format(v=value)
+        return value
+
+    def get_signed_ability_modifier(self, ability: str) -> str:
+        """Method to return the signed ability modifier"""
+        return self.get_signed_value(self.get_ability_modifier(ability))
+
+    def get_signed_saving_throw(self, ability: str) -> str:
+        """Method to return the signed saving throw"""
+        return self.get_signed_value(self.get_saving_throw(ability))
+
+    def get_signed_skill_modifier(self, skill: str) -> str:
+        """Method to return the skill signed modifier"""
+        return self.get_signed_value(self.get_skill_modifier(skill))
+
+    def get_signed_initiative(self) -> str:
+        """Method to return the signed initiative"""
+        return self.get_signed_value(self.initiative)
+
+    def get_signed_attack_bonus(self, weapon_id: str) -> str:
+        """Method to return the signed attack bonus"""
+        if self.weapons.has_property(weapon_id, "finesse") or self.weapons.is_ranged(
+            weapon_id
+        ):
+            m = self.get_ability_modifier("dex")
+        else:
+            m = self.get_ability_modifier("str")
+        return self.get_signed_value(m + self.proficiency_bonus)
 
     def get_saving_throw(self, ability: str) -> int:
         """Method to return the specified saving throw"""
@@ -112,29 +143,22 @@ class Character(ABC):
         else:
             return self.get_ability_modifier(ability)
 
+    def get_formatted_ability(self, ability: str) -> str:
+        """Method to return the specified ability string"""
+        m = self.get_signed_ability_modifier(ability)
+        return "{m} ({a})".format(m=m, a=self.get_ability_score(ability))
+
     def get_formatted_saving_throw(self, ability: str) -> str:
         """Method to return the specified saving throw formatted string"""
-        s = self.get_saving_throw(ability)
-        if s > 0:
-            s = "+{s}".format(s=s)
-        elif s == 0:
-            s = " {s}".format(s=s)
+        s = self.get_signed_saving_throw(ability)
         if ability in self.char_class.proficiencies["saving_throws"]:
             return "{s} (proficiency)".format(s=s)
         else:
             return "{s}".format(s=s)
 
-    def get_skill_modifier(self, skill: str) -> int:
-        """Method to return the specified skill modifier"""
-        return self.skills.get_modifier(skill)
-
     def get_formatted_skill_modifier(self, skill: str) -> str:
         """Method to return the specified skill modifier formatted string"""
-        m = self.get_skill_modifier(skill)
-        if m > 0:
-            m = "+{m}".format(m=m)
-        elif m == 0:
-            m = " {m}".format(m=m)
+        m = self.get_signed_skill_modifier(skill)
         if (
             "expertise" in self.proficiencies["skills"]
             and skill in self.proficiencies["skills"]["expertise"]
@@ -144,16 +168,29 @@ class Character(ABC):
             return "{m} (proficiency)".format(m=m)
         else:
             return "{m}".format(m=m)
-    
-    def get_formatted_initiative(self) -> str:
-        """Method to return the initiative formatted string"""
-        i = self.initiative
-        if i > 0:
-            i = "+{i}".format(i=i)
-        elif i == 0:
-            i = " {i}".format(i=i)
-        return i
-    
+
     def get_formatted_speed(self) -> str:
         """Method to return the speed formatted string"""
         return "{s} ft".format(s=self.speed)
+
+    def get_all_weapons(self) -> list:
+        """Method to return a list of character's weapons in tuple (id, name)"""
+        weapons = self.weapons.get_all()
+        ret = [(weapon["id"], weapon["name"]) for weapon in weapons]
+        return ret
+
+    def get_formatted_attack(self, weapon_id: str) -> str:
+        """Method to return the attack formatted string"""
+        d = self.weapons.get_damage(weapon_id)
+        if self.weapons.has_property(weapon_id, "finesse") or self.weapons.is_ranged(
+            weapon_id
+        ):
+            m = self.get_signed_ability_modifier("dex")
+        else:
+            m = self.get_signed_ability_modifier("str")
+        t = self.weapons.get_damage_type(weapon_id)
+        
+        if m == " 0":
+            return "{d} ({t})".format(d=d, t=t)
+        else: 
+            return "{d} {m} ({t})".format(d=d, m=m, t=t)

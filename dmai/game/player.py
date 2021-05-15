@@ -20,7 +20,7 @@ class Player:
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
         div = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-        
+
         # Character background
         char_str = div
         char_str += "Character Sheet:\n"
@@ -32,20 +32,30 @@ class Player:
         char_str += "{l:<20} {v:<30}\n".format(
             l="Alignment:", v=self.character.get_alignment()
         )
-        
+
         # Character stats
         char_str += div
         char_str += "Stats:\n"
-        char_str += "{l:<20} {v:<30}\n".format(l="Armor class:", v=self.character.armor_class)
-        char_str += "{l:<20} {v:<30}\n".format(l="Initiative:", v=self.character.get_formatted_initiative())
-        char_str += "{l:<20} {v:<30}\n".format(l="Speed:", v=self.character.get_formatted_speed())
-        
+        char_str += "{l:<20} {v:<30}\n".format(
+            l="Armor class:", v=self.character.armor_class
+        )
+        char_str += "{l:<20} {v:<30}\n".format(
+            l="Initiative:", v=self.character.get_signed_initiative()
+        )
+        char_str += "{l:<20} {v:<30}\n".format(
+            l="Speed:", v=self.character.get_formatted_speed()
+        )
+
         # Health
         char_str += div
         char_str += "Health:\n"
-        char_str += "{l:<20} {v:<30}\n".format(l="Hit point maximum:", v=self.character.hp_max)
-        char_str += "{l:<20} {v:<30}\n".format(l="Current hit points:", v=State.get_current_hp())
-        
+        char_str += "{l:<20} {v:<30}\n".format(
+            l="Hit point maximum:", v=self.character.hp_max
+        )
+        char_str += "{l:<20} {v:<30}\n".format(
+            l="Current hit points:", v=State.get_current_hp()
+        )
+
         # Abilities
         char_str += div
         char_str += "{l:<20} {v:<30}\n".format(l="Abilities:", v="Modifier (score)")
@@ -72,6 +82,18 @@ class Player:
         for (skill, name) in Skills.get_all_skills():
             char_str += "{l:<20} {v:<30}\n".format(
                 l=name + ":", v=self.character.get_formatted_skill_modifier(skill)
+            )
+
+        # Attacks
+        char_str += div
+        char_str += "{l:<20} {v:<20} {t:<30}\n".format(
+            l="Attacks:", v="Attack bonus", t="Damage (type)"
+        )
+        for (weapon, name) in self.character.get_all_weapons():
+            char_str += "{l:<20} {a:<20} {v:<30}\n".format(
+                l=name,
+                a=self.character.get_signed_attack_bonus(weapon),
+                v=self.character.get_formatted_attack(weapon),
             )
 
         char_str += div
