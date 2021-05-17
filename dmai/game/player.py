@@ -104,8 +104,22 @@ class Player:
         # Money
         char_str += div
         char_str += "Money:\n"
-        char_str += "{e}\n".format(e=self.character.get_formatted_money())
+        char_str += "{m}\n".format(m=self.character.get_formatted_money())
         
+        # Languages
+        char_str += div
+        char_str += "Languages:\n"
+        char_str += "{l}\n".format(l=self.character.get_formatted_languages())
+        
+        # Proficiencies
+        char_str += div
+        char_str += "Proficiencies:\n"
+        for (prof_type, profs) in self.character.get_formatted_proficiencies():
+            char_str += "{l:<20} {v:<30}\n".format(
+                l=prof_type + ":",
+                v=profs,
+            )
+            
         # Features
         char_str += div
         char_str += "Features:\n"

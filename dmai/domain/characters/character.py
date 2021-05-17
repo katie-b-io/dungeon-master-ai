@@ -31,10 +31,12 @@ class Character(ABC):
             # replace the attributes values with objects where appropriate
             self.abilities = Abilities(self.abilities)
             self.alignment = Alignment(self.alignment)
-            self.armor = Armor(self.armor)
+            self.attacks = Attacks()
             self.char_class = CharacterClass(self.char_class)
             self.conditions = Conditions()
-            self.equipment = Equipment(self.equipment)
+            self.equipment = Equipment(
+                equipment=self.equipment, proficiencies=self.proficiencies["tools"]
+            )
             self.languages = Languages(self.languages)
             self.race = Race(self.race)
             self.skills = Skills(
@@ -43,8 +45,12 @@ class Character(ABC):
                 proficiencies=self.proficiencies["skills"],
             )
             self.spells = Spells(self.spells)
-            self.weapons = Weapons(self.weapons)
-            self.attacks = Attacks()
+            self.weapons = Weapons(
+                self.weapons, proficiencies=self.get_proficiencies("weapons")
+            )
+            self.armor = Armor(
+                self.armor, proficiencies=self.get_proficiencies("armor")
+            )
             self.features = Features(char_class=self.char_class, race=self.race)
 
         except AttributeError as e:
@@ -81,6 +87,16 @@ class Character(ABC):
         """Method to return the armor class (AC) attribute"""
         return self.armor.calculate_armor_class(self.get_ability_modifier("dex"))
 
+    def get_proficiencies(self, prof_type: str) -> list:
+        """Method to return list of proficiencies of specified type"""
+        all_prof = []
+        if self.char_class.get_proficiencies(prof_type):
+            all_prof.extend(self.char_class.get_proficiencies(prof_type))
+        if prof_type in self.proficiencies:
+            for prof_reason in self.proficiencies[prof_type]:
+                all_prof.extend(self.proficiencies[prof_type][prof_reason])
+        return all_prof
+    
     def get_class(self) -> str:
         """Method to return character class in string"""
         return self.char_class.get_formatted_class()
@@ -190,29 +206,55 @@ class Character(ABC):
         else:
             m = self.get_signed_ability_modifier("str")
         t = self.weapons.get_damage_type(weapon_id)
-        
+
         if m == " 0":
             return "{d} ({t})".format(d=d, t=t)
-        else: 
+        else:
             return "{d} {m} ({t})".format(d=d, m=m, t=t)
-    
+
     def get_formatted_equipment(self) -> str:
         """Method to return the equipment formatted string"""
-        return ", ".join([self.equipment.get_formatted(e) for e in self.equipment.get_all()])
-    
+        equipment_str = ", ".join(
+            [self.equipment.get_formatted(e) for e in self.equipment.get_all()]
+        )
+        return "\n".join(textwrap.wrap(equipment_str, 75))
+
     def get_formatted_money(self) -> str:
         """Method to return the money formatted string"""
         return Money.get_formatted(self.cp)
-    
+
+    def get_formatted_languages(self) -> str:
+        """Method to return the languages formatted string"""
+        return ", ".join([language["name"] for language in self.languages.get_all()])
+
     def get_all_features(self) -> list:
         """Method to return a list of character's features in tuple (id, name)"""
-        print("here")
-        ret = [(feature["id"], feature["name"]) for feature in self.features.get_all()]
-        print(ret)
         return [(feature["id"], feature["name"]) for feature in self.features.get_all()]
-    
+
     def get_feature_description(self, feature_id: str, indent_length: int = 20) -> str:
         """Method to return the feature description string"""
         desc = self.features.get_description(feature_id)
-        empty_string = " " * indent_length
-        return "\n".join(textwrap.wrap(desc, 100, subsequent_indent=empty_string))
+        empty_str = " " * indent_length
+        wrapped = textwrap.wrap(desc, 75)
+        # append the indentation to second line onwards
+        for w_str in wrapped:
+            i = wrapped.index(w_str)
+            if i > 0:
+                wrapped[i] = empty_str + w_str
+        return "\n".join(wrapped)
+
+    def get_formatted_proficiencies(self):
+        """Method to return a list of character's proficiencies in tuple (proficiency_type, [id])"""
+        prof_list = []
+        
+        prof_armor = [a["name"] for a in self.armor.get_proficient()]
+        prof_weapons = [w["name"] for w in self.weapons.get_proficient()]
+        prof_tools = [e["name"] for e in self.equipment.get_proficient()]
+
+        for (prof_type, profs) in [("Armor", prof_armor), ("Weapons", prof_weapons), ("Tools", prof_tools)]:
+            if len(profs) == 0:
+                prof_list.append((prof_type, "None"))
+            else:
+                prof_list.append((prof_type, ", ".join(profs)))
+                
+        return prof_list

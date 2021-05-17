@@ -6,11 +6,12 @@ class Armor:
     # class variables
     armor_data = dict()
 
-    def __init__(self, armor: str) -> None:
+    def __init__(self, armor: str, proficiencies=None) -> None:
         """Armor class"""
         self.armor = armor
         self.body = None
         self.shield = None
+        self.proficiencies = proficiencies
         self._load_armor_data()
 
         # assign armor to slots on body
@@ -25,6 +26,11 @@ class Armor:
         """Set the cls.armor_data class variable data"""
         cls.armor_data = Loader.load_json("data/domain/armor.json")
 
+    def get_armor(self, armor_id: str) -> bool:
+        """Method to return specified armor"""
+        if armor_id in self.armor_data:
+            return self.armor_data[armor_id]
+            
     def equip_armor(self, armor_id: str, slot: str) -> None:
         """Method to equip specified armor to specified slot"""
         if armor_id in self.armor_data:
@@ -63,3 +69,16 @@ class Armor:
             ac += shield["ac"]["bonus"]
 
         return ac
+
+    def get_proficient(self) -> str:
+        """Return the proficient armor in a list"""
+        all_profs = []
+        for prof in self.proficiencies:
+            if prof in self.armor_data:
+                all_profs.append(self.armor_data[prof])
+            else:
+                # proficiency could be type
+                for armor in self.armor_data.values():
+                    if armor["type"] == prof:
+                        all_profs.append(armor)
+        return all_profs

@@ -31,8 +31,6 @@ class Features:
 
     def get_all(self) -> list:
         """Method to return all the features"""
-        print("also")
-        print(self.features)
         return [self.feature_data[feature] for feature in self.features]
     
     def get_description(self, feature_id):

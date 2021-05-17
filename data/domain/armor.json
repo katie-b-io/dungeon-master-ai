@@ -1,7 +1,7 @@
 {
     "armor_scraps": {
         "name": "Armor scraps",
-        "type": "light",
+        "type": "monster",
         "cost": 0,
         "ac": {
             "base": 10,

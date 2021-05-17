@@ -6,9 +6,10 @@ class Equipment:
     # class variables
     equipment_data = dict()
 
-    def __init__(self, equipment: str) -> None:
+    def __init__(self, equipment: str, proficiencies=None) -> None:
         """Equipment class"""
         self.equipment = equipment
+        self.proficiencies = proficiencies
         self._load_equipment_data()
 
     def __repr__(self) -> str:
@@ -34,3 +35,12 @@ class Equipment:
                 return equipment["name"]
             else:
                 return "{q} {e}".format(q=quantity, e=equipment["name"])
+    
+    def get_proficient(self) -> str:
+        """Return the proficient equipment in a list"""
+        all_profs = []
+        for prof_type in self.proficiencies:
+            for prof in self.proficiencies[prof_type]:
+                all_profs.append(self.equipment_data[prof])
+        return all_profs
+            

@@ -6,11 +6,12 @@ class Weapons:
     # class variables
     weapons_data = dict()
 
-    def __init__(self, weapons: str) -> None:
+    def __init__(self, weapons: str, proficiencies=None) -> None:
         """Weapons class"""
         self.weapons = weapons
         self.right_hand = None
         self.left_hand = None
+        self.proficiencies = proficiencies
         self._load_weapons_data()
 
         # equip first weapon
@@ -32,6 +33,11 @@ class Weapons:
         cls.weapons_data = Loader.load_json("data/domain/weapons.json")
         cls.weapon_properties = Loader.load_json("data/domain/weapon_properties.json")
 
+    def get_weapon(self, weapon_id: str) -> bool:
+        """Method to return specified weapon"""
+        if weapon_id in self.weapons_data:
+            return self.weapons_data[weapon_id]
+            
     def is_ranged(self, weapon_id: str) -> bool:
         """Method to determine if the weapon is ranged"""
         if weapon_id in self.weapons_data:
@@ -83,3 +89,16 @@ class Weapons:
     def get_all(self) -> list:
         """Method to return all the weapons"""
         return [self.weapons_data[weapon] for weapon in self.weapons]
+    
+    def get_proficient(self) -> list:
+        """Return the proficient weapons in a list"""
+        all_profs = []
+        for prof in self.proficiencies:
+            if prof in self.weapons_data:
+                all_profs.append(self.weapons_data[prof])
+            else:
+                # proficiency could be type
+                for weapon in self.weapons_data.values():
+                    if prof in weapon["type"]:
+                        all_profs.append(weapon)
+        return all_profs
