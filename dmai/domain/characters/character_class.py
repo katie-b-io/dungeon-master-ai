@@ -42,3 +42,8 @@ class CharacterClass:
             return "{n} ({s}) {l}".format(n=self.name, s=self.subclass["name"], l=self.level)
         else:
             return "{n} {l}".format(n=self.name, l=self.level)
+    
+    def get_proficiencies(self, prof_type) -> list:
+        """Return a list of proficiencies of specified type"""
+        if prof_type in self.proficiencies:
+            return self.proficiencies[prof_type]

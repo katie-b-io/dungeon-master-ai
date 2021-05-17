@@ -111,6 +111,15 @@ class Player:
         char_str += "Languages:\n"
         char_str += "{l}\n".format(l=self.character.get_formatted_languages())
         
+        # Proficiencies
+        char_str += div
+        char_str += "Proficiencies:\n"
+        for (prof_type, profs) in self.character.get_formatted_proficiencies():
+            char_str += "{l:<20} {v:<30}\n".format(
+                l=prof_type + ":",
+                v=profs,
+            )
+            
         # Features
         char_str += div
         char_str += "Features:\n"
