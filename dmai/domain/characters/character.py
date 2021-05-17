@@ -204,11 +204,12 @@ class Character(ABC):
         """Method to return the money formatted string"""
         return Money.get_formatted(self.cp)
     
+    def get_formatted_languages(self) -> str:
+        """Method to return the languages formatted string"""
+        return ", ".join([language["name"] for language in self.languages.get_all()])
+    
     def get_all_features(self) -> list:
         """Method to return a list of character's features in tuple (id, name)"""
-        print("here")
-        ret = [(feature["id"], feature["name"]) for feature in self.features.get_all()]
-        print(ret)
         return [(feature["id"], feature["name"]) for feature in self.features.get_all()]
     
     def get_feature_description(self, feature_id: str, indent_length: int = 20) -> str:

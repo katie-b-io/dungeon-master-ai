@@ -104,7 +104,12 @@ class Player:
         # Money
         char_str += div
         char_str += "Money:\n"
-        char_str += "{e}\n".format(e=self.character.get_formatted_money())
+        char_str += "{m}\n".format(m=self.character.get_formatted_money())
+        
+        # Languages
+        char_str += div
+        char_str += "Languages:\n"
+        char_str += "{l}\n".format(l=self.character.get_formatted_languages())
         
         # Features
         char_str += div

@@ -34,7 +34,12 @@
                 ]
             }
         },
-        "languages": {},
+        "languages": {
+            "race": [
+                "common",
+                "dwarvish"
+            ]
+        },
         "weapons": {
             "warhammer": 1,
             "handaxe": 2
@@ -201,7 +206,12 @@
                 ]
             }
         },
-        "languages": {},
+        "languages": {
+            "race": [
+                "common",
+                "halfling"
+            ]
+        },
         "weapons": {
             "dagger": 2,
             "shortsword": 1,
