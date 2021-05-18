@@ -3,19 +3,26 @@ version: "2.0"
 nlu:
 - intent: greet
   examples: |
+    - greetings
     - hey
-    - hello
     - hi
-    - hello there
+    - hello
     - good morning
+    - good afternoon
     - good evening
-    - moin
+    - hi, how are you?
+    - how have you been?
+    - good to see you
+    - hello there
     - hey there
     - let's go
     - hey dude
     - goodmorning
     - goodevening
-    - good afternoon
+    - goodafternoon
+    - I got your invitation
+    - thanks for inviting me
+    - how's business?
 
 - intent: goodbye
   examples: |
@@ -39,6 +46,8 @@ nlu:
     - of course
     - that sounds good
     - correct
+    - okay
+    - sure
 
 - intent: deny
   examples: |
@@ -112,6 +121,51 @@ nlu:
     - jump to [baradins crypt](location)
     - maneuver to [baradin's crypt](location)
     - go to [baradin crypt](location)
+    - walk towards the [giant rats](monster)
+    - go to the [zombie](monster)
+    - go towards [skeleton](monster)
+    - move to the [zombie](monster)
+    - pounce the [cat](monster)
+    - I go where the [goblin](monster) is
+    - I go where the [goblins](monster) are
+    - I go next to the [giant rat](monster)
+    - I move to the [first](id) [rat](monster)
+    - I move to the [second](id) [rat](monster)
+    - I move to the [third](id) [rat](monster)
+    - I move to the [fourth](id) [rat](monster)
+
+- intent: stealth
+  examples: |
+    - I stealth
+    - I sneak
+    - I snoop
+    - I slink
+    - I creep
+    - I slip
+    - I slither
+    - I skulk
+    - I move silently
+    - I move secretly
+    - I move quietly
+    - I move stealthily
+    - I'm stealthing
+    - I'm sneaking
+    - I'm snooping
+    - I'm slinking
+    - I'm creeping
+    - I'm slipping
+    - I'm slithering
+    - I'm skulking
+
+- intent: pick_lock
+  examples: |
+    - I pick the pick
+    - I pick it
+    - I lockpick
+    - unlock the lock
+    - pick the lock
+    - I use [thieves tools](equipment) to unlock the lock
+    - I unlock the lock with [thief tools](equipment)
 
 - intent: explore
   examples: |
@@ -132,30 +186,6 @@ nlu:
     - examine [corvus](npc)
     - look at [corvus stouthammer](npc)
     - examine [the dwarf](npc)
-    
-- intent: roleplay_neutral
-  examples: |
-    - say
-    - I say
-    - talk to [corvus](npc)
-    - I talk to [anvil-jumper](npc)
-    - say to [cat](monster)
-    - I say to [giant rat](monster)
-    - talk to [goblin](monster)
-    - talk to [first](id) [goblin](monster)
-    - talk to [second](id) [goblin](monster)
-    - talk to [skeleton](monster)
-    - talk to [zombie](monster)
-
-- intent: roleplay_negative
-  examples: |
-    - shout 
-    - shout at [corvus](npc)
-
-- intent: roleplay_positive
-  examples: |
-    - laugh
-    - laugh at [corvus](npc)
 
 - intent: attack
   examples: |
@@ -195,6 +225,294 @@ nlu:
     - punch [skeleton](monster)
     - wallop [zombie](monster)
     - pounce the [cat](monster)
+
+- intent: ranged_attack
+  examples: |
+    - I take a shot
+    - I shoot it
+    - I nock an arrow
+    - shoot [corvus stouthammer](npc)
+    - I shoot the [goblin](monster)
+    - I string my [bow](weapon)
+    - I string my [shortbow](weapon)
+    - I load my [crossbow](weapon)
+    - I load my [light crossbow](weapon)
+    - I throw a [dagger](weapon)
+    - I throw my [handaxe](weapon)
+    - I throw my [javelin](weapon)
+    - I shoot my [bow](weapon)
+    - I shoot my [crossbow](weapon)
+    - I shoot my [shortbow](weapon)
+    - I shoot my [light crossbow](weapon)
+
+- intent: disengage
+  examples: |
+    - I want to disengage
+    - I use my action to disengage
+    - I want to move away
+    - I would like to move back
+    - I need to retreat
+    - fall back
+    - run away
+    - can I disengage
+    - I take the disengage action
+
+- intent: dash
+  examples: |
+    - I want to dash
+    - I want to run
+    - I want to sprint
+    - dash
+    - run
+    - sprint
+    - I dash
+    - I run
+    - I sprint
+    - can I dash
+    - I take the dash action
+    - I use my action to dash
+
+- intent: dodge
+  examples: |
+    - I want to dodge
+    - I want to evade
+    - I want to duck
+    - dodge
+    - evade
+    - duck
+    - I dodge
+    - I evade
+    - I duck
+    - can I dodge
+    - I take the dodge action
+    - I use my action to dodge
+
+- intent: hide
+  examples: |
+    - I want to hide
+    - can I hide
+    - can I take cover
+    - can I hide behind
+    - take cover
+    - I want to take cover
+    - I take the hide action
+    - I use my action to hide
+
+- intent: search
+  examples: |
+    - I want to search
+    - I use my action to search
+    - I take the search action
+
+- intent: use
+  examples: |
+    - I want to use [thieves tools](equipment)
+    - Use [masons tools](equipment)
+    - I use [thieves tools](equipment)
+    - Can I use [masons tools](equipment)
+
+- intent: cast_spell
+  examples: |
+    - I cast [bless](spell)
+    - I cast [burning hands](spell)
+    - I cast [cure wounds](spell)
+    - I cast [detect magic](spell)
+    - I cast [guiding bolt](spell)
+    - I cast [healing word](spell)
+    - I cast [light](spell)
+    - I cast [mage armor](spell)
+    - I cast [mage hand](spell)
+    - I cast [magic missile](spell)
+    - I cast [prestidigitation](spell)
+    - I cast [ray of frost](spell)
+    - I cast [sacred flame](spell)
+    - I cast [shield](spell)
+    - I cast [shield of faith](spell)
+    - I cast [shocking grasp](spell)
+    - I cast [sleep](spell)
+    - I cast [thaumaturgy](spell)
+    - I shoot a [magic missile](spell)
+    - I shoot a [ray of frost](spell)
+    - I shoot a [guiding bolt](spell)
+    - I use [bless](spell)
+    - I use [burning hands](spell)
+    - I use [cure wounds](spell)
+    - I use [detect magic](spell)
+    - I use [guiding bolt](spell)
+    - I use [healing word](spell)
+    - I use [light](spell)
+    - I use [mage armor](spell)
+    - I use [mage hand](spell)
+    - I use [magic missile](spell)
+    - I use [prestidigitation](spell)
+    - I use [ray of frost](spell)
+    - I use [sacred flame](spell)
+    - I use [shield](spell)
+    - I use [shield of faith](spell)
+    - I use [shocking grasp](spell)
+    - I use [sleep](spell)
+    - I use [thaumaturgy](spell)
+    - I'm going to cast [bless](spell)
+    - I'd like to cast [burning hands](spell)
+    - I want to cast [cure wounds](spell)
+    - I want to cast [shield](spell) on myself
+
+- intent: rest
+  examples: |
+    - I want to go to sleep
+    - I want to rest
+    - I want to take a short rest
+    - I'm taking a short rest
+    - Take a nap
+    
+- intent: question_npc
+  examples: |
+    - what's going on?
+    - what is the problem?
+    - what's the problem?
+    - what's the issue?
+    - why did you contact me?
+    - why did you want to see me?
+    - what's up?
+    - what happened?
+    - why am I here?
+    - what can you tell me?
+    - are you having a problem?
+    - are you having issues?
+
+- intent: ale
+  examples: |
+    - I would like a cask of [ale](drink)
+    - I'll need your largest bowl of [ale](drink)
+    - cask of [ale](drink)
+    - glass of [ale](drink)
+    - goblet of [ale](drink)
+    - flagon of [ale](drink)
+    - tankard of [ale](drink)
+    - I want [ale](drink)
+    - give me [ale](drink)
+
+- intent: ability_check
+  examples: |
+    - can I do a [charisma](ability) check?
+    - [charisma](ability) check?
+    - can I use my [charisma](ability)?
+    - is that a [charisma](ability) roll?
+    - can I do a [charisma](ability) roll?
+    - [charisma](ability) roll?
+    - is that a [charisma](ability) check?
+    - is that a [constitution](ability) check?
+    - is that a [dexterity](ability) check?
+    - is that a [intelligence](ability) check?
+    - is that a [strength](ability) check?
+    - is that a [wisdom](ability) check?
+    - can I use my [cha](ability) check?
+    - can I use my [con](ability) check?
+    - can I use my [dex](ability) check?
+    - can I use my [int](ability) check?
+    - can I use my [str](ability) check?
+    - can I use my [wis](ability) check?
+
+- intent: skill_check
+  examples: |
+    - is that a [acrobatics](skill) check?
+    - can I do a [acrobatics](skill) check?
+    - [acrobatics](skill) check?
+    - can I use my [acrobatics](skill)?
+    - is that a [acrobatics](skill) roll?
+    - can I do a [acrobatics](skill) roll?
+    - [acrobatics](skill) roll?
+    - is that a [acrobatics](skill) check?
+    - is that a [animal handling](skill) check?
+    - is that a [arcana](skill) check?
+    - is that a [athletics](skill) check?
+    - is that a [deception](skill) check?
+    - is that a [history](skill) check?
+    - is that a [insight](skill) check?
+    - is that a [intimidation](skill) check?
+    - is that a [investigation](skill) check?
+    - is that a [medicine](skill) check?
+    - is that a [nature](skill) check?
+    - is that a [perception](skill) check?
+    - is that a [performance](skill) check?
+    - is that a [persuasion](skill) check?
+    - is that a [religion](skill) check?
+    - is that a [sleight of hand](skill) check?
+    - is that a [stealth](skill) check?
+    - is that a [survival](skill) check?
+
+- intent: explain
+  examples: |
+    - can you explain?
+    - what do you mean?
+    - what does than mean?
+    - what does [advantage](concept) mean?
+    - what does [disadvantage](concept) mean?
+    - what does [critical](concept) mean?
+    - what does [ability check](concept) mean?
+    - tell me about [charisma](ability)
+    - what does [cha](ability) mean?
+    - tell me about [constitution](ability)
+    - tell me about [dexterity](ability)
+    - tell me about [intelligence](ability)
+    - tell me about [strength](ability)
+    - tell me about [wisdom](ability)
+    - what does [thieves tools](equipment) do?
+    - what does [masons tools](equipment) do?
+    - what does [masons tool](equipment) do?
+    - what does [mason tools](equipment) do?
+    - what does [mason tool](equipment) do?
+
+- intent: explain_monster
+  examples: |
+    - are there any [monsters](entities)?
+    - do I see any [monsters](entities)?
+
+- intent: explain_time
+  examples: |
+    - what is the time?
+    - what time is it?
+    - whats the time?
+    - how long is a [short rest](concept)?
+    - how long is a [long rest](concept)?
+    - how long is a [combat round](concept)?
+    - how long does a [round](concept) last?
+    
+- intent: health
+  examples: |
+    - has anyone taken any damage?
+    - have I taken any damage?
+    - is the [zombie](monster) damaged?
+    - do I have an injury?
+    - is the [goblin](monster) injured?
+
+- intent: locate
+  examples: |
+    - where is the [door](entity)?
+
+- intent: sense
+  examples: |
+    - what do I [see](sense)?
+    - can I [see](sense) anything?
+    - what do I [hear](sense)?
+    - can I [hear](sense) anything?
+    - what do I [smell](sense)?
+    - can I [smell](sense) anything?
+    - what do I [feel](sense)?
+    - can I [feel](sense) anything?
+    - what do I [taste](sense)?
+    - can I [taste](sense) anything?
+
+- intent: hint
+  examples: |
+    - how can I progress?
+    - what do I do next?
+    - where do I go next?
+    - how can I make progress?
+    - can you help me
+    - can you give me a hint
+    - what should I do?
+    - where should I go?
 
 - synonym: stout_meal_inn
   examples: |
@@ -244,10 +562,29 @@ nlu:
     - stouthammer
     - the dwarf
 
+- synonym: cat
+  examples: |
+    - cats
+
 - synonym: giant_rat
   examples: |
     - giant rat
     - rat
+    - giant rats
+    - rats
+
+- synonym: goblin
+  examples: |
+    - goblins
+
+- synonym: skeleton
+  examples: |
+    - skellington
+    - skeletons
+
+- synonym: zombie
+  examples: |
+    - zombies
 
 - synonym: "1"
   examples: |
@@ -275,3 +612,119 @@ nlu:
     - 4
     - 4th
     - fourth
+
+- synonym: cha
+  examples: |
+    - charisma
+
+- synonym: con
+  examples: |
+    - constitution
+
+- synonym: dex
+  examples: |
+    - dexterity
+
+- synonym: int
+  examples: |
+    - intelligence
+
+- synonym: str
+  examples: |
+    - strength
+    
+- synonym: wis
+  examples: |
+    - wisdom
+
+- synonym: thieves_tools
+  examples: |
+    - thieves tools
+    - thieves' tools
+    - thieve's tools
+    - thief's tools
+    - theives tools
+    - thief tools
+    - thiefs tools
+    - thiefs tool
+
+- synonym: masons_tools
+  examples: |
+    - masons tools
+    - mason tools
+    - masons tool
+    - mason tool
+
+- synonym: light_crossbow
+  examples: |
+    - light crossbow
+    - crossbow
+
+- synonym: burning_hands
+  examples: |
+    - burning hands
+
+- synonym: cure_wounds
+  examples: |
+    -cure wounds
+
+- synonym: detect_magic
+  examples: |
+    - detect magic
+
+- synonym: guiding_bolt
+  examples: |
+    - guiding bolt
+
+- synonym: healing_word
+  examples: |
+    - healing word
+
+- synonym: mage_armor
+  examples: |
+    - mage armor
+
+- synonym: mage_hand
+  examples: |
+    - mage hand
+
+- synonym: magic_missile
+  examples: |
+    - magic missile
+
+- synonym: ray_of_frost
+  examples: |
+    - ray of frost
+
+- synonym: sacred_flame
+  examples: |
+    - sacred flame
+
+- synonym: shield_of_faith
+  examples: |
+    - shield of faith
+
+- synonym: shocking_grasp
+  examples: |
+    - shocking grasp
+
+- synonym: long_rest
+  examples: |
+    - long rest
+
+- synonym: short_rest
+  examples: |
+    - short rest
+
+- synonym: combat_round
+  examples: |
+    - combat round
+    - round
+
+- synonym: animal_handling
+  examples: |
+    - animal handling
+
+- synonym: sleight_of_hand
+  examples: |
+    - sleight of hand
