@@ -8,11 +8,30 @@ intents:
   - bot_challenge
   - roll_die
   - move
+  - stealth
+  - pick_lock
   - explore
-  - roleplay_neutral
-  - roleplay_negative
-  - roleplay_positive
   - attack
+  - ranged_attack
+  - disengage
+  - dash
+  - dodge
+  - hide
+  - search
+  - use
+  - cast_spell
+  - rest
+  - question_npc
+  - ale
+  - ability_check
+  - skill_check
+  - explain
+  - explain_monster
+  - explain_time
+  - health
+  - locate
+  - sense
+  - hint
 
 responses:
   utter_greet:
