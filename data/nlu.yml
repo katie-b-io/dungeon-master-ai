@@ -23,6 +23,7 @@ nlu:
     - I got your invitation
     - thanks for inviting me
     - how's business?
+    - greet [corvus](npc)
 
 - intent: goodbye
   examples: |
@@ -194,6 +195,7 @@ nlu:
     - assail [corvus stouthammer](npc)
     - assault [stouthammer](npc)
     - beat [anvil-jumper](npc)
+    - punch [stouthammer](npc)
     - blast [cat](monster)
     - charge [giant rat](monster)
     - harm [first](id) [giant rat](monster)
@@ -222,8 +224,7 @@ nlu:
     - attack [giant rat](monster) [3](id)
     - attack [giant rat](monster) [4](id)
     - overwhelm [zombie](monster)
-    - punch [skeleton](monster)
-    - wallop [zombie](monster)
+    - wallop [skeleton](monster)
     - pounce the [cat](monster)
 
 - intent: ranged_attack
@@ -558,6 +559,7 @@ nlu:
 
 - synonym: corvus
   examples: |
+    - corvus
     - corvus stouthammer
     - stouthammer
     - the dwarf

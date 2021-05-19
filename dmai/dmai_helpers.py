@@ -4,9 +4,9 @@ from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 
 
-def start() -> Game:
+def start(char_class: str = None, char_name: str = None, skip_intro: bool = False) -> Game:
     """Initialise the game"""
-    game = Game()
+    game = Game(char_class=char_class, char_name=char_name, skip_intro=skip_intro)
     NLG.set_game(game)
     NLU.set_game(game)
 
@@ -27,6 +27,10 @@ def run(game: Game) -> None:
     ui = UserInterface(game)
     ui.execute()
 
+def gameover() -> None:
+    """Gracefully exit the game"""
+    print("Thanks for playing! Don't forget to complete your feedback, in fact, why don't you do it now? :-)")
+    exit_game()
 
 def exit_game(exit_str: str = None) -> None:
     """Exit the game"""

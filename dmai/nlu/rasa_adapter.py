@@ -31,7 +31,7 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
         try:
             response = cls._parse_message(player_utter)
             intent = response["intent"]["name"]
-            entities = response["entities"]
+            entities = cls._prepare_entities(response["entities"])
             return (intent, entities)
         except ValueError as e:
             print(e)
@@ -47,6 +47,19 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
             # successful request, return response
             return r.json()
         else:
-            # not sucessful, raise error
+            # not successful, raise error
             msg = "Rasa error: {e}".format(e=r.status_code)
             raise ValueError(msg)
+        
+    @classmethod
+    def _prepare_entities(self, entities: dict) -> list:
+        """Method which converts the Rasa entity object into a generic
+        style one for NLU"""
+        return_entities = []
+        for entity in entities:
+            return_entities.append({
+                "entity": entity["entity"],
+                "value": entity["value"],
+                "confidence": entity["confidence_entity"]
+            })
+        return(return_entities)

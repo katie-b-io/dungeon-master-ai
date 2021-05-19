@@ -87,6 +87,10 @@ class Character(ABC):
         """Method to return the armor class (AC) attribute"""
         return self.armor.calculate_armor_class(self.get_ability_modifier("dex"))
 
+    def has_darkvision(self) -> bool:
+        """Method to return bool for whether character has darkvision"""
+        return self.features.contains("darkvision_elf") or self.features.contains("darkvision_dwarf")
+    
     def get_proficiencies(self, prof_type: str) -> list:
         """Method to return list of proficiencies of specified type"""
         all_prof = []

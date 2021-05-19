@@ -14,3 +14,16 @@ The dependencies can then be installed with poetry:
 To run the DMAI in interactive mode:
 
 `python ./dungeon_master.py -i`
+
+### Command line arguments
+
+|Argument                |Description                                      |
+|------------------------|-------------------------------------------------|
+|`-h, --help`            |Show the help message                            |
+|`-i, --interactive`     |Run in interactive mode                          |
+|`-c, --cleric`          |Play as a cleric                                 |
+|`-f, --fighter`         |Play as a fighter                                |
+|`-r, --rogue`           |Play as a rogue                                  |
+|`-w, --wizard`          |Play as a wizard                                 |
+|`-n NAME, --name NAME`  |Set character name (must set character class too)|
+|`--skip-intro`          |Skip the intro                                   |

@@ -106,3 +106,55 @@ class NLG(metaclass=NLGMeta):
             return "You cannot move to {room} because the way is locked!".format(
                 room=room
             )
+
+    @classmethod
+    def no_destination(cls) -> str:
+        """Return the utterance for no destination"""
+        utters = [
+            "Can you confirm your destination",
+            "Sorry, where do you want to go?",
+            "I'm not sure where you want to go, can you repeat your destination",
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def no_target(cls) -> str:
+        """Return the utterance for no target"""
+        utters = [
+            "Can you confirm your target",
+            "Who, or what, do you want to attack?",
+            "I'm not sure what you want to attack, can you repeat your target",
+        ]
+        return random.choice(utters)
+        
+    @classmethod
+    def transition_to_combat(cls) -> str:
+        """Return the utterance for transitioning to combat"""
+        utters = [
+            "Okay, let's fight!",
+            "You're now starting combat",
+            "Let's begin the combat round",
+            "Moving into combat"
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def attack_npc_end_game(cls, npc_id: str) -> str:
+        """Return the utterance for ending the game by attacking npc"""
+        n = cls.game.dm.npcs.get_npc(npc_id).short_name
+        utters = [
+            "You attacked and fatally wounded {n}. He was a much loved member of the community and retribution was swift. You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial.".format(n=n),
+            "Your unprovoked attack took your good friend {n} completely unawares. As the light left his eyes, he managed to utter a quiet \"why?\" with his dying breath. Why indeed? You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial.".format(n=n),
+            "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial.".format(n=n),
+        ]
+        return random.choice(utters)
+        
+    @classmethod
+    def explain_armor_class(cls) -> str:
+        """Return the utterance for explaining a armos class"""
+        return "The minimum roll for successful damage. It is calculated as [x] because of [x, y, z]."
+
+    @classmethod
+    def explain_critical(cls) -> str:
+        """Return the utterance for explaining a critical hit"""
+        return "Critical means the damage dice are doubled. Roll for damage, double that, and add your modifier after that."

@@ -55,6 +55,13 @@ class NPCCollection:
                     State.set_init_status(unique_id, status)
         return monsters
 
+    def get_type(self, npc_id: str) -> bool:
+        """Return str with type of npc"""
+        if npc_id in self.npcs:
+            return "npc"
+        elif npc_id in self.monsters:
+            return "monster"
+        
     def get_npc(self, npc_id: str) -> NPC:
         """Return NPC with specified id"""
         npc = None

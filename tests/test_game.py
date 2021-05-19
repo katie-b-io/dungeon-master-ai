@@ -6,15 +6,15 @@ p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
 from dmai.game.state import State
-from dmai.game.adventure import Adventure
+from dmai.game.game import Game
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 
 class TestState(unittest.TestCase):
     """Test the State class"""
 
     def setUp(self) -> None:
-        self.adventure = Adventure("the_tomb_of_baradin_stormfury")
-        State.set_adventure(self.adventure)
+        self.game = Game()
+        self.adventure = self.game.dm.adventure
 
     def test_get_current_room_player(self) -> None:
         entity = "player"

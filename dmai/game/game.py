@@ -7,16 +7,31 @@ from dmai.game.state import State
 
 
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, char_class: str = None, char_name: str = None, skip_intro: bool = False) -> None:
         """Main class for the game"""
         adventure = "the_tomb_of_baradin_stormfury"
         self.dm = DM(adventure)
-        self.intro = True
+        State.set_dm(self.dm)
         self.player = None
         
+        # set character class and name if possible
+        if char_class:
+            character = CharacterCollection.get_character(char_class)
+            self.player = Player(character)
+            State.set_player(self.player)
+        
+            if char_name:
+                self.player.set_name(char_name)
+        
         # intro text generator
-        self.intro_text = self.dm.get_intro_text()
-
+        if skip_intro:
+            State.pause()
+            self.intro = False
+            self.intro_text = iter(())
+        else:
+            self.intro = True
+            self.intro_text = self.dm.get_intro_text()
+            
     def input(self, player_utter: str) -> None:
         """Receive a player input"""
         
@@ -46,9 +61,9 @@ class Game:
             if not player_utter:
                 return
             player_utter = player_utter.lower()
-            char_class = CharacterCollection.get_character(player_utter)
-            if char_class:
-                self.player = Player(char_class)
+            character = CharacterCollection.get_character(player_utter)
+            if character:
+                self.player = Player(character)
                 State.set_player(self.player)
 
         elif not self.player.name:
@@ -66,6 +81,13 @@ class Game:
 
             # relay the player utterance to the dm
             succeed = self.dm.input(player_utter, intent=intent, kwargs=params)
+            
+            if succeed:
+                # if succeeded, clear stored intent
+                State.clear_intent()
+            else:
+                # failed, keep track of intent
+                State.store_intent(intent, params)
 
         return
 

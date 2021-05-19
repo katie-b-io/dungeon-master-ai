@@ -33,7 +33,11 @@ class Features:
         """Method to return all the features"""
         return [self.feature_data[feature] for feature in self.features]
     
-    def get_description(self, feature_id):
+    def get_description(self, feature_id) -> str:
         """Method to return the feature description"""
         if feature_id in self.feature_data:
             return self.feature_data[feature_id]["description"]
+    
+    def contains(self, feature_id) -> bool:
+        """Method to return bool for whether feature is in features"""
+        return feature_id in self.features

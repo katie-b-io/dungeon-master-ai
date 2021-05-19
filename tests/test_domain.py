@@ -6,8 +6,7 @@ p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
 from dmai.domain.actions import Actions
-from dmai.game.state import State
-from dmai.game.adventure import Adventure
+from dmai.game.game import Game
 from dmai.utils.exceptions import UnrecognisedRoomError
 
 
@@ -15,9 +14,8 @@ class TestActions(unittest.TestCase):
     """Test the Actions class"""
     
     def setUp(self) -> None:
-        self.adventure = Adventure("the_tomb_of_baradin_stormfury")
-        State.set_adventure(self.adventure)
-        self.actions = Actions(self.adventure)
+        self.game = Game()
+        self.actions = self.game.dm.actions
         
     def test_move_good_destination(self) -> None:
         entity = "player"

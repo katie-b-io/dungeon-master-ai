@@ -1,3 +1,5 @@
+import traceback
+
 from dmai.utils.exceptions import DiceFormatError, UnrecognisedCommandError
 from dmai.utils.dice_roller import DiceRoller
 from dmai.nlu.rasa_adapter import RasaAdapter
@@ -30,7 +32,7 @@ class NLU(metaclass=NLUMeta):
         "exit": {
             "text": "/exit",
             "help": "Exit the game",
-            "cmd": "dmai.dmai_helpers.exit_game()"
+            "cmd": "dmai.dmai_helpers.gameover()"
         },
         "roll": {
             "text": "/roll [die]",
@@ -114,7 +116,8 @@ class NLU(metaclass=NLUMeta):
         
         try:
             exec(command)
-        except Exception:
+        except Exception as e:
+            traceback.print_exc()
             return (False, "")
         
         if "return" in cls.commands[cmd]:
@@ -143,9 +146,17 @@ class NLU(metaclass=NLUMeta):
         (intent, entities) = RasaAdapter.get_intent(player_utter)
         if entities:
             print(entities)
+        
         if intent == "move":
             return ("move", {"nlu_entities": entities})
         if intent == "attack":
             return ("attack", {"nlu_entities": entities})
         else:
-            return (None, {})
+            # check for intent in State
+            if State.current_intent:
+                # combine the stored entities with new entities
+                if "nlu_entities" in State.current_intent["params"]:
+                    entities.extend(State.current_intent["params"]["nlu_entities"])
+                return (State.current_intent["intent"], {"nlu_entities": entities})
+
+        return (None, {})

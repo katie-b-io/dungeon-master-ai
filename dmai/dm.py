@@ -3,7 +3,7 @@ from dmai.game.adventure import Adventure
 from dmai.domain.actions import Actions
 from dmai.nlg.nlg import NLG
 from dmai.game.npcs.npc_collection import NPCCollection
-
+import dmai
 
 class DM:
 
@@ -15,16 +15,14 @@ class DM:
         """Main DM class"""
         self._dm_utter = None
         self._player_utter = None
+        self.triggers = []
         self.adventure = Adventure(adventure)
-
-        # Initialise the state with the adventure data
-        State.set_adventure(self.adventure)
-
-        # Initialise the actions with the state and adventure data
-        self.actions = Actions(self.adventure)
         
         # Initialise the NPC Collection with the adventure data
         self.npcs = NPCCollection(self.adventure)
+        
+        # Initialise the actions with the adventure and npc data
+        self.actions = Actions(self.adventure, self.npcs)
 
         # Initialise the player intent map
         self.player_intent_map = {"move": self.move, "attack": self.attack}
@@ -52,6 +50,11 @@ class DM:
             except KeyError:
                 print("Intent not in map: {i}".format(i=intent))
                 raise
+        
+        # run through any triggers
+        for obj in self.triggers:
+            obj.trigger()
+
         return True
 
     @property
@@ -59,6 +62,16 @@ class DM:
         """Return an output for the player"""
         return self._dm_utter
 
+    def register_trigger(self, trigger: object) -> None:
+        """Register a trigger object"""
+        print("registering trigger")
+        self.triggers.append(trigger)
+    
+    def deregister_trigger(self, trigger: object) -> None:
+        """Deregister a trigger object"""
+        print("deregistering trigger")
+        self.triggers.remove(trigger)
+        
     def _start_game(self) -> None:
         """Start the game"""
         starting_room = State.get_current_room_id()
@@ -85,7 +98,7 @@ class DM:
         """Extract a destination from NLU entities dictionary.
         Returns a string with destination"""
         for entity in nlu_entities:
-            if entity["entity"] == "location" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "location" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
                 return entity["value"]
 
     def _get_target(self, nlu_entities: dict) -> str:
@@ -93,11 +106,14 @@ class DM:
         Returns a string with destination"""
         monster = None
         i = None
+        npc = None
         for entity in nlu_entities:
-            if entity["entity"] == "monster" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "monster" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
                 monster = entity["value"]
-            if entity["entity"] == "id" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "id" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
                 i = entity["value"]
+            if entity["entity"] == "npc" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
+                npc = entity["value"]
                 
         # monsters are indexed by a unique id, determine it if possible
         if monster:
@@ -109,7 +125,11 @@ class DM:
                 # TODO get player confirmation about which monster to target
                 monster_id = self.npcs.get_monster_id(monster, status="alive", location=State.get_current_room_id())
             return monster_id
-                        
+        
+        # NPCs have unique ids
+        if npc:
+            return npc
+        
     def move(self, destination: str = None, entity: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to move an entity to a destination determined by NLU or specified.
         Returns whether the move was successful."""
@@ -117,21 +137,30 @@ class DM:
             entity = "player"
         if not destination and nlu_entities:
             destination = self._get_destination(nlu_entities)
-            
-        print("Moving {e} to {d}!".format(e=entity, d=destination))
-        (moved, utterance) = self.actions.move(entity, destination)
+        
+        if not destination:
+            moved = False
+            utterance = NLG.no_destination()
+        else: 
+            print("Moving {e} to {d}!".format(e=entity, d=destination))
+            (moved, utterance) = self.actions.move(entity, destination)
         self._generate_utterance(utter=utterance)
         return moved
 
     def attack(self, target: str = None, attacker: str = None, nlu_entities: dict = None) -> bool:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the attack was successful."""
+        
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
             target = self._get_target(nlu_entities)
-            
-        print("{a} is attacking {t}!".format(a=attacker, t=target))
-        (attacked, utterance) = self.actions.attack(attacker, target)
+        
+        if not target:
+            attacked = False
+            utterance = NLG.no_target()
+        else:
+            print("{a} is attacking {t}!".format(a=attacker, t=target))
+            (attacked, utterance) = self.actions.attack(attacker, target)
         self._generate_utterance(utter=utterance)
         return attacked
