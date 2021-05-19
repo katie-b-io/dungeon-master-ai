@@ -1,7 +1,10 @@
+from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedRoomError
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
+from dmai.nlg.nlg import NLG
+import dmai
 
 
 class Actions:
@@ -9,9 +12,10 @@ class Actions:
     # class variables
     action_data = dict()
 
-    def __init__(self, adventure: Adventure) -> None:
+    def __init__(self, adventure: Adventure, npcs: NPCCollection) -> None:
         """Actions class"""
         self.adventure = adventure
+        self.npcs = npcs
         self.actions = dict()
         self._load_action_data()
 
@@ -72,8 +76,15 @@ class Actions:
         # check if attack can happen
         (can_attack, reason) = self._can_attack(attacker, target)
         if can_attack:
+            # check if target will end game
+            if self.npcs.get_type(target) == "npc":
+                if self.npcs.get_npc(target).attack_ends_game:
+                    # this is a game end condition
+                    print(NLG.attack_npc_end_game(target))
+                    dmai.dmai_helpers.gameover()
+                
             utterance = "{a} attacked {t}!".format(a=attacker, t=target)
-            State.set_current_game_mode("combat")
+            State.combat()
             return (can_attack, utterance)
         else:
             utterance ="{a} can't attack {t}!\n{r}".format(a=attacker, t=target, r=reason)

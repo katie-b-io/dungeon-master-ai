@@ -13,10 +13,16 @@ class UserInterface:
         while True:
             output = self.game.output()
             if output:
-                prompt = "\n" + output + "\n> "
+                prompt = "\n" + output + "\n"
             else:
-                prompt = "\n> "
+                prompt = "\n"
+            
+            if State.in_combat:
+                prompt += "\n[COMBAT] "
+            
+            prompt += "> "
             if State.paused:
                 prompt += "Press enter to continue... "
+            
             user_input = input(prompt)
             self.game.input(user_input)

@@ -2,7 +2,7 @@ from enum import Enum
 
 from dmai.game.world.room import Room
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
-
+from dmai.nlg.nlg import NLG
 
 class GameMode(Enum):
     COMBAT = "combat"
@@ -31,6 +31,7 @@ class State(metaclass=StateMeta):
     started = False
     paused = False
     talking = False
+    in_combat = False
     adventure = None
     player = None
     current_room = {}
@@ -42,6 +43,28 @@ class State(metaclass=StateMeta):
         """Main class for the game state"""
         pass
     
+    @classmethod
+    def combat(cls) -> None:
+        if not cls.in_combat:
+            cls.set_current_game_mode("combat")
+            cls.in_combat = True
+            print(NLG.transition_to_combat())
+    
+    @classmethod
+    def explore(cls) -> None:
+        cls.set_current_game_mode("explore")
+        cls.in_combat = False
+
+    @classmethod
+    def roleplay(cls) -> None:
+        cls.set_current_game_mode("roleplay")
+        cls.in_combat = False
+    
+    @classmethod
+    def set_current_game_mode(cls, game_mode: str) -> None:
+        """Method to set the current game mode."""
+        cls.current_game_mode = GameMode(game_mode)
+        
     @classmethod
     def start(cls) -> None:
         cls.started = True
@@ -61,7 +84,7 @@ class State(metaclass=StateMeta):
     @classmethod
     def stop_talking(cls) -> None:
         cls.talking = False
-        
+    
     @classmethod
     def set_adventure(cls, adventure) -> None:
         cls.adventure = adventure
@@ -77,11 +100,6 @@ class State(metaclass=StateMeta):
     def set_init_status(cls, entity: str, status: str) -> str:
         """Method to set the initial status for specified entity."""
         cls.current_status[entity] = Status(status)
-
-    @classmethod
-    def set_current_game_mode(cls, game_mode: str) -> None:
-        """Method to set the current game mode."""
-        cls.current_game_mode = GameMode(game_mode)
 
     @classmethod
     def get_current_hp(cls, entity: str = "player") -> None:

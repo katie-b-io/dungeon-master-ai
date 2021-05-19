@@ -27,6 +27,10 @@ def run(game: Game) -> None:
     ui = UserInterface(game)
     ui.execute()
 
+def gameover() -> None:
+    """Gracefully exit the game"""
+    print("Thanks for playing! Don't forget to complete your feedback, in fact, why don't you do it now? :-)")
+    exit_game()
 
 def exit_game(exit_str: str = None) -> None:
     """Exit the game"""

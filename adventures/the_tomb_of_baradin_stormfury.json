@@ -16,13 +16,15 @@
                 "dwarf",
                 "hill"
             ],
-            "attitude": "friendly"
+            "attitude": "friendly",
+            "attack_ends_game": true
         },
         "anvil": {
             "long_name": "Anvil-Jumper",
             "short_name": "Anvil-Jumper",
             "monster": "cat",
-            "attitude": "indifferent"
+            "attitude": "indifferent",
+            "attack_ends_game": false
         }
     },
     "rooms": {
