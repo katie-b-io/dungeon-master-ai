@@ -85,7 +85,7 @@ class DM:
         """Extract a destination from NLU entities dictionary.
         Returns a string with destination"""
         for entity in nlu_entities:
-            if entity["entity"] == "location" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "location" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
                 return entity["value"]
 
     def _get_target(self, nlu_entities: dict) -> str:
@@ -94,9 +94,9 @@ class DM:
         monster = None
         i = None
         for entity in nlu_entities:
-            if entity["entity"] == "monster" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "monster" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
                 monster = entity["value"]
-            if entity["entity"] == "id" and entity["confidence_entity"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "id" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
                 i = entity["value"]
                 
         # monsters are indexed by a unique id, determine it if possible

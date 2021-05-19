@@ -23,6 +23,7 @@ nlu:
     - I got your invitation
     - thanks for inviting me
     - how's business?
+    - greet [corvus](npc)
 
 - intent: goodbye
   examples: |
