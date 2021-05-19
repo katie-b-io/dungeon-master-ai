@@ -113,7 +113,7 @@ class NLG(metaclass=NLGMeta):
         utters = [
             "Can you confirm your target",
             "Who, or what, do you want to attack?",
-            "I'm not sure what you want to attack, can you rephrase that",
+            "I'm not sure what you want to attack, can you repeat your target",
         ]
         return random.choice(utters)
         

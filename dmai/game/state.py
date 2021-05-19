@@ -38,6 +38,7 @@ class State(metaclass=StateMeta):
     current_status = {}
     current_hp = {}
     current_game_mode = GameMode.EXPLORE
+    current_intent = {}
     
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -118,7 +119,20 @@ class State(metaclass=StateMeta):
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
-            
+    
+    @classmethod
+    def clear_intent(cls,) -> None:
+        """Method to clera the current intent"""
+        cls.current_intent = {}
+        
+    @classmethod
+    def store_intent(cls, intent: str, params: dict) -> None:
+        """Method to set the current intent"""
+        cls.current_intent = {
+            "intent": intent,
+            "params": params
+        }
+        
     ############################################################
     # METHODS RELATING TO LOCATION
     @classmethod

@@ -146,9 +146,17 @@ class NLU(metaclass=NLUMeta):
         (intent, entities) = RasaAdapter.get_intent(player_utter)
         if entities:
             print(entities)
+        
         if intent == "move":
             return ("move", {"nlu_entities": entities})
         if intent == "attack":
             return ("attack", {"nlu_entities": entities})
         else:
-            return (None, {})
+            # check for intent in State
+            if State.current_intent:
+                # combine the stored entities with new entities
+                if "nlu_entities" in State.current_intent["params"]:
+                    entities.extend(State.current_intent["params"]["nlu_entities"])
+                return (State.current_intent["intent"], {"nlu_entities": entities})
+
+        return (None, {})

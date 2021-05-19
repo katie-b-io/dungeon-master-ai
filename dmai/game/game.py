@@ -79,6 +79,13 @@ class Game:
 
             # relay the player utterance to the dm
             succeed = self.dm.input(player_utter, intent=intent, kwargs=params)
+            
+            if succeed:
+                # if succeeded, clear stored intent
+                State.clear_intent()
+            else:
+                # failed, keep track of intent
+                State.store_intent(intent, params)
 
         return
 
