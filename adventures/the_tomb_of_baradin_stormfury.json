@@ -92,6 +92,7 @@
             "treasure": [],
             "text": {
                 "enter": "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness.\nThe landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus' stock and the loud protesting meows of Anvil-Jumper, Corvus' cat.",
+                "visibility": "You see a terrible scene in front of you.\nAnvil-Jumper the cat is sitting on top of one of the barrels in the north-east corner of the room, meowing pathetically at the giant rats who are entirely indifferent to his plight.\nThere are a total of four giant rats in the cellar tearing through the food supplies. The rats have burst through a 5 ft. by 5 ft. hole in the eastern wall of the cellar.",
                 "exit": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises.\nSome 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar."
             }
         },

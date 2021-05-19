@@ -108,6 +108,16 @@ class NLG(metaclass=NLGMeta):
             )
 
     @classmethod
+    def no_destination(cls) -> str:
+        """Return the utterance for no destination"""
+        utters = [
+            "Can you confirm your destination",
+            "Sorry, where do you want to go?",
+            "I'm not sure where you want to go, can you repeat your destination",
+        ]
+        return random.choice(utters)
+    
+    @classmethod
     def no_target(cls) -> str:
         """Return the utterance for no target"""
         utters = [

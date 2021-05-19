@@ -15,10 +15,8 @@ class DM:
         """Main DM class"""
         self._dm_utter = None
         self._player_utter = None
+        self.triggers = []
         self.adventure = Adventure(adventure)
-
-        # Initialise the state with the adventure data
-        State.set_adventure(self.adventure)
         
         # Initialise the NPC Collection with the adventure data
         self.npcs = NPCCollection(self.adventure)
@@ -52,6 +50,11 @@ class DM:
             except KeyError:
                 print("Intent not in map: {i}".format(i=intent))
                 raise
+        
+        # run through any triggers
+        for obj in self.triggers:
+            obj.trigger()
+
         return True
 
     @property
@@ -59,6 +62,16 @@ class DM:
         """Return an output for the player"""
         return self._dm_utter
 
+    def register_trigger(self, trigger: object) -> None:
+        """Register a trigger object"""
+        print("registering trigger")
+        self.triggers.append(trigger)
+    
+    def deregister_trigger(self, trigger: object) -> None:
+        """Deregister a trigger object"""
+        print("deregistering trigger")
+        self.triggers.remove(trigger)
+        
     def _start_game(self) -> None:
         """Start the game"""
         starting_room = State.get_current_room_id()
@@ -124,9 +137,13 @@ class DM:
             entity = "player"
         if not destination and nlu_entities:
             destination = self._get_destination(nlu_entities)
-            
-        print("Moving {e} to {d}!".format(e=entity, d=destination))
-        (moved, utterance) = self.actions.move(entity, destination)
+        
+        if not destination:
+            moved = False
+            utterance = NLG.no_destination()
+        else: 
+            print("Moving {e} to {d}!".format(e=entity, d=destination))
+            (moved, utterance) = self.actions.move(entity, destination)
         self._generate_utterance(utter=utterance)
         return moved
 

@@ -11,6 +11,7 @@ class Game:
         """Main class for the game"""
         adventure = "the_tomb_of_baradin_stormfury"
         self.dm = DM(adventure)
+        State.set_dm(self.dm)
         self.player = None
         
         # set character class and name if possible
@@ -24,6 +25,7 @@ class Game:
         
         # intro text generator
         if skip_intro:
+            State.pause()
             self.intro = False
             self.intro_text = iter(())
         else:
