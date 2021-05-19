@@ -4,9 +4,9 @@ from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 
 
-def start() -> Game:
+def start(char_class: str = None, char_name: str = None, skip_intro: bool = False) -> Game:
     """Initialise the game"""
-    game = Game()
+    game = Game(char_class=char_class, char_name=char_name, skip_intro=skip_intro)
     NLG.set_game(game)
     NLU.set_game(game)
 

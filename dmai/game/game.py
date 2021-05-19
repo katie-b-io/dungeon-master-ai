@@ -7,16 +7,29 @@ from dmai.game.state import State
 
 
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, char_class: str = None, char_name: str = None, skip_intro: bool = False) -> None:
         """Main class for the game"""
         adventure = "the_tomb_of_baradin_stormfury"
         self.dm = DM(adventure)
-        self.intro = True
         self.player = None
         
+        # set character class and name if possible
+        if char_class:
+            character = CharacterCollection.get_character(char_class)
+            self.player = Player(character)
+            State.set_player(self.player)
+        
+            if char_name:
+                self.player.set_name(char_name)
+        
         # intro text generator
-        self.intro_text = self.dm.get_intro_text()
-
+        if skip_intro:
+            self.intro = False
+            self.intro_text = iter(())
+        else:
+            self.intro = True
+            self.intro_text = self.dm.get_intro_text()
+            
     def input(self, player_utter: str) -> None:
         """Receive a player input"""
         
@@ -46,9 +59,9 @@ class Game:
             if not player_utter:
                 return
             player_utter = player_utter.lower()
-            char_class = CharacterCollection.get_character(player_utter)
-            if char_class:
-                self.player = Player(char_class)
+            character = CharacterCollection.get_character(player_utter)
+            if character:
+                self.player = Player(character)
                 State.set_player(self.player)
 
         elif not self.player.name:
