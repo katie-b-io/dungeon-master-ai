@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedRoomError
@@ -80,7 +81,7 @@ class Actions:
             if self.npcs.get_type(target) == "npc":
                 if self.npcs.get_npc(target).attack_ends_game:
                     # this is a game end condition
-                    print(NLG.attack_npc_end_game(target))
+                    OutputBuilder.append(NLG.attack_npc_end_game(target))
                     dmai.dmai_helpers.gameover()
                 
             utterance = "{a} attacked {t}!".format(a=attacker, t=target)

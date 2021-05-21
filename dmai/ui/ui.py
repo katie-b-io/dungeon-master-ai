@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.game import Game
 from dmai.game.state import State
 
@@ -11,18 +12,20 @@ class UserInterface:
         """Execute function which allows CLI communication between
         player and DM"""
         while True:
-            output = self.game.output()
+            OutputBuilder.append(self.game.output())
+            output = OutputBuilder.format()
             if output:
                 prompt = "\n" + output + "\n"
             else:
                 prompt = "\n"
             
             if State.in_combat:
-                prompt += "\n[COMBAT] "
+                prompt += "[COMBAT] "
             
             prompt += "> "
             if State.paused:
                 prompt += "Press enter to continue... "
             
             user_input = input(prompt)
+            OutputBuilder.clear()
             self.game.input(user_input)

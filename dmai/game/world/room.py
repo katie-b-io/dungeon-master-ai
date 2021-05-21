@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.nlg.nlg import NLG
 from dmai.game.state import State
 
@@ -47,7 +48,7 @@ class Room:
     def visibility(self) -> str:
         """Method when triggering visibility text"""
         if State.torch_lit or State.get_player().character.has_darkvision(): 
-            print(self.text["visibility"]["text"])
+            OutputBuilder.append(self.text["visibility"]["text"])
             self.text["visibility"]["read"] = True
     
     def trigger(self) -> str:
