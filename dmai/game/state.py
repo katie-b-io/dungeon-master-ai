@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from enum import Enum
 
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
@@ -51,7 +52,7 @@ class State(metaclass=StateMeta):
         if not cls.in_combat:
             cls.set_current_game_mode("combat")
             cls.in_combat = True
-            print(NLG.transition_to_combat())
+            OutputBuilder.append(NLG.transition_to_combat())
     
     @classmethod
     def explore(cls) -> None:

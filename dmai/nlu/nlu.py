@@ -2,6 +2,7 @@ import traceback
 
 from dmai.utils.exceptions import DiceFormatError, UnrecognisedCommandError
 from dmai.utils.dice_roller import DiceRoller
+from dmai.utils.output_builder import OutputBuilder
 from dmai.nlu.rasa_adapter import RasaAdapter
 from dmai.game.state import State
 import dmai
@@ -27,7 +28,7 @@ class NLU(metaclass=NLUMeta):
         "help": {
             "text": "/help",
             "help": "Show these commands",
-            "cmd": "print(cls.show_commands())"
+            "cmd": "OutputBuilder.append(cls.show_commands(), wrap=False)"
         },
         "exit": {
             "text": "/exit",
@@ -43,7 +44,7 @@ class NLU(metaclass=NLUMeta):
         "stats": {
             "text": "/stats",
             "help": "Show your character stats in a character sheet",
-            "cmd": "print(cls.game.player.get_character_sheet())"
+            "cmd": "OutputBuilder.append(cls.game.player.get_character_sheet())"
             
         },
         "say": {

@@ -1,6 +1,7 @@
 import argparse
 
 import dmai
+from dmai.utils.output_builder import OutputBuilder
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -33,17 +34,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     """Main entry point to the DMAI"""
-    print(
-        """
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Welcome to the Dungeon Master AI!
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This is an MSc project created by Katie Baker at Heriot-Watt University.
-You are reminded not to input any identifying or confidential information.
-This interaction will be logged for analysis.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"""
-    )
+    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    OutputBuilder.append("Welcome to the Dungeon Master AI!")
+    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    OutputBuilder.append("This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis.")
+    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     # get the command line arguments
     args = build_arg_parser().parse_args()
@@ -69,6 +64,8 @@ This interaction will be logged for analysis.
     
     # start an interactive session on the command line
     if args.interactive:
+        OutputBuilder.print()
+        OutputBuilder.clear()
         dmai.run(game)
 
 

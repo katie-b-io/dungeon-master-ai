@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 import random
 
 from dmai.utils.exceptions import DiceFormatError
@@ -71,7 +72,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
         try:
             max_val = cls.dice_map[die]
             val = random.randint(1, max_val)
-            print("Rolling {d}... {v}".format(d=die, v=val))
+            OutputBuilder.append("Rolling {d}... {v}".format(d=die, v=val))
         except KeyError as e:
             raise
 
@@ -93,7 +94,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
             rolls = [random.randint(1, max_val) for _ in dice]
             total_roll = sum(rolls) + modifier
             die = cls.construct_dice_spec_string(dice_spec)
-            print("Rolling {d}... {t}".format(d=die, t=total_roll))
+            OutputBuilder.append("Rolling {d}... {t}".format(d=die, t=total_roll))
         except (KeyError, TypeError, ValueError):
             raise
 
