@@ -38,11 +38,13 @@ class Room:
     def enter(self) -> None:
         """Method when entering a room"""
         logger.debug("Triggering enter in room: {r}".format(r=self.id))
-        if not self.visited:
-            self.visited = True
-            OutputBuilder.append(self.text["enter"]["text"])
-        else:
-            OutputBuilder.append(NLG.enter_room(self.name))
+        if not State.stationary:
+            if not self.visited:
+                self.visited = True
+                OutputBuilder.append(self.text["enter"]["text"])
+            else:
+                OutputBuilder.append(NLG.enter_room(self.name))
+            State.halt()
     
     def visibility(self) -> str:
         """Method when triggering visibility text"""

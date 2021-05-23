@@ -41,6 +41,7 @@ class State(metaclass=StateMeta):
     talking = False
     in_combat = False
     torch_lit = False
+    stationary = False
     current_room = {}
     current_status = {}
     current_hp = {}
@@ -157,9 +158,14 @@ class State(metaclass=StateMeta):
     def extinguish_torch(cls) -> None:
         """Method to extinguish a torch"""
         cls.torch_lit = False
-        
+
     ############################################################
     # METHODS RELATING TO LOCATION
+    @classmethod
+    def halt(cls) -> None:
+        """Method to set stationary to true"""
+        cls.stationary = True
+        
     @classmethod
     def set_init_room(cls, entity: str, room_id: str) -> str:
         """Method to set the initial room for specified entity."""
@@ -194,6 +200,7 @@ class State(metaclass=StateMeta):
             raise UnrecognisedRoomError(msg)
         
         logger.debug("Setting current room: {r}".format(r=room_id))
+        cls.stationary = False
         cls.dm.deregister_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
         cls.current_room[entity] = room_id
         cls.dm.register_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
