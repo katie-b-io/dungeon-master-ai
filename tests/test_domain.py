@@ -22,7 +22,7 @@ class TestActions(unittest.TestCase):
         destination = "inns_cellar"
         (moved, utterance) = self.actions.move(entity, destination)
         self.assertEqual(moved, True)
-        self.assertEqual(utterance, "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness.\nThe landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus' stock and the loud protesting meows of Anvil-Jumper, Corvus' cat.")
+        self.assertEqual(utterance, "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness. The landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus' stock and the loud protesting meows of Anvil-Jumper, Corvus' cat.")
     
     def test_move_bad_destination(self) -> None:
         entity = "player"
