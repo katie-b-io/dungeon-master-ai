@@ -148,6 +148,8 @@ class NLU(metaclass=NLUMeta):
         player_utter = player_utter.lower()
         print("I'm thinking...")
         (intent, entities) = RasaAdapter.get_intent(player_utter)
+        if intent:
+            print("intent: " + intent)
         if entities:
             print(entities)
         

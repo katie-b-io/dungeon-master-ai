@@ -4,6 +4,7 @@ from dmai.game.adventure import Adventure
 from dmai.domain.actions import Actions
 from dmai.nlg.nlg import NLG
 from dmai.game.npcs.npc_collection import NPCCollection
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -12,7 +13,6 @@ logger = get_logger(__name__)
 class DM:
 
     # class variables
-    utter_type_map = {"name": NLG.acknowledge_name, "action": NLG.get_action, "start": NLG.enter_room}
     ENTITY_CONFIDENCE = 0.75
 
     def __init__(self, adventure: str) -> None:
@@ -40,60 +40,54 @@ class DM:
     ) -> bool:
         """Receive a player input.
         Returns whether the utterance was successful."""
+        succeed = False
         self._player_utter = player_utter
         if utter_type:
             if utter_type == "start":
-                self._start_game()
+                State.start()
+            elif utter_type == "name":
+                OutputBuilder.append(NLG.acknowledge_name())
             else:
-                self._generate_utterance(utter_type=utter_type)
-            return True
-        if intent:
+                OutputBuilder.append(NLG.get_action())
+            succeed = True
+            
+        elif intent:
             # look up intent in map
             try:
-                return self.player_intent_map[intent](**kwargs)
+                succeed = self.player_intent_map[intent](**kwargs)
             except KeyError:
                 logger.error("Intent not in map: {i}".format(i=intent))
                 raise
+            
+        if succeed:
+            self.execute_triggers()
         
-        # run through any triggers
-        for obj in self.triggers:
-            obj.trigger()
-
-        return True
+        return succeed
 
     @property
     def output(self) -> str:
         """Return an output for the player"""
-        return self._dm_utter
+        if OutputBuilder.has_response():
+            return OutputBuilder.format()
+        else:
+            return NLG.get_action()
 
     def register_trigger(self, trigger: object) -> None:
         """Register a trigger object"""
-        logger.info("Registering trigger: {n}".format(n=str(trigger)))
-        self.triggers.append(trigger)
+        if trigger not in self.triggers:
+            logger.debug("Registering trigger: {n}".format(n=str(trigger)))
+            self.triggers.append(trigger)
     
     def deregister_trigger(self, trigger: object) -> None:
         """Deregister a trigger object"""
-        logger.info("Deregistering trigger: {n}".format(n=str(trigger)))
-        self.triggers.remove(trigger)
-        
-    def _start_game(self) -> None:
-        """Start the game"""
-        starting_room = State.get_current_room_id()
-        self._generate_utterance(utter_type="start", kwargs={"room": starting_room, "adventure": self.adventure})
-        State.start()
-        
-    def _generate_utterance(self, utter: str = None, utter_type: str = None, kwargs: dict = {}) -> str:
-        """Generate an utterance for the player"""
-        if utter:
-            self._dm_utter = utter
-        elif not utter_type:
-            self._dm_utter = NLG.get_action()
-        else:
-            try:
-                self._dm_utter = self.utter_type_map[utter_type](**kwargs)
-            except KeyError as e:
-                logger.error("Utterance type does not exist: {e}".format(e=e))
-                self._dm_utter = NLG.get_action()
+        if trigger in self.triggers:
+            logger.debug("Deregistering trigger: {n}".format(n=str(trigger)))
+            self.triggers.remove(trigger)
+    
+    def execute_triggers(self) -> None:
+        """Method to execute triggers"""
+        for obj in self.triggers:
+            obj.trigger()
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
@@ -144,11 +138,10 @@ class DM:
         
         if not destination:
             moved = False
-            utterance = NLG.no_destination()
+            OutputBuilder.append(NLG.no_destination())
         else: 
             logger.info("Moving {e} to {d}!".format(e=entity, d=destination))
-            (moved, utterance) = self.actions.move(entity, destination)
-        self._generate_utterance(utter=utterance)
+            moved = self.actions.move(entity, destination)
         return moved
 
     def attack(self, target: str = None, attacker: str = None, nlu_entities: dict = None) -> bool:
@@ -162,9 +155,8 @@ class DM:
         
         if not target:
             attacked = False
-            utterance = NLG.no_target()
+            OutputBuilder.append(NLG.no_target())
         else:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
-            (attacked, utterance) = self.actions.attack(attacker, target)
-        self._generate_utterance(utter=utterance)
+            attacked = self.actions.attack(attacker, target)
         return attacked

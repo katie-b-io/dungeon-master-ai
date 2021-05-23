@@ -50,3 +50,7 @@ class OutputBuilder(metaclass=OutputBuilderMeta):
         """Print the formatted output"""
         print(cls.format())
     
+    @classmethod
+    def has_response(cls) -> bool:
+        """Return whether the DM has a response"""
+        return len(cls.output_utterances) > 0

@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.characters.character_collection import CharacterCollection
 from dmai.game.player import Player
 from dmai.nlg.nlg import NLG
@@ -38,6 +39,9 @@ class Game:
             
     def input(self, player_utter: str) -> None:
         """Receive a player input"""
+        
+        # clear the output
+        OutputBuilder.clear()
         
         # reset the talking state
         if State.talking:

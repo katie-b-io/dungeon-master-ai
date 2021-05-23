@@ -37,7 +37,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     """Main entry point to the DMAI"""
-    logger.info("Starting game")
+    logger.debug("Starting game")
     OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     OutputBuilder.append("Welcome to the Dungeon Master AI!")
     OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")

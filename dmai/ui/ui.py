@@ -15,8 +15,7 @@ class UserInterface:
         """Execute function which allows CLI communication between
         player and DM"""
         while True:
-            OutputBuilder.append(self.game.output())
-            output = OutputBuilder.format()
+            output = self.game.output()
             logger.info("[DM]: {o}".format(o=output))
         
             if output:
@@ -33,5 +32,4 @@ class UserInterface:
             
             user_input = input(prompt)
             logger.info("[PLAYER]: {i}".format(i=user_input))
-            OutputBuilder.clear()
             self.game.input(user_input)
