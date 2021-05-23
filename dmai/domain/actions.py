@@ -47,18 +47,17 @@ class Actions:
         except UnrecognisedRoomError:
             raise
 
-    def move(self, entity: str, destination: str) -> tuple:
+    def move(self, entity: str, destination: str) -> bool:
         """Attempt to move an entity to the specified destination.
-        Returns a tuple with the action status and room enter/cannot_enter text."""
+        Returns a bool to indicate whether the action was successful"""
 
         # check if entity can move
         (can_move, reason) = self._can_move(entity, destination)
         if can_move:
             State.set_current_room(entity, destination)
-            utterance = self.adventure.get_room(destination).enter()
         else:
-            utterance = self.adventure.get_room(destination).cannot_enter(reason)
-        return (can_move, utterance)
+            OutputBuilder.append(NLG.cannot_move(self.adventure.get_room(destination).name, reason))
+        return can_move
 
     def _can_attack(self, attacker: str, target: str) -> tuple:
         """Check if a target can be attacked by an attacker.
@@ -84,9 +83,9 @@ class Actions:
                     OutputBuilder.append(NLG.attack_npc_end_game(target))
                     dmai.dmai_helpers.gameover()
                 
-            utterance = "{a} attacked {t}!".format(a=attacker, t=target)
+            OutputBuilder.append("{a} attacked {t}!".format(a=attacker, t=target))
             State.combat()
-            return (can_attack, utterance)
+            return can_attack
         else:
-            utterance ="{a} can't attack {t}!\n{r}".format(a=attacker, t=target, r=reason)
-            return (can_attack, utterance)
+            OutputBuilder.append("{a} can't attack {t}!\n{r}".format(a=attacker, t=target, r=reason))
+            return can_attack

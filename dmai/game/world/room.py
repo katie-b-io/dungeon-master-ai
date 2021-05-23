@@ -35,21 +35,18 @@ class Room:
     def __repr__(self) -> str:
         return "Room: {a}".format(a=self.name)
 
-    def enter(self) -> str:
+    def enter(self) -> None:
         """Method when entering a room"""
+        logger.debug("Triggering enter in room: {r}".format(r=self.id))
         if not self.visited:
-            self.text["enter"]["read"] = True
             self.visited = True
-            return self.text["enter"]["text"]
+            OutputBuilder.append(self.text["enter"]["text"])
         else:
-            return NLG.enter_room(self.name)
-
-    def cannot_enter(self, reason: str = None) -> str:
-        """Method when not entering a room"""
-        return NLG.cannot_move(self.name, reason)
+            OutputBuilder.append(NLG.enter_room(self.name))
     
     def visibility(self) -> str:
         """Method when triggering visibility text"""
+        logger.debug("Triggering visibility in room: {r}".format(r=self.id))
         if State.torch_lit or State.get_player().character.has_darkvision(): 
             OutputBuilder.append(self.text["visibility"]["text"])
             self.text["visibility"]["read"] = True

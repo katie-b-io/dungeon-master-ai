@@ -95,7 +95,7 @@ class State(metaclass=StateMeta):
     
     @classmethod
     def set_dm(cls, dm) -> None:
-        logger.info("Setting DM")
+        logger.debug("Setting DM")
         cls.dm = dm
         init_room = cls.dm.adventure.get_init_room()
         cls.dm.register_trigger(cls.dm.adventure.get_room(init_room))
@@ -193,7 +193,7 @@ class State(metaclass=StateMeta):
             msg = "Room not recognised: {r}".format(r=room_id)
             raise UnrecognisedRoomError(msg)
         
-        logger.info("Setting current room: {r}".format(r=room_id))
+        logger.debug("Setting current room: {r}".format(r=room_id))
         cls.dm.deregister_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
         cls.current_room[entity] = room_id
         cls.dm.register_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
