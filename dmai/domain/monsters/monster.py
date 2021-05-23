@@ -9,13 +9,17 @@ from dmai.domain.features import Features
 from dmai.domain.languages import Languages
 from dmai.domain.skills import Skills
 from dmai.domain.spells import Spells
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class Monster(NPC):
     def __init__(self, monster_data: dict, npc_data: dict = None) -> None:
         """Monster abstract class"""
         if npc_data:
             NPC.__init__(self, npc_data)
-            
+
         try:
             for key in monster_data:
                 self.__setattr__(key, monster_data[key])
@@ -33,9 +37,9 @@ class Monster(NPC):
             self.spells = Spells(self.spells)
 
         except AttributeError as e:
-            print("Cannot create monster, incorrect attribute: {e}".format(e=e))
+            logger.error("Cannot create monster, incorrect attribute: {e}".format(e=e))
             raise
-        
+
         # Initialise additional variables
         self.treasure = None
 

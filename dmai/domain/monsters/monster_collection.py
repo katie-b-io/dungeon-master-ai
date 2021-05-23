@@ -6,6 +6,9 @@ from dmai.domain.monsters.giant_rat import GiantRat
 from dmai.domain.monsters.goblin import Goblin
 from dmai.domain.monsters.skeleton import Skeleton
 from dmai.domain.monsters.zombie import Zombie
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class MonsterCollectionMeta(type):
@@ -53,7 +56,7 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
         try:
             return cls._monster_factory(monster_cls = monster_cls)
         except ValueError as e:
-            print(e)
+            logger.error(e)
     
     @classmethod
     def get_monster_npc(cls, npc_data: dict) -> NPC:
@@ -61,7 +64,7 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
         try:
             return cls._monster_factory(npc_data = npc_data)
         except ValueError as e:
-            print(e)
+            logger.error(e)
     
     @classmethod
     def _monster_factory(cls, monster_cls: str = None, npc_data: dict = None) -> Monster:

@@ -1,4 +1,7 @@
 from dmai.utils.loader import Loader
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class Alignment:
@@ -16,10 +19,10 @@ class Alignment:
                 self.__setattr__(key, self.alignment_data[self.alignment][key])
 
         except KeyError as e:
-            print("Alignment does not exist: {c}".format(c=e))
+            logger.error("Alignment does not exist: {c}".format(c=e))
             raise
         except AttributeError as e:
-            print("Cannot create alignment, incorrect attribute: {e}".format(e=e))
+            logger.error("Cannot create alignment, incorrect attribute: {e}".format(e=e))
             raise
 
     def __repr__(self) -> str:

@@ -1,5 +1,9 @@
 import json
 
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class LoaderMeta(type):
     _instances = {}
@@ -25,6 +29,6 @@ class Loader(metaclass=LoaderMeta):
             with open(file, mode="r") as f:
                 json_data = json.load(f)
         except FileNotFoundError:
-            print(f"{file} does not exist!")
+            logger.error("{f} does not exist!".format(f=file))
 
         return json_data

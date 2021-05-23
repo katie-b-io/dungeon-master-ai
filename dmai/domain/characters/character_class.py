@@ -1,4 +1,7 @@
 from dmai.utils.loader import Loader
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class CharacterClass:
@@ -21,10 +24,10 @@ class CharacterClass:
                 self.__setattr__(key, self.char_class_data[self.char_class][key])
 
         except KeyError as e:
-            print("Class does not exist: {c}".format(c=e))
+            logger.error("Class does not exist: {c}".format(c=e))
             raise
         except AttributeError as e:
-            print("Cannot create class, incorrect attribute: {e}".format(e=e))
+            logger.error("Cannot create class, incorrect attribute: {e}".format(e=e))
             raise
 
     def __repr__(self) -> str:

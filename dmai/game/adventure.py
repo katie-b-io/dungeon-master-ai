@@ -4,6 +4,9 @@ from dmai.utils.loader import Loader
 from dmai.utils.text import Text
 from dmai.game.world.room import Room
 from dmai.utils.exceptions import UnrecognisedRoomError
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class Adventure:
@@ -20,7 +23,7 @@ class Adventure:
             for key in self.adventure_data:
                 self.__setattr__(key, self.adventure_data[key])
         except AttributeError as e:
-            print("Cannot create adventure, incorrect attribute: {e}".format(e=e))
+            logger.error("Cannot create adventure, incorrect attribute: {e}".format(e=e))
             raise
         
         self._build_world()

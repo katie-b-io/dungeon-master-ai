@@ -1,6 +1,9 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.game.game import Game
 from dmai.game.state import State
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class UserInterface:
@@ -14,6 +17,8 @@ class UserInterface:
         while True:
             OutputBuilder.append(self.game.output())
             output = OutputBuilder.format()
+            logger.info("[DM]: {o}".format(o=output))
+        
             if output:
                 prompt = "\n" + output + "\n"
             else:
@@ -27,5 +32,6 @@ class UserInterface:
                 prompt += "Press enter to continue... "
             
             user_input = input(prompt)
+            logger.info("[PLAYER]: {i}".format(i=user_input))
             OutputBuilder.clear()
             self.game.input(user_input)

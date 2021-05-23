@@ -1,11 +1,14 @@
 import traceback
 
+import dmai
 from dmai.utils.exceptions import DiceFormatError, UnrecognisedCommandError
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.output_builder import OutputBuilder
 from dmai.nlu.rasa_adapter import RasaAdapter
 from dmai.game.state import State
-import dmai
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class NLUMeta(type):
@@ -83,7 +86,7 @@ class NLU(metaclass=NLUMeta):
             try:
                 return cls._regex_and_exec(player_cmd)
             except UnrecognisedCommandError as e:
-                print(e)
+                logger.error(e)
         return (False, player_cmd)
 
     @classmethod
@@ -113,7 +116,7 @@ class NLU(metaclass=NLUMeta):
             try:
                 DiceRoller.roll(die)
             except DiceFormatError as e:
-                print(e)
+                logger.error(e)
         
         try:
             exec(command)

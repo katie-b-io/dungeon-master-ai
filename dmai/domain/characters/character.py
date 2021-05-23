@@ -16,6 +16,9 @@ from dmai.domain.characters.character_class import CharacterClass
 from dmai.domain.characters.race import Race
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.money import Money
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class Character(ABC):
@@ -54,11 +57,11 @@ class Character(ABC):
             self.features = Features(char_class=self.char_class, race=self.race)
 
         except AttributeError as e:
-            print("Cannot create character, incorrect attribute: {e}".format(e=e))
+            logger.error("Cannot create character, incorrect attribute: {e}".format(e=e))
             raise
 
     def __repr__(self) -> str:
-        return "Character: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
+        return "Character: {n}".format(n=self.name)
 
     @property
     def hp_max(self) -> int:
