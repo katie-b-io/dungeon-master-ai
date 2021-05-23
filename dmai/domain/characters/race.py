@@ -1,4 +1,7 @@
 from dmai.utils.loader import Loader
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class Race:
@@ -21,10 +24,10 @@ class Race:
                 self.subrace = None
 
         except KeyError as e:
-            print("Race does not exist: {r}".format(r=e))
+            logger.error("Race does not exist: {r}".format(r=e))
             raise
         except AttributeError as e:
-            print("Cannot create race, incorrect attribute: {e}".format(e=e))
+            logger.error("Cannot create race, incorrect attribute: {e}".format(e=e))
             raise
 
     def __repr__(self) -> str:

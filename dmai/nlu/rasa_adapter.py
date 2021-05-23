@@ -1,5 +1,9 @@
 import requests
 
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class RasaAdapterMeta(type):
     _instances = {}
@@ -34,7 +38,7 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
             entities = cls._prepare_entities(response["entities"])
             return (intent, entities)
         except ValueError as e:
-            print(e)
+            logger.error(e)
     
     @classmethod
     def _parse_message(cls, message: str) -> str:

@@ -4,12 +4,16 @@ from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.dm import DM
 from dmai.game.state import State
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class Game:
     def __init__(self, char_class: str = None, char_name: str = None, skip_intro: bool = False) -> None:
         """Main class for the game"""
         adventure = "the_tomb_of_baradin_stormfury"
+        logger.info("Initialising adventure: {a}".format(a=adventure))
         self.dm = DM(adventure)
         State.set_dm(self.dm)
         self.player = None

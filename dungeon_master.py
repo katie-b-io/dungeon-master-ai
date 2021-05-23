@@ -2,6 +2,9 @@ import argparse
 
 import dmai
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -34,10 +37,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     """Main entry point to the DMAI"""
+    logger.info("Starting game")
     OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     OutputBuilder.append("Welcome to the Dungeon Master AI!")
     OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    OutputBuilder.append("This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis.")
+    OutputBuilder.append(
+        "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
+    )
     OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     # get the command line arguments
@@ -53,15 +59,17 @@ def main() -> None:
         char_class = "rogue"
     elif args.wizard:
         char_class = "wizard"
-    
+
     if char_class:
         if args.name:
-            game = dmai.start(char_class=char_class, char_name=args.name, skip_intro=args.skip_intro)
+            game = dmai.start(
+                char_class=char_class, char_name=args.name, skip_intro=args.skip_intro
+            )
         else:
             game = dmai.start(char_class=char_class, skip_intro=args.skip_intro)
     else:
         game = dmai.start(skip_intro=args.skip_intro)
-    
+
     # start an interactive session on the command line
     if args.interactive:
         OutputBuilder.print()

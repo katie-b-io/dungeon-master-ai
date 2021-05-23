@@ -1,6 +1,9 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.nlg.nlg import NLG
 from dmai.game.state import State
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class Room:
@@ -11,7 +14,7 @@ class Room:
                 self.__setattr__(key, room_data[key])
             
         except AttributeError as e:
-            print("Cannot create room, incorrect attribute: {e}".format(e=e))
+            logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
             raise
         
         text_map = {

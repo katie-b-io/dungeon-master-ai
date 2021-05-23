@@ -1,9 +1,13 @@
+import dmai
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.domain.actions import Actions
 from dmai.nlg.nlg import NLG
 from dmai.game.npcs.npc_collection import NPCCollection
-import dmai
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class DM:
 
@@ -48,7 +52,7 @@ class DM:
             try:
                 return self.player_intent_map[intent](**kwargs)
             except KeyError:
-                print("Intent not in map: {i}".format(i=intent))
+                logger.error("Intent not in map: {i}".format(i=intent))
                 raise
         
         # run through any triggers
@@ -64,12 +68,12 @@ class DM:
 
     def register_trigger(self, trigger: object) -> None:
         """Register a trigger object"""
-        print("registering trigger")
+        logger.info("Registering trigger: {n}".format(n=str(trigger)))
         self.triggers.append(trigger)
     
     def deregister_trigger(self, trigger: object) -> None:
         """Deregister a trigger object"""
-        print("deregistering trigger")
+        logger.info("Deregistering trigger: {n}".format(n=str(trigger)))
         self.triggers.remove(trigger)
         
     def _start_game(self) -> None:
@@ -88,7 +92,7 @@ class DM:
             try:
                 self._dm_utter = self.utter_type_map[utter_type](**kwargs)
             except KeyError as e:
-                print("Utterance type does not exist: {e}".format(e=e))
+                logger.error("Utterance type does not exist: {e}".format(e=e))
                 self._dm_utter = NLG.get_action()
 
     def get_intro_text(self) -> str:
@@ -142,7 +146,7 @@ class DM:
             moved = False
             utterance = NLG.no_destination()
         else: 
-            print("Moving {e} to {d}!".format(e=entity, d=destination))
+            logger.info("Moving {e} to {d}!".format(e=entity, d=destination))
             (moved, utterance) = self.actions.move(entity, destination)
         self._generate_utterance(utter=utterance)
         return moved
@@ -160,7 +164,7 @@ class DM:
             attacked = False
             utterance = NLG.no_target()
         else:
-            print("{a} is attacking {t}!".format(a=attacker, t=target))
+            logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             (attacked, utterance) = self.actions.attack(attacker, target)
         self._generate_utterance(utter=utterance)
         return attacked

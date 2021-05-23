@@ -2,15 +2,19 @@ from dmai.domain.characters.character import Character
 from dmai.domain.skills import Skills
 from dmai.domain.abilities import Abilities
 from dmai.game.state import State
+from dmai.utils.logger import get_logger
 
+logger = get_logger(__name__)
 
 class Player:
     def __init__(self, character: Character) -> None:
         """Main class for the player"""
+        logger.info("Initialising character: {c}".format(c=str(character)))
         self.name = None
         self.character = character
 
     def set_name(self, name: str) -> None:
+        logger.info("Setting player name: {n}".format(n=name))
         self.name = name
 
     @property

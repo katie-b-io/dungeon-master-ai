@@ -4,6 +4,9 @@ from dmai.domain.characters.fighter import Fighter
 from dmai.domain.characters.wizard import Wizard
 from dmai.domain.characters.rogue import Rogue
 from dmai.domain.characters.cleric import Cleric
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class CharacterCollectionMeta(type):
@@ -20,8 +23,8 @@ class CharacterCollectionMeta(type):
             instance = super().__call__(*args, **kwargs)
             cls._instances[cls] = instance
         return cls._instances[cls]
-    
-    
+
+
 class CharacterCollection(metaclass=CharacterCollectionMeta):
 
     # class variables
@@ -50,7 +53,7 @@ class CharacterCollection(metaclass=CharacterCollectionMeta):
         try:
             character_obj = cls._character_factory(character)
         except ValueError as e:
-            print(e)
+            logger.error(e)
         return character_obj
 
     @classmethod

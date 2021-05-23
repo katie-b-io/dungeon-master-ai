@@ -3,6 +3,10 @@ from enum import Enum
 
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 from dmai.nlg.nlg import NLG
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class GameMode(Enum):
     COMBAT = "combat"
@@ -91,9 +95,11 @@ class State(metaclass=StateMeta):
     
     @classmethod
     def set_dm(cls, dm) -> None:
+        logger.info("Setting DM")
         cls.dm = dm
-        cls.dm.register_trigger(cls.dm.adventure.get_room(cls.dm.adventure.get_init_room()))
-        cls.current_room["player"] = cls.dm.adventure.get_init_room()
+        init_room = cls.dm.adventure.get_init_room()
+        cls.dm.register_trigger(cls.dm.adventure.get_room(init_room))
+        cls.current_room["player"] = init_room
         
     @classmethod
     def set_player(cls, player) -> None:
@@ -187,6 +193,7 @@ class State(metaclass=StateMeta):
             msg = "Room not recognised: {r}".format(r=room_id)
             raise UnrecognisedRoomError(msg)
         
+        logger.info("Setting current room: {r}".format(r=room_id))
         cls.dm.deregister_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
         cls.current_room[entity] = room_id
         cls.dm.register_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
