@@ -21,6 +21,7 @@ intents:
   - use
   - cast_spell
   - rest
+  - converse
   - question_npc
   - ale
   - ability_check

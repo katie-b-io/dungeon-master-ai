@@ -104,6 +104,8 @@ nlu:
     - jump to the [inns cellar](location)
     - maneuver to the [inn's cellar](location)
     - go to [inn cellar](location)
+    - go to the [cellar inn](location)
+    - go [downstairs](location)
     - move to the [antechamber](location)
     - go to the [inn](location)
     - proceed to the [stout meal inn](location)
@@ -365,7 +367,15 @@ nlu:
     - I want to take a short rest
     - I'm taking a short rest
     - Take a nap
-    
+  
+- intent: converse
+  examples: |
+    - talk to [corvus](npc)
+    - question [corvus stouthammer](npc)
+    - chat with [the dwarf](npc)
+    - converse with [stouthammer](npc)
+    - say to [corvus](npc)
+
 - intent: question_npc
   examples: |
     - what's going on?
@@ -527,6 +537,8 @@ nlu:
     - inn's cellar
     - inns cellar
     - inn cellar
+    - downstairs
+    - cellar inn
 
 - synonym: storage_room
   examples: |
