@@ -19,6 +19,7 @@ intents:
   - hide
   - search
   - use
+  - stop_using
   - cast_spell
   - rest
   - converse

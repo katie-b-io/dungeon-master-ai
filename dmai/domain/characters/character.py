@@ -94,9 +94,17 @@ class Character(ABC):
         """Method to return bool for whether character has darkvision"""
         return self.features.contains("darkvision_elf") or self.features.contains("darkvision_dwarf")
     
+    def has_equipment(self, equipment: str) -> bool:
+        """Method to check whether player has specified equipment"""
+        return self.equipment.has_equipment(equipment)
+        
     def use_equipment(self, equipment: str) -> None:
         """Method to use specified equipment"""
         self.equipment.use_equipment(equipment)
+    
+    def stop_using_equipment(self, equipment: str) -> None:
+        """Method to stop using specified equipment"""
+        self.equipment.stop_using_equipment(equipment)
         
     def get_proficiencies(self, prof_type: str) -> list:
         """Method to return list of proficiencies of specified type"""

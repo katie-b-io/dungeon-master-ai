@@ -1,4 +1,3 @@
-from dmai.domain.characters.character_collection import CharacterCollection
 import random
 
 
@@ -27,13 +26,12 @@ class NLG(metaclass=NLGMeta):
         cls.game = game
 
     @classmethod
-    def get_char_class(cls) -> str:
+    def get_char_class(cls, characters: str) -> str:
         """Return utterance for character selection"""
-        c = "\n".join(CharacterCollection.get_all_names())
         utters = [
-            "Which character class would you like to play?\n{c}".format(c=c),
-            "Select a character class you like the sound of:\n{c}".format(c=c),
-            "Select a character class from the following choices:\n{c}".format(c=c),
+            "Which character class would you like to play?\n{c}".format(c=characters),
+            "Select a character class you like the sound of:\n{c}".format(c=characters),
+            "Select a character class from the following choices:\n{c}".format(c=characters),
         ]
         return random.choice(utters)
 
@@ -106,6 +104,28 @@ class NLG(metaclass=NLGMeta):
             return "You cannot move to {room} because the way is locked!".format(
                 room=room
             )
+        elif reason == "unknown":
+            return "You cannot move to unknown location: {room}!".format(
+                room=room
+            )
+            
+    @classmethod
+    def cannot_use(cls, equipment: str, reason: str = None) -> str:
+        """Return the utterance for not allowing use of equipment"""
+        if not reason:
+            return "You cannot use {e}".format(e=equipment)
+        elif reason == "unknown":
+            return "You cannot use unknown equipment: {e}!".format(
+                e=equipment
+            )
+        elif reason == "not equipped":
+            return "You cannot use {e} because it's not equipped!".format(
+                e=equipment
+            )
+        elif reason == "quantity":
+            return "You cannot use {e} because you've run out!".format(
+                e=equipment
+            )
 
     @classmethod
     def no_destination(cls) -> str:
@@ -126,7 +146,44 @@ class NLG(metaclass=NLGMeta):
             "I'm not sure what you want to attack, can you repeat your target",
         ]
         return random.choice(utters)
-        
+    
+    @classmethod
+    def no_equipment(cls, stop: bool = False) -> str:
+        """Return the utterance for no equipment"""
+        if stop:
+            utters = [
+                "Can you confirm the equipment you want to stop using",
+                "Sorry, what do you want to stop using?",
+                "I'm not sure where you want to stop using, can you repeat the equipment",
+            ]
+        else:
+            utters = [
+                "Can you confirm the equipment you want to use",
+                "Sorry, what do you want to use?",
+                "I'm not sure where you want to use, can you repeat the equipment",
+            ]
+        return random.choice(utters)
+    
+    @classmethod
+    def light_torch(cls) -> str:
+        """Return the utterance for lighting a torch"""
+        utters = [
+            "You light a torch and the space around you is now lighter",
+            "The space around you illuminates in the glow of your lit torch",
+            "Light now cascades from the point of your torch around you"
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def extinguish_torch(cls) -> str:
+        """Return the utterance for extinguishing a torch"""
+        utters = [
+            "You extinguish your torch and the space around you is now darker",
+            "The space around you returns to its normal light level",
+            "Light ceases to cascade from your torch"
+        ]
+        return random.choice(utters)
+    
     @classmethod
     def transition_to_combat(cls) -> str:
         """Return the utterance for transitioning to combat"""

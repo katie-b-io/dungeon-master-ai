@@ -156,11 +156,13 @@ class State(metaclass=StateMeta):
     def light_torch(cls) -> None:
         """Method to light a torch"""
         cls.torch_lit = True
+        OutputBuilder.append(NLG.light_torch())
     
     @classmethod
     def extinguish_torch(cls) -> None:
         """Method to extinguish a torch"""
         cls.torch_lit = False
+        OutputBuilder.append(NLG.extinguish_torch())
 
     ############################################################
     # METHODS RELATING TO STATE MAINTENANCE

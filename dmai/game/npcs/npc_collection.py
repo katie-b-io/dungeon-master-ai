@@ -65,6 +65,13 @@ class NPCCollection:
             return "npc"
         elif npc_id in self.monsters:
             return "monster"
+    
+    def get_entity(self, npc_id):
+        """Return the Monster/NPC with specified id"""
+        if self.get_type(npc_id) == "npc":
+            return self.get_npc(npc_id)
+        elif self.get_type(npc_id) == "monster":
+            return self.get_monster(npc_id)
         
     def get_npc(self, npc_id: str) -> NPC:
         """Return NPC with specified id"""

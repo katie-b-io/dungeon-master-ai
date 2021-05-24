@@ -47,13 +47,31 @@ class EquipmentCollection:
         """Set the self.equipment_data class variable data"""
         self.equipment_data = Loader.load_json("data/domain/equipment.json")
     
-    def has_equipment(self, equipment_id: str) -> bool:
-        """Method to return whether specified equipment exists"""
-        return equipment_id in self.equipment
+    def has_equipment(self, equipment_id: str) -> tuple:
+        """Method to return whether specified equipment exists.
+        Returns a tuple with the boolean and a string with a reason."""
+        if not equipment_id in self.equipment:
+            return (False, "not equipped")
+        if not self.quantity_above_zero(equipment_id):
+            return (False, "quantity")
+        return (True, "")
+    
+    def quantity_above_zero(self, equipment_id: str) -> bool:
+        """Method to return whether quantity of specified equipment is above zero"""
+        if equipment_id in self.equipment:
+            return self.equipment[equipment_id]["quantity"] > 0
     
     def use_equipment(self, equipment_id: str) -> None:
-        if self.has_equipment(equipment_id):
-            self.equipment[equipment_id].use()
+        """Method to use specified equipment"""
+        (has_equipment, reason) = self.has_equipment(equipment_id)
+        if has_equipment:
+            self.equipment[equipment_id]["quantity"] = self.equipment[equipment_id]["quantity"] - 1
+            self.equipment[equipment_id]["equipment"].use()
+    
+    def stop_using_equipment(self, equipment_id: str) -> None:
+        """Method to stop using specified equipment"""
+        if equipment_id in self.equipment:
+            self.equipment[equipment_id]["equipment"].stop()
             
     def get_all(self) -> list:
         """Return a list with all the equipment ids"""
