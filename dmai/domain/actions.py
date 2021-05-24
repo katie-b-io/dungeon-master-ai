@@ -84,7 +84,7 @@ class Actions:
                     dmai.dmai_helpers.gameover()
                 
             OutputBuilder.append("{a} attacked {t}!".format(a=attacker, t=target))
-            State.combat()
+            State.combat(attacker, target)
             return can_attack
         else:
             OutputBuilder.append("{a} can't attack {t}!\n{r}".format(a=attacker, t=target, r=reason))

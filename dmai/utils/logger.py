@@ -18,7 +18,7 @@ def get_logger(module_name: str) -> logging.Logger:
     logger.addHandler(file_handler)
 
     logger.setLevel(logging.DEBUG)
-    stream_handler.setLevel(logging.ERROR)
+    stream_handler.setLevel(logging.WARNING)
     file_handler.setLevel(logging.DEBUG)
 
     return logger

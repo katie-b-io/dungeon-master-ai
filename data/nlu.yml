@@ -530,6 +530,7 @@ nlu:
     - inn
     - stout meal inn
     - upstairs
+    - upstair
 
 - synonym: inns_cellar
   examples: |
@@ -538,6 +539,7 @@ nlu:
     - inns cellar
     - inn cellar
     - downstairs
+    - downstair
     - cellar inn
 
 - synonym: storage_room

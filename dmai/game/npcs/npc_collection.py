@@ -2,6 +2,7 @@ from dmai.utils.exceptions import UnrecognisedEntityError
 from dmai.domain.monsters.monster_collection import MonsterCollection
 from dmai.game.adventure import Adventure
 from dmai.game.npcs.npc import NPC
+from dmai.domain.monsters.monster import Monster
 from dmai.game.state import State, Status
 from dmai.utils.logger import get_logger
 
@@ -74,6 +75,16 @@ class NPCCollection:
             msg = "NPC id not recognised: {e}".format(e=e)
             raise KeyError(msg)
         return npc
+
+    def get_monster(self, monster_id: str) -> Monster:
+        """Return monster with specified id"""
+        monster = None
+        try:
+            monster = self.monsters[monster_id]
+        except KeyError as e:
+            msg = "Monster id not recognised: {e}".format(e=e)
+            raise KeyError(msg)
+        return monster
 
     def set_monsters(self, monster_dict: dict) -> None:
         for monster_type in monster_dict:

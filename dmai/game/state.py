@@ -41,21 +41,24 @@ class State(metaclass=StateMeta):
     talking = False
     in_combat = False
     torch_lit = False
+    stationary = False
     current_room = {}
     current_status = {}
     current_hp = {}
     current_game_mode = GameMode.EXPLORE
     current_intent = {}
+    current_target = {}
     
     def __init__(self) -> None:
         """Main class for the game state"""
         pass
     
     @classmethod
-    def combat(cls) -> None:
+    def combat(cls, attacker: str, target: str) -> None:
         if not cls.in_combat:
             cls.set_current_game_mode("combat")
             cls.in_combat = True
+            cls.set_target(target)
             OutputBuilder.append(NLG.transition_to_combat())
     
     @classmethod
@@ -106,6 +109,7 @@ class State(metaclass=StateMeta):
         cls.player = player
         cls.current_hp["player"] = player.character.hp_max
         cls.current_status["player"] = Status.ALIVE
+        cls.current_target["player"] = None
 
     @classmethod
     def get_player(cls) -> None:
@@ -137,7 +141,7 @@ class State(metaclass=StateMeta):
     
     @classmethod
     def clear_intent(cls,) -> None:
-        """Method to clera the current intent"""
+        """Method to clear the current intent"""
         cls.current_intent = {}
         
     @classmethod
@@ -157,9 +161,85 @@ class State(metaclass=StateMeta):
     def extinguish_torch(cls) -> None:
         """Method to extinguish a torch"""
         cls.torch_lit = False
+
+    ############################################################
+    # METHODS RELATING TO STATE MAINTENANCE
+    @classmethod
+    def maintenance(cls) -> None:
+        """Method to maintain the state correctly"""
+        cls.maintain_current_target()
+        cls.maintain_current_game_mode()
+    
+    @classmethod
+    def maintain_current_target(cls) -> None:
+        """Check if current targets are still valid"""
+        for entity in cls.current_target:
+            target = cls.get_current_target_id(entity)
+            print(target)
+            if target:
+                if not cls.get_current_room_id(entity) == cls.get_current_room_id(target):
+                    print("clearing")
+                    cls.clear_target(entity)
+
+    @classmethod
+    def maintain_current_game_mode(cls) -> None:
+        """Check if current game mode is still valid"""
+        if cls.in_combat:
+            if "player" in cls.current_target:
+                if not cls.current_target["player"]:
+                    cls.explore()
+
+    ############################################################
+    # METHODS RELATING TO COMBAT
+    @classmethod
+    def get_current_target_id(cls, entity: str = "player") -> str:
+        """Method to get the current target id for specified entity."""
+        try:
+            return cls.current_target[entity]
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+    
+    @classmethod
+    def get_current_target(cls, entity: str = "player"):
+        """Method to get the current target for specified entity."""
+        try:
+            return cls.dm.npcs.get_monster(cls.get_current_target_id(entity))
+        except UnrecognisedEntityError:
+            raise
+    
+    @classmethod
+    def set_target(cls, target: str, entity: str = "player") -> None:
+        """Method to set the current target for an entity"""
+        if entity not in cls.current_target:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
+        logger.debug("Setting current target: {t}".format(t=target))
+        if cls.get_current_target_id(entity):
+            cls.dm.deregister_trigger(cls.dm.npcs.get_monster(cls.get_current_target_id(entity)))
+        cls.current_target[entity] = target
+        cls.dm.register_trigger(cls.dm.npcs.get_monster(cls.get_current_target_id(entity)))
+    
+    @classmethod
+    def clear_target(cls, entity: str = "player") -> None:
+        """Method to clear the target for an entity"""
+        if entity not in cls.current_target:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
+        logger.debug("Clearing current target")
+        if cls.get_current_target_id(entity):
+            cls.dm.deregister_trigger(cls.dm.npcs.get_monster(cls.get_current_target_id(entity)))
+            cls.current_target[entity] = None
         
     ############################################################
     # METHODS RELATING TO LOCATION
+    @classmethod
+    def halt(cls) -> None:
+        """Method to set stationary to true"""
+        cls.stationary = True
+        
     @classmethod
     def set_init_room(cls, entity: str, room_id: str) -> str:
         """Method to set the initial room for specified entity."""
@@ -194,6 +274,7 @@ class State(metaclass=StateMeta):
             raise UnrecognisedRoomError(msg)
         
         logger.debug("Setting current room: {r}".format(r=room_id))
+        cls.stationary = False
         cls.dm.deregister_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
         cls.current_room[entity] = room_id
         cls.dm.register_trigger(cls.dm.adventure.get_room(cls.get_current_room_id(entity)))

@@ -58,9 +58,13 @@ class DM:
             except KeyError:
                 logger.error("Intent not in map: {i}".format(i=intent))
                 raise
-            
+        
+        # execute any triggers
         if succeed:
             self.execute_triggers()
+        
+        # last thing to do: maintain state
+        State.maintenance()
         
         return succeed
 

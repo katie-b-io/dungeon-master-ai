@@ -148,6 +148,28 @@ class NLG(metaclass=NLGMeta):
             "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial.".format(n=n),
         ]
         return random.choice(utters)
+
+    @classmethod
+    def attack_of_opportunity(cls, attacker: str = None, target: str = None) -> str:
+        """Return the utterance for an attack of opportunity"""
+        if target and attacker:
+            utters = [
+                "{a} took an attack of opportunity against {t}!".format(a=attacker, t=target),
+                "{t} opened themselves up to an an attack of opportunity from {a}!".format(a=attacker, t=target)
+            ]
+            return random.choice(utters)
+        elif attacker:
+            utters = [
+                "{a} took an attack of opportunity against you!".format(a=attacker),
+                "You opened yourself up to an an attack of opportunity from {a}!".format(a=attacker)
+            ]
+            return random.choice(utters)
+        elif target:
+            utters = [
+                "You took an attack of opportunity against {t}!".format(t=target),
+                "{t} opened themselves up to an an attack of opportunity from you!".format(t=target)
+            ]
+            return random.choice(utters)
         
     @classmethod
     def explain_armor_class(cls) -> str:
