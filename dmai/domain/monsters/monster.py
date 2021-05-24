@@ -4,7 +4,7 @@ from dmai.domain.alignment import Alignment
 from dmai.domain.armor import Armor
 from dmai.domain.attacks import Attacks
 from dmai.domain.conditions import Conditions
-from dmai.domain.equipment import Equipment
+from dmai.domain.equipment.equipment_collection import EquipmentCollection
 from dmai.domain.features import Features
 from dmai.domain.languages import Languages
 from dmai.domain.skills import Skills
@@ -33,7 +33,7 @@ class Monster(NPC):
             self.armor = Armor(self.armor)
             self.attacks = Attacks(self.attacks)
             self.conditions = Conditions()
-            self.equipment = Equipment(self.equipment)
+            self.equipment = EquipmentCollection(self.equipment)
             self.features = Features(features=self.features)
             self.languages = Languages(self.languages)
             self.skills = Skills(abilities=self.abilities, skills=self.skills)
