@@ -38,13 +38,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
 def main() -> None:
     """Main entry point to the DMAI"""
     logger.debug("Starting game")
-    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    OutputBuilder.append("Welcome to the Dungeon Master AI!")
-    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     OutputBuilder.append(
         "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
     )
-    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     # get the command line arguments
     args = build_arg_parser().parse_args()

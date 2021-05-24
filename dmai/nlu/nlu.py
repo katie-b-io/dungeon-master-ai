@@ -47,7 +47,7 @@ class NLU(metaclass=NLUMeta):
         "stats": {
             "text": "/stats",
             "help": "Show your character stats in a character sheet",
-            "cmd": "OutputBuilder.append(cls.game.player.get_character_sheet())"
+            "cmd": "OutputBuilder.append(cls.game.player.get_character_sheet(), wrap=False)"
             
         },
         "say": {
@@ -69,7 +69,7 @@ class NLU(metaclass=NLUMeta):
     @classmethod
     def show_commands(cls) -> str:
         """Return the command list"""
-        cmd_str = "\nCommands:\n"
+        cmd_str = "Commands:\n"
         for cmd in cls.commands:
             cmd_str += "{c:<20}".format(c=cls.commands[cmd]["text"])
             cmd_str += "{h}\n".format(h=cls.commands[cmd]["help"])
