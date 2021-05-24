@@ -21,6 +21,19 @@ class Player:
     def character_class(self) -> str:
         return self.character.name
 
+    def has_equipment(self, equipment: str) -> tuple:
+        """Method to return whether the player has specified equipment.
+        Returns a tuple with the boolean and a string with a reason."""
+        return self.character.has_equipment(equipment)
+    
+    def use_equipment(self, equipment: str) -> None:
+        """Method to use specified equipment"""
+        self.character.use_equipment(equipment)
+        
+    def stop_using_equipment(self, equipment: str) -> None:
+        """Method to stop using specified equipment"""
+        self.character.stop_using_equipment(equipment)
+        
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
         div = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"

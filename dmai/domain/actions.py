@@ -1,7 +1,7 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.loader import Loader
-from dmai.utils.exceptions import UnrecognisedRoomError
+from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
@@ -43,9 +43,9 @@ class Actions:
             if State.travel_allowed(current, destination):
                 return (True, "")
             else:
-                return (False, "It's locked")
+                return (False, "locked")
         except UnrecognisedRoomError:
-            return (False, "Unknown destination")
+            return (False, "unknown")
 
     def move(self, entity: str, destination: str) -> bool:
         """Attempt to move an entity to the specified destination.
@@ -69,9 +69,9 @@ class Actions:
             return (False, "Different location")
         return (True, "")
 
-    def attack(self, attacker: str, target: str) -> tuple:
+    def attack(self, attacker: str, target: str) -> bool:
         """Attempt to attack a specified target.
-        Returns a tuple with the attack status and attack resolution text."""
+        Returns a bool to indicate whether the action was successful"""
 
         # check if attack can happen
         (can_attack, reason) = self._can_attack(attacker, target)
@@ -89,3 +89,42 @@ class Actions:
         else:
             OutputBuilder.append("{a} can't attack {t}!\n{r}".format(a=attacker, t=target, r=reason))
             return can_attack
+
+    def _can_use(self, entity, equipment: str) -> tuple:
+        """Check if an entity can use specified equipment.
+        Returns tuple (bool, str) to indicate whether use is possible
+        and reason why not if not."""
+
+        # check if entity has equipment in their Equipment
+        try:
+            (has_equipment, reason) = entity.has_equipment(equipment)
+            if has_equipment:
+                print("has equipment")
+                return (True, "")
+            else:
+                return (False, reason)
+        except UnrecognisedEquipment:
+            return (False, "unknown")
+
+    def use(self, equipment: str, entity: str = "player", stop: bool = False) -> bool:
+        """Attempt to use a specified equipment.
+        Returns a bool to indicate whether the action was successful"""
+        
+        # get entity object
+        if entity == "player":
+            entity = State.get_player()
+        else:
+            entity = self.npcs.get_entity(entity)
+        
+        if stop:
+            entity.stop_using_equipment(equipment)
+            can_use = True
+            
+        else:
+            # check if equipment can be used
+            (can_use, reason) = self._can_use(entity, equipment)
+            if can_use:
+                entity.use_equipment(equipment)
+            else:
+                OutputBuilder.append(NLG.cannot_use(equipment, reason))
+        return can_use

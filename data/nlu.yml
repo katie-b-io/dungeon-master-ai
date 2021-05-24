@@ -313,6 +313,9 @@ nlu:
     - Use [masons tools](equipment)
     - I use [thieves tools](equipment)
     - Can I use [masons tools](equipment)
+    - I use my [torch](equipment)
+    - I light my [torch](equipment)
+    - I bring out my [torch](equipment)
     - I use [bless](spell)
     - I use [burning hands](spell)
     - I use [cure wounds](spell)
@@ -331,6 +334,13 @@ nlu:
     - I use [shocking grasp](spell)
     - I use [sleep](spell)
     - I use [thaumaturgy](spell)
+
+- intent: stop_using
+  examples: |
+    - I extinguish my [torch](equipment)
+    - I put away my [torch](equipment)
+    - I stop using the [torch](equipment)
+    - Stop using the [torch](equipment)
 
 - intent: cast_spell
   examples: |

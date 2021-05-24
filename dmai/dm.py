@@ -29,7 +29,12 @@ class DM:
         self.actions = Actions(self.adventure, self.npcs)
 
         # Initialise the player intent map
-        self.player_intent_map = {"move": self.move, "attack": self.attack}
+        self.player_intent_map = {
+            "move": self.move,
+            "attack": self.attack,
+            "use": self.use,
+            "stop_using": self.stop_using
+        }
 
     def input(
         self,
@@ -132,6 +137,13 @@ class DM:
         if npc:
             return npc
         
+    def _get_equipment(self, nlu_entities: dict) -> str:
+        """Extract a equipment from NLU entities dictionary.
+        Returns a string with equipment"""
+        for entity in nlu_entities:
+            if entity["entity"] == "equipment" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
+                return entity["value"]
+            
     def move(self, destination: str = None, entity: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to move an entity to a destination determined by NLU or specified.
         Returns whether the move was successful."""
@@ -151,7 +163,6 @@ class DM:
     def attack(self, target: str = None, attacker: str = None, nlu_entities: dict = None) -> bool:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the attack was successful."""
-        
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
@@ -164,3 +175,24 @@ class DM:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)
         return attacked
+    
+    def use(self, equipment: str = None, entity: str = None, nlu_entities: dict = None, stop: bool = False) -> bool:
+        """Attempt to use an equipment.
+        Returns whether the use was successful."""
+        if not entity:
+            entity = "player"
+        if not equipment and nlu_entities:
+            equipment = self._get_equipment(nlu_entities)
+        
+        if not equipment:
+            used = False
+            OutputBuilder.append(NLG.no_equipment(stop=stop))
+        else: 
+            logger.info("{e} is using {q}!".format(e=entity, q=equipment))
+            used = self.actions.use(equipment, entity, stop)
+        return used
+    
+    def stop_using(self, equipment: str = None, entity: str = None, nlu_entities: dict = None) -> bool:
+        """Attempt to stop using an equipment.
+        Returns whether the stoppage was successful."""
+        return self.use(equipment=equipment, entity=entity, nlu_entities=nlu_entities, stop=True)

@@ -6,7 +6,7 @@ from dmai.domain.alignment import Alignment
 from dmai.domain.armor import Armor
 from dmai.domain.attacks import Attacks
 from dmai.domain.conditions import Conditions
-from dmai.domain.equipment import Equipment
+from dmai.domain.equipment.equipment_collection import EquipmentCollection
 from dmai.domain.features import Features
 from dmai.domain.languages import Languages
 from dmai.domain.skills import Skills
@@ -37,7 +37,7 @@ class Character(ABC):
             self.attacks = Attacks()
             self.char_class = CharacterClass(self.char_class)
             self.conditions = Conditions()
-            self.equipment = Equipment(
+            self.equipment = EquipmentCollection(
                 equipment=self.equipment, proficiencies=self.proficiencies["tools"]
             )
             self.languages = Languages(self.languages)
@@ -94,6 +94,18 @@ class Character(ABC):
         """Method to return bool for whether character has darkvision"""
         return self.features.contains("darkvision_elf") or self.features.contains("darkvision_dwarf")
     
+    def has_equipment(self, equipment: str) -> bool:
+        """Method to check whether player has specified equipment"""
+        return self.equipment.has_equipment(equipment)
+        
+    def use_equipment(self, equipment: str) -> None:
+        """Method to use specified equipment"""
+        self.equipment.use_equipment(equipment)
+    
+    def stop_using_equipment(self, equipment: str) -> None:
+        """Method to stop using specified equipment"""
+        self.equipment.stop_using_equipment(equipment)
+        
     def get_proficiencies(self, prof_type: str) -> list:
         """Method to return list of proficiencies of specified type"""
         all_prof = []

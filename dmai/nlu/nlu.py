@@ -157,6 +157,10 @@ class NLU(metaclass=NLUMeta):
             return ("move", {"nlu_entities": entities})
         if intent == "attack":
             return ("attack", {"nlu_entities": entities})
+        if intent == "use":
+            return ("use", {"nlu_entities": entities})
+        if intent == "stop_using":
+            return ("stop_using", {"nlu_entities": entities})
         else:
             # check for intent in State
             if State.current_intent:

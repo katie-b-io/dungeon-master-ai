@@ -120,7 +120,7 @@ class Game:
         # the player variable is not set at the beginning of the game
         if not self.player:
             # get the character options for player
-            return NLG.get_char_class()
+            return NLG.get_char_class(CharacterCollection.get_all_names())
 
         elif not self.player.name:
             # get the player's name
