@@ -17,7 +17,7 @@ class Room:
             logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
             raise
         
-        text_map = {
+        trigger_map = {
             "enter": self.enter,
             "exit": print,
             "visibility": self.visibility
@@ -28,8 +28,8 @@ class Room:
             text = self.text[text_type]
             self.text[text_type] = {
                 "text": text,
-                "read": False,
-                "trigger": text_map[text_type]
+                "can_trigger": True,
+                "trigger": trigger_map[text_type]
             }
 
     def __repr__(self) -> str:
@@ -51,12 +51,12 @@ class Room:
         logger.debug("Triggering visibility in room: {r}".format(r=self.id))
         if State.torch_lit or State.get_player().character.has_darkvision(): 
             OutputBuilder.append(self.text["visibility"]["text"])
-            self.text["visibility"]["read"] = True
+            self.text["visibility"]["can_trigger"] = False
     
-    def trigger(self) -> str:
+    def trigger(self) -> None:
         """Method to print any new text if conditions met"""
         for text_type in self.text:
-            if not self.text[text_type]["read"]:
+            if self.text[text_type]["can_trigger"]:
                 # execute function
                 if text_type in self.text:
                     self.text[text_type]["trigger"]()

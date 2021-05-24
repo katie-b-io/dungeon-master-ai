@@ -9,6 +9,9 @@ from dmai.domain.features import Features
 from dmai.domain.languages import Languages
 from dmai.domain.skills import Skills
 from dmai.domain.spells import Spells
+from dmai.game.state import State
+from dmai.nlg.nlg import NLG
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -42,6 +45,13 @@ class Monster(NPC):
 
         # Initialise additional variables
         self.treasure = None
+        
+        self.trigger_map = {
+            "attack_of_opportunity": {
+                "can_trigger": True,
+                "trigger": self.attack_of_opportunity
+            }
+        }
 
     def __repr__(self) -> str:
         return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
@@ -49,3 +59,16 @@ class Monster(NPC):
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""
         self.treasure = treasure
+
+    def attack_of_opportunity(self) -> None:
+        """Method to perform an attack of opportunity"""
+        logger.debug("Triggering attack of opportunity in monster: {m}".format(m=self.id))
+        if not State.stationary:
+            print("attack of opportunity")
+            OutputBuilder.append(NLG.attack_of_opportunity(attacker=self.name))
+        
+    def trigger(self) -> None:
+        """Method to perform any actions or print any new text if conditions met"""
+        for trigger_type in self.trigger_map:
+            if self.trigger_map[trigger_type]["can_trigger"]:
+                self.trigger_map[trigger_type]["trigger"]()
