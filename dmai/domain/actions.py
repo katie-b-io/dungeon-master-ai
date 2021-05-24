@@ -43,9 +43,9 @@ class Actions:
             if State.travel_allowed(current, destination):
                 return (True, "")
             else:
-                return (False, "locked")
+                return (False, "It's locked")
         except UnrecognisedRoomError:
-            raise
+            return (False, "Unknown destination")
 
     def move(self, entity: str, destination: str) -> bool:
         """Attempt to move an entity to the specified destination.

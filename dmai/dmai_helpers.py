@@ -12,10 +12,9 @@ def start(char_class: str = None, char_name: str = None, skip_intro: bool = Fals
     NLU.set_game(game)
 
     # print some info for the user
-    OutputBuilder.append("This interface is designed for you to communicate with the DMAI using natural language but you also have the following commands at your disposal:")
+    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nThis interface is designed for you to communicate with the DMAI using natural language but you also have the following commands at your disposal:")
     OutputBuilder.append(NLU.show_commands(), wrap=False)
-    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    OutputBuilder.append(NLG.get_title())
+    OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title()))
 
     # return the game instance
     return game

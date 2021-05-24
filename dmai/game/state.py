@@ -175,10 +175,8 @@ class State(metaclass=StateMeta):
         """Check if current targets are still valid"""
         for entity in cls.current_target:
             target = cls.get_current_target_id(entity)
-            print(target)
             if target:
                 if not cls.get_current_room_id(entity) == cls.get_current_room_id(target):
-                    print("clearing")
                     cls.clear_target(entity)
 
     @classmethod

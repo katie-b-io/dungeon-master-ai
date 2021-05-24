@@ -32,13 +32,14 @@ class OutputBuilder(metaclass=OutputBuilderMeta):
         cls.output_utterances = []
 
     @classmethod
-    def append(cls, utterance: str, wrap: bool = True) -> None:
+    def append(cls, utterance: str, wrap: bool = True, newline: bool = False) -> None:
         """Append an utterance to the output"""
         if utterance:
             if wrap:
                 cls.output_utterances.extend(textwrap.wrap(utterance, 100, replace_whitespace=False))
             else:
                 cls.output_utterances.append(utterance)
+            cls.output_utterances.append("")
     
     @classmethod
     def format(cls) -> str:

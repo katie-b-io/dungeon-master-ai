@@ -64,7 +64,6 @@ class Monster(NPC):
         """Method to perform an attack of opportunity"""
         logger.debug("Triggering attack of opportunity in monster: {m}".format(m=self.id))
         if not State.stationary:
-            print("attack of opportunity")
             OutputBuilder.append(NLG.attack_of_opportunity(attacker=self.name))
         
     def trigger(self) -> None:

@@ -112,7 +112,10 @@ class Game:
                 self.intro = False
         
         if State.paused:
-            return ""
+            if OutputBuilder.has_response():
+                return OutputBuilder.format()
+            else:
+                return ""
 
         # the player variable is not set at the beginning of the game
         if not self.player:

@@ -20,7 +20,7 @@ class TestNLU(unittest.TestCase):
         self.bad_cmd2 = "/unknown"
 
     def test_show_commands(self) -> None:
-        actual = "\nCommands:\n"
+        actual = "Commands:\n"
         actual += "/help               Show these commands\n"
         actual += "/exit               Exit the game\n"
         actual += "/roll [die]         Roll a specified die, options: d4, d6, d8, d10, d12, d20, d100 (d20 by default)\n"
