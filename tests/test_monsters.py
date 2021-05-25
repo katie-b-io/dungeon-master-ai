@@ -19,6 +19,7 @@ class TestMonsterCollection(unittest.TestCase):
 
     def setUp(self) -> None:
         self.monsters = MonsterCollection()
+        self.monsters.load()
 
     def test_monster_factory_error(self) -> None:
         with self.assertRaises(ValueError):

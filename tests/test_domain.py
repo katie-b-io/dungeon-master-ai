@@ -15,6 +15,7 @@ class TestActions(unittest.TestCase):
     
     def setUp(self) -> None:
         self.game = Game()
+        self.game.load()
         self.actions = self.game.dm.actions
         
     def test_move_good_destination(self) -> None:
