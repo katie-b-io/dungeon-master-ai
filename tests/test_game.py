@@ -14,6 +14,7 @@ class TestState(unittest.TestCase):
 
     def setUp(self) -> None:
         self.game = Game()
+        self.game.load()
         self.adventure = self.game.dm.adventure
 
     def test_get_current_room_player(self) -> None:

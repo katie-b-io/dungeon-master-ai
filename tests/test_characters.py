@@ -18,6 +18,7 @@ class TestCharacterCollection(unittest.TestCase):
 
     def setUp(self) -> None:
         self.character_collection = CharacterCollection()
+        self.character_collection.load()
 
     def test_character_factory_error(self) -> None:
         with self.assertRaises(ValueError):
@@ -48,6 +49,7 @@ class TestCharacter(unittest.TestCase):
 
     def setUp(self) -> None:
         self.character_collection = CharacterCollection()
+        self.character_collection.load()
         self.fighter = self.character_collection.get_character("fighter")
 
     def test_character_malformed(self) -> None:

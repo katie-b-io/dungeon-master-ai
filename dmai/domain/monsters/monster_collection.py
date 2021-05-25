@@ -16,7 +16,14 @@ class MonsterCollectionMeta(type):
 
     def __new__(cls, name, bases, dict):
         instance = super().__new__(cls, name, bases, dict)
-        instance.monster_data = Loader.load_json("data/domain/monsters.json")
+        instance.monster_data = {}
+        instance.monster_map = {
+            "cat": Cat,
+            "giant_rat": GiantRat,
+            "goblin": Goblin,
+            "skeleton": Skeleton,
+            "zombie": Zombie,
+        }
         return instance
     
     def __call__(cls, *args, **kwargs) -> None:
@@ -29,16 +36,6 @@ class MonsterCollectionMeta(type):
     
 class MonsterCollection(metaclass=MonsterCollectionMeta):
 
-    # class variables
-    monster_data = dict()
-    monster_map = {
-        "cat": Cat,
-        "giant_rat": GiantRat,
-        "goblin": Goblin,
-        "skeleton": Skeleton,
-        "zombie": Zombie,
-    }
-
     def __init__(self) -> None:
         """MonsterCollection static class"""
         pass
@@ -50,6 +47,10 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
         )
         return monster_str
 
+    @classmethod
+    def load(cls) -> None:
+        cls.monster_data = Loader.load_domain("monsters")
+        
     @classmethod
     def get_monster(cls, monster_cls: str) -> Monster:
         """Return an instance of a monster of specified type"""

@@ -26,7 +26,7 @@ class Actions:
     @classmethod
     def _load_action_data(cls) -> None:
         """Set the cls.action_data class variable data"""
-        cls.action_data = Loader.load_json("data/domain/actions.json")
+        cls.action_data = Loader.load_domain("actions")
 
     def _can_move(self, entity: str, destination: str) -> tuple:
         """Check if an entity can be moved to a specified destination.

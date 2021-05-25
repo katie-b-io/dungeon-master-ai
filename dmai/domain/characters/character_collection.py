@@ -14,7 +14,7 @@ class CharacterCollectionMeta(type):
 
     def __new__(cls, name, bases, dict):
         instance = super().__new__(cls, name, bases, dict)
-        instance.character_data = Loader.load_json("data/domain/characters.json")
+        instance.character_data = {}
         return instance
 
     def __call__(cls, *args, **kwargs) -> None:
@@ -27,9 +27,6 @@ class CharacterCollectionMeta(type):
 
 class CharacterCollection(metaclass=CharacterCollectionMeta):
 
-    # class variables
-    character_data = dict()
-
     def __init__(self) -> None:
         """CharacterCollection class"""
         pass
@@ -41,6 +38,10 @@ class CharacterCollection(metaclass=CharacterCollectionMeta):
             c=cls.__class__.__name__, cl=", ".join(character_list)
         )
         return character_str
+
+    @classmethod
+    def load(cls) -> None:
+        cls.character_data = Loader.load_domain("characters")
 
     @classmethod
     def get_all_names(cls) -> list:

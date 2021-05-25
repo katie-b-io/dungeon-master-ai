@@ -17,4 +17,4 @@ class Spells:
     @classmethod
     def _load_spell_data(cls) -> None:
         """Set the cls.spell_data class variable data"""
-        cls.spell_data = Loader.load_json("data/domain/spells.json")
+        cls.spell_data = Loader.load_domain("spells")

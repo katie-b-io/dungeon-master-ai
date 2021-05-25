@@ -34,9 +34,7 @@ class Adventure:
     @classmethod
     def _load_adventure_data(cls, adventure) -> None:
         """Set the cls.adventure_data class variable data"""
-        cls.adventure_data = Loader.load_json(
-            "adventures/{a}.json".format(a=adventure)
-        )
+        cls.adventure_data = Loader.load_adventure(adventure)
 
     def _build_world(self) -> None:
         """Method to build the world"""

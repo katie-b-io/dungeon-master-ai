@@ -26,8 +26,8 @@ class Features:
     @classmethod
     def _load_feature_data(cls) -> None:
         """Set the cls.feature_data class variable data"""
-        cls.feature_data = Loader.load_json("data/domain/features.json")
-        cls.feature_data.update(Loader.load_json("data/domain/monster_features.json"))
+        cls.feature_data = Loader.load_domain("features")
+        cls.feature_data.update(Loader.load_domain("monster_features"))
 
     def get_all(self) -> list:
         """Method to return all the features"""

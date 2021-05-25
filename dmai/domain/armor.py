@@ -24,7 +24,7 @@ class Armor:
     @classmethod
     def _load_armor_data(cls) -> None:
         """Set the cls.armor_data class variable data"""
-        cls.armor_data = Loader.load_json("data/domain/armor.json")
+        cls.armor_data = Loader.load_domain("armor")
 
     def get_armor(self, armor_id: str) -> bool:
         """Method to return specified armor"""
