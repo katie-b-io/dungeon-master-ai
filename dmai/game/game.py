@@ -35,12 +35,11 @@ class Game:
         # set character class and name if possible
         if self.char_class:
             character = CharacterCollection.get_character(self.char_class)
-            character.load()
             self.player = Player(character)
             State.set_player(self.player)
         
             if self.char_name:
-                self.player.set_name(char_name)
+                self.player.set_name(self.char_name)
         
         # intro text generator
         if self.skip_intro:
