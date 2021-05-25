@@ -16,7 +16,7 @@ class MonsterCollectionMeta(type):
 
     def __new__(cls, name, bases, dict):
         instance = super().__new__(cls, name, bases, dict)
-        instance.monster_data = Loader.load_json("data/domain/monsters.json")
+        instance.monster_data = Loader.load_domain("monsters")
         return instance
     
     def __call__(cls, *args, **kwargs) -> None:

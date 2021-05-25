@@ -47,7 +47,7 @@ class Skills:
     @classmethod
     def _load_skill_data(cls) -> None:
         """Set the cls.skill_data class variable data"""
-        cls.skill_data = Loader.load_json("data/domain/skills.json")
+        cls.skill_data = Loader.load_domain("skills")
 
     @classmethod
     def get_all_skills(cls) -> list:

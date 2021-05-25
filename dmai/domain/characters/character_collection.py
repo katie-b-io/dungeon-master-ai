@@ -14,7 +14,7 @@ class CharacterCollectionMeta(type):
 
     def __new__(cls, name, bases, dict):
         instance = super().__new__(cls, name, bases, dict)
-        instance.character_data = Loader.load_json("data/domain/characters.json")
+        instance.character_data = Loader.load_domain("characters")
         return instance
 
     def __call__(cls, *args, **kwargs) -> None:

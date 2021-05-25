@@ -45,7 +45,7 @@ class EquipmentCollection:
 
     def _load_equipment_data(self) -> None:
         """Set the self.equipment_data class variable data"""
-        self.equipment_data = Loader.load_json("data/domain/equipment.json")
+        self.equipment_data = Loader.load_domain("equipment")
     
     def has_equipment(self, equipment_id: str) -> tuple:
         """Method to return whether specified equipment exists.

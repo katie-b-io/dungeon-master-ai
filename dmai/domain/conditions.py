@@ -17,4 +17,4 @@ class Conditions:
     @classmethod
     def _load_condition_data(cls) -> None:
         """Set the cls.condition_data class variable data"""
-        cls.condition_data = Loader.load_json("data/domain/conditions.json")
+        cls.condition_data = Loader.load_domain("conditions")

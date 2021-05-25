@@ -30,8 +30,8 @@ class Weapons:
     @classmethod
     def _load_weapons_data(cls) -> None:
         """Set the cls.weapons_data and cls.weapon_properties class variable data"""
-        cls.weapons_data = Loader.load_json("data/domain/weapons.json")
-        cls.weapon_properties = Loader.load_json("data/domain/weapon_properties.json")
+        cls.weapons_data = Loader.load_domain("weapons")
+        cls.weapon_properties = Loader.load_domain("weapon_properties")
 
     def get_weapon(self, weapon_id: str) -> bool:
         """Method to return specified weapon"""

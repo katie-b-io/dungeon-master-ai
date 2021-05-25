@@ -1,5 +1,7 @@
 import json
+import os
 
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -20,6 +22,20 @@ class Loader(metaclass=LoaderMeta):
     def __init__(self) -> None:
         """Loader static class"""
         pass
+
+    @staticmethod
+    def load_adventure(adventure: str) -> dict:
+        """Loads specified adventure data"""
+        adventure = "{a}.json".format(a=adventure)
+        file = os.path.join(Config.directory.adventure, adventure)
+        return Loader.load_json(file)
+
+    @staticmethod
+    def load_domain(domain: str) -> dict:
+        """Loads specified domain data"""
+        domain = "{d}.json".format(d=domain)
+        file = os.path.join(Config.directory.domain, domain)
+        return Loader.load_json(file)
 
     @staticmethod
     def load_json(file: str) -> dict:
