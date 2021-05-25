@@ -1,6 +1,8 @@
 import argparse
+import os
 
 import dmai
+from dmai.utils.config import Config
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
@@ -38,6 +40,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
 def main() -> None:
     """Main entry point to the DMAI"""
     logger.debug("Starting game")
+    Config.set_root(os.path.dirname(os.path.abspath(__file__)))
+    
     OutputBuilder.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     OutputBuilder.append(
         "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."

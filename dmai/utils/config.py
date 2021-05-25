@@ -1,32 +1,9 @@
 import os
 
 
-class Directories(object):
-    @property
-    def root(self) -> str:
-        return os.path.abspath("")
-
-    @property
-    def data(self) -> str:
-        return os.path.join(self.root, "data")
-
-    @property
-    def domain(self) -> str:
-        return os.path.join(self.data, "domain")
-    
-    @property
-    def adventure(self) -> str:
-        return os.path.join(self.root, "adventures")
-
-
 class ConfigMeta(type):
     _instances = {}
 
-    def __new__(cls, name, bases, dict):
-        instance = super().__new__(cls, name, bases, dict)
-        instance.directory = Directories()
-        return instance
-    
     def __call__(cls, *args, **kwargs) -> None:
         """Config static singleton metaclass"""
         if cls not in cls._instances:
@@ -40,4 +17,30 @@ class Config(metaclass=ConfigMeta):
         """Config static class"""
         pass
 
+    class Directories(object):
+        root = os.path.abspath("")
 
+        @classmethod
+        def set_root(cls, root) -> None:
+            cls.root = root
+            print(root)
+
+        @property
+        def data(self) -> str:
+            return os.path.join(self.root, "data")
+
+        @property
+        def domain(self) -> str:
+            return os.path.join(self.data, "domain")
+
+        @property
+        def adventure(self) -> str:
+            return os.path.join(self.root, "adventures")
+
+    # class variables
+    directory = Directories()
+
+    @classmethod
+    def set_root(cls, root: str) -> None:
+        """Method to set the dmai root directory"""
+        cls.directory.set_root(root)
