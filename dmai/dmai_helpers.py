@@ -8,6 +8,7 @@ from dmai.utils.output_builder import OutputBuilder
 def start(char_class: str = None, char_name: str = None, skip_intro: bool = False) -> Game:
     """Initialise the game"""
     game = Game(char_class=char_class, char_name=char_name, skip_intro=skip_intro)
+    game.load()
     NLG.set_game(game)
     NLU.set_game(game)
 

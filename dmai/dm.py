@@ -21,9 +21,11 @@ class DM:
         self._player_utter = None
         self.triggers = []
         self.adventure = Adventure(adventure)
-        
+    
+    def load(self) -> None:
         # Initialise the NPC Collection with the adventure data
         self.npcs = NPCCollection(self.adventure)
+        self.npcs.load()
         
         # Initialise the actions with the adventure and npc data
         self.actions = Actions(self.adventure, self.npcs)

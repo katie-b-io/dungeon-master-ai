@@ -13,6 +13,8 @@ class NPCCollection:
     def __init__(self, adventure: Adventure) -> None:
         """NPCCollection class"""
         self.adventure = adventure
+    
+    def load(self) -> None:
         self.npcs = self._create_npcs()
         self.monsters = self._create_monsters()
 

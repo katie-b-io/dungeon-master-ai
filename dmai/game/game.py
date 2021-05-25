@@ -1,5 +1,6 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.characters.character_collection import CharacterCollection
+from dmai.domain.monsters.monster_collection import MonsterCollection
 from dmai.game.player import Player
 from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
@@ -13,23 +14,36 @@ logger = get_logger(__name__)
 class Game:
     def __init__(self, char_class: str = None, char_name: str = None, skip_intro: bool = False) -> None:
         """Main class for the game"""
-        adventure = "the_tomb_of_baradin_stormfury"
-        logger.info("Initialising adventure: {a}".format(a=adventure))
-        self.dm = DM(adventure)
-        State.set_dm(self.dm)
+        self.char_class = char_class
+        self.char_name = char_name
+        self.skip_intro = skip_intro
+        self.adventure = "the_tomb_of_baradin_stormfury"
+    
+    def load(self) -> None:
+        logger.info("Initialising adventure: {a}".format(a=self.adventure))
         self.player = None
         
+        # load data in static classes
+        CharacterCollection.load()
+        MonsterCollection.load()
+        
+        # Initialise DM
+        self.dm = DM(self.adventure)
+        self.dm.load()
+        State.set_dm(self.dm)
+        
         # set character class and name if possible
-        if char_class:
-            character = CharacterCollection.get_character(char_class)
+        if self.char_class:
+            character = CharacterCollection.get_character(self.char_class)
+            character.load()
             self.player = Player(character)
             State.set_player(self.player)
         
-            if char_name:
+            if self.char_name:
                 self.player.set_name(char_name)
         
         # intro text generator
-        if skip_intro:
+        if self.skip_intro:
             State.pause()
             self.intro = False
             self.intro_text = iter(())
