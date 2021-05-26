@@ -243,7 +243,7 @@
             "init": false,
             "visited": false,
             "connections": {
-                "storage_room": true,
+                "storage_room": false,
                 "antechamber": true
             },
             "npcs": {},
@@ -259,7 +259,7 @@
             "name": "Antechamber",
             "init": false,
             "connections": {
-                "western_room": true,
+                "western_corridor": true,
                 "southern_corridor": false
             },
             "npcs": {},
