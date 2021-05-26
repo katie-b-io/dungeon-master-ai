@@ -106,6 +106,10 @@ nlu:
     - go to [inn cellar](location)
     - go to the [cellar inn](location)
     - go [downstairs](location)
+    - move [down stairs](location)
+    - travel [down the stairs](location)
+    - go [up stairs](location)
+    - move [up the stairs](location)
     - move to the [antechamber](location)
     - go to the [inn](location)
     - proceed to the [stout meal inn](location)
@@ -541,6 +545,8 @@ nlu:
     - stout meal inn
     - upstairs
     - upstair
+    - up stairs
+    - up the stairs
 
 - synonym: inns_cellar
   examples: |
@@ -550,6 +556,8 @@ nlu:
     - inn cellar
     - downstairs
     - downstair
+    - down stairs
+    - down the stairs
     - cellar inn
 
 - synonym: storage_room

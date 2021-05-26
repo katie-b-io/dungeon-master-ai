@@ -56,7 +56,7 @@ class Actions:
         if can_move:
             State.set_current_room(entity, destination)
         else:
-            OutputBuilder.append(NLG.cannot_move(self.adventure.get_room(destination).name, reason))
+            OutputBuilder.append(NLG.cannot_move(destination, reason))
         return can_move
 
     def _can_attack(self, attacker: str, target: str) -> tuple:
