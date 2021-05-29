@@ -42,10 +42,29 @@
     wis - ability
     ; Skills
     perception - skill
+    ; Equipment
+    thieves_tools - equipment
 )
 
 (:init
+    ; =======================================
+    ; Player
     (alive player)
+    (at player stout_meal_inn)
+    ; set abilities
+    (charisma cha)
+    (constitution con)
+    (dexterity dex)
+    (intelligence int)
+    (strength str)
+    (wisdom wis)
+    ; set skills
+    (perception perception)
+    ; set equipment
+    (thieves_tools thieves_tools)
+
+    ; =======================================
+    ; Monsters
     (alive cat)
     (alive giant_rat1)
     (alive giant_rat2)
@@ -55,7 +74,6 @@
     (alive goblin3)
     (alive skeleton)
     (alive zombie)
-    (at player stout_meal_inn)
     (at cat inns_cellar)
     (at giant_rat1 inns_cellar)
     (at giant_rat2 inns_cellar)
@@ -66,7 +84,9 @@
     (at goblin3 antechamber)
     (at zombie storage_room)
     (at skeleton burial_chamber)
-    ; Set up doors and rooms
+
+    ; =======================================
+    ; Rooms
     (connected door1 stout_meal_inn inns_cellar)
     (connected door1 inns_cellar stout_meal_inn)
     (connected door2 inns_cellar storage_room)
@@ -99,12 +119,17 @@
     (locked door4)
     (locked door6)
     (locked door7)
+
+    ; =======================================
+    ; Challenges
     ; set DC for doors
     (dc door3 str)
     (dc door4 str)
     (dc door6 str)
     (dc door3 perception)
     (dc door4 perception)
+    ; set equipment DC for doors
+    (dc_equipment door6 thieves_tools)
     ; set HP for doors
     (hp door3)
     (hp door4)
@@ -113,15 +138,7 @@
     (ac door3)
     (ac door4)
     (ac door6)
-    ; set abilities
-    (charisma cha)
-    (constitution con)
-    (dexterity dex)
-    (intelligence int)
-    (strength str)
-    (wisdom wis)
-    ; set skills
-    (perception perception)
+
 )
 
 (:goal (and
