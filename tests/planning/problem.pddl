@@ -5,6 +5,9 @@
     ; NPCs
     corvus - npc
     anvil - npc
+    neutral - neutral
+    positive - positive
+    negative - negative
     ; Rooms
     stout_meal_inn - room
     inns_cellar - room
@@ -48,6 +51,10 @@
 
 (:init
     ; =======================================
+    ; Adventure
+    ; (quest)
+
+    ; =======================================
     ; Player
     (alive player)
     (at player stout_meal_inn)
@@ -64,8 +71,21 @@
     (thieves_tools thieves_tools)
 
     ; =======================================
+    ; NPCs
+    (alive corvus)
+    (alive anvil)
+    (at corvus stout_meal_inn)
+    (at anvil inns_cellar)
+    ; set attitudes
+    (attitude_towards_player corvus negative)
+    (attitude_towards_player anvil neutral)
+    (improve_attitude neutral positive)
+    (improve_attitude negative neutral)
+    (degrade_attitude positive neutral)
+    (degrade_attitude neutral negative)
+
+    ; =======================================
     ; Monsters
-    (alive cat)
     (alive giant_rat1)
     (alive giant_rat2)
     (alive giant_rat3)
@@ -74,7 +94,6 @@
     (alive goblin3)
     (alive skeleton)
     (alive zombie)
-    (at cat inns_cellar)
     (at giant_rat1 inns_cellar)
     (at giant_rat2 inns_cellar)
     (at giant_rat3 inns_cellar)
@@ -142,7 +161,7 @@
 )
 
 (:goal (and
-    (at player southern_corridor)
+    (at player inns_cellar)
 ))
 
 ;un-comment the following line if metric is needed

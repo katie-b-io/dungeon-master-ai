@@ -16,6 +16,9 @@
         ; Entities exist
         entity - object
         player npc monster - entity
+        ; Roleplaying exists
+        attitude - object
+        neutral positive negative - attitude
         ; Monsters exist
         cat giant_rat goblin skeleton zombie - monster
         ; Abilities and skills exist
@@ -49,6 +52,9 @@
     ;(:constants )
 
     (:predicates 
+        ; Adventure
+        (quest) ; player has recieved quest
+        (dwarven_thrower) ; player has found dwarven thrower treasure
         ; Abilities
         (charisma ?ability - ability)
         (constitution ?ability - ability)
@@ -110,7 +116,14 @@
         (thieves_tools ?equipment - equipment)
         ; Action is performed
         (action)
+        ; NPC attitudes
+        (attitude_towards_player ?npc - npc ?attitude - attitude)
+        (improve_attitude ?current - attitude ?next - attitude)
+        (degrade_attitude ?current - attitude ?next - attitude)
     )
+
+    ; ================================================================
+    ; Rolls
 
     ; Entity succeeds on an ability check
     (:action ability_check
@@ -173,10 +186,14 @@
         )
     )
 
+    ; ================================================================
+    ; Movement
+
     ; An entity moves from one room to another
     (:action move
         :parameters (?entity - entity ?door - door ?location - room ?destination - room)
         :precondition (and 
+            (quest)
             (alive ?entity)
             (at ?entity ?location)
             (connected ?door ?location ?destination)
@@ -332,5 +349,52 @@
         )
     )
 
+    ; ================================================================
+    ; NPCs
+    (:action recieve_quest
+        :parameters (?player - player ?corvus - npc ?positive - positive ?location - room)
+        :precondition (and
+            (alive ?player)
+            (alive ?corvus)
+            (at ?player ?location)
+            (at ?corvus ?location)
+            (attitude_towards_player ?corvus ?positive)
+        )
+        :effect (and
+            (quest)
+        )
+    )
+
+    (:action roleplay_positively
+        :parameters (?player - player ?npc - npc ?current - attitude ?next - attitude ?location - room)
+        :precondition (and
+            (alive ?player)
+            (alive ?npc)
+            (at ?player ?location)
+            (at ?npc ?location)
+            (attitude_towards_player ?npc ?current)
+            (improve_attitude ?current ?next)
+        )
+        :effect (and
+            (not (attitude_towards_player ?npc ?current))
+            (attitude_towards_player ?npc ?next)
+        )
+    )
+
+    (:action roleplay_negatively
+        :parameters (?player - player ?npc - npc ?current - attitude ?next - attitude ?location - room)
+        :precondition (and
+            (alive ?player)
+            (alive ?npc)
+            (at ?player ?location)
+            (at ?npc ?location)
+            (attitude_towards_player ?npc ?current)
+            (degrade_attitude ?current ?next)
+        )
+        :effect (and
+            (not (attitude_towards_player ?npc ?current))
+            (attitude_towards_player ?npc ?next)
+        )
+    )
 
 )
