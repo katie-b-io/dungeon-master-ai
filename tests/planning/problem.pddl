@@ -47,6 +47,10 @@
     perception - skill
     ; Equipment
     thieves_tools - equipment
+    ; Weapons
+    greataxe - weapon
+    javelin - weapon
+    crossbow_light - weapon
 )
 
 (:init
@@ -67,8 +71,13 @@
     (wisdom wis)
     ; set skills
     (perception perception)
+    ; set weapons
+    ; (has player greataxe)
+    ; (has player javelin)
+    ; (has player crossbow_light)
     ; set equipment
     (thieves_tools thieves_tools)
+    (has player thieves_tools)
 
     ; =======================================
     ; NPCs
@@ -142,9 +151,9 @@
     ; =======================================
     ; Challenges
     ; set DC for doors
-    (dc door3 str)
-    (dc door4 str)
-    (dc door6 str)
+    ; (dc door3 str)
+    ; (dc door4 str)
+    ; (dc door6 str)
     (dc door3 perception)
     (dc door4 perception)
     ; set equipment DC for doors
@@ -161,7 +170,7 @@
 )
 
 (:goal (and
-    (at player inns_cellar)
+    (at player southern_corridor)
 ))
 
 ;un-comment the following line if metric is needed

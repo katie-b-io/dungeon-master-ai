@@ -53,7 +53,7 @@
 
     (:predicates 
         ; Adventure
-        (quest) ; player has recieved quest
+        (quest) ; player has received quest
         (dwarven_thrower) ; player has found dwarven thrower treasure
         ; Abilities
         (charisma ?ability - ability)
@@ -81,12 +81,14 @@
         (sleight_of_hand ?skill - skill)
         (stealth ?skill - skill)
         (survival ?skill - skill)
+        ; Entity has an object
+        (has ?entity - entity ?object - object)
         ; Object is in a room
-        (at ?entity - object ?room - room)
+        (at ?object - object ?room - room)
         ; Entity is alive
         (alive ?entity - entity)
-        ; Entity has a weapon
-        (armed ?entity - entity ?weapon - weapon)
+        ; Object is equipped
+        (equipped ?entity - entity ?object - object)
         ; Rooms are connected
         (connected ?door - door ?location - room ?destination - room)
         ; Door is locked
@@ -157,11 +159,12 @@
 
     ; Entity succeeds on an attack roll
     (:action attack_roll
-        :parameters (?entity - entity ?target - object ?location - room)
+        :parameters (?entity - entity ?weapon - weapon ?target - object ?location - room)
         :precondition (and 
             (at ?entity ?location)
             (at ?target ?location)
             (can_attack_roll ?entity ?target)
+            (equipped ?entity ?weapon)
             (not (attack_roll_success ?entity ?target))
         )
         :effect (and 
@@ -183,6 +186,30 @@
         :effect (and 
             (not (can_damage_roll ?entity ?target))
             (not (hp ?target))
+        )
+    )
+
+    ; ================================================================
+    ; Basic player actions
+    (:action equip
+        :parameters (?entity - entity ?object - object)
+        :precondition (and 
+            (has ?entity ?object)
+            (not (equipped ?entity ?object))
+        )
+        :effect (and 
+            (equipped ?entity ?object)
+        )
+    )
+    
+    (:action unequip
+        :parameters (?entity - entity ?object - object)
+        :precondition (and 
+            (has ?entity ?object)
+            (equipped ?entity ?object)
+        )
+        :effect (and 
+            (not (equipped ?entity ?object))
         )
     )
 
@@ -305,25 +332,28 @@
             (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
+            (equipped ?player ?thieves_tools)
             (thieves_tools ?thieves_tools)
             (equipment_check_success ?player ?thieves_tools)
         )
         :effect (and 
             (not (action))
             (not (locked ?door))
+            (not (equipped ?player ?thieves_tools))
             (not (equipment_check_success ?player ?thieves_tools))
         )
     )
     
     ; A player attacks a door
     (:action attack_door
-        :parameters (?player - player ?door - door ?location - room ?destination - room)
+        :parameters (?player - player ?weapon - weapon ?door - door ?location - room ?destination - room)
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
             (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
+            (equipped ?player ?weapon)
             (attack_roll_success ?player ?door)
         )
         :effect (and 
@@ -351,7 +381,7 @@
 
     ; ================================================================
     ; NPCs
-    (:action recieve_quest
+    (:action receive_quest
         :parameters (?player - player ?corvus - npc ?positive - positive ?location - room)
         :precondition (and
             (alive ?player)
@@ -396,5 +426,9 @@
             (attitude_towards_player ?npc ?next)
         )
     )
+
+    ; ================================================================
+    ; Combat
+
 
 )
