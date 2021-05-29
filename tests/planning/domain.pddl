@@ -153,7 +153,7 @@
 
     ; An entity damages a target
     (:action damage_roll
-        :parameters (?entity - entity ?target - target)
+        :parameters (?entity - entity ?target - object)
         :precondition (and 
             (can_damage_roll ?entity ?target)
             (hp ?target)
@@ -284,7 +284,7 @@
         )
     )
     
-    ; An player attacks a door
+    ; A player attacks a door
     (:action attack_door
         :parameters (?player - player ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -296,10 +296,11 @@
         )
         :effect (and 
             (can_damage_roll ?player ?door)
+            (not (attack_roll_success ?player ?door))
         )
     )
 
-    ; An player breaks down a door
+    ; A player breaks down a door
     (:action breaks_down_door
         :parameters (?player - player ?door - door ?location - room ?destination - room)
         :precondition (and 

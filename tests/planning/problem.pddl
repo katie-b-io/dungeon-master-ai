@@ -89,8 +89,8 @@
     ; (dc door3 str)
     ; (dc door4 str)
     ; (dc door6 str)
-    ; (dc door3 perception)
-    ; (dc door4 perception)
+    (dc door3 perception)
+    (dc door4 perception)
     ; set HP for doors
     (hp door3)
     (hp door4)
@@ -99,12 +99,38 @@
     (ac door3)
     (ac door4)
     (ac door6)
+    ; set abilities
+    (charisma cha)
+    (constitution con)
+    (dexterity dex)
+    (intelligence int)
+    (strength str)
+    (wisdom wis)
     ; set skills
     (perception perception)
 )
 
 (:goal (and
-    (at player burial_chamber)
+    (at player southern_corridor)
+    ; (not (hp door3))
+    ; (not (can_damage_roll player door3))
+    ; (can_damage_roll player door3)
+    ; (hp door3)
+    ; (ac door3)
+
+    ; (alive player)
+    ; (at player storage_room)
+    ; (connected door3 storage_room burial_chamber)
+    ; (locked door3)
+    ; (action)
+    ; (attack_roll_success player door3)
+    ; (ac door3)
+    ; (not (can_damage_roll player door3))
+    ; (not (hp door3))
+
+    ; (can_damage_roll player door3)
+    ; (hp door3)
+    ; (ac door3)
 ))
 
 ;un-comment the following line if metric is needed
