@@ -75,10 +75,10 @@
         (sleight_of_hand ?skill - skill)
         (stealth ?skill - skill)
         (survival ?skill - skill)
+        ; Object is in a room
+        (at ?entity - object ?room - room)
         ; Entity is alive
         (alive ?entity - entity)
-        ; Entity is in a room
-        (at ?entity - entity ?room - room)
         ; Entity has a weapon
         (armed ?entity - entity ?weapon - weapon)
         ; Rooms are connected
@@ -97,11 +97,11 @@
         ; Entity can perform a damage roll
         (can_damage_roll ?entity - entity ?target - object)
         ; Entity can perform an ability check
-        (can_ability_check ?entity - entity ?ability - ability)
+        (can_ability_check ?entity - entity ?ability - ability ?target - object)
         ; Entity can perform an equipment check
-        (can_equipment_check ?entity - entity ?equipment - equipment)
+        (can_equipment_check ?entity - entity ?equipment - equipment ?target - object)
         ; Entity makes a successful ability check
-        (ability_check_success ?entity - entity ?ability - ability)
+        (ability_check_success ?entity - entity ?ability - ability ?target - object)
         ; Entity makes a successful equipment check
         (equipment_check_success ?entity - entity ?equipment - equipment)
         ; Entity makes a successful attack roll against target
@@ -114,34 +114,40 @@
 
     ; Entity succeeds on an ability check
     (:action ability_check
-        :parameters (?entity - entity ?ability - ability)
+        :parameters (?entity - entity ?ability - ability ?target - object ?location - room)
         :precondition (and 
-            (can_ability_check ?entity ?ability)
-            (not (ability_check_success ?entity ?ability))
+            (at ?entity ?location)
+            (at ?target ?location)
+            (can_ability_check ?entity ?ability ?target)
+            (not (ability_check_success ?entity ?ability ?target))
         )
         :effect (and 
-            (not (can_ability_check ?entity ?ability))
-            (ability_check_success ?entity ?ability)
+            (not (can_ability_check ?entity ?ability ?target))
+            (ability_check_success ?entity ?ability ?target)
         )
     )
     
     ; Entity succeeds on an equipment check
     (:action equipment_check
-        :parameters (?entity - entity ?equipment - equipment)
+        :parameters (?entity - entity ?equipment - equipment ?target - object ?location - room)
         :precondition (and 
-            (can_equipment_check ?entity ?equipment)
+            (at ?entity ?location)
+            (at ?target ?location)
+            (can_equipment_check ?entity ?equipment ?target)
             (not (equipment_check_success ?entity ?equipment))
         )
         :effect (and 
-            (not (can_equipment_check ?entity ?equipment))
+            (not (can_equipment_check ?entity ?equipment ?target))
             (equipment_check_success ?entity ?equipment)
         )
     )
 
     ; Entity succeeds on an attack roll
     (:action attack_roll
-        :parameters (?entity - entity ?target - object)
+        :parameters (?entity - entity ?target - object ?location - room)
         :precondition (and 
+            (at ?entity ?location)
+            (at ?target ?location)
             (can_attack_roll ?entity ?target)
             (not (attack_roll_success ?entity ?target))
         )
@@ -153,8 +159,10 @@
 
     ; An entity damages a target
     (:action damage_roll
-        :parameters (?entity - entity ?target - object)
+        :parameters (?entity - entity ?target - object ?location - room)
         :precondition (and 
+            (at ?entity ?location)
+            (at ?target ?location)
             (can_damage_roll ?entity ?target)
             (hp ?target)
             (ac ?target)
@@ -186,13 +194,14 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (dc ?door ?ability)
             (not (action))
         )
         :effect (and 
-            (can_ability_check ?player ?ability)
+            (can_ability_check ?player ?ability ?door)
             (action)
         )
     )
@@ -203,13 +212,14 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (dc_equipment ?door ?equipment)
             (not (action))
         )
         :effect (and 
-            (can_equipment_check ?player ?equipment)
+            (can_equipment_check ?player ?equipment ?door)
             (action)
         )
     )
@@ -220,6 +230,7 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (not (action))
@@ -236,15 +247,16 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (strength ?str)
-            (ability_check_success ?player ?str)
+            (ability_check_success ?player ?str ?door)
         )
         :effect (and 
             (not (action))
             (not (locked ?door))
-            (not (ability_check_success ?player ?str))
+            (not (ability_check_success ?player ?str ?door))
         )
     )
 
@@ -254,15 +266,16 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (perception ?perception)
-            (ability_check_success ?player ?perception)
+            (ability_check_success ?player ?perception ?door)
         )
         :effect (and 
             (not (action))
             (not (locked ?door))
-            (not (ability_check_success ?player ?perception))
+            (not (ability_check_success ?player ?perception ?door))
         )
     )
 
@@ -272,6 +285,7 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (thieves_tools ?thieves_tools)
@@ -290,6 +304,7 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (attack_roll_success ?player ?door)
@@ -306,6 +321,7 @@
         :precondition (and 
             (alive ?player)
             (at ?player ?location)
+            (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
             (not (hp ?door))
