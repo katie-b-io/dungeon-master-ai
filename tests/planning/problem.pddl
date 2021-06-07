@@ -85,6 +85,7 @@
     (alive anvil)
     (at corvus stout_meal_inn)
     (at anvil inns_cellar)
+    (gives_quest corvus)
     ; set attitudes
     (attitude_towards_player corvus negative)
     (attitude_towards_player anvil neutral)

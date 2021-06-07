@@ -55,6 +55,7 @@
         ; Adventure
         (quest) ; player has received quest
         (dwarven_thrower) ; player has found dwarven thrower treasure
+        (gives_quest ?npc - npc) ; NPC can give quest
         ; Abilities
         (charisma ?ability - ability)
         (constitution ?ability - ability)
@@ -191,6 +192,8 @@
 
     ; ================================================================
     ; Basic player actions
+
+    ; Entity equips weapon or equipment
     (:action equip
         :parameters (?entity - entity ?object - object)
         :precondition (and 
@@ -202,6 +205,7 @@
         )
     )
     
+    ; Entity unequips weapon or equipment
     (:action unequip
         :parameters (?entity - entity ?object - object)
         :precondition (and 
@@ -304,7 +308,7 @@
         )
     )
 
-    ; A player uses the switch to open a door
+    ; A player uses a switch to open a door
     (:action use_door_switch
         :parameters (?player - player ?perception - skill ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -381,20 +385,24 @@
 
     ; ================================================================
     ; NPCs
+
+    ; Player receives quest from NPC that can give quests
     (:action receive_quest
-        :parameters (?player - player ?corvus - npc ?positive - positive ?location - room)
+        :parameters (?player - player ?npc - npc ?positive - positive ?location - room)
         :precondition (and
             (alive ?player)
-            (alive ?corvus)
+            (alive ?npc)
             (at ?player ?location)
-            (at ?corvus ?location)
-            (attitude_towards_player ?corvus ?positive)
+            (at ?npc ?location)
+            (gives_quest ?npc)
+            (attitude_towards_player ?npc ?positive)
         )
         :effect (and
             (quest)
         )
     )
 
+    ; Player roleplays positively, which improves the NPC's attitude towards the player
     (:action roleplay_positively
         :parameters (?player - player ?npc - npc ?current - attitude ?next - attitude ?location - room)
         :precondition (and
@@ -411,6 +419,7 @@
         )
     )
 
+    ; Player roleplays negatively, which degrades the NPC's attitude towards the player
     (:action roleplay_negatively
         :parameters (?player - player ?npc - npc ?current - attitude ?next - attitude ?location - room)
         :precondition (and
@@ -429,6 +438,7 @@
 
     ; ================================================================
     ; Combat
+
 
 
 )

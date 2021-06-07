@@ -3,3 +3,4 @@
 *coverage*
 models/*
 *.log
+*.plan
