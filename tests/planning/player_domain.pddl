@@ -1,6 +1,6 @@
 ;Dungeons and Dragons 5th Edition Domain
 
-(define (domain dnd)
+(define (domain dnd_player)
 
     ;remove requirements that are not needed
     (:requirements 

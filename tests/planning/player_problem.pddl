@@ -1,4 +1,4 @@
-(define (problem fighter) (:domain dnd)
+(define (problem fighter) (:domain dnd_player)
 (:objects 
     ; Player
     player - player
