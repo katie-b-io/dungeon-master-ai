@@ -10,7 +10,7 @@
         :conditional-effects
         :negative-preconditions
         :equality
-    )
+     :disjunctive-preconditions)
 
     (:types 
         ; Entities exist
@@ -21,6 +21,8 @@
         neutral positive negative - attitude
         ; Monsters exist
         cat giant_rat goblin skeleton zombie - monster
+        ; Monster variants exist
+        diseased_giant_rat - giant_rat
         ; Abilities and skills exist
         ability - object
         skill - ability
@@ -36,8 +38,6 @@
         armor - object
         ; Equipment exists
         equipment - object
-        ; Attacks exist
-        attack - object
         ; Damage vulnerabilities exist
         damage_vulnerability - object
         ; Damage immunities exist
@@ -56,6 +56,9 @@
         (quest) ; player has received quest
         (dwarven_thrower) ; player has found dwarven thrower treasure
         (gives_quest ?npc - npc) ; NPC can give quest
+        ; Rolls
+        (advantage ?object - object)
+        (disadvantage ?object - object)
         ; Abilities
         (charisma ?ability - ability)
         (constitution ?ability - ability)
@@ -135,6 +138,33 @@
     (:action ability_check
         :parameters (?player - player ?ability - ability ?target - object ?location - room)
         :precondition (and 
+            (or
+                (and
+                    (not (advantage ?ability))
+                    (not (disadvantage ?ability))
+                )
+                (and
+                    (advantage ?ability)
+                    (disadvantage ?ability)
+                )
+            )
+            (at ?player ?location)
+            (at ?target ?location)
+            (can_ability_check ?player ?ability ?target)
+            (not (ability_check_success ?player ?ability ?target))
+        )
+        :effect (and 
+            (not (can_ability_check ?player ?ability ?target))
+            (ability_check_success ?player ?ability ?target)
+        )
+    )
+
+    ; Player succeeds on an ability check with advantage
+    (:action ability_check_with_advantage
+        :parameters (?player - player ?ability - ability ?target - object ?location - room)
+        :precondition (and 
+            (advantage ?ability)
+            (not (disadvantage ?ability))
             (at ?player ?location)
             (at ?target ?location)
             (can_ability_check ?player ?ability ?target)
@@ -146,10 +176,71 @@
         )
     )
     
+    ; Player succeeds on an ability check with disadvantage
+    (:action ability_check_with_disadvantage
+        :parameters (?player - player ?ability - ability ?target - object ?location - room)
+        :precondition (and 
+            (not (advantage ?ability))
+            (disadvantage ?ability)
+            (at ?player ?location)
+            (at ?target ?location)
+            (can_ability_check ?player ?ability ?target)
+            (not (ability_check_success ?player ?ability ?target))
+        )
+        :effect (and 
+            (not (can_ability_check ?player ?ability ?target))
+            (ability_check_success ?player ?ability ?target)
+        )
+    )
+
     ; Player succeeds on an equipment check
     (:action equipment_check
         :parameters (?player - player ?equipment - equipment ?target - object ?location - room)
         :precondition (and 
+            (or
+                (and
+                    (not (advantage ?equipment))
+                    (not (disadvantage ?equipment))
+                )
+                (and
+                    (advantage ?equipment)
+                    (disadvantage ?equipment)
+                )
+            )
+            (at ?player ?location)
+            (at ?target ?location)
+            (can_equipment_check ?player ?equipment ?target)
+            (not (equipment_check_success ?player ?equipment))
+        )
+        :effect (and 
+            (not (can_equipment_check ?player ?equipment ?target))
+            (equipment_check_success ?player ?equipment)
+        )
+    )
+
+    ; Player succeeds on an equipment check with advantage
+    (:action equipment_check_with_advantage
+        :parameters (?player - player ?equipment - equipment ?target - object ?location - room)
+        :precondition (and 
+            (advantage ?equipment)
+            (not (disadvantage ?equipment))
+            (at ?player ?location)
+            (at ?target ?location)
+            (can_equipment_check ?player ?equipment ?target)
+            (not (equipment_check_success ?player ?equipment))
+        )
+        :effect (and 
+            (not (can_equipment_check ?player ?equipment ?target))
+            (equipment_check_success ?player ?equipment)
+        )
+    )
+
+    ; Player succeeds on an equipment check with disadvantage
+    (:action equipment_check_with_disadvantage
+        :parameters (?player - player ?equipment - equipment ?target - object ?location - room)
+        :precondition (and 
+            (not (advantage ?equipment))
+            (disadvantage ?equipment)
             (at ?player ?location)
             (at ?target ?location)
             (can_equipment_check ?player ?equipment ?target)
@@ -165,6 +256,54 @@
     (:action attack_roll
         :parameters (?player - player ?weapon - weapon ?target - object ?location - room)
         :precondition (and 
+            (or
+                (and
+                    (not (advantage ?weapon))
+                    (not (disadvantage ?weapon))
+                )
+                (and
+                    (advantage ?weapon)
+                    (disadvantage ?weapon)
+                )
+            )
+            (at ?player ?location)
+            (at ?target ?location)
+            (can_attack_roll ?player ?target)
+            (equipped ?player ?weapon)
+            (not (attack_roll_success ?player ?target))
+        )
+        :effect (and 
+            (not (can_attack_roll ?player ?target))
+            (attack_roll_success ?player ?target)
+            (higher_than_ac ?target)
+        )
+    )
+
+    ; Player succeeds on an attack roll with advantage
+    (:action attack_roll_with_advantage
+        :parameters (?player - player ?weapon - weapon ?target - object ?location - room)
+        :precondition (and 
+            (advantage ?weapon)
+            (not (disadvantage ?weapon))
+            (at ?player ?location)
+            (at ?target ?location)
+            (can_attack_roll ?player ?target)
+            (equipped ?player ?weapon)
+            (not (attack_roll_success ?player ?target))
+        )
+        :effect (and 
+            (not (can_attack_roll ?player ?target))
+            (attack_roll_success ?player ?target)
+            (higher_than_ac ?target)
+        )
+    )
+
+    ; Player succeeds on an attack roll with disadvantage
+    (:action attack_roll_with_disadvantage
+        :parameters (?player - player ?weapon - weapon ?target - object ?location - room)
+        :precondition (and 
+            (not (advantage ?weapon))
+            (disadvantage ?weapon)
             (at ?player ?location)
             (at ?target ?location)
             (can_attack_roll ?player ?target)
