@@ -90,8 +90,8 @@
         (alive ?object - object)
         ; Object is damaged
         (damaged ?object - object)
-        ; Object is equipped
-        (equipped ?entity - entity ?object - object)
+        ; Object is equipped by player
+        (equipped ?player - player ?object - object)
         ; Rooms are connected
         (connected ?door - door ?location - room ?destination - room)
         ; Door is locked
@@ -101,20 +101,20 @@
         (dc_equipment ?target - object ?equipment - equipment)
         ; Attack roll exceeds AC of object
         (higher_than_ac ?target - object)
-        ; Entity can perform an attack roll
-        (can_attack_roll ?entity - entity ?target - object)
-        ; Entity can perform a damage roll
-        (can_damage_roll ?entity - entity ?target - object)
-        ; Entity can perform an ability check
-        (can_ability_check ?entity - entity ?ability - ability ?target - object)
-        ; Entity can perform an equipment check
-        (can_equipment_check ?entity - entity ?equipment - equipment ?target - object)
-        ; Entity makes a successful ability check
-        (ability_check_success ?entity - entity ?ability - ability ?target - object)
-        ; Entity makes a successful equipment check
-        (equipment_check_success ?entity - entity ?equipment - equipment)
-        ; Entity makes a successful attack roll against target
-        (attack_roll_success ?entity - entity ?target - object)
+        ; Player can perform an attack roll
+        (can_attack_roll ?player - player ?target - object)
+        ; Player can perform a damage roll
+        (can_damage_roll ?player - player ?target - object)
+        ; Player can perform an ability check
+        (can_ability_check ?player - player ?ability - ability ?target - object)
+        ; Player can perform an equipment check
+        (can_equipment_check ?player - player ?equipment - equipment ?target - object)
+        ; Player makes a successful ability check
+        (ability_check_success ?player - player ?ability - ability ?target - object)
+        ; Player makes a successful equipment check
+        (equipment_check_success ?player - player ?equipment - equipment)
+        ; Player makes a successful attack roll against target
+        (attack_roll_success ?player - player ?target - object)
         ; Tools
         (thieves_tools ?equipment - equipment)
         ; Action is performed
@@ -131,65 +131,65 @@
     ; ================================================================
     ; Rolls
 
-    ; Entity succeeds on an ability check
+    ; Player succeeds on an ability check
     (:action ability_check
-        :parameters (?entity - entity ?ability - ability ?target - object ?location - room)
+        :parameters (?player - player ?ability - ability ?target - object ?location - room)
         :precondition (and 
-            (at ?entity ?location)
+            (at ?player ?location)
             (at ?target ?location)
-            (can_ability_check ?entity ?ability ?target)
-            (not (ability_check_success ?entity ?ability ?target))
+            (can_ability_check ?player ?ability ?target)
+            (not (ability_check_success ?player ?ability ?target))
         )
         :effect (and 
-            (not (can_ability_check ?entity ?ability ?target))
-            (ability_check_success ?entity ?ability ?target)
+            (not (can_ability_check ?player ?ability ?target))
+            (ability_check_success ?player ?ability ?target)
         )
     )
     
-    ; Entity succeeds on an equipment check
+    ; Player succeeds on an equipment check
     (:action equipment_check
-        :parameters (?entity - entity ?equipment - equipment ?target - object ?location - room)
+        :parameters (?player - player ?equipment - equipment ?target - object ?location - room)
         :precondition (and 
-            (at ?entity ?location)
+            (at ?player ?location)
             (at ?target ?location)
-            (can_equipment_check ?entity ?equipment ?target)
-            (not (equipment_check_success ?entity ?equipment))
+            (can_equipment_check ?player ?equipment ?target)
+            (not (equipment_check_success ?player ?equipment))
         )
         :effect (and 
-            (not (can_equipment_check ?entity ?equipment ?target))
-            (equipment_check_success ?entity ?equipment)
+            (not (can_equipment_check ?player ?equipment ?target))
+            (equipment_check_success ?player ?equipment)
         )
     )
 
-    ; Entity succeeds on an attack roll
+    ; Player succeeds on an attack roll
     (:action attack_roll
-        :parameters (?entity - entity ?weapon - weapon ?target - object ?location - room)
+        :parameters (?player - player ?weapon - weapon ?target - object ?location - room)
         :precondition (and 
-            (at ?entity ?location)
+            (at ?player ?location)
             (at ?target ?location)
-            (can_attack_roll ?entity ?target)
-            (equipped ?entity ?weapon)
-            (not (attack_roll_success ?entity ?target))
+            (can_attack_roll ?player ?target)
+            (equipped ?player ?weapon)
+            (not (attack_roll_success ?player ?target))
         )
         :effect (and 
-            (not (can_attack_roll ?entity ?target))
-            (attack_roll_success ?entity ?target)
+            (not (can_attack_roll ?player ?target))
+            (attack_roll_success ?player ?target)
             (higher_than_ac ?target)
         )
     )
 
-    ; An entity damages a target
+    ; Player damages a target
     (:action damage_roll
-        :parameters (?entity - entity ?target - object ?location - room)
+        :parameters (?player - player ?target - object ?location - room)
         :precondition (and 
-            (at ?entity ?location)
+            (at ?player ?location)
             (at ?target ?location)
-            (can_damage_roll ?entity ?target)
+            (can_damage_roll ?player ?target)
             (alive ?target)
             (higher_than_ac ?target)
         )
         :effect (and 
-            (not (can_damage_roll ?entity ?target))
+            (not (can_damage_roll ?player ?target))
             (not (higher_than_ac ?target))
             (damaged ?target)
         )
@@ -198,40 +198,40 @@
     ; ================================================================
     ; Basic player actions
 
-    ; Entity equips weapon or equipment
+    ; Player equips weapon or equipment
     (:action equip
-        :parameters (?entity - entity ?object - object)
+        :parameters (?player - player ?object - object)
         :precondition (and 
-            (has ?entity ?object)
-            (not (equipped ?entity ?object))
+            (has ?player ?object)
+            (not (equipped ?player ?object))
         )
         :effect (and 
-            (equipped ?entity ?object)
+            (equipped ?player ?object)
         )
     )
     
-    ; Entity unequips weapon or equipment
+    ; Player unequips weapon or equipment
     (:action unequip
-        :parameters (?entity - entity ?object - object)
+        :parameters (?player - player ?object - object)
         :precondition (and 
-            (has ?entity ?object)
-            (equipped ?entity ?object)
+            (has ?player ?object)
+            (equipped ?player ?object)
         )
         :effect (and 
-            (not (equipped ?entity ?object))
+            (not (equipped ?player ?object))
         )
     )
 
     ; ================================================================
     ; Movement
 
-    ; An entity moves from one room to another
+    ; Player moves from one room to another
     (:action move
-        :parameters (?entity - entity ?door - door ?location - room ?destination - room)
+        :parameters (?player - player ?door - door ?location - room ?destination - room)
         :precondition (and 
             (quest)
-            (alive ?entity)
-            (at ?entity ?location)
+            (alive ?player)
+            (at ?player ?location)
             (connected ?door ?location ?destination)
             (not (locked ?door))
             (forall (?monster - monster)
@@ -250,12 +250,12 @@
             )
         )
         :effect (and 
-            (not (at ?entity ?location))
-            (at ?entity ?destination)
+            (not (at ?player ?location))
+            (at ?player ?destination)
         )
     )
 
-    ; An entity wants to open a door with an ability/skill
+    ; Player wants to open a door with an ability/skill
     (:action open_door_with_ability
         :parameters (?player - player ?ability - ability ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -273,7 +273,7 @@
         )
     )
 
-    ; An entity wants to open a door with equipment
+    ; Player wants to open a door with equipment
     (:action open_door_with_equipment
         :parameters (?player - player ?equipment - equipment ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -291,7 +291,7 @@
         )
     )
 
-    ; An entity wants to open a door with attack
+    ; Player wants to open a door with attack
     (:action open_door_with_attack
         :parameters (?player - player ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -308,7 +308,7 @@
         )
     )
 
-    ; A player forces open a door
+    ; Player forces open a door
     (:action force_door
         :parameters (?player - player ?str - ability ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -327,7 +327,7 @@
         )
     )
 
-    ; A player uses a switch to open a door
+    ; Player uses a switch to open a door
     (:action use_door_switch
         :parameters (?player - player ?perception - skill ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -346,7 +346,7 @@
         )
     )
 
-    ; A player uses thieves tools to open a door
+    ; Player uses thieves tools to open a door
     (:action use_thieves_tools
         :parameters (?player - player ?thieves_tools - equipment ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -367,7 +367,7 @@
         )
     )
     
-    ; A player attacks a door
+    ; Player attacks a door
     (:action attack_door
         :parameters (?player - player ?weapon - weapon ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -385,7 +385,7 @@
         )
     )
 
-    ; A player breaks down a door
+    ; Player breaks down a door
     (:action breaks_down_door
         :parameters (?player - player ?door - door ?location - room ?destination - room)
         :precondition (and 
@@ -459,7 +459,7 @@
     ; ================================================================
     ; Combat
 
-    ; An player wants to attack another entity
+    ; Player wants to attack another entity
     (:action declare_attack_against_entity
         :parameters (?player - player ?target - entity ?location - room)
         :precondition (and 
@@ -475,7 +475,7 @@
         )
     )
 
-    ; A player attacks a monster
+    ; Player attacks a monster
     (:action attack_monster
         :parameters (?player - player ?weapon - weapon ?monster - monster ?location - room)
         :precondition (and 
@@ -494,7 +494,7 @@
         )
     )
 
-    ; A player kills a monster
+    ; Player kills a monster
     (:action kill_monster
         :parameters (?player - player ?monster - monster ?location - room)
         :precondition (and 
