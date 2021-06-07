@@ -86,8 +86,10 @@
         (has ?entity - entity ?object - object)
         ; Object is in a room
         (at ?object - object ?room - room)
-        ; Entity is alive
-        (alive ?entity - entity)
+        ; Object is alive
+        (alive ?object - object)
+        ; Object is damaged
+        (damaged ?object - object)
         ; Object is equipped
         (equipped ?entity - entity ?object - object)
         ; Rooms are connected
@@ -97,10 +99,8 @@
         ; DC of object
         (dc ?target - object ?ability - ability)
         (dc_equipment ?target - object ?equipment - equipment)
-        ; HP of object
-        (hp ?target - object)
-        ; AC of object
-        (ac ?target - object)
+        ; Attack roll exceeds AC of object
+        (higher_than_ac ?target - object)
         ; Entity can perform an attack roll
         (can_attack_roll ?entity - entity ?target - object)
         ; Entity can perform a damage roll
@@ -123,6 +123,9 @@
         (attitude_towards_player ?npc - npc ?attitude - attitude)
         (improve_attitude ?current - attitude ?next - attitude)
         (degrade_attitude ?current - attitude ?next - attitude)
+        ; Combat
+        (combat)
+        (must_kill ?monster - monster)
     )
 
     ; ================================================================
@@ -171,6 +174,7 @@
         :effect (and 
             (not (can_attack_roll ?entity ?target))
             (attack_roll_success ?entity ?target)
+            (higher_than_ac ?target)
         )
     )
 
@@ -181,12 +185,13 @@
             (at ?entity ?location)
             (at ?target ?location)
             (can_damage_roll ?entity ?target)
-            (hp ?target)
-            (ac ?target)
+            (alive ?target)
+            (higher_than_ac ?target)
         )
         :effect (and 
             (not (can_damage_roll ?entity ?target))
-            (not (hp ?target))
+            (not (higher_than_ac ?target))
+            (damaged ?target)
         )
     )
 
@@ -229,6 +234,20 @@
             (at ?entity ?location)
             (connected ?door ?location ?destination)
             (not (locked ?door))
+            (forall (?monster - monster)
+                (or
+                    (not (at ?monster ?location))
+                    (and
+                        (at ?monster ?location)
+                        (not (must_kill ?monster))
+                    )
+                    (and 
+                        (at ?monster ?location)
+                        (must_kill ?monster)
+                        (not (alive ?monster))
+                    )
+                )
+            )
         )
         :effect (and 
             (not (at ?entity ?location))
@@ -375,11 +394,12 @@
             (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
-            (not (hp ?door))
+            (damaged ?door)
         )
         :effect (and 
             (not (action))
             (not (locked ?door))
+            (not (alive ?door))
         )
     )
 
@@ -439,6 +459,58 @@
     ; ================================================================
     ; Combat
 
+    ; An player wants to attack another entity
+    (:action declare_attack_against_entity
+        :parameters (?player - player ?target - entity ?location - room)
+        :precondition (and 
+            (alive ?player)
+            (alive ?target)
+            (at ?player ?location)
+            (at ?target ?location)
+            (not (action))
+        )
+        :effect (and 
+            (can_attack_roll ?player ?target)
+            (action)
+        )
+    )
 
+    ; A player attacks a monster
+    (:action attack_monster
+        :parameters (?player - player ?weapon - weapon ?monster - monster ?location - room)
+        :precondition (and 
+            (action)
+            (alive ?player)
+            (alive ?monster)
+            (at ?player ?location)
+            (at ?monster ?location)
+            (equipped ?player ?weapon)
+            (attack_roll_success ?player ?monster)
+        )
+        :effect (and 
+            (combat)
+            (can_damage_roll ?player ?monster)
+            (not (attack_roll_success ?player ?monster))
+        )
+    )
+
+    ; A player kills a monster
+    (:action kill_monster
+        :parameters (?player - player ?monster - monster ?location - room)
+        :precondition (and 
+            (action)
+            (combat)
+            (alive ?player)
+            (alive ?monster)
+            (at ?player ?location)
+            (at ?monster ?location)
+            (damaged ?monster)
+        )
+        :effect (and 
+            (not (action))
+            (not (combat))
+            (not (alive ?monster))
+        )
+    )
 
 )

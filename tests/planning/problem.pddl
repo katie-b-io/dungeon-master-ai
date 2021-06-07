@@ -31,11 +31,11 @@
     giant_rat2 - giant_rat
     giant_rat3 - giant_rat
     giant_rat4 - giant_rat
-    goblin1 - goblin
-    goblin2 - goblin
-    goblin3 - goblin
-    skeleton - skeleton
-    zombie - zombie
+    ; goblin1 - goblin
+    ; goblin2 - goblin
+    ; goblin3 - goblin
+    ; skeleton - skeleton
+    ; zombie - zombie
     ; Abilities
     cha - ability
     con - ability
@@ -72,9 +72,9 @@
     ; set skills
     (perception perception)
     ; set weapons
-    ; (has player greataxe)
-    ; (has player javelin)
-    ; (has player crossbow_light)
+    (has player greataxe)
+    (has player javelin)
+    (has player crossbow_light)
     ; set equipment
     (thieves_tools thieves_tools)
     (has player thieves_tools)
@@ -96,23 +96,23 @@
 
     ; =======================================
     ; Monsters
-    (alive giant_rat1)
-    (alive giant_rat2)
-    (alive giant_rat3)
-    (alive giant_rat4)
-    (alive goblin2)
-    (alive goblin3)
-    (alive skeleton)
-    (alive zombie)
     (at giant_rat1 inns_cellar)
     (at giant_rat2 inns_cellar)
     (at giant_rat3 inns_cellar)
     (at giant_rat4 inns_cellar)
-    (at goblin1 storage_room)
-    (at goblin2 antechamber)
-    (at goblin3 antechamber)
-    (at zombie storage_room)
-    (at skeleton burial_chamber)
+    ; (at goblin1 storage_room)
+    ; (at goblin2 antechamber)
+    ; (at goblin3 antechamber)
+    ; (at skeleton burial_chamber)
+    ; (at zombie storage_room)
+    (alive giant_rat1)
+    (alive giant_rat2)
+    (alive giant_rat3)
+    (alive giant_rat4)
+    ; (alive goblin2)
+    ; (alive goblin3)
+    ; (alive skeleton)
+    ; (alive zombie)
 
     ; =======================================
     ; Rooms
@@ -150,23 +150,34 @@
     (locked door7)
 
     ; =======================================
+    ; Combat
+    (must_kill giant_rat1)
+    (must_kill giant_rat2)
+    (must_kill giant_rat3)
+    (must_kill giant_rat4)
+    ; (must_kill goblin2)
+    ; (must_kill goblin3)
+    ; (must_kill skeleton)
+    ; (must_kill zombie)
+
+    ; =======================================
     ; Challenges
     ; set DC for doors
-    ; (dc door3 str)
-    ; (dc door4 str)
-    ; (dc door6 str)
+    (dc door3 str)
+    (dc door4 str)
+    (dc door6 str)
     (dc door3 perception)
     (dc door4 perception)
     ; set equipment DC for doors
     (dc_equipment door6 thieves_tools)
-    ; set HP for doors
-    (hp door3)
-    (hp door4)
-    (hp door6)
-    ; set AC for doors
-    (ac door3)
-    (ac door4)
-    (ac door6)
+    ; doors not broken are considered "alive"
+    (alive door1)
+    (alive door2)
+    (alive door3)
+    (alive door4)
+    (alive door5)
+    (alive door6)
+    (alive door7)
 
 )
 
