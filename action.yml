@@ -1,0 +1,11 @@
+# action.yml
+name: 'Test in container'
+description: 'Run pytest tests in Docker container'
+inputs:
+  codecov_token:
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.codecov_token }}
