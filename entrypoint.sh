@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 python3 -m pytest --cov=dmai tests/ --cov-report=xml
-curl -s https://codecov.io/bash -t $1
+bash <(curl -s https://codecov.io/bash) -t $1
