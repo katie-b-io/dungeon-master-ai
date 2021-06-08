@@ -12,12 +12,6 @@ class FastForwardAdapter(PlannerAdapter):
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
     
-    def build_domain(self) -> None:
-        pass
-
-    def build_problem(self) -> None:
-        pass
-    
     def build_plan(self) -> None:
         pass
 

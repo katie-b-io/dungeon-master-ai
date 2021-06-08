@@ -6,20 +6,13 @@ logger = get_logger(__name__)
 
 
 class PlannerAdapter(ABC):
-    def __init__(self) -> None:
+    def __init__(self, domain: str, problem: str) -> None:
         """PlannerAdapter abstract class"""
-        pass
+        self.domain = domain
+        self.problem = problem
         
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
-    
-    @abstractmethod
-    def build_domain(self) -> None:
-        pass
-
-    @abstractmethod
-    def build_problem(self) -> None:
-        pass
     
     @abstractmethod
     def build_plan(self) -> None:

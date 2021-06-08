@@ -1,4 +1,5 @@
 import os
+import uuid
 
 
 class ConfigMeta(type):
@@ -36,6 +37,15 @@ class Config(metaclass=ConfigMeta):
         @property
         def adventure(self) -> str:
             return os.path.join(self.root, "adventures")
+        
+        @property
+        def output(self) -> str:
+            return os.path.join(self.root, "output")
+        
+        @property
+        def planning(self) -> str:
+            # TODO update to actual path
+            return os.path.join(self.root, "tests", "planning")
 
     # class variables
     directory = Directories()
@@ -44,3 +54,8 @@ class Config(metaclass=ConfigMeta):
     def set_root(cls, root: str) -> None:
         """Method to set the dmai root directory"""
         cls.directory.set_root(root)
+
+    @classmethod
+    def set_uuid(cls) -> None:
+        """Method to set the UUID"""
+        cls.uuid = str(uuid.uuid1())
