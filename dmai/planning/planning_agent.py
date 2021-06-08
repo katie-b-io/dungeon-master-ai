@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from dmai.planning.planner_adapter import PlannerAdapter
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
 
@@ -8,7 +9,7 @@ logger = get_logger(__name__)
 
 
 class PlanningAgent(ABC):
-    def __init__(self, domain: str, problem: str, planner: str) -> None:
+    def __init__(self, planner: str, domain: str, problem: str) -> None:
         """PlanningAgent abstract class"""
         self.domain = domain
         self.problem = problem
@@ -38,7 +39,11 @@ class PlanningAgent(ABC):
             planner_map = {
                 "fd": FastDownwardAdapter
             }
-            return planner_map[planner]
+            planner = planner_map[planner]
+            return planner(self.domain, self.problem)
         except (ValueError, KeyError) as e:
             msg = "Cannot create planner {p} - it does not exist!".format(p=planner)
             raise ValueError(msg)
+
+    def get_next_move(self) -> str:
+        return "PlanningAgent's next move"

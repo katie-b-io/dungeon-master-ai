@@ -6,7 +6,7 @@ logger = get_logger(__name__)
 
 class FastForwardAdapter(PlannerAdapter):
     def __init__(self) -> None:
-        """FastForwardAdapter abstract class"""
+        """FastForwardAdapter class"""
         pass
         
     def __repr__(self) -> str:

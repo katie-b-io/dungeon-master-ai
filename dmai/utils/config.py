@@ -18,6 +18,7 @@ class Config(metaclass=ConfigMeta):
         """Config static class"""
         pass
 
+    ################################################################
     class Directories(object):
         root = os.path.abspath("")
 
@@ -47,8 +48,38 @@ class Config(metaclass=ConfigMeta):
             # TODO update to actual path
             return os.path.join(self.root, "tests", "planning")
 
+    ################################################################
+    class Agents(object):
+        player = "planning"
+        monster = "planning"
+
+        @classmethod
+        def set_player(cls, agent: str) -> None:
+            cls.player = agent
+        
+        @classmethod
+        def set_monster(cls, agent: str) -> None:
+            cls.monster = agent
+
+    ################################################################
+    class Planners(object):
+        player = "fd"
+        monster = "fd"
+
+        @classmethod
+        def set_player(cls, agent: str) -> None:
+            cls.player = agent
+        
+        @classmethod
+        def set_monster(cls, agent: str) -> None:
+            cls.monster = agent
+
+
+    ################################################################
     # class variables
     directory = Directories()
+    agent = Agents()
+    planner = Planners()
 
     @classmethod
     def set_root(cls, root: str) -> None:

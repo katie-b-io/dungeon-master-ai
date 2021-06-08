@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 
 class FastDownwardAdapter(PlannerAdapter):
     def __init__(self, domain: str, problem: str) -> None:
-        """FastDownwardAdapter abstract class"""
+        """FastDownwardAdapter class"""
         PlannerAdapter.__init__(self, domain, problem)
 
     def __repr__(self) -> str:
