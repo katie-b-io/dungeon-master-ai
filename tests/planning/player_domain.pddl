@@ -2,7 +2,6 @@
 
 (define (domain dnd_player)
 
-    ;remove requirements that are not needed
     (:requirements 
         :strips
         :action-costs
@@ -10,7 +9,7 @@
         :conditional-effects
         :negative-preconditions
         :equality
-     :disjunctive-preconditions)
+        :disjunctive-preconditions)
 
     (:types 
         ; Entities exist
@@ -47,9 +46,6 @@
         ; Languages exist
         language - object
     )
-
-    ; un-comment following line if constants are needed
-    ;(:constants )
 
     (:predicates 
         ; Adventure
@@ -651,5 +647,4 @@
             (not (alive ?monster))
         )
     )
-
 )

@@ -1,5 +1,6 @@
 import os
 import uuid
+from pathlib import Path
 
 
 class ConfigMeta(type):
@@ -41,12 +42,23 @@ class Config(metaclass=ConfigMeta):
         
         @property
         def output(self) -> str:
-            return os.path.join(self.root, "output")
+            path = os.path.join(self.root, "output")
+            Path(path).mkdir(parents=True, exist_ok=True)
+            return path
         
         @property
         def planning(self) -> str:
-            # TODO update to actual path
-            return os.path.join(self.root, "tests", "planning")
+            path = os.path.join(self.output, "planning")
+            Path(path).mkdir(parents=True, exist_ok=True)
+            return path
+        
+        @property
+        def test(self) -> str:
+            return os.path.join(self.root, "tests")
+
+        @property
+        def planning_test(self) -> str:
+            return os.path.join(self.test, "planning")
 
     ################################################################
     class Agents(object):

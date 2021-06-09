@@ -2,7 +2,6 @@
 
 (define (domain dnd_monster)
 
-    ;remove requirements that are not needed
     (:requirements 
         :strips
         :action-costs
@@ -10,7 +9,7 @@
         :conditional-effects
         :negative-preconditions
         :equality
-     :disjunctive-preconditions)
+        :disjunctive-preconditions)
     
     (:types 
         ; Entities exist
@@ -329,5 +328,4 @@
             (not (alive ?target))
         )
     )
-
 )

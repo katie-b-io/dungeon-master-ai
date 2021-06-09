@@ -18,17 +18,17 @@ class TestFastDownwardAdapter(unittest.TestCase):
         try:
             Config.set_uuid()
             shutil.copy(
-                os.path.join(Config.directory.planning,
+                os.path.join(Config.directory.planning_test,
                              "{d}.pddl".format(d=self.domain)),
                 os.path.join(
                     Config.directory.planning,
-                    "{u}.{d}.pddl".format(d=self.domain, u=Config.uuid)))
+                    "{u}.{d}.domain.pddl".format(d=self.domain, u=Config.uuid)))
             shutil.copy(
-                os.path.join(Config.directory.planning,
+                os.path.join(Config.directory.planning_test,
                              "{p}.pddl".format(p=self.problem)),
                 os.path.join(
                     Config.directory.planning,
-                    "{u}.{p}.pddl".format(p=self.problem, u=Config.uuid)))
+                    "{u}.{p}.problem.pddl".format(p=self.problem, u=Config.uuid)))
             self.adapter = FastDownwardAdapter(self.domain, self.problem)
         except Exception:
             self.tearDown()
@@ -36,10 +36,10 @@ class TestFastDownwardAdapter(unittest.TestCase):
     def tearDown(self) -> None:
         os.remove(
             os.path.join(Config.directory.planning,
-                         "{u}.{d}.pddl".format(d=self.domain, u=Config.uuid)))
+                         "{u}.{d}.domain.pddl".format(d=self.domain, u=Config.uuid)))
         os.remove(
             os.path.join(Config.directory.planning,
-                         "{u}.{p}.pddl".format(p=self.problem, u=Config.uuid)))
+                         "{u}.{p}.problem.pddl".format(p=self.problem, u=Config.uuid)))
         os.remove(
             os.path.join(
                 Config.directory.planning,
