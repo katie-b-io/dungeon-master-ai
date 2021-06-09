@@ -1,5 +1,6 @@
 {
     "cleric": {
+        "id": "cleric",
         "name": "Cleric",
         "char_class": {
             "cleric": {
@@ -99,6 +100,7 @@
         }
     },
     "fighter": {
+        "id": "fighter",
         "name": "Fighter",
         "char_class": {
             "fighter": {
@@ -167,6 +169,7 @@
         }
     },
     "rogue": {
+        "id": "rogue",
         "name": "Rogue",
         "char_class": {
             "rogue": {
@@ -248,6 +251,7 @@
         }
     },
     "wizard": {
+        "id": "wizard",
         "name": "Wizard",
         "char_class": {
             "wizard": {

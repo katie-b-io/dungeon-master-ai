@@ -1,4 +1,5 @@
 from dmai.game.npcs.npc import NPC
+from dmai.agents.monster_agent import MonsterAgent
 from dmai.domain.abilities import Abilities
 from dmai.domain.alignment import Alignment
 from dmai.domain.armor import Armor
@@ -17,9 +18,10 @@ from dmai.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-class Monster(NPC):
+class Monster(NPC, MonsterAgent):
     def __init__(self, monster_data: dict, npc_data: dict = None) -> None:
         """Monster abstract class"""
+        MonsterAgent.__init__(self, problem=monster_data["id"])
         if npc_data:
             NPC.__init__(self, npc_data)
 

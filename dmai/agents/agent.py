@@ -19,4 +19,5 @@ class Agent(ABC):
         pass
 
     def get_next_move(self) -> None:
+        logger.debug("Getting next move")
         OutputBuilder.append(self.agent.get_next_move())

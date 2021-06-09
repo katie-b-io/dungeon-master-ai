@@ -1,4 +1,5 @@
 from dmai.domain.characters.character import Character
+from dmai.agents.player_agent import PlayerAgent
 from dmai.domain.skills import Skills
 from dmai.domain.abilities import Abilities
 from dmai.game.state import State
@@ -6,9 +7,10 @@ from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-class Player:
+class Player(PlayerAgent):
     def __init__(self, character: Character) -> None:
         """Main class for the player"""
+        PlayerAgent.__init__(self, problem=character.id)
         logger.info("Initialising character: {c}".format(c=str(character)))
         self.name = None
         self.character = character
