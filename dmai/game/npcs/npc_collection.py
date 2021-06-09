@@ -55,6 +55,7 @@ class NPCCollection:
                     monster.set_treasure(treasure)
                     i = 1 + sum(1 for m in monsters.values() if m.name == monster.name)
                     unique_id = "{m}_{i}".format(i=i, m=monster_id)
+                    monster.set_unique_id(unique_id)
                     monsters[unique_id] = monster
                     # update state with monster location and status
                     State.set_init_room(unique_id, room)

@@ -23,6 +23,14 @@ class Player(PlayerAgent):
     def character_class(self) -> str:
         return self.character.name
 
+    def get_all_equipment_ids(self) -> list:
+        """Method to return a list of IDs of all the player's equipment"""
+        return self.character.equipment.get_all()
+
+    def get_all_weapon_ids(self) -> list:
+        """Method to return a list of IDs of all the player's weapon"""
+        return [weapon[0] for weapon in self.character.get_all_weapons()]
+
     def has_equipment(self, equipment: str) -> tuple:
         """Method to return whether the player has specified equipment.
         Returns a tuple with the boolean and a string with a reason."""

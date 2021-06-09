@@ -2,7 +2,10 @@ from abc import ABC, abstractmethod
 import os
 
 from dmai.planning.planning_agent import PlanningAgent
+from dmai.domain.abilities import Abilities
+from dmai.domain.skills import Skills
 from dmai.utils.config import Config
+from dmai.game.state import State
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -678,77 +681,70 @@ class PlanningPlayer(PlanningAgent):
 
     def build_problem(self) -> None:
         logger.debug("Building problem")
+        print("building")
         problem_file = os.path.join(
             Config.directory.planning,
             "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem))
 
         with open(problem_file, 'w') as writer:
+            writer.write("(define (problem {p}) (:domain player)\n".format(p=self.problem))
+            writer.write("(:objects\n")
+
+            writer.write("; Player\n")
+            writer.write("player - player\n")
+
+            writer.write("; NPCs\n")
+            for npc in State.get_dm().npcs.get_all_npcs():
+                writer.write("{n} - npc\n".format(n=npc.id))
+            writer.write("neutral - neutral\n")
+            writer.write("positive - positive\n")
+            writer.write("negative - negative\n")
+            
+            writer.write("; Rooms\n")
+            for room in State.get_dm().adventure.get_all_rooms():
+                writer.write("{r} - room\n".format(r=room.id))
+
+            writer.write("; Doors\n")
+            i = 1
+            for room in State.get_dm().adventure.get_all_rooms():
+                writer.write("door{i} - door\n".format(i=i))
+                i += 1
+
+            writer.write("; Monsters\n")
+            for monster in State.get_dm().npcs.get_all_monsters():
+                writer.write("{u} - {m}\n".format(u=monster.unique_id, m=monster.id))
+
+            writer.write("; Abilities\n")
+            for ability in Abilities.get_all_abilities():
+                writer.write("{a} - ability\n".format(a=ability[0]))
+            
+            writer.write("; Skills\n")
+            for skill in Skills.get_all_skills():
+                writer.write("{s} - skill\n".format(s=skill[0]))
+
+            writer.write("; Equipment\n")
+            for equipment in State.get_player().get_all_equipment_ids():
+                writer.write("{e} - equipment\n".format(e=equipment))
+            
+            writer.write("; Weapons\n")
+            for weapon in State.get_player().get_all_weapon_ids():
+                writer.write("{w} - equipment\n".format(w=weapon))
+            
+            writer.write(")\n")
+            writer.write("(:init\n")
+            writer.write("; =======================================\n")
+            writer.write("; Adventure\n")
+            if State.questing:
+                writer.write("(quest)\n")
+
+            writer.write("; =======================================\n")
+            writer.write("; Player\n")
+            writer.write("(at player {r})\n".format(r=State.get_current_room().id))
+            if State.is_alive():
+                writer.write("(alive player)\n")
+            
             writer.write("""
-(define (problem {p}) (:domain player)
-
-    (:objects 
-        ; Player
-        player - player
-        ; NPCs
-        corvus - npc
-        anvil - npc
-        neutral - neutral
-        positive - positive
-        negative - negative
-        ; Rooms
-        stout_meal_inn - room
-        inns_cellar - room
-        storage_room - room
-        burial_chamber - room
-        western_corridor - room
-        antechamber - room
-        southern_corridor - room
-        baradins_crypt - room
-        ; Doors
-        door1 - door
-        door2 - door
-        door3 - door
-        door4 - door
-        door5 - door
-        door6 - door
-        door7 - door
-        ; Monsters
-        cat - cat
-        giant_rat1 - giant_rat
-        giant_rat2 - giant_rat
-        giant_rat3 - giant_rat
-        giant_rat4 - giant_rat
-        ; goblin1 - goblin
-        ; goblin2 - goblin
-        ; goblin3 - goblin
-        ; skeleton - skeleton
-        ; zombie - zombie
-        ; Abilities
-        cha - ability
-        con - ability
-        dex - ability
-        int - ability
-        str - ability
-        wis - ability
-        ; Skills
-        perception - skill
-        ; Equipment
-        thieves_tools - equipment
-        ; Weapons
-        greataxe - weapon
-        javelin - weapon
-        crossbow_light - weapon
-    )
-
-    (:init
-        ; =======================================
-        ; Adventure
-        ; (quest)
-
-        ; =======================================
-        ; Player
-        (alive player)
-        (at player stout_meal_inn)
+        
         ; set abilities
         (charisma cha)
         (constitution con)
@@ -871,4 +867,4 @@ class PlanningPlayer(PlanningAgent):
         (at player southern_corridor)
     ))
 )
-""".format(p=self.problem))
+""")

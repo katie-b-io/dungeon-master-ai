@@ -47,6 +47,7 @@ class Monster(NPC, MonsterAgent):
 
         # Initialise additional variables
         self.treasure = None
+        self.unique_id = None
         
         self.trigger_map = {
             "attack_of_opportunity": {
@@ -61,7 +62,11 @@ class Monster(NPC, MonsterAgent):
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""
         self.treasure = treasure
-
+    
+    def set_unique_id(self, unique_id: str) -> None:
+        """Method to set unique id."""
+        self.unique_id = unique_id
+    
     def attack_of_opportunity(self) -> None:
         """Method to perform an attack of opportunity"""
         logger.debug("Triggering attack of opportunity in monster: {m}".format(m=self.id))

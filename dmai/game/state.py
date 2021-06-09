@@ -39,6 +39,7 @@ class State(metaclass=StateMeta):
     started = False
     paused = False
     talking = False
+    questing = False
     in_combat = False
     torch_lit = False
     stationary = False
@@ -89,6 +90,10 @@ class State(metaclass=StateMeta):
         cls.paused = False
 
     @classmethod
+    def received_quest(cls) -> None:
+        cls.questing = True
+
+    @classmethod
     def talk(cls) -> None:
         cls.talking = True
 
@@ -103,7 +108,12 @@ class State(metaclass=StateMeta):
         init_room = cls.dm.adventure.get_init_room()
         cls.dm.register_trigger(cls.dm.adventure.get_room(init_room))
         cls.current_room["player"] = init_room
-        
+    
+    @classmethod
+    def get_dm(cls) -> None:
+        """Method to return dm"""
+        return cls.dm
+
     @classmethod
     def set_player(cls, player) -> None:
         cls.player = player
@@ -116,13 +126,15 @@ class State(metaclass=StateMeta):
         """Method to return player"""
         return cls.player
     
+    ############################################################
+    # METHODS RELATING TO STATUS
     @classmethod
     def set_init_status(cls, entity: str, status: str) -> str:
         """Method to set the initial status for specified entity."""
         cls.current_status[entity] = Status(status)
 
     @classmethod
-    def get_current_hp(cls, entity: str = "player") -> None:
+    def get_current_hp(cls, entity: str = "player") -> int:
         """Method to get the current hp for specified entity."""
         try:
             return cls.current_hp[entity]
@@ -131,7 +143,7 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
         
     @classmethod
-    def get_current_status(cls, entity: str = "player") -> None:
+    def get_current_status(cls, entity: str = "player") -> str:
         """Method to get the current status for specified entity."""
         try:
             return cls.current_status[entity]
@@ -139,6 +151,27 @@ class State(metaclass=StateMeta):
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
     
+    @classmethod
+    def is_alive(cls, entity: str = "player") -> bool:
+        """Method to determine whether the specified entity is alive"""
+        return cls.get_current_status(entity) == Status.ALIVE
+    
+    ############################################################
+    # METHODS RELATING TO ACTIONS
+    @classmethod
+    def light_torch(cls) -> None:
+        """Method to light a torch"""
+        cls.torch_lit = True
+        OutputBuilder.append(NLG.light_torch())
+    
+    @classmethod
+    def extinguish_torch(cls) -> None:
+        """Method to extinguish a torch"""
+        cls.torch_lit = False
+        OutputBuilder.append(NLG.extinguish_torch())
+    
+    ############################################################
+    # METHODS RELATING TO INTENTS
     @classmethod
     def clear_intent(cls,) -> None:
         """Method to clear the current intent"""
@@ -151,18 +184,6 @@ class State(metaclass=StateMeta):
             "intent": intent,
             "params": params
         }
-    
-    @classmethod
-    def light_torch(cls) -> None:
-        """Method to light a torch"""
-        cls.torch_lit = True
-        OutputBuilder.append(NLG.light_torch())
-    
-    @classmethod
-    def extinguish_torch(cls) -> None:
-        """Method to extinguish a torch"""
-        cls.torch_lit = False
-        OutputBuilder.append(NLG.extinguish_torch())
 
     ############################################################
     # METHODS RELATING TO STATE MAINTENANCE

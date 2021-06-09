@@ -63,7 +63,9 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
     def get_monster_npc(cls, npc_data: dict) -> NPC:
         """Return an instance of a monster of specified NPC."""
         try:
-            return cls._monster_factory(npc_data = npc_data)
+            monster = cls._monster_factory(npc_data = npc_data)
+            monster.id = npc_data["id"]
+            return monster
         except ValueError as e:
             logger.error(e)
     

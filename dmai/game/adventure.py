@@ -62,3 +62,7 @@ class Adventure:
             msg = "Room not recognised: {e}".format(e=e)
             raise UnrecognisedRoomError(msg)
     
+    def get_all_rooms(self) -> list:
+        """Method to return all room objects in a list.
+        Returns a list of rooms"""
+        return list(self.rooms.values())

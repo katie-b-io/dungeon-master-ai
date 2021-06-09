@@ -43,13 +43,15 @@ class Config(metaclass=ConfigMeta):
         @property
         def output(self) -> str:
             path = os.path.join(self.root, "output")
-            Path(path).mkdir(parents=True, exist_ok=True)
+            if not os.path.exists(path):
+                Path(path).mkdir(parents=True, exist_ok=True)
             return path
         
         @property
         def planning(self) -> str:
             path = os.path.join(self.output, "planning")
-            Path(path).mkdir(parents=True, exist_ok=True)
+            if not os.path.exists(path):
+                Path(path).mkdir(parents=True, exist_ok=True)
             return path
         
         @property
