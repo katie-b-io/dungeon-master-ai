@@ -70,7 +70,11 @@ class DM:
         # execute any triggers
         if succeed:
             self.execute_triggers()
-        
+
+        # prepare next AI moves
+        State.get_player().prepare_next_move()
+        # TODO monster next moves
+
         # last thing to do: maintain state
         State.maintenance()
         
@@ -108,7 +112,7 @@ class DM:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the OutputBuilder.
         """
-        State.get_player().get_next_move()
+        State.get_player().print_next_move()
 
     def _get_destination(self, nlu_entities: dict) -> str:
         """Extract a destination from NLU entities dictionary.

@@ -120,3 +120,14 @@ class NPCCollection:
                         return monster_id
                 except UnrecognisedEntityError as e:
                     logger.error(e)
+
+    def get_all_npcs(self) -> list:
+        """Method to return all NPC objects in a list.
+        Returns a list of NPCs"""
+        return list(self.npcs.values())
+    
+    def get_all_monsters(self) -> list:
+        """Method to return all monster objects in a list.
+        Returns a list of monsters"""
+        return list(self.monsters.values())
+    
