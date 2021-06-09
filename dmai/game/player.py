@@ -1,4 +1,5 @@
 from dmai.domain.characters.character import Character
+from dmai.agents.player_agent import PlayerAgent
 from dmai.domain.skills import Skills
 from dmai.domain.abilities import Abilities
 from dmai.game.state import State
@@ -6,9 +7,10 @@ from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-class Player:
+class Player(PlayerAgent):
     def __init__(self, character: Character) -> None:
         """Main class for the player"""
+        PlayerAgent.__init__(self, problem=character.id)
         logger.info("Initialising character: {c}".format(c=str(character)))
         self.name = None
         self.character = character
@@ -20,6 +22,14 @@ class Player:
     @property
     def character_class(self) -> str:
         return self.character.name
+
+    def get_all_equipment_ids(self) -> list:
+        """Method to return a list of IDs of all the player's equipment"""
+        return self.character.equipment.get_all()
+
+    def get_all_weapon_ids(self) -> list:
+        """Method to return a list of IDs of all the player's weapon"""
+        return [weapon[0] for weapon in self.character.get_all_weapons()]
 
     def has_equipment(self, equipment: str) -> tuple:
         """Method to return whether the player has specified equipment.

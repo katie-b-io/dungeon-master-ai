@@ -18,5 +18,11 @@ class Agent(ABC):
     def get_agent(self, **kwargs):
         pass
 
-    def get_next_move(self) -> None:
+    def prepare_next_move(self) -> None:
+        logger.debug("Preparing next move")
+        self.agent.prepare_next_move()
+
+    def print_next_move(self) -> None:
+        """Method to print the next move"""
+        logger.debug("Getting next move")
         OutputBuilder.append(self.agent.get_next_move())

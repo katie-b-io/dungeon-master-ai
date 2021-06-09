@@ -55,6 +55,7 @@ class NPCCollection:
                     monster.set_treasure(treasure)
                     i = 1 + sum(1 for m in monsters.values() if m.name == monster.name)
                     unique_id = "{m}_{i}".format(i=i, m=monster_id)
+                    monster.set_unique_id(unique_id)
                     monsters[unique_id] = monster
                     # update state with monster location and status
                     State.set_init_room(unique_id, room)
@@ -120,3 +121,14 @@ class NPCCollection:
                         return monster_id
                 except UnrecognisedEntityError as e:
                     logger.error(e)
+
+    def get_all_npcs(self) -> list:
+        """Method to return all NPC objects in a list.
+        Returns a list of NPCs"""
+        return list(self.npcs.values())
+    
+    def get_all_monsters(self) -> list:
+        """Method to return all monster objects in a list.
+        Returns a list of monsters"""
+        return list(self.monsters.values())
+    

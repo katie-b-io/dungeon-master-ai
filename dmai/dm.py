@@ -32,6 +32,7 @@ class DM:
 
         # Initialise the player intent map
         self.player_intent_map = {
+            "hint": self.hint,
             "move": self.move,
             "attack": self.attack,
             "use": self.use,
@@ -69,7 +70,11 @@ class DM:
         # execute any triggers
         if succeed:
             self.execute_triggers()
-        
+
+        # prepare next AI moves
+        State.get_player().prepare_next_move()
+        # TODO monster next moves
+
         # last thing to do: maintain state
         State.maintenance()
         
@@ -102,6 +107,12 @@ class DM:
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
+    
+    def hint(self) -> None:
+        """Use the player AI to get the next possible move.
+        Appends the hint to output with the OutputBuilder.
+        """
+        State.get_player().print_next_move()
 
     def _get_destination(self, nlu_entities: dict) -> str:
         """Extract a destination from NLU entities dictionary.

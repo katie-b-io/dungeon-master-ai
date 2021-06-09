@@ -1,4 +1,5 @@
 from dmai.game.npcs.npc import NPC
+from dmai.agents.monster_agent import MonsterAgent
 from dmai.domain.abilities import Abilities
 from dmai.domain.alignment import Alignment
 from dmai.domain.armor import Armor
@@ -17,9 +18,10 @@ from dmai.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-class Monster(NPC):
+class Monster(NPC, MonsterAgent):
     def __init__(self, monster_data: dict, npc_data: dict = None) -> None:
         """Monster abstract class"""
+        MonsterAgent.__init__(self, problem=monster_data["id"])
         if npc_data:
             NPC.__init__(self, npc_data)
 
@@ -45,6 +47,7 @@ class Monster(NPC):
 
         # Initialise additional variables
         self.treasure = None
+        self.unique_id = None
         
         self.trigger_map = {
             "attack_of_opportunity": {
@@ -59,7 +62,11 @@ class Monster(NPC):
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""
         self.treasure = treasure
-
+    
+    def set_unique_id(self, unique_id: str) -> None:
+        """Method to set unique id."""
+        self.unique_id = unique_id
+    
     def attack_of_opportunity(self) -> None:
         """Method to perform an attack of opportunity"""
         logger.debug("Triggering attack of opportunity in monster: {m}".format(m=self.id))

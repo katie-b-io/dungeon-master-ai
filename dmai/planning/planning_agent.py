@@ -45,5 +45,13 @@ class PlanningAgent(ABC):
             msg = "Cannot create planner {p} - it does not exist!".format(p=planner)
             raise ValueError(msg)
 
+    def prepare_next_move(self) -> None:
+        """Method to prepare the next move.
+        Planning agents build a plan"""
+        self.build_domain()
+        self.build_problem()
+        self.planner.build_plan()
+
     def get_next_move(self) -> str:
-        return "PlanningAgent's next move"
+        plan = self.planner.parse_plan()
+        return plan[0]

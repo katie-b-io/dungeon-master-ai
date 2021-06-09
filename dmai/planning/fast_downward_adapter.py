@@ -1,4 +1,4 @@
-import subprocess
+from subprocess import run, PIPE
 import os
 
 from dmai.planning.planner_adapter import PlannerAdapter
@@ -19,27 +19,38 @@ class FastDownwardAdapter(PlannerAdapter):
     def build_plan(self) -> bool:
         """Build a plan using FastDownward.
         Returns boolean indicating successful execution"""
+        logger.debug("Building plan with FastDownward")
         domain_file = os.path.join(
-            Config.directory.planning, "{u}.{d}.pddl".format(u=Config.uuid,
-                                                             d=self.domain))
+            Config.directory.planning,
+            "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.domain))
         problem_file = os.path.join(
-            Config.directory.planning, "{u}.{p}.pddl".format(u=Config.uuid,
-                                                             p=self.problem))
+            Config.directory.planning,
+            "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem))
         plan_file = os.path.join(
             Config.directory.planning,
             "{u}.{d}-{p}.plan".format(u=Config.uuid,
                                       d=self.domain,
                                       p=self.problem))
-        p = subprocess.run([
-            'fast-downward.py',
-            '--plan-file',
-            plan_file,
-            domain_file,
-            problem_file,
-            '--search',
-            'astar(add())'
-        ])
+        p = run([
+            'fast-downward.py', '--plan-file', plan_file, domain_file,
+            problem_file, '--search', 'astar(add())'
+        ],
+                      stdout=PIPE,
+                      stderr=PIPE,
+                      universal_newlines=True)
+        logger.debug(p.stdout)
+        logger.debug(p.stderr)
+        
         return p.returncode == 0
 
-    def parse_plan(self) -> None:
-        pass
+    def parse_plan(self) -> list:
+        """Reads the plan file and returns a list"""
+        plan_file = os.path.join(
+            Config.directory.planning,
+            "{u}.{d}-{p}.plan".format(u=Config.uuid,
+                                      d=self.domain,
+                                      p=self.problem))
+        with open(plan_file, 'r') as reader:
+            plan = reader.readlines()
+
+        return plan

@@ -10,6 +10,7 @@
     },
     "npcs": {
         "corvus": {
+            "id": "corvus",
             "long_name": "Corvus Stouthammer",
             "short_name": "Corvus",
             "race": [
@@ -20,6 +21,7 @@
             "attack_ends_game": true
         },
         "anvil": {
+            "id": "anvil",
             "long_name": "Anvil-Jumper",
             "short_name": "Anvil-Jumper",
             "monster": "cat",
