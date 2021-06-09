@@ -32,6 +32,7 @@ class DM:
 
         # Initialise the player intent map
         self.player_intent_map = {
+            "hint": self.hint,
             "move": self.move,
             "attack": self.attack,
             "use": self.use,
@@ -102,6 +103,12 @@ class DM:
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
+    
+    def hint(self) -> None:
+        """Use the player AI to get the next possible move.
+        Appends the hint to output with the OutputBuilder.
+        """
+        State.get_player().get_next_move()
 
     def _get_destination(self, nlu_entities: dict) -> str:
         """Extract a destination from NLU entities dictionary.
