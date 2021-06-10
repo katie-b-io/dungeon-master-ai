@@ -57,8 +57,8 @@ class TestMonster(unittest.TestCase):
         self.cat = self.monsters.get_monster("cat")
 
     def test_monster_malformed(self) -> None:
-        bad_monster1 = {"name": "Cat", "type": "beast", "abilitie": {}}
-        bad_monster2 = {"name": "Cat", "type": "beast"}
+        bad_monster1 = {"id": "cat", "name": "Cat", "type": "beast", "abilitie": {}}
+        bad_monster2 = {"id": "cat", "name": "Cat", "type": "beast"}
         with self.assertRaises(AttributeError):
             Monster(bad_monster1)
         with self.assertRaises(AttributeError):

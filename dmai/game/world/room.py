@@ -1,3 +1,5 @@
+from dmai.game.world.puzzles.puzzle_collection import PuzzleCollection
+from dmai.game.world.puzzles.puzzle_collection import PuzzleCollection
 from dmai.utils.output_builder import OutputBuilder
 from dmai.nlg.nlg import NLG
 from dmai.game.state import State
@@ -12,6 +14,9 @@ class Room:
         try:
             for key in room_data:
                 self.__setattr__(key, room_data[key])
+
+            # replace the attributes values with objects where appropriate
+            self.puzzles = PuzzleCollection(self.puzzles)
             
         except AttributeError as e:
             logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
@@ -61,3 +66,6 @@ class Room:
                 if text_type in self.text:
                     self.text[text_type]["trigger"]()
                     
+    def get_connected_rooms(self) -> list:
+        """Method to return the connected rooms"""
+        return list(self.connections.keys())

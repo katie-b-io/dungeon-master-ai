@@ -17,7 +17,7 @@
         player npc monster - entity
         ; Roleplaying exists
         attitude - object
-        neutral positive negative - attitude
+        indifferent friendly hostile - attitude
         ; Monsters exist
         cat giant_rat goblin skeleton zombie - monster
         ; Monster variants exist
@@ -46,7 +46,7 @@
         ; Languages exist
         language - object
     )
-
+    
     (:predicates 
         ; Adventure
         (quest) ; player has received quest
@@ -543,14 +543,14 @@
 
     ; Player receives quest from NPC that can give quests
     (:action receive_quest
-        :parameters (?player - player ?npc - npc ?positive - positive ?location - room)
+        :parameters (?player - player ?npc - npc ?friendly - friendly ?location - room)
         :precondition (and
             (alive ?player)
             (alive ?npc)
             (at ?player ?location)
             (at ?npc ?location)
             (gives_quest ?npc)
-            (attitude_towards_player ?npc ?positive)
+            (attitude_towards_player ?npc ?friendly)
         )
         :effect (and
             (quest)

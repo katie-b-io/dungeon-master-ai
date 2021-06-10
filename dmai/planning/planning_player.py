@@ -46,7 +46,7 @@ class PlanningPlayer(PlanningAgent):
         player npc monster - entity
         ; Roleplaying exists
         attitude - object
-        neutral positive negative - attitude
+        indifferent friendly hostile - attitude
         ; Monsters exist
         cat giant_rat goblin skeleton zombie - monster
         ; Monster variants exist
@@ -81,6 +81,7 @@ class PlanningPlayer(PlanningAgent):
         (quest) ; player has received quest
         (dwarven_thrower) ; player has found dwarven thrower treasure
         (gives_quest ?npc - npc) ; NPC can give quest
+        (silver_key) ; player has the silver key
         ; Rolls
         (advantage ?object - object)
         (disadvantage ?object - object)
@@ -143,8 +144,20 @@ class PlanningPlayer(PlanningAgent):
         (equipment_check_success ?player - player ?equipment - equipment)
         ; Player makes a successful attack roll against target
         (attack_roll_success ?player - player ?target - object)
-        ; Tools
+        ; Equipment
+        (arrows ?equipment - equipment)
+        (backpack ?equipment - equipment)
+        (bedroll ?equipment - equipment)
+        (bolts ?equipment - equipment)
+        (mess_kit ?equipment - equipment)
+        (quiver ?equipment - equipment)
+        (rations ?equipment - equipment)
+        (rope_hempen ?equipment - equipment)
+        (set_of_common_clothes ?equipment - equipment)
         (thieves_tools ?equipment - equipment)
+        (tinder_box ?equipment - equipment)
+        (torch ?equipment - equipment)
+        (waterskin ?equipment - equipment)
         ; Action is performed
         (action)
         ; NPC attitudes
@@ -572,14 +585,14 @@ class PlanningPlayer(PlanningAgent):
 
     ; Player receives quest from NPC that can give quests
     (:action receive_quest
-        :parameters (?player - player ?npc - npc ?positive - positive ?location - room)
+        :parameters (?player - player ?npc - npc ?friendly - friendly ?location - room)
         :precondition (and
             (alive ?player)
             (alive ?npc)
             (at ?player ?location)
             (at ?npc ?location)
             (gives_quest ?npc)
-            (attitude_towards_player ?npc ?positive)
+            (attitude_towards_player ?npc ?friendly)
         )
         :effect (and
             (quest)
@@ -681,190 +694,166 @@ class PlanningPlayer(PlanningAgent):
 
     def build_problem(self) -> None:
         logger.debug("Building problem")
-        print("building")
         problem_file = os.path.join(
             Config.directory.planning,
             "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem))
 
         with open(problem_file, 'w') as writer:
-            writer.write("(define (problem {p}) (:domain player)\n".format(p=self.problem))
-            writer.write("(:objects\n")
+            ################################################
+            # Construct the problem file header
+            writer.write(self._construct_problem_header(
+                self.problem, "player"))
 
-            writer.write("; Player\n")
-            writer.write("player - player\n")
+            ################################################
+            # Construct the problem file objects
+            objects = []
 
-            writer.write("; NPCs\n")
+            # Player
+            objects.append(("player", "player"))
+
+            # NPCs
             for npc in State.get_dm().npcs.get_all_npcs():
-                writer.write("{n} - npc\n".format(n=npc.id))
-            writer.write("neutral - neutral\n")
-            writer.write("positive - positive\n")
-            writer.write("negative - negative\n")
-            
-            writer.write("; Rooms\n")
-            for room in State.get_dm().adventure.get_all_rooms():
-                writer.write("{r} - room\n".format(r=room.id))
+                objects.append((npc.id, "npc"))
+            objects.append(("indifferent", "indifferent"))
+            objects.append(("friendly", "friendly"))
+            objects.append(("hostile", "hostile"))
 
-            writer.write("; Doors\n")
-            i = 1
+            # Rooms
             for room in State.get_dm().adventure.get_all_rooms():
-                writer.write("door{i} - door\n".format(i=i))
-                i += 1
+                objects.append((room.id, "room"))
 
-            writer.write("; Monsters\n")
+            # Doors
+            doors = []
+            for room in State.get_dm().adventure.get_all_rooms():
+                for connection in room.get_connected_rooms():
+                    door = "{r}---{c}".format(r=room.id, c=connection)
+                    reverse_door = "{c}---{r}".format(r=room.id, c=connection)
+                    if not reverse_door in doors:
+                        doors.append(door)
+            for door in doors:
+                objects.append((door, "door"))
+
+            # Monsters
             for monster in State.get_dm().npcs.get_all_monsters():
-                writer.write("{u} - {m}\n".format(u=monster.unique_id, m=monster.id))
+                objects.append((monster.unique_id, monster.id))
 
-            writer.write("; Abilities\n")
+            # Abilities
             for ability in Abilities.get_all_abilities():
-                writer.write("{a} - ability\n".format(a=ability[0]))
-            
-            writer.write("; Skills\n")
+                objects.append((ability[0], "ability"))
+
+            # Skills
             for skill in Skills.get_all_skills():
-                writer.write("{s} - skill\n".format(s=skill[0]))
+                objects.append((skill[0], "skill"))
 
-            writer.write("; Equipment\n")
-            for equipment in State.get_player().get_all_equipment_ids():
-                writer.write("{e} - equipment\n".format(e=equipment))
-            
-            writer.write("; Weapons\n")
+            # Weapons
             for weapon in State.get_player().get_all_weapon_ids():
-                writer.write("{w} - equipment\n".format(w=weapon))
-            
-            writer.write(")\n")
-            writer.write("(:init\n")
-            writer.write("; =======================================\n")
-            writer.write("; Adventure\n")
+                objects.append((weapon, "weapon"))
+
+            # Equipment
+            for equipment in State.get_player().get_all_equipment_ids():
+                objects.append((equipment, "equipment"))
+
+            # Construct the string
+            writer.write(self._construct_objects(objects))
+
+            ################################################
+            # Construct the problem file init
+            init = []
+
+            # Adventure
             if State.questing:
-                writer.write("(quest)\n")
+                init.append(("quest"))
 
-            writer.write("; =======================================\n")
-            writer.write("; Player\n")
-            writer.write("(at player {r})\n".format(r=State.get_current_room().id))
+            # Player
+            init.append(("at", "player", State.get_current_room().id))
             if State.is_alive():
-                writer.write("(alive player)\n")
+                init.append(("alive", "player"))
+            for ability in Abilities.get_all_abilities():
+                init.append((ability[1].lower(), ability[0]))
+            for skill in Skills.get_all_skills():
+                init.append((skill[0], skill[0]))
+            for weapon in State.get_player().get_all_weapon_ids():
+                init.append(("has", "player", weapon))
+            for equipment in State.get_player().get_all_equipment_ids():
+                init.append((equipment, equipment))
+                init.append(("has", "player", equipment))
+
+            # NPCs
+            for npc in State.get_dm().npcs.get_all_npcs():
+                init.append(("at", npc.id, State.get_current_room(npc.id).id))
+                if State.is_alive(npc.id):
+                    init.append(("alive", npc.id))
+                if npc.gives_quest:
+                    init.append(("gives_quest", npc.id))
+            init.append(("improve_attitude", "indifferent", "friendly"))
+            init.append(("improve_attitude", "hostile", "indifferent"))
+            init.append(("degrade_attitude", "friendly", "indifferent"))
+            init.append(("degrade_attitude", "indifferent", "hostile"))
+            for npc in State.get_dm().npcs.get_all_npcs():
+                init.append(("attitude_towards_player", npc.id, npc.attitude))
+
+            # Monsters
+            for monster in State.get_dm().npcs.get_all_monsters():
+                init.append(("at", monster.unique_id,
+                             State.get_current_room(monster.unique_id).id))
+            for monster in State.get_dm().npcs.get_all_monsters():
+                if State.is_alive(monster.unique_id):
+                    init.append(("alive", monster.unique_id))
+
+            # Combat
+            for npc in State.get_dm().npcs.get_all_npcs():
+                if npc.must_kill:
+                    init.append(("must_kill", npc.id))
+            for monster in State.get_dm().npcs.get_all_monsters():
+                if monster.must_kill:
+                    init.append(("must_kill", monster.unique_id))
+
+            # Rooms
+            for door in doors:
+                room1 = door.split("---")[0]
+                room2 = door.split("---")[1]
+                init.append(("connected", door, room1, room2))
+                init.append(("connected", door, room2, room1))
+                init.append(("at", door, room1))
+                init.append(("at", door, room2))
+                if not State.travel_allowed(room1, room2):
+                    init.append(("locked", door))
+                # TODO account for broken doors
             
-            writer.write("""
-        
-        ; set abilities
-        (charisma cha)
-        (constitution con)
-        (dexterity dex)
-        (intelligence int)
-        (strength str)
-        (wisdom wis)
-        ; set skills
-        (perception perception)
-        ; set weapons
-        (has player greataxe)
-        (has player javelin)
-        (has player crossbow_light)
-        ; set equipment
-        (thieves_tools thieves_tools)
-        (has player thieves_tools)
+            # Puzzles
+            for room in State.get_dm().adventure.get_all_rooms():
+                for puzzle in room.puzzles.get_all_puzzles():
+                    # TODO add other puzzle types
+                    if puzzle.type == "door":
+                        for ability in Abilities.get_all_abilities():
+                            if puzzle.check_solution_ability(ability[0]):
+                                init.append(("dc", puzzle.id, ability[0]))
+                        for skill in Skills.get_all_skills():
+                            if puzzle.check_solution_skill(skill[0]):
+                                init.append(("dc", puzzle.id, skill[0]))
+                        for equipment in State.get_player().get_all_equipment_ids():
+                            if puzzle.check_solution_equipment(equipment):
+                                init.append(("dc_equipment", puzzle.id, equipment))
+                        # TODO add item solutions
+                        # TODO add other solutions
 
-        ; =======================================
-        ; NPCs
-        (alive corvus)
-        (alive anvil)
-        (at corvus stout_meal_inn)
-        (at anvil inns_cellar)
-        (gives_quest corvus)
-        ; set attitudes
-        (attitude_towards_player corvus negative)
-        (attitude_towards_player anvil neutral)
-        (improve_attitude neutral positive)
-        (improve_attitude negative neutral)
-        (degrade_attitude positive neutral)
-        (degrade_attitude neutral negative)
+            # TODO generate these on the fly
+            init.append(("alive", "stout_meal_inn---inns_cellar"))
+            init.append(("alive", "inns_cellar---storage_room"))
+            init.append(("alive", "storage_room---burial_chamber"))
+            init.append(("alive", "storage_room---western_corridor"))
+            init.append(("alive", "western_corridor---antechamber"))
+            init.append(("alive", "antechamber---southern_corridor"))
+            init.append(("alive", "southern_corridor---baradins_crypt"))
 
-        ; =======================================
-        ; Monsters
-        (at giant_rat1 inns_cellar)
-        (at giant_rat2 inns_cellar)
-        (at giant_rat3 inns_cellar)
-        (at giant_rat4 inns_cellar)
-        ; (at goblin1 storage_room)
-        ; (at goblin2 antechamber)
-        ; (at goblin3 antechamber)
-        ; (at skeleton burial_chamber)
-        ; (at zombie storage_room)
-        (alive giant_rat1)
-        (alive giant_rat2)
-        (alive giant_rat3)
-        (alive giant_rat4)
-        ; (alive goblin2)
-        ; (alive goblin3)
-        ; (alive skeleton)
-        ; (alive zombie)
+            # Construct the string
+            writer.write(self._construct_init(init))
+            
+            ################################################
+            # Construct the problem file goal
+            goal = []
 
-        ; =======================================
-        ; Rooms
-        (connected door1 stout_meal_inn inns_cellar)
-        (connected door1 inns_cellar stout_meal_inn)
-        (connected door2 inns_cellar storage_room)
-        (connected door2 storage_room stout_meal_inn)
-        (connected door3 storage_room burial_chamber)
-        (connected door3 burial_chamber storage_room)
-        (connected door4 storage_room western_corridor)
-        (connected door4 western_corridor storage_room)
-        (connected door5 western_corridor antechamber)
-        (connected door5 antechamber western_corridor)
-        (connected door6 antechamber southern_corridor)
-        (connected door6 southern_corridor antechamber)
-        (connected door7 southern_corridor baradins_crypt)
-        (connected door7 baradins_crypt southern_corridor)
-        (at door1 stout_meal_inn)
-        (at door1 inns_cellar)
-        (at door2 inns_cellar)
-        (at door2 storage_room)
-        (at door3 storage_room)
-        (at door3 burial_chamber)
-        (at door4 storage_room)
-        (at door4 western_corridor)
-        (at door5 western_corridor)
-        (at door5 antechamber)
-        (at door6 antechamber)
-        (at door6 southern_corridor)
-        (at door7 southern_corridor)
-        (at door7 baradins_crypt)
-        (locked door3)
-        (locked door4)
-        (locked door6)
-        (locked door7)
-
-        ; =======================================
-        ; Combat
-        (must_kill giant_rat1)
-        (must_kill giant_rat2)
-        (must_kill giant_rat3)
-        (must_kill giant_rat4)
-        ; (must_kill goblin2)
-        ; (must_kill goblin3)
-        ; (must_kill skeleton)
-        ; (must_kill zombie)
-
-        ; =======================================
-        ; Challenges
-        ; set DC for doors
-        (dc door3 str)
-        (dc door4 str)
-        (dc door6 str)
-        (dc door3 perception)
-        (dc door4 perception)
-        ; set equipment DC for doors
-        (dc_equipment door6 thieves_tools)
-        ; doors not broken are considered "alive"
-        (alive door1)
-        (alive door2)
-        (alive door3)
-        (alive door4)
-        (alive door5)
-        (alive door6)
-        (alive door7)
-    )
-
-    (:goal (and
-        (at player southern_corridor)
-    ))
-)
-""")
+            # TODO generate this on the fly
+            goal.append(("at", "player", "southern_corridor"))
+            writer.write(self._construct_goal(goal))
+            writer.write(self._construct_problem_footer())

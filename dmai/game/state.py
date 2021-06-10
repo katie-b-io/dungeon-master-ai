@@ -311,7 +311,7 @@ class State(metaclass=StateMeta):
             current = cls.dm.adventure.rooms[current_id]
             if destination_id not in current.connections:
                 return False
-            return current.connections[destination_id]
+            return not current.connections[destination_id]["locked"]
         except KeyError as e:
             msg = "Room not recognised: {e}".format(e=e)
             raise UnrecognisedRoomError(msg)
@@ -327,8 +327,8 @@ class State(metaclass=StateMeta):
         if msg:
             raise UnrecognisedRoomError(msg)
         
-        cls.dm.adventure.rooms[room_id1].connections[room_id2] = False
-        cls.dm.adventure.rooms[room_id2].connections[room_id1] = False
+        cls.dm.adventure.rooms[room_id1].connections[room_id2]["locked"] = True
+        cls.dm.adventure.rooms[room_id2].connections[room_id1]["locked"] = True
 
     @classmethod
     def unlock(cls, room_id1: str, room_id2: str) -> None:
@@ -341,5 +341,5 @@ class State(metaclass=StateMeta):
         if msg:
             raise UnrecognisedRoomError(msg)
         
-        cls.dm.adventure.rooms[room_id1].connections[room_id2] = True
-        cls.dm.adventure.rooms[room_id2].connections[room_id1] = True
+        cls.dm.adventure.rooms[room_id1].connections[room_id2]["locked"] = False
+        cls.dm.adventure.rooms[room_id2].connections[room_id1]["locked"] = False

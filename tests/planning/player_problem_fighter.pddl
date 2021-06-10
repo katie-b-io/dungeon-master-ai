@@ -6,9 +6,9 @@
         ; NPCs
         corvus - npc
         anvil - npc
-        neutral - neutral
-        positive - positive
-        negative - negative
+        indifferent - indifferent
+        friendly - friendly
+        hostile - hostile
         ; Rooms
         stout_meal_inn - room
         inns_cellar - room
@@ -88,12 +88,12 @@
         (at anvil inns_cellar)
         (gives_quest corvus)
         ; set attitudes
-        (attitude_towards_player corvus negative)
-        (attitude_towards_player anvil neutral)
-        (improve_attitude neutral positive)
-        (improve_attitude negative neutral)
-        (degrade_attitude positive neutral)
-        (degrade_attitude neutral negative)
+        (attitude_towards_player corvus hostile)
+        (attitude_towards_player anvil indifferent)
+        (improve_attitude indifferent friendly)
+        (improve_attitude hostile indifferent)
+        (degrade_attitude friendly indifferent)
+        (degrade_attitude indifferent hostile)
 
         ; =======================================
         ; Monsters

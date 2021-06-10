@@ -65,6 +65,9 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
         try:
             monster = cls._monster_factory(npc_data = npc_data)
             monster.id = npc_data["id"]
+            monster.set_unique_id(npc_data["id"])
+            monster.set_treasure(npc_data["treasure"])
+            monster.set_must_kill(npc_data["must_kill"])
             return monster
         except ValueError as e:
             logger.error(e)

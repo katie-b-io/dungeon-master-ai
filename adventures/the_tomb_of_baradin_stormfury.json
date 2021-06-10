@@ -18,7 +18,11 @@
                 "hill"
             ],
             "attitude": "friendly",
-            "attack_ends_game": true
+            "attack_ends_game": true,
+            "gives_quest": true,
+            "status": "alive",
+            "treasure": [],
+            "must_kill": false
         },
         "anvil": {
             "id": "anvil",
@@ -26,7 +30,11 @@
             "short_name": "Anvil-Jumper",
             "monster": "cat",
             "attitude": "indifferent",
-            "attack_ends_game": false
+            "attack_ends_game": false,
+            "gives_quest": false,
+            "status": "alive",
+            "treasure": [],
+            "must_kill": false
         }
     },
     "rooms": {
@@ -36,18 +44,14 @@
             "init": true,
             "visited": false,
             "connections": {
-                "inns_cellar": true
-            },
-            "npcs": {
-                "corvus": {
-                    "status": [
-                        "alive"
-                    ],
-                    "treasure": [
-                        []
-                    ]
+                "inns_cellar": {
+                    "locked": false,
+                    "broken": false
                 }
             },
+            "npcs": [
+                "corvus"
+            ],
             "monsters": {},
             "puzzles": {},
             "treasure": [],
@@ -61,19 +65,18 @@
             "init": false,
             "visited": false,
             "connections": {
-                "stout_meal_inn": true,
-                "storage_room": true
-            },
-            "npcs": {
-                "anvil": {
-                    "status": [
-                        "alive"
-                    ],
-                    "treasure": [
-                        []
-                    ]
+                "stout_meal_inn": {
+                    "locked": false,
+                    "broken": false
+                },
+                "storage_room": {
+                    "locked": false,
+                    "broken": false
                 }
             },
+            "npcs": [
+                "anvil"
+            ],
             "monsters": {
                 "giant_rat": {
                     "status": [
@@ -87,6 +90,12 @@
                         [],
                         [],
                         []
+                    ],
+                    "must_kill": [
+                        true,
+                        true,
+                        true,
+                        true
                     ]
                 }
             },
@@ -104,9 +113,18 @@
             "init": false,
             "visited": false,
             "connections": {
-                "inns_cellar": true,
-                "burial_chamber": false,
-                "western_corridor": false
+                "inns_cellar": {
+                    "locked": false,
+                    "broken": false
+                },
+                "burial_chamber": {
+                    "locked": true,
+                    "broken": false
+                },
+                "western_corridor": {
+                    "locked": true,
+                    "broken": false
+                }
             },
             "npcs": {},
             "monsters": {
@@ -116,6 +134,9 @@
                     ],
                     "treasure": [
                         []
+                    ],
+                    "must_kill": [
+                        true
                     ]
                 },
                 "goblin": {
@@ -129,19 +150,52 @@
                                 "pouch": 7
                             }
                         ]
+                    ],
+                    "must_kill": [
+                        false
                     ]
                 }
             },
             "puzzles": {
-                "portcullis": {
-                    "hp": 27,
-                    "ac": 19,
+                "storage_room---burial_chamber": {
+                    "id": "storage_room---burial_chamber",
+                    "type": "door",
+                    "name": "Portcullis",
                     "solutions": {
+                        "attack": {
+                            "description": "attack door",
+                            "hp": 27,
+                            "ac": 19
+                        },
                         "force": {
+                            "description": "force door",
                             "ability": "str",
                             "dc": 15
                         },
                         "switch": {
+                            "description": "use switch",
+                            "skill": "perception",
+                            "dc": 10
+                        }
+                    }
+                },
+                "storage_room---western_corridor": {
+                    "id": "storage_room---western_corridor",
+                    "type": "door",
+                    "name": "Portcullis",
+                    "solutions": {
+                        "attack": {
+                            "description": "attack door",
+                            "hp": 27,
+                            "ac": 19
+                        },
+                        "force": {
+                            "description": "force door",
+                            "ability": "str",
+                            "dc": 15
+                        },
+                        "switch": {
+                            "description": "use switch",
                             "skill": "perception",
                             "dc": 10
                         }
@@ -159,7 +213,10 @@
             "init": false,
             "visited": false,
             "connections": {
-                "storage_room": false
+                "storage_room": {
+                    "locked": true,
+                    "broken": false
+                }
             },
             "npcs": {},
             "monsters": {
@@ -169,25 +226,43 @@
                     ],
                     "treasure": [
                         []
+                    ],
+                    "must_kill": [
+                        false
                     ]
                 }
             },
             "puzzles": {
                 "vault": {
+                    "id": "vault",
+                    "type": "vault",
+                    "name": "Vault",
                     "solutions": {
                         "force": {
+                            "description": "force lid",
                             "ability": "str",
                             "dc": 15
                         }
                     }
                 },
                 "silver_key": {
-                    "solutions": "look"
+                    "id": "silver_key",
+                    "type": "item",
+                    "name": "Silver key",
+                    "solutions": {
+                        "look": {
+                            "description": "look around"
+                        }
+                    }
                 },
                 "altar": {
+                    "id": "altar",
+                    "type": "altar",
+                    "name": "Altar",
                     "description": "The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol.",
                     "solutions": {
                         "inspect": {
+                            "description": "inspect altar",
                             "skill": "religion",
                             "dc": 10,
                             "advantage": {
@@ -197,6 +272,9 @@
                     }
                 },
                 "false_door_trap": {
+                    "id": "false_door_trap",
+                    "type": "trap",
+                    "name": "False door trap",
                     "spell": "glyph_of_warding_explosive_runes",
                     "trigger": "touch",
                     "effect": {
@@ -217,11 +295,13 @@
                         }
                     },
                     "solutions": {
-                        "detect": {
+                        "inspect": {
+                            "description": "inspect trap",
                             "skill": "investigation",
                             "dc": 13
                         },
                         "detect_magic": {
+                            "description": "detect magic",
                             "skill": "arcana",
                             "dc": 18,
                             "advantage": {
@@ -229,6 +309,7 @@
                             }
                         },
                         "dispel": {
+                            "description": "dispel magic",
                             "spell": "dispel_magic"
                         }
                     }
@@ -245,8 +326,14 @@
             "init": false,
             "visited": false,
             "connections": {
-                "storage_room": false,
-                "antechamber": true
+                "storage_room": {
+                    "locked": true,
+                    "broken": false
+                },
+                "antechamber": {
+                    "locked": false,
+                    "broken": false
+                }
             },
             "npcs": {},
             "monsters": {},
@@ -261,8 +348,14 @@
             "name": "Antechamber",
             "init": false,
             "connections": {
-                "western_corridor": true,
-                "southern_corridor": false
+                "western_corridor": {
+                    "locked": false,
+                    "broken": false
+                },
+                "southern_corridor": {
+                    "locked": true,
+                    "broken": false
+                }
             },
             "npcs": {},
             "monsters": {
@@ -280,22 +373,35 @@
                                 "pouch": 39
                             }
                         ]
+                    ],
+                    "must_kill": [
+                        true,
+                        true
                     ]
                 }
             },
             "puzzles": {
-                "reinforced_door": {
-                    "hp": 39,
-                    "ac": 19,
+                "antechamber---southern_corridor": {
+                    "id": "antechamber---southern_corridor",
+                    "type": "door",
+                    "name": "Reinforced door",
                     "solutions": {
+                        "attack": {
+                            "description": "attack door",
+                            "hp": 39,
+                            "ac": 19
+                        },
                         "force": {
+                            "description": "force door",
                             "ability": "str",
                             "dc": 21
                         },
                         "unlock": {
+                            "description": "unlock door",
                             "item": "silver_key"
                         },
                         "lockpick": {
+                            "description": "lockpick door",
                             "equipment": "thieves_tools",
                             "dc": 15
                         }
@@ -313,82 +419,102 @@
             "init": false,
             "visited": false,
             "connections": {
-                "antechamber": false,
-                "baradins_crypt": false
+                "antechamber": {
+                    "locked": true,
+                    "broken": false
+                },
+                "baradins_crypt": {
+                    "locked": true,
+                    "broken": false
+                }
             },
             "npcs": {},
             "monsters": {},
             "puzzles": {
-                "magic_stone_face": {
+                "southern_corridor---baradins_crypt": {
+                    "id": "southern_corridor---baradins_crypt",
+                    "type": "door",
+                    "name": "Magic stone face",
                     "trigger": 5,
-                    "stages": [
-                        {
-                            "utterance": "Speak these names and you shall pass."
-                        },
-                        {
-                            "utterance": "I am the father of the children of metal born from the heart of the world. My anvil and hammer a sign for those who craft and learn.",
-                            "response": "Thorogrin",
-                            "hints": [
+                    "solutions": {
+                        "solve": {
+                            "description": "solve riddle",
+                            "stages": [
                                 {
-                                    "skill": "history",
-                                    "dc": 10,
-                                    "text": "You know that \"children\" of metal is another name for dwarves."
+                                    "utterance": "Speak these names and you shall pass."
                                 },
                                 {
-                                    "skill": "history",
-                                    "dc": 15,
-                                    "text": "You recognise the reference to the creation myth of the dwarves."
+                                    "utterance": "I am the father of the children of metal born from the heart of the world. My anvil and hammer a sign for those who craft and learn.",
+                                    "response": "Thorogrin",
+                                    "hints": [
+                                        {
+                                            "skill": "history",
+                                            "dc": 10,
+                                            "text": "You know that \"children\" of metal is another name for dwarves."
+                                        },
+                                        {
+                                            "skill": "history",
+                                            "dc": 15,
+                                            "text": "You recognise the reference to the creation myth of the dwarves."
+                                        },
+                                        {
+                                            "skill": "religion",
+                                            "dc": 10,
+                                            "text": "You identify the anvil and hammer as a reference to Thorogrin's holy symbol and divine domains, the forge and knowledge."
+                                        }
+                                    ]
                                 },
                                 {
-                                    "skill": "religion",
-                                    "dc": 10,
-                                    "text": "You identify the anvil and hammer as a reference to Thorogrin's holy symbol and divine domains, the forge and knowledge."
+                                    "utterance": "On mighty silver wings I fly, my breath cold as ice. Relics of old and treasures adorn my home. Secret guardian under the mountain.",
+                                    "response": "Rizoarithra",
+                                    "hints": [
+                                        {
+                                            "skill": [
+                                                "history",
+                                                "arcana",
+                                                "nature"
+                                            ],
+                                            "dc": 10,
+                                            "text": "You recognise the references to a silver dragon."
+                                        },
+                                        {
+                                            "skill": "history",
+                                            "dc": 10,
+                                            "text": "You know that the \"secret guardian under the mountain\" refers to the founding of Greyforge and the guardian dragon that led the dwarf settlers to the mountain that would become their home."
+                                        },
+                                        {
+                                            "skill": "history",
+                                            "dc": 15,
+                                            "text": "You remember the myths about Rizoarithra, the silver dragon guardian of Greyforge."
+                                        }
+                                    ]
+                                },
+                                {
+                                    "utterance": "Name me and so you shall break me.",
+                                    "response": "Baradin"
                                 }
                             ]
-                        },
-                        {
-                            "utterance": "On mighty silver wings I fly, my breath cold as ice. Relics of old and treasures adorn my home. Secret guardian under the mountain.",
-                            "response": "Rizoarithra",
-                            "hints": [
-                                {
-                                    "skill": [
-                                        "history",
-                                        "arcana",
-                                        "nature"
-                                    ],
-                                    "dc": 10,
-                                    "text": "You recognise the references to a silver dragon."
-                                },
-                                {
-                                    "skill": "history",
-                                    "dc": 10,
-                                    "text": "You know that the \"secret guardian under the mountain\" refers to the founding of Greyforge and the guardian dragon that led the dwarf settlers to the mountain that would become their home."
-                                },
-                                {
-                                    "skill": "history",
-                                    "dc": 15,
-                                    "text": "You remember the myths about Rizoarithra, the silver dragon guardian of Greyforge."
-                                }
-                            ]
-                        },
-                        {
-                            "utterance": "Name me and so you shall break me.",
-                            "response": "Baradin"
                         }
-                    ]
+                    }
                 },
                 "wand_of_magic_missiles_trap": {
+                    "id": "wand_of_magic_missiles_trap",
+                    "type": "trap",
+                    "name": "Wand of magic missiles trap",
                     "trigger": "pressure",
                     "solutions": {
-                        "reveal": {
+                        "detect_magic": {
+                            "description": "detect magic",
                             "skill": "arcana",
                             "dc": 10
                         },
                         "detect": {
+                            "description": "detect trap",
                             "skill": "perception",
                             "dc": 15
                         },
                         "inspect": {
+                            "description": "inspect trap",
                             "skill": "investigation",
                             "dc": 15
                         }
@@ -408,7 +534,10 @@
             "init": false,
             "visited": false,
             "connections": {
-                "southern_corridor": false
+                "southern_corridor": {
+                    "locked": true,
+                    "broken": false
+                }
             },
             "npcs": {},
             "monsters": {},
