@@ -18,7 +18,11 @@
                 "hill"
             ],
             "attitude": "friendly",
-            "attack_ends_game": true
+            "attack_ends_game": true,
+            "gives_quest": true,
+            "status": "alive",
+            "treasure": [],
+            "must_kill": false
         },
         "anvil": {
             "id": "anvil",
@@ -26,7 +30,11 @@
             "short_name": "Anvil-Jumper",
             "monster": "cat",
             "attitude": "indifferent",
-            "attack_ends_game": false
+            "attack_ends_game": false,
+            "gives_quest": false,
+            "status": "alive",
+            "treasure": [],
+            "must_kill": false
         }
     },
     "rooms": {
@@ -38,16 +46,9 @@
             "connections": {
                 "inns_cellar": true
             },
-            "npcs": {
-                "corvus": {
-                    "status": [
-                        "alive"
-                    ],
-                    "treasure": [
-                        []
-                    ]
-                }
-            },
+            "npcs": [
+                "corvus"
+            ],
             "monsters": {},
             "puzzles": {},
             "treasure": [],
@@ -64,16 +65,9 @@
                 "stout_meal_inn": true,
                 "storage_room": true
             },
-            "npcs": {
-                "anvil": {
-                    "status": [
-                        "alive"
-                    ],
-                    "treasure": [
-                        []
-                    ]
-                }
-            },
+            "npcs": [
+                "anvil"
+            ],
             "monsters": {
                 "giant_rat": {
                     "status": [
@@ -87,6 +81,12 @@
                         [],
                         [],
                         []
+                    ],
+                    "must_kill": [
+                        true,
+                        true,
+                        true,
+                        true
                     ]
                 }
             },
@@ -116,6 +116,9 @@
                     ],
                     "treasure": [
                         []
+                    ],
+                    "must_kill": [
+                        true
                     ]
                 },
                 "goblin": {
@@ -129,14 +132,41 @@
                                 "pouch": 7
                             }
                         ]
+                    ],
+                    "must_kill": [
+                        false
                     ]
                 }
             },
             "puzzles": {
-                "portcullis": {
-                    "hp": 27,
-                    "ac": 19,
+                "storage_room---burial_chamber": {
+                    "id": "storage_room---burial_chamber",
+                    "type": "door",
+                    "name": "Portcullis",
                     "solutions": {
+                        "attack": {
+                            "hp": 27,
+                            "ac": 19
+                        },
+                        "force": {
+                            "ability": "str",
+                            "dc": 15
+                        },
+                        "switch": {
+                            "skill": "perception",
+                            "dc": 10
+                        }
+                    }
+                },
+                "storage_room---western_corridor": {
+                    "id": "storage_room---western_corridor",
+                    "type": "door",
+                    "name": "Portcullis",
+                    "solutions": {
+                        "attack": {
+                            "hp": 27,
+                            "ac": 19
+                        },
                         "force": {
                             "ability": "str",
                             "dc": 15
@@ -169,11 +199,17 @@
                     ],
                     "treasure": [
                         []
+                    ],
+                    "must_kill": [
+                        false
                     ]
                 }
             },
             "puzzles": {
                 "vault": {
+                    "id": "vault",
+                    "type": "vault",
+                    "name": "Vault",
                     "solutions": {
                         "force": {
                             "ability": "str",
@@ -185,6 +221,9 @@
                     "solutions": "look"
                 },
                 "altar": {
+                    "id": "altar",
+                    "type": "altar",
+                    "name": "Altar",
                     "description": "The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol.",
                     "solutions": {
                         "inspect": {
@@ -197,6 +236,9 @@
                     }
                 },
                 "false_door_trap": {
+                    "id": "false_door_trap",
+                    "type": "trap",
+                    "name": "False door trap",
                     "spell": "glyph_of_warding_explosive_runes",
                     "trigger": "touch",
                     "effect": {
@@ -280,14 +322,23 @@
                                 "pouch": 39
                             }
                         ]
+                    ],
+                    "must_kill": [
+                        true,
+                        true
                     ]
                 }
             },
             "puzzles": {
-                "reinforced_door": {
-                    "hp": 39,
-                    "ac": 19,
+                "antechamber---southern_corridor": {
+                    "id": "antechamber---southern_corridor",
+                    "type": "door",
+                    "name": "Reinforced door",
                     "solutions": {
+                        "attack": {
+                            "hp": 39,
+                            "ac": 19
+                        },
                         "force": {
                             "ability": "str",
                             "dc": 21
@@ -320,6 +371,9 @@
             "monsters": {},
             "puzzles": {
                 "magic_stone_face": {
+                    "id": "magic_stone_face",
+                    "type": "special",
+                    "name": "Magic stone face",
                     "trigger": 5,
                     "stages": [
                         {
@@ -378,6 +432,9 @@
                     ]
                 },
                 "wand_of_magic_missiles_trap": {
+                    "id": "wand_of_magic_missiles_trap",
+                    "type": "trap",
+                    "name": "Wand of magic missiles trap",
                     "trigger": "pressure",
                     "solutions": {
                         "reveal": {

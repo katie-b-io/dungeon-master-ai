@@ -46,8 +46,9 @@ class Monster(NPC, MonsterAgent):
             raise
 
         # Initialise additional variables
-        self.treasure = None
         self.unique_id = None
+        self.treasure = None
+        self.must_kill = False
         
         self.trigger_map = {
             "attack_of_opportunity": {
@@ -59,13 +60,17 @@ class Monster(NPC, MonsterAgent):
     def __repr__(self) -> str:
         return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
 
+    def set_unique_id(self, unique_id: str) -> None:
+        """Method to set unique id."""
+        self.unique_id = unique_id
+    
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""
         self.treasure = treasure
     
-    def set_unique_id(self, unique_id: str) -> None:
-        """Method to set unique id."""
-        self.unique_id = unique_id
+    def set_must_kill(self, must_kill: str) -> None:
+        """Method to set must_kill."""
+        self.must_kill = must_kill
     
     def attack_of_opportunity(self) -> None:
         """Method to perform an attack of opportunity"""

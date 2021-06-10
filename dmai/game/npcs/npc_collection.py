@@ -35,6 +35,7 @@ class NPCCollection:
                 npc = NPC(npc_data)
             else:
                 npc = MonsterCollection.get_monster_npc(npc_data)
+            State.set_init_status(npc_id, npc_data["status"])
             npcs[npc_id] = npc
             # update state with npc location
             for room in self.adventure.rooms:
@@ -49,10 +50,11 @@ class NPCCollection:
         for room in self.adventure.rooms:
             for monster_id in self.adventure.rooms[room].monsters:
                 monster_dict = self.adventure.rooms[room].monsters[monster_id]
-                for (status, treasure) in zip(monster_dict["status"], monster_dict["treasure"]):
+                for (status, treasure, must_kill) in zip(monster_dict["status"], monster_dict["treasure"], monster_dict["must_kill"]):
                     # create a monster with unique id
                     monster = MonsterCollection.get_monster(monster_id)
                     monster.set_treasure(treasure)
+                    monster.set_must_kill(must_kill)
                     i = 1 + sum(1 for m in monsters.values() if m.name == monster.name)
                     unique_id = "{m}_{i}".format(i=i, m=monster_id)
                     monster.set_unique_id(unique_id)
