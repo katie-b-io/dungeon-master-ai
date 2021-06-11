@@ -164,13 +164,13 @@
         ; =======================================
         ; Challenges
         ; set DC for doors
-        (dc door3 str)
-        (dc door4 str)
-        (dc door6 str)
-        (dc door3 perception)
-        (dc door4 perception)
+        (ability_solution door3 str)
+        (ability_solution door4 str)
+        (ability_solution door6 str)
+        (ability_solution door3 perception)
+        (ability_solution door4 perception)
         ; set equipment DC for doors
-        (dc_equipment door6 thieves_tools)
+        (equipment_solution door6 thieves_tools)
         ; doors not broken are considered "alive"
         (alive door1)
         (alive door2)
