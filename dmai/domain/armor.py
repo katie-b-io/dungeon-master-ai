@@ -30,7 +30,7 @@ class Armor:
         """Method to return specified armor"""
         if armor_id in self.armor_data:
             return self.armor_data[armor_id]
-            
+
     def equip_armor(self, armor_id: str, slot: str) -> None:
         """Method to equip specified armor to specified slot"""
         if armor_id in self.armor_data:

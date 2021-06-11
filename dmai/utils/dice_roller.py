@@ -18,7 +18,15 @@ class DiceRollerMeta(type):
 class DiceRoller(metaclass=DiceRollerMeta):
 
     # class variables
-    dice_map = {"d4": 4, "d6": 6, "d8": 8, "d10": 10, "d12": 12, "d20": 20, "d100": 100}
+    dice_map = {
+        "d4": 4,
+        "d6": 6,
+        "d8": 8,
+        "d10": 10,
+        "d12": 12,
+        "d20": 20,
+        "d100": 100
+    }
 
     def __init__(self) -> None:
         """DiceRoller static class"""
@@ -36,15 +44,18 @@ class DiceRoller(metaclass=DiceRollerMeta):
 
         if d == -1:
             msg = 'Cannot roll dice: "{d}"\nUse format /roll d4 or /roll 2d12+2 for example'.format(
-                d=die
-            )
+                d=die)
             raise DiceFormatError(msg)
 
         try:
             # convert the string into a die spec and pass to roll_dice
             total = 1 if not die[0:d] else int(die[0:d])
             if plus != -1:
-                dice_spec = {"die": die[d:plus], "total": total, "mod": int(die[plus:])}
+                dice_spec = {
+                    "die": die[d:plus],
+                    "total": total,
+                    "mod": int(die[plus:])
+                }
             elif minus != -1:
                 dice_spec = {
                     "die": die[d:minus],
@@ -58,8 +69,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
 
         except (KeyError, TypeError, ValueError):
             msg = 'Cannot roll dice: "{d}"\nUse format /roll d4 or /roll 2d12+2 for example'.format(
-                d=die
-            )
+                d=die)
             raise DiceFormatError(msg)
 
         return dice_val
@@ -94,7 +104,8 @@ class DiceRoller(metaclass=DiceRollerMeta):
             rolls = [random.randint(1, max_val) for _ in dice]
             total_roll = sum(rolls) + modifier
             die = cls.construct_dice_spec_string(dice_spec)
-            OutputBuilder.append("Rolling {d}... {t}".format(d=die, t=total_roll))
+            OutputBuilder.append("Rolling {d}... {t}".format(d=die,
+                                                             t=total_roll))
         except (KeyError, TypeError, ValueError):
             raise
 

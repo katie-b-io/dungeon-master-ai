@@ -40,15 +40,18 @@ class NLU(metaclass=NLUMeta):
         },
         "roll": {
             "text": "/roll [die]",
-            "help": "Roll a specified die, options: d4, d6, d8, d10, d12, d20, d100 (d20 by default)",
+            "help":
+            "Roll a specified die, options: d4, d6, d8, d10, d12, d20, d100 (d20 by default)",
             "cmd": "roll_die(cls.param)",
             "default_param": "d20"
         },
         "stats": {
-            "text": "/stats",
-            "help": "Show your character stats in a character sheet",
-            "cmd": "OutputBuilder.append(cls.game.player.get_character_sheet(), wrap=False)"
-            
+            "text":
+            "/stats",
+            "help":
+            "Show your character stats in a character sheet",
+            "cmd":
+            "OutputBuilder.append(cls.game.player.get_character_sheet(), wrap=False)"
         },
         "say": {
             "text": "/say [utterance]",
@@ -57,7 +60,7 @@ class NLU(metaclass=NLUMeta):
             "return": (False, "param")
         },
     }
-        
+
     def __init__(self) -> None:
         """NLU static class"""
         pass
@@ -94,7 +97,7 @@ class NLU(metaclass=NLUMeta):
         """Process the player command as a regular expression"""
         cmd_tokens = player_cmd.split()
         cmd = cmd_tokens[0][1:]
-        
+
         try:
             # setting param here in the local namespace for exec
             if len(cmd_tokens) == 2:
@@ -107,8 +110,7 @@ class NLU(metaclass=NLUMeta):
             command = cls.commands[cmd]["cmd"]
         except KeyError:
             msg = "Command not recognised: {c}\nUse /help to get list of available commands".format(
-                c=player_cmd
-            )
+                c=player_cmd)
             raise UnrecognisedCommandError(msg)
 
         # define a local function for wrapping the DiceRoller
@@ -117,13 +119,13 @@ class NLU(metaclass=NLUMeta):
                 DiceRoller.roll(die)
             except DiceFormatError as e:
                 logger.error(e)
-        
+
         try:
             exec(command)
         except Exception as e:
             traceback.print_exc()
             return (False, "")
-        
+
         if "return" in cls.commands[cmd]:
             return_vals = []
             for val in cls.commands[cmd]["return"]:
@@ -136,7 +138,6 @@ class NLU(metaclass=NLUMeta):
         else:
             return (True, "")
 
-
     @classmethod
     def process_player_utterance(cls, player_utter: str) -> tuple:
         """Method to process the player utterance"""
@@ -148,11 +149,12 @@ class NLU(metaclass=NLUMeta):
         player_utter = player_utter.lower()
         print("I'm thinking...")
         (intent, entities) = RasaAdapter.get_intent(player_utter)
+        State.set_intent(intent)
         if intent:
             print("intent: " + intent)
         if entities:
             print(entities)
-        
+
         if intent == "move":
             return ("move", {"nlu_entities": entities})
         if intent == "attack":
@@ -164,11 +166,14 @@ class NLU(metaclass=NLUMeta):
         if intent == "hint":
             return ("hint", {})
         else:
-            # check for intent in State
-            if State.current_intent:
+            # check for stored intent in State
+            if State.stored_intent:
                 # combine the stored entities with new entities
-                if "nlu_entities" in State.current_intent["params"]:
-                    entities.extend(State.current_intent["params"]["nlu_entities"])
-                return (State.current_intent["intent"], {"nlu_entities": entities})
+                if "nlu_entities" in State.stored_intent["params"]:
+                    entities.extend(
+                        State.stored_intent["params"]["nlu_entities"])
+                return (State.stored_intent["intent"], {
+                    "nlu_entities": entities
+                })
 
         return (None, {})

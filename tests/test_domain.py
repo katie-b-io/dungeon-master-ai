@@ -12,23 +12,23 @@ from dmai.utils.exceptions import UnrecognisedRoomError
 
 class TestActions(unittest.TestCase):
     """Test the Actions class"""
-    
     def setUp(self) -> None:
         self.game = Game()
         self.game.load()
         self.actions = self.game.dm.actions
-        
+
     def test_move_good_destination(self) -> None:
         entity = "player"
         destination = "inns_cellar"
         moved = self.actions.move(entity, destination)
         self.assertEqual(moved, True)
-    
+
     def test_move_bad_destination(self) -> None:
         entity = "player"
         destination = "the_moon"
         moved = self.actions.move(entity, destination)
         self.assertEqual(moved, False)
+
 
 if __name__ == "__main__":
     unittest.main()

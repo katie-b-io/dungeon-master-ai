@@ -11,20 +11,20 @@ logger = get_logger(__name__)
 class PlanningMonster(PlanningAgent):
     def __init__(self, **kwargs) -> None:
         """PlanningMonster class"""
-        PlanningAgent.__init__(self, Config.planner.monster, "monster", **kwargs)
-        
+        PlanningAgent.__init__(self, Config.planner.monster, "monster",
+                               **kwargs)
+
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
-    
+
     def build_domain(self) -> None:
         logging.debug("Building domain")
         domain_file = os.path.join(
             Config.directory.planning, "{u}.{d}.pddl".format(u=Config.uuid,
                                                              d=self.domain))
-        
+
         with open(domain_file, 'w') as writer:
-            writer.write(
-                """
+            writer.write("""
                 ;Dungeons and Dragons 5th Edition Domain
 
                 (define (domain dnd_monster)
@@ -44,8 +44,6 @@ class PlanningMonster(PlanningAgent):
                         player npc monster - entity
                         ; Monsters exist
                         cat giant_rat goblin skeleton zombie - monster
-                        ; Monster variants exist
-                        diseased_giant_rat - giant_rat
                         ; Abilities and skills exist
                         ability - object
                         skill - ability
@@ -357,18 +355,16 @@ class PlanningMonster(PlanningAgent):
                     )
 
                 )
-                """
-            )
+                """)
 
     def build_problem(self) -> None:
         logging.debug("Building problem")
         problem_file = os.path.join(
             Config.directory.planning, "{u}.{p}.pddl".format(u=Config.uuid,
                                                              p=self.problem))
-        
+
         with open(problem_file, 'w') as writer:
-            writer.write(
-                """
+            writer.write("""
                 (define (problem inns_cellar) (:domain dnd_monster)
 
                 (:objects 
@@ -376,7 +372,7 @@ class PlanningMonster(PlanningAgent):
                     giant_rat1 - giant_rat
                     giant_rat2 - giant_rat
                     giant_rat3 - giant_rat
-                    giant_rat4 - diseased_giant_rat
+                    giant_rat4 - giant_rat
                     ; Player
                     player - player
                     ; Room
@@ -449,5 +445,4 @@ class PlanningMonster(PlanningAgent):
                 ))
 
                 )
-                """
-            )
+                """)

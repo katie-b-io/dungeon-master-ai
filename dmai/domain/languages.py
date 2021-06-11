@@ -18,7 +18,7 @@ class Languages:
     def _load_language_data(cls) -> None:
         """Set the cls.language_data class variable data"""
         cls.language_data = Loader.load_domain("languages")
-    
+
     def get_all(self) -> list:
         """Method to return all the languages"""
         all_languages = []
@@ -26,4 +26,3 @@ class Languages:
             for language in self.languages[language_type]:
                 all_languages.append(self.language_data[language])
         return all_languages
-    

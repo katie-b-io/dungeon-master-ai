@@ -4,7 +4,6 @@
 
     (:requirements 
         :strips
-        :action-costs
         :typing
         :conditional-effects
         :negative-preconditions
@@ -20,8 +19,6 @@
         indifferent friendly hostile - attitude
         ; Monsters exist
         cat giant_rat goblin skeleton zombie - monster
-        ; Monster variants exist
-        diseased_giant_rat - giant_rat
         ; Abilities and skills exist
         ability - object
         skill - ability
@@ -32,7 +29,7 @@
         ; Weapons exist
         weapon - object
         ; Ranged weapons exist
-        ranged_weapon
+        ranged_weapon - weapon
         ; Armor exists
         armor - object
         ; Equipment exists
@@ -50,7 +47,7 @@
     (:predicates 
         ; Adventure
         (quest) ; player has received quest
-        (dwarven_thrower) ; player has found dwarven thrower treasure
+        (complete) ; player has completed quest
         (gives_quest ?npc - npc) ; NPC can give quest
         ; Rolls
         (advantage ?object - object)
@@ -96,8 +93,8 @@
         ; Door is locked
         (locked ?door - door)
         ; DC of object
-        (dc ?target - object ?ability - ability)
-        (dc_equipment ?target - object ?equipment - equipment)
+        (ability_solution ?target - object ?ability - ability)
+        (equipment_solution ?target - object ?equipment - equipment)
         ; Attack roll exceeds AC of object
         (higher_than_ac ?target - object)
         ; Player can perform an attack roll
@@ -111,7 +108,7 @@
         ; Player makes a successful ability check
         (ability_check_success ?player - player ?ability - ability ?target - object)
         ; Player makes a successful equipment check
-        (equipment_check_success ?player - player ?equipment - equipment)
+        (equipment_check_success ?player - player ?equipment - equipment ?target - object)
         ; Player makes a successful attack roll against target
         (attack_roll_success ?player - player ?target - object)
         ; Tools
@@ -206,11 +203,11 @@
             (at ?player ?location)
             (at ?target ?location)
             (can_equipment_check ?player ?equipment ?target)
-            (not (equipment_check_success ?player ?equipment))
+            (not (equipment_check_success ?player ?equipment ?target))
         )
         :effect (and 
             (not (can_equipment_check ?player ?equipment ?target))
-            (equipment_check_success ?player ?equipment)
+            (equipment_check_success ?player ?equipment ?target)
         )
     )
 
@@ -223,11 +220,11 @@
             (at ?player ?location)
             (at ?target ?location)
             (can_equipment_check ?player ?equipment ?target)
-            (not (equipment_check_success ?player ?equipment))
+            (not (equipment_check_success ?player ?equipment ?target))
         )
         :effect (and 
             (not (can_equipment_check ?player ?equipment ?target))
-            (equipment_check_success ?player ?equipment)
+            (equipment_check_success ?player ?equipment ?target)
         )
     )
 
@@ -240,11 +237,11 @@
             (at ?player ?location)
             (at ?target ?location)
             (can_equipment_check ?player ?equipment ?target)
-            (not (equipment_check_success ?player ?equipment))
+            (not (equipment_check_success ?player ?equipment ?target))
         )
         :effect (and 
             (not (can_equipment_check ?player ?equipment ?target))
-            (equipment_check_success ?player ?equipment)
+            (equipment_check_success ?player ?equipment ?target)
         )
     )
 
@@ -399,7 +396,7 @@
             (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
-            (dc ?door ?ability)
+            (ability_solution ?door ?ability)
             (not (action))
         )
         :effect (and 
@@ -417,7 +414,7 @@
             (at ?door ?location)
             (connected ?door ?location ?destination)
             (locked ?door)
-            (dc_equipment ?door ?equipment)
+            (equipment_solution ?door ?equipment)
             (not (action))
         )
         :effect (and 
@@ -492,13 +489,13 @@
             (locked ?door)
             (equipped ?player ?thieves_tools)
             (thieves_tools ?thieves_tools)
-            (equipment_check_success ?player ?thieves_tools)
+            (equipment_check_success ?player ?thieves_tools ?door)
         )
         :effect (and 
             (not (action))
             (not (locked ?door))
             (not (equipped ?player ?thieves_tools))
-            (not (equipment_check_success ?player ?thieves_tools))
+            (not (equipment_check_success ?player ?thieves_tools ?door))
         )
     )
     

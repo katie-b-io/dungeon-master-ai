@@ -11,7 +11,6 @@ from dmai.game.game import Game
 
 class TestNLG(unittest.TestCase):
     """Test the NLG class"""
-
     def setUp(self) -> None:
         self.game = Game()
         NLG.set_game(self.game)
@@ -31,7 +30,7 @@ class TestNLG(unittest.TestCase):
             "You cannot move to room because you're already there!",
             NLG.cannot_move(room, "same"),
         )
-        
+
     def test_cannot_move_locked(self) -> None:
         room = "room"
         reason2 = "locked"
@@ -39,6 +38,7 @@ class TestNLG(unittest.TestCase):
             "You cannot move to room because the way is locked!",
             NLG.cannot_move(room, "locked"),
         )
+
 
 if __name__ == "__main__":
     unittest.main()

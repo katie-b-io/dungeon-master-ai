@@ -39,21 +39,21 @@ class Config(metaclass=ConfigMeta):
         @property
         def adventure(self) -> str:
             return os.path.join(self.root, "adventures")
-        
+
         @property
         def output(self) -> str:
             path = os.path.join(self.root, "output")
             if not os.path.exists(path):
                 Path(path).mkdir(parents=True, exist_ok=True)
             return path
-        
+
         @property
         def planning(self) -> str:
             path = os.path.join(self.output, "planning")
             if not os.path.exists(path):
                 Path(path).mkdir(parents=True, exist_ok=True)
             return path
-        
+
         @property
         def test(self) -> str:
             return os.path.join(self.root, "tests")
@@ -70,7 +70,7 @@ class Config(metaclass=ConfigMeta):
         @classmethod
         def set_player(cls, agent: str) -> None:
             cls.player = agent
-        
+
         @classmethod
         def set_monster(cls, agent: str) -> None:
             cls.monster = agent
@@ -83,11 +83,10 @@ class Config(metaclass=ConfigMeta):
         @classmethod
         def set_player(cls, agent: str) -> None:
             cls.player = agent
-        
+
         @classmethod
         def set_monster(cls, agent: str) -> None:
             cls.monster = agent
-
 
     ################################################################
     # class variables

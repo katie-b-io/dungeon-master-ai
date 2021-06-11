@@ -35,12 +35,12 @@ class FastDownwardAdapter(PlannerAdapter):
             'fast-downward.py', '--plan-file', plan_file, domain_file,
             problem_file, '--search', 'astar(add())'
         ],
-                      stdout=PIPE,
-                      stderr=PIPE,
-                      universal_newlines=True)
+                stdout=PIPE,
+                stderr=PIPE,
+                universal_newlines=True)
         logger.debug(p.stdout)
         logger.debug(p.stderr)
-        
+
         return p.returncode == 0
 
     def parse_plan(self) -> list:

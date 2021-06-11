@@ -5,7 +5,7 @@
         giant_rat1 - giant_rat
         giant_rat2 - giant_rat
         giant_rat3 - giant_rat
-        giant_rat4 - diseased_giant_rat
+        giant_rat4 - giant_rat
         ; Player
         player - player
         ; Room

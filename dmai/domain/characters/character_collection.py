@@ -26,7 +26,6 @@ class CharacterCollectionMeta(type):
 
 
 class CharacterCollection(metaclass=CharacterCollectionMeta):
-
     def __init__(self) -> None:
         """CharacterCollection class"""
         pass
@@ -35,8 +34,7 @@ class CharacterCollection(metaclass=CharacterCollectionMeta):
     def __repr__(cls) -> str:
         character_list = cls.character_data.keys()
         character_str = "{c} is storing the following characters: {cl}".format(
-            c=cls.__class__.__name__, cl=", ".join(character_list)
-        )
+            c=cls.__class__.__name__, cl=", ".join(character_list))
         return character_str
 
     @classmethod
@@ -71,7 +69,6 @@ class CharacterCollection(metaclass=CharacterCollectionMeta):
             character_obj = character_map[character]
         else:
             msg = "Cannot create character class {c} - it does not exist!".format(
-                c=character
-            )
+                c=character)
             raise ValueError(msg)
         return character_obj(cls.character_data[character])

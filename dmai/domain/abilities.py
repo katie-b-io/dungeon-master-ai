@@ -13,9 +13,8 @@ class Abilities:
         self.modifiers = self._calculate_ability_modifiers()
 
     def __repr__(self) -> str:
-        return "Abilities:\n{a}\nModifiers:\n{m}".format(
-            a=self.abilities, m=self.modifiers
-        )
+        return "Abilities:\n{a}\nModifiers:\n{m}".format(a=self.abilities,
+                                                         m=self.modifiers)
 
     @classmethod
     def _load_ability_data(cls) -> None:
@@ -27,7 +26,7 @@ class Abilities:
         """Method to return a list of all abilities in tuple (id, name)"""
         abilities = cls.ability_data["abilities"]
         return [(ability, abilities[ability]["name"]) for ability in abilities]
-            
+
     def _calculate_ability_modifiers(self) -> dict:
         """Calculate the ability modifiers"""
         modifiers = dict()

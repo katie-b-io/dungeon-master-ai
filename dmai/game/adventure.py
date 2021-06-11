@@ -23,9 +23,11 @@ class Adventure:
             for key in self.adventure_data:
                 self.__setattr__(key, self.adventure_data[key])
         except AttributeError as e:
-            logger.error("Cannot create adventure, incorrect attribute: {e}".format(e=e))
+            logger.error(
+                "Cannot create adventure, incorrect attribute: {e}".format(
+                    e=e))
             raise
-        
+
         self._build_world()
 
     def __repr__(self) -> str:
@@ -61,7 +63,7 @@ class Adventure:
         except KeyError as e:
             msg = "Room not recognised: {e}".format(e=e)
             raise UnrecognisedRoomError(msg)
-    
+
     def get_all_rooms(self) -> list:
         """Method to return all room objects in a list.
         Returns a list of rooms"""

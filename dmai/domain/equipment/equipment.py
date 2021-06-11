@@ -11,16 +11,18 @@ class Equipment(ABC):
         try:
             for key in equipment_data:
                 self.__setattr__(key, equipment_data[key])
-                
+
         except AttributeError as e:
-            logger.error("Cannot create equipment, incorrect attribute: {e}".format(e=e))
+            logger.error(
+                "Cannot create equipment, incorrect attribute: {e}".format(
+                    e=e))
             raise
-        
+
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
-    
+
     def use(self) -> None:
         print("Using this doesn't do anything special")
-    
+
     def stop(self) -> None:
         pass

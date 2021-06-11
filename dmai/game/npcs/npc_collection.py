@@ -13,7 +13,7 @@ class NPCCollection:
     def __init__(self, adventure: Adventure) -> None:
         """NPCCollection class"""
         self.adventure = adventure
-    
+
     def load(self) -> None:
         self.npcs = self._create_npcs()
         self.monsters = self._create_monsters()
@@ -22,8 +22,9 @@ class NPCCollection:
         npc_list = self.npcs.keys()
         monster_list = self.monsters.keys()
         npc_str = "{c} is storing the following NPCs: {n}\n{c} is storing the following monsters: {m}".format(
-            c=self.__class__.__name__, n=", ".join(npc_list), m=", ".join(monster_list)
-        )
+            c=self.__class__.__name__,
+            n=", ".join(npc_list),
+            m=", ".join(monster_list))
         return npc_str
 
     def _create_npcs(self) -> None:
@@ -50,12 +51,16 @@ class NPCCollection:
         for room in self.adventure.rooms:
             for monster_id in self.adventure.rooms[room].monsters:
                 monster_dict = self.adventure.rooms[room].monsters[monster_id]
-                for (status, treasure, must_kill) in zip(monster_dict["status"], monster_dict["treasure"], monster_dict["must_kill"]):
+                for (status, treasure,
+                     must_kill) in zip(monster_dict["status"],
+                                       monster_dict["treasure"],
+                                       monster_dict["must_kill"]):
                     # create a monster with unique id
                     monster = MonsterCollection.get_monster(monster_id)
                     monster.set_treasure(treasure)
                     monster.set_must_kill(must_kill)
-                    i = 1 + sum(1 for m in monsters.values() if m.name == monster.name)
+                    i = 1 + sum(
+                        1 for m in monsters.values() if m.name == monster.name)
                     unique_id = "{m}_{i}".format(i=i, m=monster_id)
                     monster.set_unique_id(unique_id)
                     monsters[unique_id] = monster
@@ -70,14 +75,14 @@ class NPCCollection:
             return "npc"
         elif npc_id in self.monsters:
             return "monster"
-    
+
     def get_entity(self, npc_id):
         """Return the Monster/NPC with specified id"""
         if self.get_type(npc_id) == "npc":
             return self.get_npc(npc_id)
         elif self.get_type(npc_id) == "monster":
             return self.get_monster(npc_id)
-        
+
     def get_npc(self, npc_id: str) -> NPC:
         """Return NPC with specified id"""
         npc = None
@@ -104,8 +109,11 @@ class NPCCollection:
                 monster = self.get_monster(monster_type)
                 monster_id = "monster_{i}".format(i=i)
                 self.monsters[monster_id] = monster
-    
-    def get_monster_id(self, monster_type: str, status: str = None, location: str = None) -> None:
+
+    def get_monster_id(self,
+                       monster_type: str,
+                       status: str = None,
+                       location: str = None) -> None:
         """Method to find a monster of specified type and status.
         Returns a string with the monster id matching requirements."""
         for monster_id in self.monsters:
@@ -114,7 +122,8 @@ class NPCCollection:
                 try:
                     select = True
                     if status:
-                        if Status(status) != State.get_current_status(monster_id):
+                        if Status(status) != State.get_current_status(
+                                monster_id):
                             select = False
                     if location:
                         if location != State.get_current_room_id(monster_id):
@@ -128,9 +137,18 @@ class NPCCollection:
         """Method to return all NPC objects in a list.
         Returns a list of NPCs"""
         return list(self.npcs.values())
-    
+
+    def get_all_npc_ids(self) -> list:
+        """Method to return all NPC IDs in a list.
+        Returns a list of NPC IDs"""
+        return list(self.npcs.keys())
+
     def get_all_monsters(self) -> list:
         """Method to return all monster objects in a list.
         Returns a list of monsters"""
         return list(self.monsters.values())
-    
+
+    def get_all_monster_ids(self) -> list:
+        """Method to return all monster IDs in a list.
+        Returns a list of monster IDs"""
+        return list(self.monsters.keys())

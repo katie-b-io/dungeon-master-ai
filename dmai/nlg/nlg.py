@@ -29,9 +29,12 @@ class NLG(metaclass=NLGMeta):
     def get_char_class(cls, characters: str) -> str:
         """Return utterance for character selection"""
         utters = [
-            "Which character class would you like to play?\n{c}".format(c=characters),
-            "Select a character class you like the sound of:\n{c}".format(c=characters),
-            "Select a character class from the following choices:\n{c}".format(c=characters),
+            "Which character class would you like to play?\n{c}".format(
+                c=characters),
+            "Select a character class you like the sound of:\n{c}".format(
+                c=characters),
+            "Select a character class from the following choices:\n{c}".format(
+                c=characters),
         ]
         return random.choice(utters)
 
@@ -41,10 +44,10 @@ class NLG(metaclass=NLGMeta):
         c = cls.game.player.character_class
         utters = [
             "What is your character's name, this great {c}?".format(c=c),
-            "Ahh, a {c}. Excellent choice! And what is your character's name?".format(
-                c=c
-            ),
-            "A {c}, marvelous! And what do they call your character?".format(c=c),
+            "Ahh, a {c}. Excellent choice! And what is your character's name?".
+            format(c=c),
+            "A {c}, marvelous! And what do they call your character?".format(
+                c=c),
         ]
         return random.choice(utters)
 
@@ -60,15 +63,12 @@ class NLG(metaclass=NLGMeta):
         """Return the utterance for introducing the adventure title"""
         t = cls.game.dm.adventure.title
         utters = [
-            "Welcome adventurer, today we're going to play {t}! Let me set the scene...".format(
-                t=t
-            ),
-            "Today we'll play {t}, an exciting tale of adventure! Let me set the scene...".format(
-                t=t
-            ),
-            "The title of the adventure we're about to play is: {t}. Let me set the scene...".format(
-                t=t
-            ),
+            "Welcome adventurer, today we're going to play {t}! Let me set the scene..."
+            .format(t=t),
+            "Today we'll play {t}, an exciting tale of adventure! Let me set the scene..."
+            .format(t=t),
+            "The title of the adventure we're about to play is: {t}. Let me set the scene..."
+            .format(t=t),
         ]
         return random.choice(utters)
 
@@ -82,9 +82,9 @@ class NLG(metaclass=NLGMeta):
             "{n}, that's a good one!".format(n=n),
         ]
         return random.choice(utters)
-    
+
     @classmethod
-    def enter_room(cls, room: str, adventure = None) -> str:
+    def enter_room(cls, room: str, adventure=None) -> str:
         """Return the utterance for entering a room previously visited"""
         if not adventure:
             return "You entered {r}".format(r=room)
@@ -98,34 +98,27 @@ class NLG(metaclass=NLGMeta):
             return "You cannot move to {room}".format(room=room)
         elif reason == "same":
             return "You cannot move to {room} because you're already there!".format(
-                room=room
-            )
+                room=room)
         elif reason == "locked":
             return "You cannot move to {room} because the way is locked!".format(
-                room=room
-            )
+                room=room)
         elif reason == "unknown":
             return "You cannot move to unknown location: {room}!".format(
-                room=room
-            )
-            
+                room=room)
+
     @classmethod
     def cannot_use(cls, equipment: str, reason: str = None) -> str:
         """Return the utterance for not allowing use of equipment"""
         if not reason:
             return "You cannot use {e}".format(e=equipment)
         elif reason == "unknown":
-            return "You cannot use unknown equipment: {e}!".format(
-                e=equipment
-            )
+            return "You cannot use unknown equipment: {e}!".format(e=equipment)
         elif reason == "not equipped":
             return "You cannot use {e} because it's not equipped!".format(
-                e=equipment
-            )
+                e=equipment)
         elif reason == "quantity":
             return "You cannot use {e} because you've run out!".format(
-                e=equipment
-            )
+                e=equipment)
 
     @classmethod
     def no_destination(cls) -> str:
@@ -136,7 +129,7 @@ class NLG(metaclass=NLGMeta):
             "I'm not sure where you want to go, can you repeat your destination",
         ]
         return random.choice(utters)
-    
+
     @classmethod
     def no_target(cls) -> str:
         """Return the utterance for no target"""
@@ -146,7 +139,7 @@ class NLG(metaclass=NLGMeta):
             "I'm not sure what you want to attack, can you repeat your target",
         ]
         return random.choice(utters)
-    
+
     @classmethod
     def no_equipment(cls, stop: bool = False) -> str:
         """Return the utterance for no equipment"""
@@ -163,7 +156,7 @@ class NLG(metaclass=NLGMeta):
                 "I'm not sure where you want to use, can you repeat the equipment",
             ]
         return random.choice(utters)
-    
+
     @classmethod
     def light_torch(cls) -> str:
         """Return the utterance for lighting a torch"""
@@ -173,7 +166,7 @@ class NLG(metaclass=NLGMeta):
             "Light now cascades from the point of your torch around you"
         ]
         return random.choice(utters)
-    
+
     @classmethod
     def extinguish_torch(cls) -> str:
         """Return the utterance for extinguishing a torch"""
@@ -183,51 +176,60 @@ class NLG(metaclass=NLGMeta):
             "Light ceases to cascade from your torch"
         ]
         return random.choice(utters)
-    
+
     @classmethod
     def transition_to_combat(cls) -> str:
         """Return the utterance for transitioning to combat"""
         utters = [
-            "Okay, let's fight!",
-            "You're now starting combat",
-            "Let's begin the combat round",
-            "Moving into combat"
+            "Okay, let's fight!", "You're now starting combat",
+            "Let's begin the combat round", "Moving into combat"
         ]
         return random.choice(utters)
-    
+
     @classmethod
     def attack_npc_end_game(cls, npc_id: str) -> str:
         """Return the utterance for ending the game by attacking npc"""
         n = cls.game.dm.npcs.get_npc(npc_id).short_name
         utters = [
-            "You attacked and fatally wounded {n}. He was a much loved member of the community and retribution was swift. You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial.".format(n=n),
-            "Your unprovoked attack took your good friend {n} completely unawares. As the light left his eyes, he managed to utter a quiet \"why?\" with his dying breath. Why indeed? You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial.".format(n=n),
-            "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial.".format(n=n),
+            "You attacked and fatally wounded {n}. He was a much loved member of the community and retribution was swift. You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
+            .format(n=n),
+            "Your unprovoked attack took your good friend {n} completely unawares. As the light left his eyes, he managed to utter a quiet \"why?\" with his dying breath. Why indeed? You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
+            .format(n=n),
+            "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
+            .format(n=n),
         ]
         return random.choice(utters)
 
     @classmethod
-    def attack_of_opportunity(cls, attacker: str = None, target: str = None) -> str:
+    def attack_of_opportunity(cls,
+                              attacker: str = None,
+                              target: str = None) -> str:
         """Return the utterance for an attack of opportunity"""
         if target and attacker:
             utters = [
-                "{a} took an attack of opportunity against {t}!".format(a=attacker, t=target),
-                "{t} opened themselves up to an an attack of opportunity from {a}!".format(a=attacker, t=target)
+                "{a} took an attack of opportunity against {t}!".format(
+                    a=attacker, t=target),
+                "{t} opened themselves up to an an attack of opportunity from {a}!"
+                .format(a=attacker, t=target)
             ]
             return random.choice(utters)
         elif attacker:
             utters = [
-                "{a} took an attack of opportunity against you!".format(a=attacker),
-                "You opened yourself up to an an attack of opportunity from {a}!".format(a=attacker)
+                "{a} took an attack of opportunity against you!".format(
+                    a=attacker),
+                "You opened yourself up to an an attack of opportunity from {a}!"
+                .format(a=attacker)
             ]
             return random.choice(utters)
         elif target:
             utters = [
-                "You took an attack of opportunity against {t}!".format(t=target),
-                "{t} opened themselves up to an an attack of opportunity from you!".format(t=target)
+                "You took an attack of opportunity against {t}!".format(
+                    t=target),
+                "{t} opened themselves up to an an attack of opportunity from you!"
+                .format(t=target)
             ]
             return random.choice(utters)
-        
+
     @classmethod
     def explain_armor_class(cls) -> str:
         """Return the utterance for explaining a armos class"""

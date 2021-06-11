@@ -23,4 +23,7 @@ class Money(metaclass=MoneyMeta):
         cp = cp % 100
         sp = int(cp / 10)
         cp = cp % 10
-        return "PP: {p}\nGP: {g}\nSP: {s}\nCP: {c}".format(p=pp, g=gp, s=sp, c=cp)
+        return "PP: {p}\nGP: {g}\nSP: {s}\nCP: {c}".format(p=pp,
+                                                           g=gp,
+                                                           s=sp,
+                                                           c=cp)

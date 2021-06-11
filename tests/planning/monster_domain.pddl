@@ -4,7 +4,6 @@
 
     (:requirements 
         :strips
-        :action-costs
         :typing
         :conditional-effects
         :negative-preconditions
@@ -17,8 +16,6 @@
         player npc monster - entity
         ; Monsters exist
         cat giant_rat goblin skeleton zombie - monster
-        ; Monster variants exist
-        diseased_giant_rat - giant_rat
         ; Abilities and skills exist
         ability - object
         skill - ability
@@ -27,7 +24,7 @@
         ; Weapons exist
         weapon - object
         ; Ranged weapons exist
-        ranged_weapon
+        ranged_weapon - weapon
         ; Armor exists
         armor - object
         ; Damage vulnerabilities exist

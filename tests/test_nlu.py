@@ -11,7 +11,6 @@ from dmai.utils.exceptions import UnrecognisedCommandError
 
 class TestNLU(unittest.TestCase):
     """Test the NLU class"""
-
     def setUp(self) -> None:
         self.roll_cmd1 = "/roll d20"
         self.help_cmd = "/help"
@@ -33,15 +32,18 @@ class TestNLU(unittest.TestCase):
         self.assertEqual(NLU.process_player_command(self.help_cmd), (True, ""))
 
     def test_process_player_command_roll(self) -> None:
-        self.assertEqual(NLU.process_player_command(self.roll_cmd1), (True, ""))
+        self.assertEqual(NLU.process_player_command(self.roll_cmd1),
+                         (True, ""))
 
     def test_process_player_command_exit(self) -> None:
         with self.assertRaises(SystemExit):
             NLU.process_player_command(self.exit_cmd)
 
     def test_process_player_command_malformed(self) -> None:
-        self.assertEqual(NLU.process_player_command(self.bad_cmd1), (False, "roll d20"))
-        self.assertEqual(NLU.process_player_command(self.bad_cmd2), (False, "/unknown"))
+        self.assertEqual(NLU.process_player_command(self.bad_cmd1),
+                         (False, "roll d20"))
+        self.assertEqual(NLU.process_player_command(self.bad_cmd2),
+                         (False, "/unknown"))
 
     def test_regex_help(self) -> None:
         self.assertEqual(NLU._regex_and_exec(self.help_cmd), (True, ""))

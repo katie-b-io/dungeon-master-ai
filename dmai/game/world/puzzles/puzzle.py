@@ -71,3 +71,19 @@ class Puzzle(ABC):
             if "equipment" in s:
                 if equipment == s["equipment"]:
                     return True
+    
+    def check_solution_intent(self, intent: str) -> bool:
+        """Method to determine if possible intent solution exists.
+        Returns bool"""
+        for s in self.solutions.values():
+            if "intent" in s:
+                if intent == s["intent"]:
+                    return True
+
+    def check_solution_spell(self, spell: str) -> bool:
+        """Method to determine if possible spell solution exists.
+        Returns bool"""
+        for s in self.solutions.values():
+            if "spell" in s:
+                if spell == s["spell"]:
+                    return True
