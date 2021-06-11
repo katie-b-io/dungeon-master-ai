@@ -48,8 +48,11 @@ class State(metaclass=StateMeta):
     current_status = {}
     current_hp = {}
     current_game_mode = GameMode.EXPLORE
-    current_intent = {}
+    current_intent = None
+    stored_intent = {}
     current_target = {}
+    current_goal = ("at", "player", "southern_corridor")
+    current_items = {}
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -77,6 +80,11 @@ class State(metaclass=StateMeta):
     def set_current_game_mode(cls, game_mode: str) -> None:
         """Method to set the current game mode."""
         cls.current_game_mode = GameMode(game_mode)
+    
+    @classmethod
+    def set_current_goal(cls, goal: tuple) -> None:
+        """Method to set the current goal"""
+        cls.current_goal = goal
 
     @classmethod
     def start(cls) -> None:
@@ -158,6 +166,29 @@ class State(metaclass=StateMeta):
         return cls.get_current_status(entity) == Status.ALIVE
 
     ############################################################
+    # METHODS RELATING TO ITEMS
+    @classmethod
+    def add_item(cls, item: str) -> None:
+        """Method to add item"""
+        if item in cls.current_items:
+            cls.current_items[item] = cls.current_items[item] + 1
+        else:
+            cls.current_items[item] = 1
+    
+    @classmethod
+    def remove_item(cls, item: str) -> None:
+        """Method to remove item"""
+        if item in cls.current_items:
+            cls.current_items[item] = cls.current_items[item] - 1
+        if cls.current_items[item] == 0:
+            del cls.current_items[item]
+    
+    @classmethod
+    def get_all_item_ids(cls) -> list:
+        """Method to return all item IDs in list"""
+        return list(cls.current_items.keys())
+
+    ############################################################
     # METHODS RELATING TO ACTIONS
     @classmethod
     def light_torch(cls) -> None:
@@ -175,13 +206,18 @@ class State(metaclass=StateMeta):
     # METHODS RELATING TO INTENTS
     @classmethod
     def clear_intent(cls, ) -> None:
-        """Method to clear the current intent"""
-        cls.current_intent = {}
+        """Method to clear the stored intent"""
+        cls.stored_intent = {}
 
     @classmethod
     def store_intent(cls, intent: str, params: dict) -> None:
+        """Method to set the stored intent"""
+        cls.stored_intent = {"intent": intent, "params": params}
+    
+    @classmethod
+    def set_intent(cls, intent: str) -> None:
         """Method to set the current intent"""
-        cls.current_intent = {"intent": intent, "params": params}
+        cls.current_intent = intent
 
     ############################################################
     # METHODS RELATING TO STATE MAINTENANCE

@@ -164,6 +164,7 @@
                     "solutions": {
                         "attack": {
                             "description": "attack door",
+                            "intent": "attack",
                             "hp": 27,
                             "ac": 19
                         },
@@ -186,6 +187,7 @@
                     "solutions": {
                         "attack": {
                             "description": "attack door",
+                            "intent": "attack",
                             "hp": 27,
                             "ac": 19
                         },
@@ -250,8 +252,9 @@
                     "type": "item",
                     "name": "Silver key",
                     "solutions": {
-                        "look": {
-                            "description": "look around"
+                        "explore": {
+                            "description": "look around",
+                            "intent": "explore"
                         }
                     }
                 },
@@ -388,6 +391,7 @@
                     "solutions": {
                         "attack": {
                             "description": "attack door",
+                            "intent": "attack",
                             "hp": 39,
                             "ac": 19
                         },
@@ -439,6 +443,7 @@
                     "solutions": {
                         "solve": {
                             "description": "solve riddle",
+                            "intent": "solve",
                             "stages": [
                                 {
                                     "utterance": "Speak these names and you shall pass."

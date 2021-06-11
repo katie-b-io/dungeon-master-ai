@@ -149,6 +149,7 @@ class NLU(metaclass=NLUMeta):
         player_utter = player_utter.lower()
         print("I'm thinking...")
         (intent, entities) = RasaAdapter.get_intent(player_utter)
+        State.set_intent(intent)
         if intent:
             print("intent: " + intent)
         if entities:
@@ -165,13 +166,13 @@ class NLU(metaclass=NLUMeta):
         if intent == "hint":
             return ("hint", {})
         else:
-            # check for intent in State
-            if State.current_intent:
+            # check for stored intent in State
+            if State.stored_intent:
                 # combine the stored entities with new entities
-                if "nlu_entities" in State.current_intent["params"]:
+                if "nlu_entities" in State.stored_intent["params"]:
                     entities.extend(
-                        State.current_intent["params"]["nlu_entities"])
-                return (State.current_intent["intent"], {
+                        State.stored_intent["params"]["nlu_entities"])
+                return (State.stored_intent["intent"], {
                     "nlu_entities": entities
                 })
 

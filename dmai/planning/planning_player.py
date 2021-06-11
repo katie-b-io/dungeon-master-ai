@@ -25,6 +25,10 @@ class PlanningPlayer(PlanningAgent):
             Config.directory.planning,
             "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.domain))
 
+        # TODO implement intent solution
+        # TODO implement item solution
+        # TODO implement solve intent
+
         with open(domain_file, 'w') as writer:
             writer.write("""
 ;Dungeons and Dragons 5th Edition Domain
@@ -44,6 +48,12 @@ class PlanningPlayer(PlanningAgent):
         ; Entities exist
         entity - object
         player npc monster - entity
+        ; Intents exist
+        intent - object
+        ; Items exist
+        item - object
+        ; Puzzles exist
+        puzzle - object
         ; Roleplaying exists
         attitude - object
         indifferent friendly hostile - attitude
@@ -125,9 +135,6 @@ class PlanningPlayer(PlanningAgent):
         (connected ?door - door ?location - room ?destination - room)
         ; Door is locked
         (locked ?door - door)
-        ; DC of object
-        (dc ?target - object ?ability - ability)
-        (dc_equipment ?target - object ?equipment - equipment)
         ; Attack roll exceeds AC of object
         (higher_than_ac ?target - object)
         ; Player can perform an attack roll
@@ -167,6 +174,11 @@ class PlanningPlayer(PlanningAgent):
         ; Combat
         (combat)
         (must_kill ?monster - monster)
+        ; Puzzles
+        (dc ?target - object ?ability - ability)
+        (dc_equipment ?target - object ?equipment - equipment)
+        (intent_solution ?target - object ?intent - intent)
+        (item_solution ?target - object ?item - item)
     )
 
     ; ================================================================
@@ -710,6 +722,10 @@ class PlanningPlayer(PlanningAgent):
 
             # Player
             objects.append(("player", "player"))
+            for intent in State.get_dm().player_intent_map.keys():
+                objects.append((intent, "intent"))
+            for item in State.get_all_item_ids():
+                objects.append((item, "item"))
 
             # NPCs
             for npc in State.get_dm().npcs.get_all_npcs():
@@ -752,6 +768,12 @@ class PlanningPlayer(PlanningAgent):
             # Equipment
             for equipment in State.get_player().get_all_equipment_ids():
                 objects.append((equipment, "equipment"))
+
+            # Puzzles
+            for room in State.get_dm().adventure.get_all_rooms():
+                for puzzle in room.puzzles.get_all_puzzles():
+                    if not puzzle.type == "door":
+                        objects.append((puzzle.id, "puzzle"))
 
             # Construct the string
             writer.write(self._construct_objects(objects))
@@ -818,35 +840,35 @@ class PlanningPlayer(PlanningAgent):
                 init.append(("at", door, room2))
                 if not State.travel_allowed(room1, room2):
                     init.append(("locked", door))
-                # TODO account for broken doors
+                if not State.connection_broken(room1, room2):
+                    init.append(("alive", door))
 
             # Puzzles
             for room in State.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
-                    # TODO add other puzzle types
-                    if puzzle.type == "door":
-                        for ability in Abilities.get_all_abilities():
-                            if puzzle.check_solution_ability(ability[0]):
-                                init.append(("dc", puzzle.id, ability[0]))
-                        for skill in Skills.get_all_skills():
-                            if puzzle.check_solution_skill(skill[0]):
-                                init.append(("dc", puzzle.id, skill[0]))
-                        for equipment in State.get_player(
-                        ).get_all_equipment_ids():
-                            if puzzle.check_solution_equipment(equipment):
-                                init.append(
-                                    ("dc_equipment", puzzle.id, equipment))
-                        # TODO add item solutions
-                        # TODO add other solutions
+                    # Ability solution
+                    for ability in Abilities.get_all_abilities():
+                        if puzzle.check_solution_ability(ability[0]):
+                            init.append(("dc", puzzle.id, ability[0]))
+                    # Skill solution
+                    for skill in Skills.get_all_skills():
+                        if puzzle.check_solution_skill(skill[0]):
+                            init.append(("dc", puzzle.id, skill[0]))
+                    # Equipment solution
+                    for equipment in State.get_player().get_all_equipment_ids(
+                    ):
+                        if puzzle.check_solution_equipment(equipment):
+                            init.append(("dc_equipment", puzzle.id, equipment))
+                    # Intent solution
+                    for intent in State.get_dm().player_intent_map.keys():
+                        if puzzle.check_solution_intent(intent):
+                            init.append(("intent_solution", puzzle.id, intent))
+                    # Item solution
+                    for item in State.get_all_item_ids():
+                        if puzzle.check_solution_item(item):
+                            init.append(("item_solution", puzzle.id, item))
 
-            # TODO generate these on the fly
-            init.append(("alive", "stout_meal_inn---inns_cellar"))
-            init.append(("alive", "inns_cellar---storage_room"))
-            init.append(("alive", "storage_room---burial_chamber"))
-            init.append(("alive", "storage_room---western_corridor"))
-            init.append(("alive", "western_corridor---antechamber"))
-            init.append(("alive", "antechamber---southern_corridor"))
-            init.append(("alive", "southern_corridor---baradins_crypt"))
+                    # TODO add spell solution
 
             # Construct the string
             writer.write(self._construct_init(init))
@@ -854,8 +876,6 @@ class PlanningPlayer(PlanningAgent):
             ################################################
             # Construct the problem file goal
             goal = []
-
-            # TODO generate this on the fly
-            goal.append(("at", "player", "southern_corridor"))
+            goal.append(State.current_goal)
             writer.write(self._construct_goal(goal))
             writer.write(self._construct_problem_footer())
