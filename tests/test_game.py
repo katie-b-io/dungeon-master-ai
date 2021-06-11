@@ -7,7 +7,7 @@ sys.path.insert(0, p + "/../")
 
 from dmai.game.state import State
 from dmai.game.game import Game
-from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
+from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 
 
 class TestState(unittest.TestCase):
@@ -87,19 +87,19 @@ class TestState(unittest.TestCase):
     def test_lock_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
-        with self.assertRaises(UnrecognisedRoomError):
+        with self.assertRaises(RoomConnectionError):
             State.lock_door(room1, room2)
 
     def test_unlock_door_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
-        with self.assertRaises(UnrecognisedRoomError):
+        with self.assertRaises(RoomConnectionError):
             State.unlock_door(room1, room2)
 
     def test_break_door_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
-        with self.assertRaises(UnrecognisedRoomError):
+        with self.assertRaises(RoomConnectionError):
             State.break_door(room1, room2)
 
     def test_lock_door_malformed(self) -> None:

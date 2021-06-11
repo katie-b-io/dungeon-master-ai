@@ -32,20 +32,20 @@ class Actions:
         """Check if an entity can be moved to a specified destination.
         Returns tuple (bool, str) to indicate whether movement is possible
         and reason why not if not."""
-
-        # check if destination is accessible
-        current = State.get_current_room_id(entity)
-
-        if current == destination:
-            return (False, "same")
-
         try:
+            # check if destination is accessible
+            current = State.get_current_room_id(entity)
+            if current == destination:
+                return (False, "same")
+
             if State.travel_allowed(current, destination):
                 return (True, "")
             else:
                 return (False, "locked")
         except UnrecognisedRoomError:
-            return (False, "unknown")
+            return (False, "unknown destination")
+        except UnrecognisedEntityError:
+            return (False, "unknown entity")
 
     def move(self, entity: str, destination: str) -> bool:
         """Attempt to move an entity to the specified destination.

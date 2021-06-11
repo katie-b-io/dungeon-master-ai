@@ -1,7 +1,7 @@
 from dmai.utils.output_builder import OutputBuilder
 from enum import Enum
 
-from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
+from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
 from dmai.utils.logger import get_logger
 
@@ -269,101 +269,136 @@ class State(metaclass=StateMeta):
         cls.current_room[entity] = room_id
 
     @classmethod
+    def _check_entity_exists(cls, entity_id: str) -> bool:
+        """Method to check entity exists.
+        Raises UnrecognisedEntityError exception if not"""
+        try:
+            return bool(cls.current_room[entity_id])
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity_id)
+            raise UnrecognisedEntityError(msg)
+
+    @classmethod
+    def _check_room_exists(cls, room_id: str) -> bool:
+        """Method to check room exists.
+        Raises UnrecognisedRoomError exception if not"""
+        try:
+            return bool(cls.dm.adventure.get_room(room_id))
+        except UnrecognisedRoomError:
+            raise
+
+    @classmethod
+    def _check_connection_exists(cls, room_id1: str, room_id2: str) -> bool:
+        """Method to check connection exists.
+        Raises UnrecognisedRoomError exception if not"""
+        try:
+            for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
+                cls.dm.adventure.rooms[r1].connections[r2]
+            return True
+        except KeyError:
+            msg = "Connection does not exist: {r1}-{r2}".format(r1=r1, r2=r2)
+            raise RoomConnectionError(msg)
+
+    @classmethod
     def get_current_room_id(cls, entity: str = "player") -> str:
         """Method to get the current room id for specified entity."""
         try:
-            return cls.current_room[entity]
-        except KeyError:
-            msg = "Entity not recognised: {e}".format(e=entity)
-            raise UnrecognisedEntityError(msg)
+            if cls._check_entity_exists(entity):
+                return cls.current_room[entity]
+        except UnrecognisedEntityError:
+            raise
 
     @classmethod
     def get_current_room(cls, entity: str = "player"):
         """Method to get the current room for specified entity."""
         try:
-            return cls.dm.adventure.get_room(cls.get_current_room_id(entity))
+            if cls._check_entity_exists(entity):
+                room_id = cls.get_current_room_id(entity)
+                if cls._check_room_exists(room_id):
+                    return cls.dm.adventure.get_room(room_id)
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
 
     @classmethod
     def set_current_room(cls, entity: str, room_id: str) -> None:
         """Method to set the current room for specified entity."""
-        if entity not in cls.current_room:
-            msg = "Entity not recognised: {e}".format(e=entity)
-            raise UnrecognisedEntityError(msg)
-
-        if room_id not in cls.dm.adventure.rooms:
-            msg = "Room not recognised: {r}".format(r=room_id)
-            raise UnrecognisedRoomError(msg)
-
-        logger.debug("Setting current room: {r}".format(r=room_id))
-        cls.stationary = False
-        cls.dm.deregister_trigger(
-            cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
-        cls.current_room[entity] = room_id
-        cls.dm.register_trigger(
-            cls.dm.adventure.get_room(cls.get_current_room_id(entity)))
+        try:
+            if cls._check_entity_exists(entity) and cls._check_room_exists(
+                    room_id):
+                logger.debug("Setting current room for {e}: {r}".format(
+                    e=entity, r=room_id))
+                cls.stationary = False
+                cls.dm.deregister_trigger(cls.get_current_room(entity))
+                cls.current_room[entity] = room_id
+                cls.dm.register_trigger(cls.get_current_room(entity))
+        except (UnrecognisedRoomError, UnrecognisedEntityError):
+            raise
 
     @classmethod
     def travel_allowed(cls, current_id: str, destination_id: str) -> bool:
         """Method to determine if travel is allowed between specified rooms."""
-        if destination_id not in cls.dm.adventure.rooms:
-            msg = "Room not recognised: {d}".format(d=destination_id)
-            raise UnrecognisedRoomError(msg)
-
         try:
-            current = cls.dm.adventure.rooms[current_id]
-            if destination_id not in current.connections:
-                return False
-            return current.connections[destination_id][
-                "broken"] or not current.connections[destination_id]["locked"]
-        except KeyError as e:
-            msg = "Room not recognised: {e}".format(e=e)
-            raise UnrecognisedRoomError(msg)
+            if cls._check_room_exists(current_id) and cls._check_room_exists(
+                    destination_id) and cls._check_connection_exists(
+                        current_id, destination_id):
+                current = cls.dm.adventure.get_room(current_id)
+                return current.connections[destination_id][
+                    "broken"] or not current.connections[destination_id][
+                        "locked"]
+        except UnrecognisedRoomError:
+            raise
+        except RoomConnectionError:
+            return False
+
+    @classmethod
+    def connection_broken(cls, current_id: str, destination_id: str) -> bool:
+        """Method to determine if connection between specified rooms is broken."""
+        try:
+            if cls._check_room_exists(current_id) and cls._check_room_exists(
+                    destination_id) and cls._check_connection_exists(
+                        current_id, destination_id):
+                current = cls.dm.adventure.rooms[current_id]
+                return current.connections[destination_id]["broken"]
+        except UnrecognisedRoomError:
+            raise
+        except RoomConnectionError:
+            return False
+
+    @classmethod
+    def _update_connection(cls, r1: str, r2: str, status: str,
+                           state: bool) -> None:
+        cls.dm.adventure.rooms[r1].connections[r2][status] = state
+        cls.dm.adventure.rooms[r2].connections[r1][status] = state
 
     @classmethod
     def lock_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to lock the connection between two given rooms."""
-        msg = None
-        for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
-            if r1 not in cls.dm.adventure.rooms:
-                msg = "Room not recognised: {r}".format(r=r1)
-            elif r2 not in cls.dm.adventure.rooms[r1].connections:
-                msg = "Connection not recognised: {r}".format(r=r2)
-        if msg:
-            raise UnrecognisedRoomError(msg)
-
-        cls.dm.adventure.rooms[room_id1].connections[room_id2]["locked"] = True
-        cls.dm.adventure.rooms[room_id2].connections[room_id1]["locked"] = True
+        try:
+            if cls._check_room_exists(room_id1) and cls._check_room_exists(
+                    room_id2) and cls._check_connection_exists(
+                        room_id1, room_id2):
+                cls._update_connection(room_id1, room_id2, "locked", True)
+        except (UnrecognisedRoomError, RoomConnectionError):
+            raise
 
     @classmethod
     def unlock_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to unlock the connection between two given rooms."""
-        msg = None
-        for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
-            if r1 not in cls.dm.adventure.rooms:
-                msg = "Room not recognised: {r}".format(r=r1)
-            elif r2 not in cls.dm.adventure.rooms[r1].connections:
-                msg = "Connection not recognised: {r}".format(r=r2)
-        if msg:
-            raise UnrecognisedRoomError(msg)
-
-        cls.dm.adventure.rooms[room_id1].connections[room_id2][
-            "locked"] = False
-        cls.dm.adventure.rooms[room_id2].connections[room_id1][
-            "locked"] = False
+        try:
+            if cls._check_room_exists(room_id1) and cls._check_room_exists(
+                    room_id2) and cls._check_connection_exists(
+                        room_id1, room_id2):
+                cls._update_connection(room_id1, room_id2, "locked", False)
+        except (UnrecognisedRoomError, RoomConnectionError):
+            raise
 
     @classmethod
     def break_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to break the connection between two given rooms."""
-        msg = None
-        for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
-            if r1 not in cls.dm.adventure.rooms:
-                msg = "Room not recognised: {r}".format(r=r1)
-            elif r2 not in cls.dm.adventure.rooms[r1].connections:
-                msg = "Connection not recognised: {r}".format(r=r2)
-        if msg:
-            raise UnrecognisedRoomError(msg)
-
-        cls.dm.adventure.rooms[room_id1].connections[room_id2]["broken"] = True
-        cls.dm.adventure.rooms[room_id2].connections[room_id1]["broken"] = True
+        try:
+            if cls._check_room_exists(room_id1) and cls._check_room_exists(
+                    room_id2) and cls._check_connection_exists(
+                        room_id1, room_id2):
+                cls._update_connection(room_id1, room_id2, "broken", True)
+        except (UnrecognisedRoomError, RoomConnectionError):
+            raise
