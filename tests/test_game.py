@@ -61,6 +61,12 @@ class TestState(unittest.TestCase):
         destination = "inns_cellar"
         self.assertEqual(True, State.travel_allowed(current, destination))
     
+    def test_travel_allowed_broken_door(self) -> None:
+        current = "storage_room"
+        destination = "burial_chamber"
+        State.break_door(current, destination)
+        self.assertEqual(True, State.travel_allowed(current, destination))
+    
     def test_travel_allowed_not_connected(self) -> None:
         current = "stout_meal_inn"
         destination = "antechamber"
@@ -82,25 +88,37 @@ class TestState(unittest.TestCase):
         room1 = "stout_meal_inn"
         room2 = "antechamber"
         with self.assertRaises(UnrecognisedRoomError):
-            State.lock(room1, room2)
+            State.lock_door(room1, room2)
 
-    def test_unlock_no_connection(self) -> None:
+    def test_unlock_door_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
         with self.assertRaises(UnrecognisedRoomError):
-            State.unlock(room1, room2)
+            State.unlock_door(room1, room2)
 
-    def test_lock_malformed(self) -> None:
+    def test_break_door_no_connection(self) -> None:
+        room1 = "stout_meal_inn"
+        room2 = "antechamber"
+        with self.assertRaises(UnrecognisedRoomError):
+            State.break_door(room1, room2)
+
+    def test_lock_door_malformed(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State.lock(room1, room2)
+            State.lock_door(room1, room2)
             
-    def test_unlock_malformed(self) -> None:
+    def test_unlock_door_malformed(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State.unlock(room1, room2)
+            State.unlock_door(room1, room2)
+
+    def test_break_door_malformed(self) -> None:
+        room1 = "stout_meal_inn"
+        room2 = "the_moon"
+        with self.assertRaises(UnrecognisedRoomError):
+            State.break_door(room1, room2)
             
 if __name__ == "__main__":
     unittest.main()

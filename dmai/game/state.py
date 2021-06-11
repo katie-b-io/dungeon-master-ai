@@ -311,14 +311,15 @@ class State(metaclass=StateMeta):
             current = cls.dm.adventure.rooms[current_id]
             if destination_id not in current.connections:
                 return False
-            return not current.connections[destination_id]["locked"]
+            return current.connections[destination_id]["broken"] or not current.connections[destination_id]["locked"] 
         except KeyError as e:
             msg = "Room not recognised: {e}".format(e=e)
             raise UnrecognisedRoomError(msg)
     
     @classmethod
-    def lock(cls, room_id1: str, room_id2: str) -> None:
+    def lock_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to lock the connection between two given rooms."""
+        msg = None
         for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
             if r1 not in cls.dm.adventure.rooms:
                 msg = "Room not recognised: {r}".format(r=r1)
@@ -331,8 +332,9 @@ class State(metaclass=StateMeta):
         cls.dm.adventure.rooms[room_id2].connections[room_id1]["locked"] = True
 
     @classmethod
-    def unlock(cls, room_id1: str, room_id2: str) -> None:
+    def unlock_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to unlock the connection between two given rooms."""
+        msg = None
         for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
             if r1 not in cls.dm.adventure.rooms:
                 msg = "Room not recognised: {r}".format(r=r1)
@@ -343,3 +345,18 @@ class State(metaclass=StateMeta):
         
         cls.dm.adventure.rooms[room_id1].connections[room_id2]["locked"] = False
         cls.dm.adventure.rooms[room_id2].connections[room_id1]["locked"] = False
+
+    @classmethod
+    def break_door(cls, room_id1: str, room_id2: str) -> None:
+        """Method to break the connection between two given rooms."""
+        msg = None
+        for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
+            if r1 not in cls.dm.adventure.rooms:
+                msg = "Room not recognised: {r}".format(r=r1)
+            elif r2 not in cls.dm.adventure.rooms[r1].connections:
+                msg = "Connection not recognised: {r}".format(r=r2)
+        if msg:
+            raise UnrecognisedRoomError(msg)
+        
+        cls.dm.adventure.rooms[room_id1].connections[room_id2]["broken"] = True
+        cls.dm.adventure.rooms[room_id2].connections[room_id1]["broken"] = True
