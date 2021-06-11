@@ -17,17 +17,18 @@ class Room:
 
             # replace the attributes values with objects where appropriate
             self.puzzles = PuzzleCollection(self.puzzles)
-            
+
         except AttributeError as e:
-            logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
+            logger.error(
+                "Cannot create room, incorrect attribute: {e}".format(e=e))
             raise
-        
+
         trigger_map = {
             "enter": self.enter,
             "exit": print,
             "visibility": self.visibility
         }
-        
+
         # populate the self.text object
         for text_type in self.text:
             text = self.text[text_type]
@@ -50,14 +51,14 @@ class Room:
             else:
                 OutputBuilder.append(NLG.enter_room(self.name))
             State.halt()
-    
+
     def visibility(self) -> str:
         """Method when triggering visibility text"""
         logger.debug("Triggering visibility in room: {r}".format(r=self.id))
-        if State.torch_lit or State.get_player().character.has_darkvision(): 
+        if State.torch_lit or State.get_player().character.has_darkvision():
             OutputBuilder.append(self.text["visibility"]["text"])
             self.text["visibility"]["can_trigger"] = False
-    
+
     def trigger(self) -> None:
         """Method to print any new text if conditions met"""
         for text_type in self.text:
@@ -65,7 +66,7 @@ class Room:
                 # execute function
                 if text_type in self.text:
                     self.text[text_type]["trigger"]()
-                    
+
     def get_connected_rooms(self) -> list:
         """Method to return the connected rooms"""
         return list(self.connections.keys())

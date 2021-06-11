@@ -17,19 +17,19 @@ class UserInterface:
         while True:
             output = self.game.output()
             logger.info("[DM]: {o}".format(o=output))
-        
+
             if output:
                 prompt = "\n" + output + "\n"
             else:
                 prompt = "\n"
-            
+
             if State.in_combat:
                 prompt += "[COMBAT] "
-            
+
             prompt += "> "
             if State.paused:
                 prompt += "Press enter to continue... "
-            
+
             user_input = input(prompt)
             logger.info("[PLAYER]: {i}".format(i=user_input))
             self.game.input(user_input)

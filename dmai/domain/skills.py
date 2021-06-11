@@ -40,8 +40,7 @@ class Skills:
         repr_str = "Skills:\n"
         for skill in self.skills:
             repr_str += "{skill}: {score}\n".format(
-                skill=self.skill_data[skill]["name"], score=self.skills[skill]
-            )
+                skill=self.skill_data[skill]["name"], score=self.skills[skill])
         return repr_str
 
     @classmethod
@@ -54,8 +53,7 @@ class Skills:
         """Method to return a list of all skills in tuple (id, name)"""
         skills = cls.skill_data
         return [(skill, skills[skill]["name"]) for skill in skills]
-    
+
     def get_modifier(self, skill: str) -> int:
         """Return the specified skill modifier"""
         return self.skills[skill]
-    

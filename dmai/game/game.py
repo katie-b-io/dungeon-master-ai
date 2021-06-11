@@ -12,35 +12,38 @@ logger = get_logger(__name__)
 
 
 class Game:
-    def __init__(self, char_class: str = None, char_name: str = None, skip_intro: bool = False) -> None:
+    def __init__(self,
+                 char_class: str = None,
+                 char_name: str = None,
+                 skip_intro: bool = False) -> None:
         """Main class for the game"""
         self.char_class = char_class
         self.char_name = char_name
         self.skip_intro = skip_intro
         self.adventure = "the_tomb_of_baradin_stormfury"
-    
+
     def load(self) -> None:
         logger.info("Initialising adventure: {a}".format(a=self.adventure))
         self.player = None
-        
+
         # load data in static classes
         CharacterCollection.load()
         MonsterCollection.load()
-        
+
         # Initialise DM
         self.dm = DM(self.adventure)
         self.dm.load()
         State.set_dm(self.dm)
-        
+
         # set character class and name if possible
         if self.char_class:
             character = CharacterCollection.get_character(self.char_class)
             self.player = Player(character)
             State.set_player(self.player)
-        
+
             if self.char_name:
                 self.player.set_name(self.char_name)
-        
+
         # intro text generator
         if self.skip_intro:
             State.pause()
@@ -49,17 +52,17 @@ class Game:
         else:
             self.intro = True
             self.intro_text = self.dm.get_intro_text()
-            
+
     def input(self, player_utter: str) -> None:
         """Receive a player input"""
-        
+
         # clear the output
         OutputBuilder.clear()
-        
+
         # reset the talking state
         if State.talking:
             State.stop_talking()
-            
+
         # first check for commands, if we have a command - pause the story telling if necessary
         if player_utter:
             (pause, player_utter) = NLU.process_player_command(player_utter)
@@ -71,7 +74,7 @@ class Game:
         else:
             if State.paused:
                 State.play()
-        
+
         # the game has started, the introduction is being read, ignore utterances
         if self.intro:
             return
@@ -91,9 +94,9 @@ class Game:
             # player is entering a name
             self.player.set_name(player_utter)
             succeed = self.dm.input(player_utter, utter_type="name")
-        
+
         elif not State.started:
-            # start the game by relaying description of starting room 
+            # start the game by relaying description of starting room
             succeed = self.dm.input(player_utter, utter_type="start")
 
         elif player_utter:
@@ -102,7 +105,7 @@ class Game:
 
             # relay the player utterance to the dm
             succeed = self.dm.input(player_utter, intent=intent, kwargs=params)
-            
+
             if succeed:
                 # if succeeded, clear stored intent
                 State.clear_intent()
@@ -123,7 +126,7 @@ class Game:
             except StopIteration:
                 State.play()
                 self.intro = False
-        
+
         if State.paused:
             if OutputBuilder.has_response():
                 return OutputBuilder.format()

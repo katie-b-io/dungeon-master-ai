@@ -25,17 +25,16 @@ class MonsterCollectionMeta(type):
             "zombie": Zombie,
         }
         return instance
-    
+
     def __call__(cls, *args, **kwargs) -> None:
         """MonsterCollection static singleton metaclass"""
         if cls not in cls._instances:
             instance = super().__call__(*args, **kwargs)
             cls._instances[cls] = instance
         return cls._instances[cls]
-    
-    
-class MonsterCollection(metaclass=MonsterCollectionMeta):
 
+
+class MonsterCollection(metaclass=MonsterCollectionMeta):
     def __init__(self) -> None:
         """MonsterCollection static class"""
         pass
@@ -43,27 +42,26 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
     def __repr__(self) -> str:
         monster_list = self.monster_data.keys()
         monster_str = "{c} is storing the following monsters: {m}".format(
-            c=self.__class__.__name__, m=", ".join(monster_list)
-        )
+            c=self.__class__.__name__, m=", ".join(monster_list))
         return monster_str
 
     @classmethod
     def load(cls) -> None:
         cls.monster_data = Loader.load_domain("monsters")
-        
+
     @classmethod
     def get_monster(cls, monster_cls: str) -> Monster:
         """Return an instance of a monster of specified type"""
         try:
-            return cls._monster_factory(monster_cls = monster_cls)
+            return cls._monster_factory(monster_cls=monster_cls)
         except ValueError as e:
             logger.error(e)
-    
+
     @classmethod
     def get_monster_npc(cls, npc_data: dict) -> NPC:
         """Return an instance of a monster of specified NPC."""
         try:
-            monster = cls._monster_factory(npc_data = npc_data)
+            monster = cls._monster_factory(npc_data=npc_data)
             monster.id = npc_data["id"]
             monster.set_unique_id(npc_data["id"])
             monster.set_treasure(npc_data["treasure"])
@@ -71,19 +69,21 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
             return monster
         except ValueError as e:
             logger.error(e)
-    
+
     @classmethod
-    def _monster_factory(cls, monster_cls: str = None, npc_data: dict = None) -> Monster:
+    def _monster_factory(cls,
+                         monster_cls: str = None,
+                         npc_data: dict = None) -> Monster:
         """Construct a monster of specified type"""
         try:
             if monster_cls:
                 monster_cls = monster_cls.lower()
             else:
                 monster_cls = npc_data["monster"].lower()
-                
+
             monster = cls.monster_map[monster_cls]
             return monster(cls.monster_data[monster_cls], npc_data)
         except (ValueError, KeyError) as e:
-            msg = "Cannot create monster {m} - it does not exist!".format(m=monster_cls)
+            msg = "Cannot create monster {m} - it does not exist!".format(
+                m=monster_cls)
             raise ValueError(msg)
-

@@ -17,7 +17,7 @@ class Weapons:
         # equip first weapon
         weapon_id = next(iter(self.weapons))
         weapon_count = self.weapons[weapon_id]
-        
+
         if weapon_count > 0:
             self.equip_weapon(weapon_id, "right_hand")
         if weapon_count > 1 or self.has_property(weapon_id, "two_handed"):
@@ -37,7 +37,7 @@ class Weapons:
         """Method to return specified weapon"""
         if weapon_id in self.weapons_data:
             return self.weapons_data[weapon_id]
-            
+
     def is_ranged(self, weapon_id: str) -> bool:
         """Method to determine if the weapon is ranged"""
         if weapon_id in self.weapons_data:
@@ -45,7 +45,7 @@ class Weapons:
             if "ranged" in weapon["type"]:
                 return True
         return False
-        
+
     def has_property(self, weapon_id: str, prop: str) -> bool:
         """Method to determine if weapon has property"""
         if weapon_id in self.weapons_data:
@@ -53,19 +53,19 @@ class Weapons:
             if prop in weapon["properties"]:
                 return True
         return False
-    
+
     def get_damage(self, weapon_id: str) -> str:
         """Method to return the weapon damage"""
         if weapon_id in self.weapons_data:
             damage = self.weapons_data[weapon_id]["damage"]
             return "{t}{d}".format(t=damage["total"], d=damage["die"])
-    
+
     def get_damage_type(self, weapon_id: str) -> str:
         """Method to return the weapon damage type"""
         if weapon_id in self.weapons_data:
             damage = self.weapons_data[weapon_id]["damage"]
             return damage["type"]
-    
+
     def equip_weapon(self, weapon_id: str, slot: str) -> None:
         """Method to equip specified weapon"""
         if weapon_id in self.weapons_data:
@@ -89,7 +89,7 @@ class Weapons:
     def get_all(self) -> list:
         """Method to return all the weapons"""
         return [self.weapons_data[weapon] for weapon in self.weapons]
-    
+
     def get_proficient(self) -> list:
         """Return the proficient weapons in a list"""
         all_profs = []

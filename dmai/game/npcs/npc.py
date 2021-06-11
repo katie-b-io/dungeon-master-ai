@@ -11,9 +11,9 @@ class NPC():
                 self.__setattr__(key, npc_data[key])
 
         except AttributeError as e:
-            logger.error("Cannot create NPC, incorrect attribute: {e}".format(e=e))
+            logger.error(
+                "Cannot create NPC, incorrect attribute: {e}".format(e=e))
             raise
-        
+
     def __repr__(self) -> str:
         return "NPC: {a}".format(a=self.name)
-    

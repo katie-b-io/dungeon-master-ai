@@ -14,10 +14,10 @@ class PlanningAgent(ABC):
         self.domain = domain
         self.problem = problem
         self.planner = self.get_planner(planner)
-        
+
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
-    
+
     @abstractmethod
     def build_domain(self) -> None:
         pass
@@ -32,17 +32,16 @@ class PlanningAgent(ABC):
             return self._planner_factory(planner)
         except ValueError as e:
             logger.error(e)
-    
+
     def _planner_factory(self, planner: str) -> PlannerAdapter:
         """Construct an instance of a PlannerAdapter"""
         try:
-            planner_map = {
-                "fd": FastDownwardAdapter
-            }
+            planner_map = {"fd": FastDownwardAdapter}
             planner = planner_map[planner]
             return planner(self.domain, self.problem)
         except (ValueError, KeyError) as e:
-            msg = "Cannot create planner {p} - it does not exist!".format(p=planner)
+            msg = "Cannot create planner {p} - it does not exist!".format(
+                p=planner)
             raise ValueError(msg)
 
     def prepare_next_move(self) -> None:
@@ -57,8 +56,9 @@ class PlanningAgent(ABC):
         return plan[0]
 
     def _construct_problem_header(self, problem: str, domain: str) -> str:
-        return "(define (problem {p}) (:domain {d})\n".format(p=problem, d=domain)
-    
+        return "(define (problem {p}) (:domain {d})\n".format(p=problem,
+                                                              d=domain)
+
     def _construct_problem_footer(self) -> str:
         return ")\n"
 
@@ -73,7 +73,7 @@ class PlanningAgent(ABC):
                 objects_str += "{o} - {t}\n".format(o=obj[0], t=obj[1])
         objects_str += ")\n"
         return objects_str
-    
+
     def _construct_init(self, init: list) -> str:
         """Method expects a list of tuples of any length.
         Tuples will be constructed into PDDL strings, e.g. (one, two, three)
@@ -83,7 +83,7 @@ class PlanningAgent(ABC):
             init_str += "({s})\n".format(s=" ".join(obj))
         init_str += ")\n"
         return init_str
-    
+
     def _construct_goal(self, goal: list) -> str:
         """Method expects a list of tuples of any length.
         Tuples will be constructed into PDDL strings, e.g. (one, two, three)
@@ -93,4 +93,3 @@ class PlanningAgent(ABC):
             goal_str += "({g})\n".format(g=" ".join(obj))
         goal_str += "))\n"
         return goal_str
-    

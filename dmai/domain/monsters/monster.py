@@ -42,14 +42,15 @@ class Monster(NPC, MonsterAgent):
             self.spells = Spells(self.spells)
 
         except AttributeError as e:
-            logger.error("Cannot create monster, incorrect attribute: {e}".format(e=e))
+            logger.error(
+                "Cannot create monster, incorrect attribute: {e}".format(e=e))
             raise
 
         # Initialise additional variables
         self.unique_id = None
         self.treasure = None
         self.must_kill = False
-        
+
         self.trigger_map = {
             "attack_of_opportunity": {
                 "can_trigger": True,
@@ -63,21 +64,22 @@ class Monster(NPC, MonsterAgent):
     def set_unique_id(self, unique_id: str) -> None:
         """Method to set unique id."""
         self.unique_id = unique_id
-    
+
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""
         self.treasure = treasure
-    
+
     def set_must_kill(self, must_kill: str) -> None:
         """Method to set must_kill."""
         self.must_kill = must_kill
-    
+
     def attack_of_opportunity(self) -> None:
         """Method to perform an attack of opportunity"""
-        logger.debug("Triggering attack of opportunity in monster: {m}".format(m=self.id))
+        logger.debug("Triggering attack of opportunity in monster: {m}".format(
+            m=self.id))
         if not State.stationary:
             OutputBuilder.append(NLG.attack_of_opportunity(attacker=self.name))
-        
+
     def trigger(self) -> None:
         """Method to perform any actions or print any new text if conditions met"""
         for trigger_type in self.trigger_map:

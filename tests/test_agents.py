@@ -20,7 +20,7 @@ class TestPlayerAgent(unittest.TestCase):
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         self.agent = PlayerAgent(problem="fighter")
-    
+
     def test_construction(self) -> None:
         self.assertIsInstance(self.agent, PlayerAgent)
         self.assertIsInstance(self.agent.agent, PlanningPlayer)
@@ -33,7 +33,7 @@ class TestMonsterAgent(unittest.TestCase):
         Config.agent.set_monster("planning")
         Config.planner.set_monster("fd")
         self.agent = MonsterAgent(problem="giant_rat")
-    
+
     def test_construction(self) -> None:
         self.assertIsInstance(self.agent, MonsterAgent)
         self.assertIsInstance(self.agent.agent, PlanningMonster)

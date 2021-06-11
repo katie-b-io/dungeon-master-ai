@@ -63,9 +63,10 @@ class Actions:
         """Check if a target can be attacked by an attacker.
         Returns tuple (bool, str) to indicate whether attack is possible
         and reason why not if not."""
-        
+
         # check if attacker and target are within attack range
-        if not State.get_current_room(attacker) == State.get_current_room(target):
+        if not State.get_current_room(attacker) == State.get_current_room(
+                target):
             return (False, "Different location")
         return (True, "")
 
@@ -82,12 +83,14 @@ class Actions:
                     # this is a game end condition
                     OutputBuilder.append(NLG.attack_npc_end_game(target))
                     dmai.dmai_helpers.gameover()
-                
-            OutputBuilder.append("{a} attacked {t}!".format(a=attacker, t=target))
+
+            OutputBuilder.append("{a} attacked {t}!".format(a=attacker,
+                                                            t=target))
             State.combat(attacker, target)
             return can_attack
         else:
-            OutputBuilder.append("{a} can't attack {t}!\n{r}".format(a=attacker, t=target, r=reason))
+            OutputBuilder.append("{a} can't attack {t}!\n{r}".format(
+                a=attacker, t=target, r=reason))
             return can_attack
 
     def _can_use(self, entity, equipment: str) -> tuple:
@@ -106,20 +109,23 @@ class Actions:
         except UnrecognisedEquipment:
             return (False, "unknown")
 
-    def use(self, equipment: str, entity: str = "player", stop: bool = False) -> bool:
+    def use(self,
+            equipment: str,
+            entity: str = "player",
+            stop: bool = False) -> bool:
         """Attempt to use a specified equipment.
         Returns a bool to indicate whether the action was successful"""
-        
+
         # get entity object
         if entity == "player":
             entity = State.get_player()
         else:
             entity = self.npcs.get_entity(entity)
-        
+
         if stop:
             entity.stop_using_equipment(equipment)
             can_use = True
-            
+
         else:
             # check if equipment can be used
             (can_use, reason) = self._can_use(entity, equipment)

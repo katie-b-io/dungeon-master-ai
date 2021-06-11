@@ -21,12 +21,12 @@ class DM:
         self._player_utter = None
         self.triggers = []
         self.adventure = Adventure(adventure)
-    
+
     def load(self) -> None:
         # Initialise the NPC Collection with the adventure data
         self.npcs = NPCCollection(self.adventure)
         self.npcs.load()
-        
+
         # Initialise the actions with the adventure and npc data
         self.actions = Actions(self.adventure, self.npcs)
 
@@ -58,7 +58,7 @@ class DM:
             else:
                 OutputBuilder.append(NLG.get_action())
             succeed = True
-            
+
         elif intent:
             # look up intent in map
             try:
@@ -66,7 +66,7 @@ class DM:
             except KeyError:
                 logger.error("Intent not in map: {i}".format(i=intent))
                 raise
-        
+
         # execute any triggers
         if succeed:
             self.execute_triggers()
@@ -77,7 +77,7 @@ class DM:
 
         # last thing to do: maintain state
         State.maintenance()
-        
+
         return succeed
 
     @property
@@ -93,13 +93,13 @@ class DM:
         if trigger not in self.triggers:
             logger.debug("Registering trigger: {n}".format(n=str(trigger)))
             self.triggers.append(trigger)
-    
+
     def deregister_trigger(self, trigger: object) -> None:
         """Deregister a trigger object"""
         if trigger in self.triggers:
             logger.debug("Deregistering trigger: {n}".format(n=str(trigger)))
             self.triggers.remove(trigger)
-    
+
     def execute_triggers(self) -> None:
         """Method to execute triggers"""
         for obj in self.triggers:
@@ -107,7 +107,7 @@ class DM:
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
-    
+
     def hint(self) -> None:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the OutputBuilder.
@@ -118,7 +118,8 @@ class DM:
         """Extract a destination from NLU entities dictionary.
         Returns a string with destination"""
         for entity in nlu_entities:
-            if entity["entity"] == "location" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "location" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
                 return entity["value"]
 
     def _get_target(self, nlu_entities: dict) -> str:
@@ -128,13 +129,16 @@ class DM:
         i = None
         npc = None
         for entity in nlu_entities:
-            if entity["entity"] == "monster" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "monster" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
                 monster = entity["value"]
-            if entity["entity"] == "id" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "id" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
                 i = entity["value"]
-            if entity["entity"] == "npc" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "npc" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
                 npc = entity["value"]
-                
+
         # monsters are indexed by a unique id, determine it if possible
         if monster:
             if i:
@@ -143,44 +147,54 @@ class DM:
             else:
                 # player hasn't appeared to specify particular individual, pick first alive one
                 # TODO get player confirmation about which monster to target
-                monster_id = self.npcs.get_monster_id(monster, status="alive", location=State.get_current_room_id())
+                monster_id = self.npcs.get_monster_id(
+                    monster,
+                    status="alive",
+                    location=State.get_current_room_id())
             return monster_id
-        
+
         # NPCs have unique ids
         if npc:
             return npc
-        
+
     def _get_equipment(self, nlu_entities: dict) -> str:
         """Extract a equipment from NLU entities dictionary.
         Returns a string with equipment"""
         for entity in nlu_entities:
-            if entity["entity"] == "equipment" and entity["confidence"] >= self.ENTITY_CONFIDENCE:
+            if entity["entity"] == "equipment" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
                 return entity["value"]
-            
-    def move(self, destination: str = None, entity: str = None, nlu_entities: dict = None) -> bool:
+
+    def move(self,
+             destination: str = None,
+             entity: str = None,
+             nlu_entities: dict = None) -> bool:
         """Attempt to move an entity to a destination determined by NLU or specified.
         Returns whether the move was successful."""
         if not entity:
             entity = "player"
         if not destination and nlu_entities:
             destination = self._get_destination(nlu_entities)
-        
+
         if not destination:
             moved = False
             OutputBuilder.append(NLG.no_destination())
-        else: 
+        else:
             logger.info("Moving {e} to {d}!".format(e=entity, d=destination))
             moved = self.actions.move(entity, destination)
         return moved
 
-    def attack(self, target: str = None, attacker: str = None, nlu_entities: dict = None) -> bool:
+    def attack(self,
+               target: str = None,
+               attacker: str = None,
+               nlu_entities: dict = None) -> bool:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the attack was successful."""
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
             target = self._get_target(nlu_entities)
-        
+
         if not target:
             attacked = False
             OutputBuilder.append(NLG.no_target())
@@ -188,24 +202,34 @@ class DM:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)
         return attacked
-    
-    def use(self, equipment: str = None, entity: str = None, nlu_entities: dict = None, stop: bool = False) -> bool:
+
+    def use(self,
+            equipment: str = None,
+            entity: str = None,
+            nlu_entities: dict = None,
+            stop: bool = False) -> bool:
         """Attempt to use an equipment.
         Returns whether the use was successful."""
         if not entity:
             entity = "player"
         if not equipment and nlu_entities:
             equipment = self._get_equipment(nlu_entities)
-        
+
         if not equipment:
             used = False
             OutputBuilder.append(NLG.no_equipment(stop=stop))
-        else: 
+        else:
             logger.info("{e} is using {q}!".format(e=entity, q=equipment))
             used = self.actions.use(equipment, entity, stop)
         return used
-    
-    def stop_using(self, equipment: str = None, entity: str = None, nlu_entities: dict = None) -> bool:
+
+    def stop_using(self,
+                   equipment: str = None,
+                   entity: str = None,
+                   nlu_entities: dict = None) -> bool:
         """Attempt to stop using an equipment.
         Returns whether the stoppage was successful."""
-        return self.use(equipment=equipment, entity=entity, nlu_entities=nlu_entities, stop=True)
+        return self.use(equipment=equipment,
+                        entity=entity,
+                        nlu_entities=nlu_entities,
+                        stop=True)

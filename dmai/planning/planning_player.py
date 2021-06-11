@@ -819,7 +819,7 @@ class PlanningPlayer(PlanningAgent):
                 if not State.travel_allowed(room1, room2):
                     init.append(("locked", door))
                 # TODO account for broken doors
-            
+
             # Puzzles
             for room in State.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
@@ -831,9 +831,11 @@ class PlanningPlayer(PlanningAgent):
                         for skill in Skills.get_all_skills():
                             if puzzle.check_solution_skill(skill[0]):
                                 init.append(("dc", puzzle.id, skill[0]))
-                        for equipment in State.get_player().get_all_equipment_ids():
+                        for equipment in State.get_player(
+                        ).get_all_equipment_ids():
                             if puzzle.check_solution_equipment(equipment):
-                                init.append(("dc_equipment", puzzle.id, equipment))
+                                init.append(
+                                    ("dc_equipment", puzzle.id, equipment))
                         # TODO add item solutions
                         # TODO add other solutions
 
@@ -848,7 +850,7 @@ class PlanningPlayer(PlanningAgent):
 
             # Construct the string
             writer.write(self._construct_init(init))
-            
+
             ################################################
             # Construct the problem file goal
             goal = []

@@ -27,7 +27,8 @@ class Race:
             logger.error("Race does not exist: {r}".format(r=e))
             raise
         except AttributeError as e:
-            logger.error("Cannot create race, incorrect attribute: {e}".format(e=e))
+            logger.error(
+                "Cannot create race, incorrect attribute: {e}".format(e=e))
             raise
 
     def __repr__(self) -> str:

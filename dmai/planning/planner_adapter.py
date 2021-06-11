@@ -10,10 +10,10 @@ class PlannerAdapter(ABC):
         """PlannerAdapter abstract class"""
         self.domain = domain
         self.problem = problem
-        
+
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
-    
+
     @abstractmethod
     def build_plan(self) -> None:
         pass

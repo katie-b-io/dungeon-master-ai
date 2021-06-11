@@ -8,7 +8,7 @@ class OutputBuilderMeta(type):
         instance = super().__new__(cls, name, bases, dict)
         instance.output_utterances = []
         return instance
-    
+
     def __call__(cls, *args, **kwargs) -> None:
         """OutputBuilder static singleton metaclass"""
         if cls not in cls._instances:
@@ -18,10 +18,10 @@ class OutputBuilderMeta(type):
 
 
 class OutputBuilder(metaclass=OutputBuilderMeta):
-    
+
     # class variables
     output_utterances = []
-    
+
     def __init__(self) -> None:
         """OutputBuilder static class"""
         pass
@@ -32,25 +32,29 @@ class OutputBuilder(metaclass=OutputBuilderMeta):
         cls.output_utterances = []
 
     @classmethod
-    def append(cls, utterance: str, wrap: bool = True, newline: bool = False) -> None:
+    def append(cls,
+               utterance: str,
+               wrap: bool = True,
+               newline: bool = False) -> None:
         """Append an utterance to the output"""
         if utterance:
             if wrap:
-                cls.output_utterances.extend(textwrap.wrap(utterance, 100, replace_whitespace=False))
+                cls.output_utterances.extend(
+                    textwrap.wrap(utterance, 100, replace_whitespace=False))
             else:
                 cls.output_utterances.append(utterance)
             cls.output_utterances.append("")
-    
+
     @classmethod
     def format(cls) -> str:
         """Return the formatted output"""
         return "\n".join(cls.output_utterances)
-    
+
     @classmethod
     def print(cls) -> str:
         """Print the formatted output"""
         print(cls.format())
-    
+
     @classmethod
     def has_response(cls) -> bool:
         """Return whether the DM has a response"""

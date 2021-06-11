@@ -9,9 +9,9 @@ from dmai.game.state import State
 from dmai.game.game import Game
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 
+
 class TestState(unittest.TestCase):
     """Test the State class"""
-
     def setUp(self) -> None:
         self.game = Game()
         self.game.load()
@@ -39,13 +39,13 @@ class TestState(unittest.TestCase):
         room_id = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
             State.set_current_room(entity, room_id)
-            
+
     def test_set_current_room_malformed_room(self) -> None:
         entity = "yoda"
         room_id = "inns_cellar"
         with self.assertRaises(UnrecognisedEntityError):
             State.set_current_room(entity, room_id)
-    
+
     def test_get_current_room_id_player(self) -> None:
         entity = "player"
         room = "stout_meal_inn"
@@ -60,18 +60,18 @@ class TestState(unittest.TestCase):
         current = "stout_meal_inn"
         destination = "inns_cellar"
         self.assertEqual(True, State.travel_allowed(current, destination))
-    
+
     def test_travel_allowed_broken_door(self) -> None:
         current = "storage_room"
         destination = "burial_chamber"
         State.break_door(current, destination)
         self.assertEqual(True, State.travel_allowed(current, destination))
-    
+
     def test_travel_allowed_not_connected(self) -> None:
         current = "stout_meal_inn"
         destination = "antechamber"
         self.assertEqual(False, State.travel_allowed(current, destination))
-            
+
     def test_travel_allowed_malformed_destination(self) -> None:
         current = "stout_meal_inn"
         destination = "the_moon"
@@ -83,7 +83,7 @@ class TestState(unittest.TestCase):
         destination = "inns_cellar"
         with self.assertRaises(UnrecognisedRoomError):
             State.travel_allowed(current, destination)
-    
+
     def test_lock_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
@@ -107,7 +107,7 @@ class TestState(unittest.TestCase):
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
             State.lock_door(room1, room2)
-            
+
     def test_unlock_door_malformed(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "the_moon"
@@ -119,6 +119,7 @@ class TestState(unittest.TestCase):
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
             State.break_door(room1, room2)
-            
+
+
 if __name__ == "__main__":
     unittest.main()
