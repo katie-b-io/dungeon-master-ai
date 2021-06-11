@@ -138,7 +138,17 @@ class NPCCollection:
         Returns a list of NPCs"""
         return list(self.npcs.values())
 
+    def get_all_npc_ids(self) -> list:
+        """Method to return all NPC IDs in a list.
+        Returns a list of NPC IDs"""
+        return list(self.npcs.keys())
+
     def get_all_monsters(self) -> list:
         """Method to return all monster objects in a list.
         Returns a list of monsters"""
         return list(self.monsters.values())
+
+    def get_all_monster_ids(self) -> list:
+        """Method to return all monster IDs in a list.
+        Returns a list of monster IDs"""
+        return list(self.monsters.keys())

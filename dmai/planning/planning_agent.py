@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from dmai.planning.planner_adapter import PlannerAdapter
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
+from dmai.planning.planning_actions import planning_actions
 
 from dmai.utils.logger import get_logger
 
@@ -55,6 +56,8 @@ class PlanningAgent(ABC):
         plan = self.planner.parse_plan()
         return plan[0]
 
+    ################################################
+    # Methods for PDDL problem files
     def _construct_problem_header(self, problem: str, domain: str) -> str:
         return "(define (problem {p}) (:domain {d})\n".format(p=problem,
                                                               d=domain)
@@ -80,7 +83,10 @@ class PlanningAgent(ABC):
         becomes (one two three)"""
         init_str = "(:init\n"
         for obj in init:
-            init_str += "({s})\n".format(s=" ".join(obj))
+            if len(obj) == 1:
+                init_str += "({s})\n".format(s=obj[0])
+            else:
+                init_str += "({s})\n".format(s=" ".join(obj))
         init_str += ")\n"
         return init_str
 
@@ -90,6 +96,77 @@ class PlanningAgent(ABC):
         becomes (one two three)"""
         goal_str = "(:goal (and\n"
         for obj in goal:
-            goal_str += "({g})\n".format(g=" ".join(obj))
+            if len(obj) == 1:
+                goal_str += "({s})\n".format(s=obj[0])
+            else:
+                goal_str += "({g})\n".format(g=" ".join(obj))
         goal_str += "))\n"
         return goal_str
+
+    ################################################
+    # Methods for PDDL domain files
+    def _construct_domain_header(self, domain: str) -> str:
+        return "(define (domain {d})\n".format(d=domain)
+
+    def _construct_domain_footer(self) -> str:
+        return ")\n"
+
+    def _construct_requirements(self) -> str:
+        requirements_str = "(:requirements \n"
+        requirements_str += ":strips\n"
+        requirements_str += ":typing\n"
+        requirements_str += ":conditional-effects\n"
+        requirements_str += ":negative-preconditions\n"
+        requirements_str += ":equality\n"
+        requirements_str += ":disjunctive-preconditions\n"
+        requirements_str += ")\n"
+        return requirements_str
+
+    def _construct_types(self, types: list) -> str:
+        """Method expects a list of dicts of any length.
+        Dicts will be constructed into PDDL strings, e.g.
+        {
+            "type": "attitude",
+            "subtypes": ["indifferent", "friendly", "hostile"]
+        }
+        becomes (indifferent friendly hostile - attitude)"""
+        types_str = "(:types\n"
+        for obj in types:
+            t = obj["type"]
+            subtypes = " ".join(obj["subtypes"])
+            types_str += "{s} - {t}\n".format(s=subtypes, t=t)
+        types_str += ")\n"
+        return types_str
+
+    def _construct_predicates(self, predicates: list) -> str:
+        """Method expects a list of dicts of any length.
+        Dicts will be constructed into PDDL strings, e.g.
+        {
+            "predicate": "can_attack_roll",
+            "params": [
+                (parameter, type)
+                ("player", "player"),
+                ("target", "object")
+            ]
+        }
+        becomes (can_attack_roll ?player - player ?target - object)"""
+        predicates_str = "(:predicates\n"
+        for predicate in predicates:
+            p = predicate["predicate"]
+            if predicate["params"]:
+                params = ""
+                for param in predicate["params"]:
+                    params += " ?{p} - {t}".format(p=param[0], t=param[1])
+                predicates_str += "({p}{params})\n".format(p=p, params=params)
+            else:
+                predicates_str += "({p})\n".format(p=p)
+        predicates_str += ")\n"
+        return predicates_str
+
+    def _construct_actions(self, actions: list) -> str:
+        """Method expects a list of action IDs. 
+        Action PDDL strings will be looked up and appended to string"""
+        actions_str = ""
+        for action in actions:
+            actions_str += "{a}\n".format(a=planning_actions[action])
+        return actions_str

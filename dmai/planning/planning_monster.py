@@ -44,8 +44,6 @@ class PlanningMonster(PlanningAgent):
                         player npc monster - entity
                         ; Monsters exist
                         cat giant_rat goblin skeleton zombie - monster
-                        ; Monster variants exist
-                        diseased_giant_rat - giant_rat
                         ; Abilities and skills exist
                         ability - object
                         skill - ability
@@ -374,7 +372,7 @@ class PlanningMonster(PlanningAgent):
                     giant_rat1 - giant_rat
                     giant_rat2 - giant_rat
                     giant_rat3 - giant_rat
-                    giant_rat4 - diseased_giant_rat
+                    giant_rat4 - giant_rat
                     ; Player
                     player - player
                     ; Room

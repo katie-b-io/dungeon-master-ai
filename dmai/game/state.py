@@ -41,6 +41,7 @@ class State(metaclass=StateMeta):
     paused = False
     talking = False
     questing = False
+    complete = False
     in_combat = False
     torch_lit = False
     stationary = False
@@ -101,6 +102,10 @@ class State(metaclass=StateMeta):
     @classmethod
     def received_quest(cls) -> None:
         cls.questing = True
+    
+    @classmethod
+    def complete_quest(cls) -> None:
+        cls.complete = True
 
     @classmethod
     def talk(cls) -> None:

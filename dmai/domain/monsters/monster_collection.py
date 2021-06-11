@@ -87,3 +87,9 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
             msg = "Cannot create monster {m} - it does not exist!".format(
                 m=monster_cls)
             raise ValueError(msg)
+
+    @classmethod
+    def get_all_monsters(cls) -> list:
+        """Method to return all monster IDs in a list.
+        Returns a list of monster IDs"""
+        return list(cls.monster_map.keys())
