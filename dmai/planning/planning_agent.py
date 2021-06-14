@@ -50,11 +50,15 @@ class PlanningAgent(ABC):
         Planning agents build a plan"""
         self.build_domain()
         self.build_problem()
-        self.planner.build_plan()
+        # TODO do something with succeed
+        succeed = self.planner.build_plan()
 
     def get_next_move(self) -> str:
         plan = self.planner.parse_plan()
-        return plan[0]
+        if len(plan) > 0:
+            return plan[0]
+        else:
+            return False
 
     ################################################
     # Methods for PDDL problem files
@@ -66,40 +70,53 @@ class PlanningAgent(ABC):
         return ")\n"
 
     def _construct_objects(self, objects: list) -> str:
-        """Method expects a list of tuples of one or two length.
+        """Method expects a list of tuples of two length.
         If length is two, the tuple is (object, type)"""
         objects_str = "(:objects\n"
         for obj in objects:
-            if len(obj) == 1:
-                objects_str += "{o}\n".format(o=obj[0])
-            else:
-                objects_str += "{o} - {t}\n".format(o=obj[0], t=obj[1])
+            objects_str += "{o} - {t}\n".format(o=obj[0], t=obj[1])
         objects_str += ")\n"
         return objects_str
 
     def _construct_init(self, init: list) -> str:
-        """Method expects a list of tuples of any length.
+        """Method expects a list of list of any length.
         Tuples will be constructed into PDDL strings, e.g. (one, two, three)
         becomes (one two three)"""
         init_str = "(:init\n"
         for obj in init:
-            if len(obj) == 1:
-                init_str += "({s})\n".format(s=obj[0])
-            else:
-                init_str += "({s})\n".format(s=" ".join(obj))
+            init_str += "({s})\n".format(s=" ".join(obj))
         init_str += ")\n"
         return init_str
 
-    def _construct_goal(self, goal: list) -> str:
-        """Method expects a list of tuples of any length.
+    def _construct_goal(self, goal: list, alt_goal: list = None) -> str:
+        """Method expects a list of list of any length.
         Tuples will be constructed into PDDL strings, e.g. (one, two, three)
         becomes (one two three)"""
-        goal_str = "(:goal (and\n"
+        if alt_goal:
+            goal_str = "(:goal (or\n"
+        else:
+            goal_str = "(:goal (and\n"
         for obj in goal:
             if len(obj) == 1:
                 goal_str += "({s})\n".format(s=obj[0])
             else:
-                goal_str += "({g})\n".format(g=" ".join(obj))
+                if obj[0] == "not":
+                        goal_str += "(not "
+                        goal_str += "({g})".format(g=" ".join(obj[1:]))
+                        goal_str += ")\n"
+                else:
+                    goal_str += "({g})\n".format(g=" ".join(obj))
+        if alt_goal:
+            for obj in alt_goal:
+                if len(obj) == 1:
+                    goal_str += "({s})\n".format(s=obj[0])
+                else:
+                    if obj[0] == "not":
+                        goal_str += "(not "
+                        goal_str += "({g})".format(g=" ".join(obj[1:]))
+                        goal_str += ")\n"
+                    else:
+                        goal_str += "({g})\n".format(g=" ".join(obj))
         goal_str += "))\n"
         return goal_str
 

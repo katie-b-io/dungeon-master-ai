@@ -19,9 +19,12 @@ logger = get_logger(__name__)
 
 
 class Monster(NPC, MonsterAgent):
-    def __init__(self, monster_data: dict, npc_data: dict = None) -> None:
+    def __init__(self, monster_data: dict, npc_data: dict = None, unique_id: str = None) -> None:
         """Monster abstract class"""
-        MonsterAgent.__init__(self, problem=monster_data["id"])
+        if unique_id:
+            MonsterAgent.__init__(self, problem=unique_id)
+        else:
+            MonsterAgent.__init__(self, problem=monster_data["id"])
         if npc_data:
             NPC.__init__(self, npc_data)
 
@@ -47,7 +50,7 @@ class Monster(NPC, MonsterAgent):
             raise
 
         # Initialise additional variables
-        self.unique_id = None
+        self.unique_id = unique_id
         self.treasure = None
         self.must_kill = False
 
@@ -60,10 +63,6 @@ class Monster(NPC, MonsterAgent):
 
     def __repr__(self) -> str:
         return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
-
-    def set_unique_id(self, unique_id: str) -> None:
-        """Method to set unique id."""
-        self.unique_id = unique_id
 
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""

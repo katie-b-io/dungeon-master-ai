@@ -73,7 +73,14 @@ class DM:
 
         # prepare next AI moves
         State.get_player().prepare_next_move()
-        # TODO monster next moves
+
+        # prepare next monster moves
+        for monster in self.npcs.get_all_monsters():
+            if State.is_alive(monster.unique_id):
+                if State.get_current_room_id() == State.get_current_room_id(monster.unique_id):
+                    monster.prepare_next_move()
+                    # TODO decide where to trigger the monster moves
+                    monster.print_next_move()
 
         # last thing to do: maintain state
         State.maintenance()
