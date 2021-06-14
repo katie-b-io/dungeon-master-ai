@@ -52,5 +52,9 @@ class FastDownwardAdapter(PlannerAdapter):
                                       p=self.problem))
         with open(plan_file, 'r') as reader:
             plan = reader.readlines()
+        
+        # remove the footer line
+        if "; cost = 0 (unit cost)" in plan[-1]:
+            del plan[-1]
 
         return plan
