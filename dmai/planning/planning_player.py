@@ -329,6 +329,8 @@ class PlanningPlayer(PlanningAgent):
                 init.append([skill[0], skill[0]])
             for weapon in State.get_player().get_all_weapon_ids():
                 init.append(["has", "player", weapon])
+                if State.get_player().is_equipped(weapon):
+                    init.append(["equipped", "player", weapon])
             for equipment in State.get_player().get_all_equipment_ids():
                 init.append([equipment, equipment])
                 init.append(["has", "player", equipment])

@@ -740,7 +740,7 @@ nlu:
     - masons tool
     - mason tool
 
-- synonym: light_crossbow
+- synonym: crossbow_light
   examples: |
     - light crossbow
     - crossbow

@@ -141,9 +141,8 @@ class Actions:
 
         # check if entity has weapon in their Weapons
         try:
-            (has_weapon, reason) = entity.has_weapon(weapon)
-            if has_weapon:
-                print("has weapon")
+            (can_equip, reason) = entity.can_equip(weapon)
+            if can_equip:
                 return (True, "")
             else:
                 return (False, reason)
@@ -164,6 +163,7 @@ class Actions:
         (can_equip, reason) = self._can_equip(entity, weapon)
         if can_equip:
             entity.equip_weapon(weapon)
+            OutputBuilder.append(NLG.equip_weapon(weapon))
         else:
             OutputBuilder.append(NLG.cannot_equip(weapon, reason))
         return can_equip
@@ -175,9 +175,8 @@ class Actions:
 
         # check if entity has weapon equipped
         try:
-            (has_weapon, reason) = entity.is_equipped(weapon)
-            if has_weapon:
-                print("weapon equipped")
+            (can_unequip, reason) = entity.can_unequip(weapon)
+            if can_unequip:
                 return (True, "")
             else:
                 return (False, reason)
@@ -198,6 +197,7 @@ class Actions:
         (can_unequip, reason) = self._can_unequip(entity, weapon)
         if can_unequip:
             entity.unequip_weapon(weapon)
+            OutputBuilder.append(NLG.unequip_weapon(weapon))
         else:
             OutputBuilder.append(NLG.cannot_unequip(weapon, reason))
         return can_unequip

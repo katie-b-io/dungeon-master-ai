@@ -37,6 +37,36 @@ class Weapons:
         """Method to return specified weapon"""
         if weapon_id in self.weapons_data:
             return self.weapons_data[weapon_id]
+    
+    def can_equip(self, weapon_id: str) -> tuple:
+        """Method to return whether specified weapon can be equipped.
+        Returns a tuple with the boolean and a string with a reason."""
+        if not weapon_id in self.weapons:
+            return (False, "not owned")
+
+        weapon_count = self.weapons[weapon_id]
+        right_weapon = self.get_equipped("right_hand")
+        left_weapon = self.get_equipped("left_hand")
+
+        if weapon_count == 1 and right_weapon and weapon_id == right_weapon["id"]:
+            return (False, "already equipped")
+
+        if weapon_count == 1 and left_weapon and weapon_id == left_weapon["id"]:
+            return (False, "already equipped")
+
+        if right_weapon and left_weapon:
+            return (False, "no free slots")
+        return (True, "")
+
+    def can_unequip(self, weapon_id: str) -> tuple:
+        """Method to return whether specified weapon can be unequipped.
+        Returns a tuple with the boolean and a string with a reason."""
+        if not weapon_id in self.weapons:
+            return (False, "not owned")
+        
+        if not self.is_equipped(weapon_id):
+            return (False, "not equipped")
+        return (True, "")
 
     def is_ranged(self, weapon_id: str) -> bool:
         """Method to determine if the weapon is ranged"""
@@ -66,16 +96,27 @@ class Weapons:
             damage = self.weapons_data[weapon_id]["damage"]
             return damage["type"]
 
-    def equip_weapon(self, weapon_id: str, slot: str) -> None:
+    def equip_weapon(self, weapon_id: str, slot: str = None) -> None:
         """Method to equip specified weapon"""
         if weapon_id in self.weapons_data:
-            self.__setattr__(slot, weapon_id)
+            if slot:
+                self.__setattr__(slot, weapon_id)
+            else:
+                if self.has_property(weapon_id, "two_handed"):
+                    self.__setattr__("left_hand", weapon_id)
+                    self.__setattr__("right_hand", weapon_id)
+                    return
+                else:
+                    if self.get_equipped("right_hand"):
+                        self.__setattr__("left_hand", weapon_id)
+                        return
+                    self.__setattr__("right_hand", weapon_id)
 
     def unequip_weapon(self, weapon_id: str) -> None:
         """Method to unequip specified weapon"""
         if self.right_hand == weapon_id:
             self.right_hand = None
-        elif self.left_hand == weapon_id:
+        if self.left_hand == weapon_id:
             self.left_hand = None
 
     def get_equipped(self, slot) -> dict:
@@ -85,6 +126,18 @@ class Weapons:
             return self.weapons_data[self.right_hand]
         if slot == "left_hand" and self.left_hand:
             return self.weapons_data[self.left_hand]
+    
+    def is_equipped(self, weapon_id: str) -> bool:
+        """Method to determine if weapon is equipped.
+        Returns bool"""
+        right_weapon = self.get_equipped("right_hand")
+        left_weapon = self.get_equipped("left_hand")
+
+        if right_weapon and weapon_id == right_weapon["id"]:
+            return True
+        if left_weapon and weapon_id == left_weapon["id"]:
+            return True
+        return False
 
     def get_all(self) -> list:
         """Method to return all the weapons"""

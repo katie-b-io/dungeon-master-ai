@@ -184,6 +184,12 @@ class NLG(metaclass=NLGMeta):
         elif reason == "not owned":
             return "You cannot equip {w} because it's not in your inventory!".format(
                 w=weapon)
+        elif reason == "no free slots":
+            return "You cannot equip {w} because you don't have any free slots! Unequip something first.".format(
+                w=weapon)
+        elif reason == "already equipped":
+            return "You cannot equip {w} because it's already equipped!".format(
+                w=weapon)
 
     @classmethod
     def cannot_unequip(cls, weapon: str, reason: str = None) -> str:
@@ -192,9 +198,28 @@ class NLG(metaclass=NLGMeta):
             return "You cannot unequip {w}".format(w=weapon)
         elif reason == "unknown":
             return "You cannot unequip unknown equipment: {w}!".format(w=weapon)
+        elif reason == "not owned":
+            return "You cannot unequip {w} because it's not in your inventory!".format(
+                w=weapon)
         elif reason == "not equipped":
             return "You cannot unequip {w} because it's not equipped!".format(
                 w=weapon)
+
+    @classmethod
+    def equip_weapon(cls, weapon: str) -> str:
+        """Return the utterance for equipping a weapon"""
+        utters = [
+            "You equipped {w}".format(w=weapon)
+        ]
+        return random.choice(utters)
+
+    @classmethod
+    def unequip_weapon(cls, weapon: str) -> str:
+        """Return the utterance for unequipping a weapon"""
+        utters = [
+            "You unequipped {w}".format(w=weapon)
+        ]
+        return random.choice(utters)
 
     @classmethod
     def light_torch(cls) -> str:

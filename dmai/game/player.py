@@ -45,6 +45,16 @@ class Player(PlayerAgent):
         """Method to stop using specified equipment"""
         self.character.stop_using_equipment(equipment)
 
+    def can_equip(self, weapon: str) -> tuple:
+        """Method to return whether the player can equip specified weapon.
+        Returns a tuple with the boolean and a string with a reason."""
+        return self.character.can_equip(weapon)
+
+    def can_unequip(self, weapon: str) -> tuple:
+        """Method to return whether the playercan unequip specified weapon.
+        Returns a tuple with the boolean and a string with a reason."""
+        return self.character.can_unequip(weapon)
+
     def equip_weapon(self, weapon: str) -> None:
         """Method to equip specified weapon"""
         self.character.equip_weapon(weapon)
@@ -52,6 +62,10 @@ class Player(PlayerAgent):
     def unequip_weapon(self, weapon: str) -> None:
         """Method to unequip specified weapon"""
         self.character.unequip_weapon(weapon)
+    
+    def is_equipped(self, weapon: str) -> bool:
+        """Method to check whether weapon is equipped"""
+        return self.character.is_equipped(weapon)
 
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
@@ -114,11 +128,13 @@ class Player(PlayerAgent):
 
         # Attacks
         char_str += div
-        char_str += "{l:<20} {v:<20} {t:<30}\n".format(l="Attacks:",
+        char_str += "{l:<20} {v:<20} {t:<30}\n".format(l="Attacks (equipped):",
                                                        v="Attack bonus",
                                                        t="Damage (type)")
         for (weapon, name) in self.character.get_all_weapons():
-            char_str += "{l:<20} {a:<20} {v:<30}\n".format(
+            if self.character.is_equipped(weapon): 
+                name = "{n} (equipped)".format(n=name)
+            char_str += "{l:<25} {a:<20} {v:<30}\n".format(
                 l=name + ":",
                 a=self.character.get_signed_attack_bonus(weapon),
                 v=self.character.get_formatted_attack(weapon),
