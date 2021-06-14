@@ -332,6 +332,7 @@ class State(metaclass=StateMeta):
     def _check_connection_exists(cls, room_id1: str, room_id2: str) -> bool:
         """Method to check connection exists.
         Raises UnrecognisedRoomError exception if not"""
+        r1, r2 = "", ""
         try:
             for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
                 cls.dm.adventure.rooms[r1].connections[r2]
