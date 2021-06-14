@@ -50,10 +50,10 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
         cls.monster_data = Loader.load_domain("monsters")
 
     @classmethod
-    def get_monster(cls, monster_cls: str) -> Monster:
+    def get_monster(cls, monster_cls: str, unique_id: str = None) -> Monster:
         """Return an instance of a monster of specified type"""
         try:
-            return cls._monster_factory(monster_cls=monster_cls)
+            return cls._monster_factory(monster_cls=monster_cls, unique_id=unique_id)
         except ValueError as e:
             logger.error(e)
 
@@ -61,9 +61,8 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
     def get_monster_npc(cls, npc_data: dict) -> NPC:
         """Return an instance of a monster of specified NPC."""
         try:
-            monster = cls._monster_factory(npc_data=npc_data)
+            monster = cls._monster_factory(npc_data=npc_data, unique_id=npc_data["id"])
             monster.id = npc_data["id"]
-            monster.set_unique_id(npc_data["id"])
             monster.set_treasure(npc_data["treasure"])
             monster.set_must_kill(npc_data["must_kill"])
             return monster
@@ -73,7 +72,8 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
     @classmethod
     def _monster_factory(cls,
                          monster_cls: str = None,
-                         npc_data: dict = None) -> Monster:
+                         npc_data: dict = None, 
+                         unique_id: str = None) -> Monster:
         """Construct a monster of specified type"""
         try:
             if monster_cls:
@@ -82,7 +82,7 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
                 monster_cls = npc_data["monster"].lower()
 
             monster = cls.monster_map[monster_cls]
-            return monster(cls.monster_data[monster_cls], npc_data)
+            return monster(cls.monster_data[monster_cls], npc_data, unique_id)
         except (ValueError, KeyError) as e:
             msg = "Cannot create monster {m} - it does not exist!".format(
                 m=monster_cls)
