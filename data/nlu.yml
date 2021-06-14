@@ -232,6 +232,25 @@ nlu:
     - overwhelm [zombie](monster)
     - wallop [skeleton](monster)
     - pounce the [cat](monster)
+    - I swing my [shortsword](weapon)
+    - I use my [sword](weapon)
+    - I hit the [skeleton](monster) with my [short sword](weapon)
+    - I stab the [first](id) [rat](monster) with the [dagger](weapon)
+    - I attack [corvus](npc) with my [daggers](weapon)
+    - I swing my [greataxe](weapon) at the [skeleton](monster)
+    - I use the [great axe](weapon) against the [goblin](monster)
+    - I strike the [zombie](monster) with my [greatax](weapon)
+    - I swing my [handaxe](weapon) at the [skeleton](monster)
+    - I use my [hand axe](weapon) against the [goblin](monster)
+    - I slash the [zombie](monster) with the [handax](weapon)
+    - I attack with my [javelin](weapon)
+    - I stab [anvil](npc) with the [javelin](weapon)
+    - swing with the [quaterstaff](weapon)
+    - use the [quarter staff](weapon) on the [giant rat](monster)
+    - attack with the [quaterstaff](weapon)
+    - swing my [scimitar](weapon) at the [skeleton](monster)
+    - bash the [zombie](monster) with my [warhammer](weapon)
+    - swing the [war hammer](weapon) at the [second](id) [giant rat](monster)
 
 - intent: ranged_attack
   examples: |
@@ -310,6 +329,32 @@ nlu:
     - I want to search
     - I use my action to search
     - I take the search action
+
+- intent: equip
+  examples: |
+    - I equip my [crossbow](weapon)
+    - equip my [dagger](weapon)
+    - I equip the [greataxe](weapon)
+    - equip the [handaxe](weapon)
+    - I equip my [javelin](weapon)
+    - equip my [quarterstaff](weapon)
+    - I equip the [scimitar](weapon)
+    - equip the [shortbow](weapon)
+    - I equip my [shortsword](weapon)
+    - I equip [warhammer](weapon)
+
+- intent: unequip
+  examples: |
+    - I unequip my [crossbow](weapon)
+    - unequip my [dagger](weapon)
+    - I unequip the [greataxe](weapon)
+    - unequip the [handaxe](weapon)
+    - I unequip my [javelin](weapon)
+    - unequip my [quarterstaff](weapon)
+    - I unequip the [scimitar](weapon)
+    - unequip the [shortbow](weapon)
+    - I unequip my [shortsword](weapon)
+    - I unequip [warhammer](weapon)
 
 - intent: use
   examples: |
@@ -768,3 +813,31 @@ nlu:
 - synonym: sleight_of_hand
   examples: |
     - sleight of hand
+
+- synonym: shortsword
+  examples: |
+    - short sword
+    - sword
+
+- synonym: dagger
+  examples: |
+    - daggers
+
+- synonym: greataxe
+  examples: |
+    - great axe
+    - greatax
+
+- synonym: handaxe
+  examples: |
+    - hand axe
+    - handax
+
+- synonym: quarterstaff
+  examples: |
+    - quarter staff
+    - quaterstaff
+
+- synonym: warhammer
+  examples: |
+    - war hammer

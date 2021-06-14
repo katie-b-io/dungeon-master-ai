@@ -158,6 +158,45 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
+    def no_weapon(cls, unequip: bool = False) -> str:
+        """Return the utterance for no weapon"""
+        if unequip:
+            utters = [
+                "Can you confirm the weapon you want to unequip",
+                "Sorry, what do you want to unequip?",
+                "I'm not sure where you want to unequip, can you repeat the weapon",
+            ]
+        else:
+            utters = [
+                "Can you confirm the weapon you want to equip",
+                "Sorry, what do you want to equip?",
+                "I'm not sure where you want to equip, can you repeat the weapon",
+            ]
+        return random.choice(utters)
+
+    @classmethod
+    def cannot_equip(cls, weapon: str, reason: str = None) -> str:
+        """Return the utterance for not allowing equipping of weapon"""
+        if not reason:
+            return "You cannot equip {w}".format(w=weapon)
+        elif reason == "unknown":
+            return "You cannot equip unknown equipment: {w}!".format(w=weapon)
+        elif reason == "not owned":
+            return "You cannot equip {w} because it's not in your inventory!".format(
+                w=weapon)
+
+    @classmethod
+    def cannot_unequip(cls, weapon: str, reason: str = None) -> str:
+        """Return the utterance for not allowing unequipping of weapon"""
+        if not reason:
+            return "You cannot unequip {w}".format(w=weapon)
+        elif reason == "unknown":
+            return "You cannot unequip unknown equipment: {w}!".format(w=weapon)
+        elif reason == "not equipped":
+            return "You cannot unequip {w} because it's not equipped!".format(
+                w=weapon)
+
+    @classmethod
     def light_torch(cls) -> str:
         """Return the utterance for lighting a torch"""
         utters = [

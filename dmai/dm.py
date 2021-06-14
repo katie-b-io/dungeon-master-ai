@@ -36,7 +36,9 @@ class DM:
             "move": self.move,
             "attack": self.attack,
             "use": self.use,
-            "stop_using": self.stop_using
+            "stop_using": self.stop_using,
+            "equip": self.equip,
+            "unequip": self.unequip
         }
 
     def input(
@@ -77,7 +79,8 @@ class DM:
         # prepare next monster moves
         for monster in self.npcs.get_all_monsters():
             if State.is_alive(monster.unique_id):
-                if State.get_current_room_id() == State.get_current_room_id(monster.unique_id):
+                if State.get_current_room_id() == State.get_current_room_id(
+                        monster.unique_id):
                     monster.prepare_next_move()
                     # TODO decide where to trigger the monster moves
                     monster.print_next_move()
@@ -172,6 +175,14 @@ class DM:
                     "confidence"] >= self.ENTITY_CONFIDENCE:
                 return entity["value"]
 
+    def _get_weapon(self, nlu_entities: dict) -> str:
+        """Extract a weapon from NLU entities dictionary.
+        Returns a string with weapon"""
+        for entity in nlu_entities:
+            if entity["entity"] == "weapon" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
+                return entity["value"]
+
     def move(self,
              destination: str = None,
              entity: str = None,
@@ -240,3 +251,41 @@ class DM:
                         entity=entity,
                         nlu_entities=nlu_entities,
                         stop=True)
+
+    def equip(self,
+              weapon: str = None,
+              entity: str = None,
+              nlu_entities: dict = None):
+        """Attempt to equip a weapon.
+        Returns whether equipping was successful."""
+        if not entity:
+            entity = "player"
+        if not weapon and nlu_entities:
+            weapon = self._get_weapon(nlu_entities)
+
+        if not weapon:
+            equipped = False
+            OutputBuilder.append(NLG.no_weapon(unequip=False))
+        else:
+            logger.info("{e} is equipping {q}!".format(e=entity, q=weapon))
+            equipped = self.actions.equip(weapon, entity)
+        return equipped
+
+    def unequip(self,
+                weapon: str = None,
+                entity: str = None,
+                nlu_entities: dict = None) -> bool:
+        """Attempt to unequip a weapon.
+        Returns whether unequipping was successful."""
+        if not entity:
+            entity = "player"
+        if not weapon and nlu_entities:
+            weapon = self._get_weapon(nlu_entities)
+
+        if not weapon:
+            unequipped = False
+            OutputBuilder.append(NLG.no_weapon(unequip=True))
+        else:
+            logger.info("{e} is unequipping {q}!".format(e=entity, q=weapon))
+            unequipped = self.actions.unequip(weapon, entity)
+        return unequipped

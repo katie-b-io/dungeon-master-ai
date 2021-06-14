@@ -1,7 +1,7 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.loader import Loader
-from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment
+from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
@@ -102,7 +102,6 @@ class Actions:
         try:
             (has_equipment, reason) = entity.has_equipment(equipment)
             if has_equipment:
-                print("has equipment")
                 return (True, "")
             else:
                 return (False, reason)
@@ -134,3 +133,71 @@ class Actions:
             else:
                 OutputBuilder.append(NLG.cannot_use(equipment, reason))
         return can_use
+
+    def _can_equip(self, entity, weapon: str) -> tuple:
+        """Check if an entity can equip specified weapon.
+        Returns tuple (bool, str) to indicate whether equip is possible
+        and reason why not if not."""
+
+        # check if entity has weapon in their Weapons
+        try:
+            (has_weapon, reason) = entity.has_weapon(weapon)
+            if has_weapon:
+                print("has weapon")
+                return (True, "")
+            else:
+                return (False, reason)
+        except UnrecognisedWeapon:
+            return (False, "unknown")
+
+    def equip(self, weapon: str, entity: str = "player") -> bool:
+        """Attempt to equip a specified weapon.
+        Returns a bool to indicate whether the action was successful"""
+
+        # get entity object
+        if entity == "player":
+            entity = State.get_player()
+        else:
+            entity = self.npcs.get_entity(entity)
+
+        # check if weapon can be equipped
+        (can_equip, reason) = self._can_equip(entity, weapon)
+        if can_equip:
+            entity.equip_weapon(weapon)
+        else:
+            OutputBuilder.append(NLG.cannot_equip(weapon, reason))
+        return can_equip
+    
+    def _can_unequip(self, entity, weapon: str) -> tuple:
+        """Check if an entity can unequip specified weapon.
+        Returns tuple (bool, str) to indicate whether unequip is possible
+        and reason why not if not."""
+
+        # check if entity has weapon equipped
+        try:
+            (has_weapon, reason) = entity.is_equipped(weapon)
+            if has_weapon:
+                print("weapon equipped")
+                return (True, "")
+            else:
+                return (False, reason)
+        except UnrecognisedWeapon:
+            return (False, "unknown")
+
+    def unequip(self, weapon: str, entity: str = "player") -> bool:
+        """Attempt to unequip a specified weapon.
+        Returns a bool to indicate whether the action was successful"""
+
+        # get entity object
+        if entity == "player":
+            entity = State.get_player()
+        else:
+            entity = self.npcs.get_entity(entity)
+
+        # check if weapon can be unequipped
+        (can_unequip, reason) = self._can_unequip(entity, weapon)
+        if can_unequip:
+            entity.unequip_weapon(weapon)
+        else:
+            OutputBuilder.append(NLG.cannot_unequip(weapon, reason))
+        return can_unequip

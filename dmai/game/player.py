@@ -45,6 +45,14 @@ class Player(PlayerAgent):
         """Method to stop using specified equipment"""
         self.character.stop_using_equipment(equipment)
 
+    def equip_weapon(self, weapon: str) -> None:
+        """Method to equip specified weapon"""
+        self.character.equip_weapon(weapon)
+
+    def unequip_weapon(self, weapon: str) -> None:
+        """Method to unequip specified weapon"""
+        self.character.unequip_weapon(weapon)
+
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
         div = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"

@@ -223,7 +223,6 @@ class PlanningPlayer(PlanningAgent):
                 "open_door_with_attack",
                 "force_door",
                 "use_door_switch",
-                "use_thieves_tools",
                 "attack_door",
                 "breaks_down_door",
                 "receive_quest",
@@ -233,6 +232,8 @@ class PlanningPlayer(PlanningAgent):
                 "attack_monster",
                 "kill_monster"
             ]
+            if State.get_player().has_equipment("thieves_tools")[0]:
+                actions.append("use_thieves_tools")
             writer.write(self._construct_actions(actions))
             writer.write(self._construct_domain_footer())
 

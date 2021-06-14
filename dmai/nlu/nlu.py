@@ -165,6 +165,10 @@ class NLU(metaclass=NLUMeta):
             return ("stop_using", {"nlu_entities": entities})
         if intent == "hint":
             return ("hint", {})
+        if intent == "equip":
+            return ("equip", {"nlu_entities": entities})
+        if intent == "unequip":
+            return ("equip", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

@@ -55,3 +55,12 @@ class UnrecognisedEquipment(Exception):
 
     def __str__(self):
         return f"{self.message}"
+
+class UnrecognisedWeapon(Exception):
+    """Raised when the weapon is unrecognised"""
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f"{self.message}"
