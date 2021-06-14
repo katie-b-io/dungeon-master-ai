@@ -37,6 +37,7 @@ class NPCCollection:
             else:
                 npc = MonsterCollection.get_monster_npc(npc_data)
             State.set_init_status(npc_id, npc_data["status"])
+            State.set_init_attitude(npc_id, npc_data["attitude"])
             npcs[npc_id] = npc
             # update state with npc location
             for room in self.adventure.rooms:

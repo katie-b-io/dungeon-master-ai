@@ -19,6 +19,12 @@ class Status(Enum):
     DEAD = "dead"
 
 
+class Attitude(Enum):
+    FRIENDLY = "friendly"
+    INDIFFERENT = "indifferent"
+    HOSTILE = "hostile"
+
+
 class StateMeta(type):
     _instances = {}
 
@@ -40,7 +46,7 @@ class State(metaclass=StateMeta):
     started = False
     paused = False
     talking = False
-    questing = False
+    questing = True
     complete = False
     in_combat = False
     torch_lit = False
@@ -54,6 +60,7 @@ class State(metaclass=StateMeta):
     current_target = {}
     current_goal = ("at", "player", "southern_corridor")
     current_items = {}
+    current_attitude = {}
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -141,7 +148,7 @@ class State(metaclass=StateMeta):
         return cls.player
 
     ############################################################
-    # METHODS RELATING TO STATUS
+    # METHODS RELATING TO STATUS AND ATTITUDE
     @classmethod
     def set_init_status(cls, entity: str, status: str) -> str:
         """Method to set the initial status for specified entity."""
@@ -157,10 +164,19 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
 
     @classmethod
+    def set_current_status(cls, entity: str = "player", status: str = "alive") -> str:
+        """Method to set the current status for specified entity."""
+        try:
+            cls.current_status[entity] = Status(status)
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+
+    @classmethod
     def get_current_status(cls, entity: str = "player") -> str:
         """Method to get the current status for specified entity."""
         try:
-            return cls.current_status[entity]
+            return cls.current_status[entity].value
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
@@ -168,7 +184,30 @@ class State(metaclass=StateMeta):
     @classmethod
     def is_alive(cls, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is alive"""
-        return cls.get_current_status(entity) == Status.ALIVE
+        return cls.get_current_status(entity) == "alive"
+
+    @classmethod
+    def set_init_attitude(cls, entity: str, attitude: str) -> None:
+        """Method to set the initial attitude towards player for specifed entity."""
+        cls.current_attitude[entity] = Attitude(attitude)
+    
+    @classmethod
+    def set_current_attitude(cls, entity: str = "player", attitude: str = "indifferent") -> str:
+        """Method to set the current attitude towards player for specified entity."""
+        try:
+            cls.current_attitude[entity] = Attitude(attitude)
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+
+    @classmethod
+    def get_current_attitude(cls, entity: str = "player") -> str:
+        """Method to get the current attitude towards player for specified entity."""
+        try:
+            return cls.current_attitude[entity].value
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
 
     ############################################################
     # METHODS RELATING TO ITEMS
