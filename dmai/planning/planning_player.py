@@ -253,22 +253,22 @@ class PlanningPlayer(PlanningAgent):
             objects = []
 
             # Player
-            objects.append(("player", "player"))
+            objects.append(["player", "player"])
             for intent in State.get_dm().player_intent_map.keys():
-                objects.append((intent, "intent"))
+                objects.append([intent, "intent"])
             for item in State.get_all_item_ids():
-                objects.append((item, "item"))
+                objects.append([item, "item"])
 
             # NPCs
             for npc in State.get_dm().npcs.get_all_npcs():
-                objects.append((npc.id, "npc"))
-            objects.append(("indifferent", "indifferent"))
-            objects.append(("friendly", "friendly"))
-            objects.append(("hostile", "hostile"))
+                objects.append([npc.id, "npc"])
+            objects.append(["indifferent", "indifferent"])
+            objects.append(["friendly", "friendly"])
+            objects.append(["hostile", "hostile"])
 
             # Rooms
             for room in State.get_dm().adventure.get_all_rooms():
-                objects.append((room.id, "room"))
+                objects.append([room.id, "room"])
 
             # Doors
             doors = []
@@ -279,33 +279,33 @@ class PlanningPlayer(PlanningAgent):
                     if not reverse_door in doors:
                         doors.append(door)
             for door in doors:
-                objects.append((door, "door"))
+                objects.append([door, "door"])
 
             # Monsters
             for monster in State.get_dm().npcs.get_all_monsters():
-                objects.append((monster.unique_id, monster.id))
+                objects.append([monster.unique_id, monster.id])
 
             # Abilities
             for ability in Abilities.get_all_abilities():
-                objects.append((ability[0], "ability"))
+                objects.append([ability[0], "ability"])
 
             # Skills
             for skill in Skills.get_all_skills():
-                objects.append((skill[0], "skill"))
+                objects.append([skill[0], "skill"])
 
             # Weapons
             for weapon in State.get_player().get_all_weapon_ids():
-                objects.append((weapon, "weapon"))
+                objects.append([weapon, "weapon"])
 
             # Equipment
             for equipment in State.get_player().get_all_equipment_ids():
-                objects.append((equipment, "equipment"))
+                objects.append([equipment, "equipment"])
 
             # Puzzles
             for room in State.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
                     if not puzzle.type == "door":
-                        objects.append((puzzle.id, "puzzle"))
+                        objects.append([puzzle.id, "puzzle"])
 
             # Construct the string
             writer.write(self._construct_objects(objects))
@@ -316,64 +316,64 @@ class PlanningPlayer(PlanningAgent):
 
             # Adventure
             if State.questing:
-                init.append(("quest"))
+                init.append(["quest"])
 
             # Player
-            init.append(("at", "player", State.get_current_room().id))
+            init.append(["at", "player", State.get_current_room().id])
             if State.is_alive():
-                init.append(("alive", "player"))
+                init.append(["alive", "player"])
             for ability in Abilities.get_all_abilities():
-                init.append((ability[1].lower(), ability[0]))
+                init.append([ability[1].lower(), ability[0]])
             for skill in Skills.get_all_skills():
-                init.append((skill[0], skill[0]))
+                init.append([skill[0], skill[0]])
             for weapon in State.get_player().get_all_weapon_ids():
-                init.append(("has", "player", weapon))
+                init.append(["has", "player", weapon])
             for equipment in State.get_player().get_all_equipment_ids():
-                init.append((equipment, equipment))
-                init.append(("has", "player", equipment))
+                init.append([equipment, equipment])
+                init.append(["has", "player", equipment])
 
             # NPCs
             for npc in State.get_dm().npcs.get_all_npcs():
-                init.append(("at", npc.id, State.get_current_room(npc.id).id))
+                init.append(["at", npc.id, State.get_current_room(npc.id).id])
                 if State.is_alive(npc.id):
-                    init.append(("alive", npc.id))
+                    init.append(["alive", npc.id])
                 if npc.gives_quest:
-                    init.append(("gives_quest", npc.id))
-            init.append(("improve_attitude", "indifferent", "friendly"))
-            init.append(("improve_attitude", "hostile", "indifferent"))
-            init.append(("degrade_attitude", "friendly", "indifferent"))
-            init.append(("degrade_attitude", "indifferent", "hostile"))
+                    init.append(["gives_quest", npc.id])
+            init.append(["improve_attitude", "indifferent", "friendly"])
+            init.append(["improve_attitude", "hostile", "indifferent"])
+            init.append(["degrade_attitude", "friendly", "indifferent"])
+            init.append(["degrade_attitude", "indifferent", "hostile"])
             for npc in State.get_dm().npcs.get_all_npcs():
-                init.append(("attitude_towards_player", npc.id, State.get_current_attitude(npc.id)))
+                init.append(["attitude_towards_player", npc.id, State.get_current_attitude(npc.id)])
 
             # Monsters
             for monster in State.get_dm().npcs.get_all_monsters():
-                init.append(("at", monster.unique_id,
-                             State.get_current_room(monster.unique_id).id))
+                init.append(["at", monster.unique_id,
+                             State.get_current_room(monster.unique_id).id])
             for monster in State.get_dm().npcs.get_all_monsters():
                 if State.is_alive(monster.unique_id):
-                    init.append(("alive", monster.unique_id))
+                    init.append(["alive", monster.unique_id])
 
             # Combat
             for npc in State.get_dm().npcs.get_all_npcs():
                 if npc.must_kill:
-                    init.append(("must_kill", npc.id))
+                    init.append(["must_kill", npc.id])
             for monster in State.get_dm().npcs.get_all_monsters():
                 if monster.must_kill:
-                    init.append(("must_kill", monster.unique_id))
+                    init.append(["must_kill", monster.unique_id])
 
             # Rooms
             for door in doors:
                 room1 = door.split("---")[0]
                 room2 = door.split("---")[1]
-                init.append(("connected", door, room1, room2))
-                init.append(("connected", door, room2, room1))
-                init.append(("at", door, room1))
-                init.append(("at", door, room2))
+                init.append(["connected", door, room1, room2])
+                init.append(["connected", door, room2, room1])
+                init.append(["at", door, room1])
+                init.append(["at", door, room2])
                 if not State.travel_allowed(room1, room2):
-                    init.append(("locked", door))
+                    init.append(["locked", door])
                 if not State.connection_broken(room1, room2):
-                    init.append(("alive", door))
+                    init.append(["alive", door])
 
             # Puzzles
             for room in State.get_dm().adventure.get_all_rooms():
@@ -381,24 +381,24 @@ class PlanningPlayer(PlanningAgent):
                     # Ability solution
                     for ability in Abilities.get_all_abilities():
                         if puzzle.check_solution_ability(ability[0]):
-                            init.append(("ability_solution", puzzle.id, ability[0]))
+                            init.append(["ability_solution", puzzle.id, ability[0]])
                     # Skill solution
                     for skill in Skills.get_all_skills():
                         if puzzle.check_solution_skill(skill[0]):
-                            init.append(("ability_solution", puzzle.id, skill[0]))
+                            init.append(["ability_solution", puzzle.id, skill[0]])
                     # Equipment solution
                     for equipment in State.get_player().get_all_equipment_ids(
                     ):
                         if puzzle.check_solution_equipment(equipment):
-                            init.append(("equipment_solution", puzzle.id, equipment))
+                            init.append(["equipment_solution", puzzle.id, equipment])
                     # Intent solution
                     for intent in State.get_dm().player_intent_map.keys():
                         if puzzle.check_solution_intent(intent):
-                            init.append(("intent_solution", puzzle.id, intent))
+                            init.append(["intent_solution", puzzle.id, intent])
                     # Item solution
                     for item in State.get_all_item_ids():
                         if puzzle.check_solution_item(item):
-                            init.append(("item_solution", puzzle.id, item))
+                            init.append(["item_solution", puzzle.id, item])
 
                     # TODO add spell solution
 

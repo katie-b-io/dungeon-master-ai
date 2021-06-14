@@ -70,32 +70,26 @@ class PlanningAgent(ABC):
         return ")\n"
 
     def _construct_objects(self, objects: list) -> str:
-        """Method expects a list of tuples of one or two length.
+        """Method expects a list of tuples of two length.
         If length is two, the tuple is (object, type)"""
         objects_str = "(:objects\n"
         for obj in objects:
-            if len(obj) == 1:
-                objects_str += "{o}\n".format(o=obj[0])
-            else:
-                objects_str += "{o} - {t}\n".format(o=obj[0], t=obj[1])
+            objects_str += "{o} - {t}\n".format(o=obj[0], t=obj[1])
         objects_str += ")\n"
         return objects_str
 
     def _construct_init(self, init: list) -> str:
-        """Method expects a list of tuples of any length.
+        """Method expects a list of list of any length.
         Tuples will be constructed into PDDL strings, e.g. (one, two, three)
         becomes (one two three)"""
         init_str = "(:init\n"
         for obj in init:
-            if len(obj) == 1:
-                init_str += "({s})\n".format(s=obj[0])
-            else:
-                init_str += "({s})\n".format(s=" ".join(obj))
+            init_str += "({s})\n".format(s=" ".join(obj))
         init_str += ")\n"
         return init_str
 
     def _construct_goal(self, goal: list, alt_goal: list = None) -> str:
-        """Method expects a list of tuples of any length.
+        """Method expects a list of list of any length.
         Tuples will be constructed into PDDL strings, e.g. (one, two, three)
         becomes (one two three)"""
         if alt_goal:
