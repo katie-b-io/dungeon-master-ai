@@ -131,12 +131,12 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
-    def no_target(cls) -> str:
+    def no_target(cls, verb: str) -> str:
         """Return the utterance for no target"""
         utters = [
             "Can you confirm your target",
-            "Who, or what, do you want to attack?",
-            "I'm not sure what you want to attack, can you repeat your target",
+            "Who, or what, do you want to {v}?".format(v=verb),
+            "I'm not sure what you want to {v}, can you repeat your target".format(v=verb),
         ]
         return random.choice(utters)
 
@@ -247,6 +247,15 @@ class NLG(metaclass=NLGMeta):
         utters = [
             "Okay, let's fight!", "You're now starting combat",
             "Let's begin the combat round", "Moving into combat"
+        ]
+        return random.choice(utters)
+
+    @classmethod
+    def roleplay(cls, target: str) -> str:
+        """Return the utterance for getting roleplay prompt"""
+        n = cls.game.player.name
+        utters = [
+            "{n}, what do you say to {t}?".format(n=n, t=target)
         ]
         return random.choice(utters)
 

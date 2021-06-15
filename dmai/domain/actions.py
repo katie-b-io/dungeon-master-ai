@@ -1,7 +1,7 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.loader import Loader
-from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon
+from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon, UnrecognisedEntityError
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
@@ -83,12 +83,13 @@ class Actions:
                     # this is a game end condition
                     OutputBuilder.append(NLG.attack_npc_end_game(target))
                     dmai.dmai_helpers.gameover()
-
+            attacker = "You" if attacker == "player" else attacker
             OutputBuilder.append("{a} attacked {t}!".format(a=attacker,
                                                             t=target))
             State.combat(attacker, target)
             return can_attack
         else:
+            attacker = "You" if attacker == "player" else attacker
             OutputBuilder.append("{a} can't attack {t}!\n{r}".format(
                 a=attacker, t=target, r=reason))
             return can_attack
@@ -167,7 +168,7 @@ class Actions:
         else:
             OutputBuilder.append(NLG.cannot_equip(weapon, reason))
         return can_equip
-    
+
     def _can_unequip(self, entity, weapon: str) -> tuple:
         """Check if an entity can unequip specified weapon.
         Returns tuple (bool, str) to indicate whether unequip is possible
@@ -201,3 +202,36 @@ class Actions:
         else:
             OutputBuilder.append(NLG.cannot_unequip(weapon, reason))
         return can_unequip
+
+    def _can_converse(self, target: str) -> tuple:
+        """Check if a target can have a conversation.
+        Returns tuple (bool, str) to indicate whether conversation is possible
+        and reason why not if not."""
+
+        # check if player and target are within converse range
+        if not State.get_current_room() == State.get_current_room(target):
+            return (False, "different location")
+        # check if target is a monster
+        if self.npcs.get_type(target) == "monster":
+            return (False, "monster")
+        return (True, "")
+
+    def converse(self, target: str) -> bool:
+        """Attempt to converse with a specified target.
+        Returns a bool to indicate whether the action was successful"""
+
+        # check if conversation can happen
+        (can_converse, reason) = self._can_converse(target)
+        if can_converse:
+            if self.npcs.get_entity(target).dialogue:
+                # TODO make the dialogue options flexible
+                if not State.quest_received:
+                    State.received_quest()
+                    OutputBuilder.append(
+                        self.npcs.get_entity(target).dialogue["gives_quest"])
+                State.roleplay(target)
+            return can_converse
+        else:
+            OutputBuilder.append("You can't converse with {t}!\n{r}".format(
+                t=target, r=reason))
+            return can_converse

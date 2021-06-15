@@ -46,9 +46,11 @@ class State(metaclass=StateMeta):
     started = False
     paused = False
     talking = False
-    questing = True
+    quest_received = False
+    questing = False
     complete = False
     in_combat = False
+    roleplaying = False
     torch_lit = False
     stationary = False
     current_room = {}
@@ -71,6 +73,7 @@ class State(metaclass=StateMeta):
         if not cls.in_combat:
             cls.set_current_game_mode("combat")
             cls.in_combat = True
+            cls.roleplaying = False
             cls.set_target(target)
             OutputBuilder.append(NLG.transition_to_combat())
 
@@ -78,11 +81,18 @@ class State(metaclass=StateMeta):
     def explore(cls) -> None:
         cls.set_current_game_mode("explore")
         cls.in_combat = False
+        cls.roleplaying = False
+        cls.clear_target()
 
     @classmethod
-    def roleplay(cls) -> None:
-        cls.set_current_game_mode("roleplay")
-        cls.in_combat = False
+    def roleplay(cls, target: str) -> None:
+        t = State.get_dm().npcs.get_entity(target).name
+        OutputBuilder.append(NLG.roleplay(t))
+        if not cls.roleplaying:
+            cls.set_current_game_mode("roleplay")
+            cls.in_combat = False
+            cls.roleplaying = True
+            cls.clear_target()
 
     @classmethod
     def set_current_game_mode(cls, game_mode: str) -> None:
@@ -108,6 +118,10 @@ class State(metaclass=StateMeta):
 
     @classmethod
     def received_quest(cls) -> None:
+        cls.quest_received = True
+    
+    @classmethod
+    def quest(cls) -> None:
         cls.questing = True
     
     @classmethod

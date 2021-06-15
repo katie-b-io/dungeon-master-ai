@@ -38,7 +38,8 @@ class DM:
             "use": self.use,
             "stop_using": self.stop_using,
             "equip": self.equip,
-            "unequip": self.unequip
+            "unequip": self.unequip,
+            "converse": self.converse
         }
 
     def input(
@@ -215,7 +216,7 @@ class DM:
 
         if not target:
             attacked = False
-            OutputBuilder.append(NLG.no_target())
+            OutputBuilder.append(NLG.no_target("attack"))
         else:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)
@@ -289,3 +290,17 @@ class DM:
             logger.info("{e} is unequipping {q}!".format(e=entity, q=weapon))
             unequipped = self.actions.unequip(weapon, entity)
         return unequipped
+    
+    def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
+        """Attempt an attack by attacker against target determined by NLU or specified.
+        Returns whether the attack was successful."""
+        if not target and nlu_entities:
+            target = self._get_target(nlu_entities)
+
+        if not target:
+            conversation = False
+            OutputBuilder.append(NLG.no_target("talk to"))
+        else:
+            logger.info("player is conversing with {t}!".format(t=target))
+            conversation = self.actions.converse(target)
+        return conversation

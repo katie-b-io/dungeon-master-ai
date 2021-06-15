@@ -59,6 +59,8 @@ nlu:
     - don't like that
     - no way
     - not really
+    - nah
+    - I don't feel like it
 
 - intent: bot_challenge
   examples: |
@@ -434,6 +436,14 @@ nlu:
     - chat with [the dwarf](npc)
     - converse with [stouthammer](npc)
     - say to [corvus](npc)
+    - talk to [anvil](npc)
+    - speak to [anvil-jumper](npc)
+    - communicate with [giant rat](monster)
+    - commune with the [skeleton](monster)
+    - speak with [zombie](monster)
+    - talk to the [first](id) [rat](monster)
+    - talk with [goblin](monster)
+    - say to the [3rd](id) [goblin](monster)
 
 - intent: question_npc
   examples: |
