@@ -1,8 +1,11 @@
+import shutil
+
 from dmai.game.game import Game
 from dmai.ui.ui import UserInterface
 from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.config import Config
 
 
 def start(char_class: str = None,
@@ -23,7 +26,7 @@ def start(char_class: str = None,
     OutputBuilder.append(NLU.show_commands(), wrap=False)
     OutputBuilder.append(
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title()))
-
+    
     # return the game instance
     return game
 
@@ -40,6 +43,8 @@ def gameover() -> None:
         "Thanks for playing! Don't forget to complete your feedback, in fact, why don't you do it now? :-)"
     )
     OutputBuilder.print()
+    if Config.cleanup:
+        shutil.rmtree(Config.directory.planning)
     exit_game()
 
 

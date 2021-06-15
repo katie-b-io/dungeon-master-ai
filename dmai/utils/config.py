@@ -90,6 +90,7 @@ class Config(metaclass=ConfigMeta):
 
     ################################################################
     # class variables
+    cleanup = False
     directory = Directories()
     agent = Agents()
     planner = Planners()
@@ -103,3 +104,8 @@ class Config(metaclass=ConfigMeta):
     def set_uuid(cls) -> None:
         """Method to set the UUID"""
         cls.uuid = str(uuid.uuid1())
+
+    @classmethod
+    def cleanup_on_exit(cls) -> None:
+        """Method to set cleanup status"""
+        cls.cleanup = True

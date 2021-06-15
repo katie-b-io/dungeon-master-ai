@@ -27,3 +27,4 @@ To run the DMAI in interactive mode:
 |`-w, --wizard`          |Play as a wizard                                 |
 |`-n NAME, --name NAME`  |Set character name (must set character class too)|
 |`--skip-intro`          |Skip the intro                                   |
+|`--cleanup`             |On exit, remove any files produced during game   |
