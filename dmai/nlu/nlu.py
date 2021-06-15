@@ -85,7 +85,7 @@ class NLU(metaclass=NLUMeta):
         should be paused and string is the updated player utterance."""
 
         # first check if the user is issuing a command
-        if player_cmd[0] == "/":
+        if player_cmd[0] == "/" or player_cmd[0] == "\\":
             try:
                 return cls._regex_and_exec(player_cmd)
             except UnrecognisedCommandError as e:

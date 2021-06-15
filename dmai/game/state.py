@@ -194,7 +194,7 @@ class State(metaclass=StateMeta):
     def get_current_status(cls, entity: str = "player") -> str:
         """Method to get the current status for specified entity."""
         try:
-            return cls.current_status[entity].value
+            return cls.current_status[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
@@ -202,7 +202,7 @@ class State(metaclass=StateMeta):
     @classmethod
     def is_alive(cls, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is alive"""
-        return cls.get_current_status(entity) == "alive"
+        return cls.get_current_status(entity) == Status("alive")
 
     @classmethod
     def set_init_attitude(cls, entity: str, attitude: str) -> None:
@@ -222,7 +222,7 @@ class State(metaclass=StateMeta):
     def get_current_attitude(cls, entity: str = "player") -> str:
         """Method to get the current attitude towards player for specified entity."""
         try:
-            return cls.current_attitude[entity].value
+            return cls.current_attitude[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)

@@ -347,7 +347,7 @@ class PlanningPlayer(PlanningAgent):
             init.append(["degrade_attitude", "friendly", "indifferent"])
             init.append(["degrade_attitude", "indifferent", "hostile"])
             for npc in State.get_dm().npcs.get_all_npcs():
-                init.append(["attitude_towards_player", npc.id, State.get_current_attitude(npc.id)])
+                init.append(["attitude_towards_player", npc.id, State.get_current_attitude(npc.id).value])
 
             # Monsters
             for monster in State.get_dm().npcs.get_all_monsters():

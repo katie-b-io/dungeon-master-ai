@@ -101,6 +101,7 @@ class Game:
 
         elif player_utter:
             # attempt to determine the player's intent
+            player_utter = player_utter.replace("\"", "'")
             (intent, params) = NLU.process_player_utterance(player_utter)
 
             # relay the player utterance to the dm

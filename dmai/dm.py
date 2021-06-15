@@ -138,7 +138,7 @@ class DM:
 
     def _get_target(self, nlu_entities: dict) -> str:
         """Extract a target from NLU entities dictionary.
-        Returns a string with destination"""
+        Returns a string with target ID"""
         # TODO support non-entity targets
         monster = None
         i = None
@@ -171,6 +171,13 @@ class DM:
         # NPCs have unique ids
         if npc:
             return npc
+
+    def _get_npc(self) -> str:
+        """Get an NPC.
+        Returns a string with NPC ID"""
+        for npc in self.npcs.get_all_npc_ids():
+            if State.get_current_room_id() == State.get_current_room_id(npc):
+                return npc
 
     def _get_equipment(self, nlu_entities: dict) -> str:
         """Extract a equipment from NLU entities dictionary.
@@ -300,6 +307,8 @@ class DM:
         Returns whether the action was successful."""
         if not target and nlu_entities:
             target = self._get_target(nlu_entities)
+        elif not nlu_entities:
+            target = self._get_npc()
 
         if not target:
             conversation = False

@@ -125,6 +125,7 @@ nlu:
     - proceed to the [stout meal inn](location)
     - go [upstairs](location)
     - go to the [storage room](location)
+    - go through [the hole](location)
     - head to [storage](location)
     - travel to [store room](location)
     - progress to [store](location)
@@ -636,6 +637,7 @@ nlu:
     - storage
     - store room
     - store
+    - the hole
 
 - synonym: burial_chamber
   examples: |
