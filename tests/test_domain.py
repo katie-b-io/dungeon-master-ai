@@ -7,6 +7,7 @@ sys.path.insert(0, p + "/../")
 
 from dmai.domain.actions import Actions
 from dmai.game.game import Game
+from dmai.game.state import State
 from dmai.utils.exceptions import UnrecognisedRoomError
 
 
@@ -20,14 +21,15 @@ class TestActions(unittest.TestCase):
     def test_move_good_destination(self) -> None:
         entity = "player"
         destination = "inns_cellar"
+        State.quest()
         moved = self.actions.move(entity, destination)
         self.assertEqual(moved, True)
 
     def test_move_bad_destination(self) -> None:
         entity = "player"
         destination = "the_moon"
-        moved = self.actions.move(entity, destination)
-        self.assertEqual(moved, False)
+        with self.assertRaises(UnrecognisedRoomError):
+            moved = self.actions.move(entity, destination)
 
 
 if __name__ == "__main__":
