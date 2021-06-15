@@ -34,11 +34,21 @@ class Actions:
         and reason why not if not."""
         try:
             # check if destination is accessible
-            current = State.get_current_room_id(entity)
-            if current == destination:
+            current = State.get_current_room(entity)
+            if current.id == destination:
                 return (False, "same")
 
-            if State.travel_allowed(current, destination):
+            # can't move if can't see
+            if not current.visibility:
+                if not State.torch_lit or State.get_player(
+                ).character.has_darkvision():
+                    return (False, "no visibility")
+            
+            # can't move without quest
+            if not State.questing:
+                return (False, "no quest")
+
+            if State.travel_allowed(current.id, destination):
                 return (True, "")
             else:
                 return (False, "locked")
@@ -56,7 +66,8 @@ class Actions:
         if can_move:
             State.set_current_room(entity, destination)
         else:
-            OutputBuilder.append(NLG.cannot_move(destination, reason))
+            OutputBuilder.append(
+                NLG.cannot_move(State.get_room_name(destination), reason))
         return can_move
 
     def _can_attack(self, attacker: str, target: str) -> tuple:
@@ -230,20 +241,24 @@ class Actions:
                     State.received_quest()
                     OutputBuilder.append(
                         self.npcs.get_entity(target).dialogue["gives_quest"])
+                else:
+                    t = State.get_dm().npcs.get_entity(target).name
+                    OutputBuilder.append(NLG.roleplay(t))
                 State.roleplay(target)
             return can_converse
         else:
             OutputBuilder.append("You can't converse with {t}!\n{r}".format(
                 t=target, r=reason))
             return can_converse
-    
+
     def _can_investigate(self, target: str) -> tuple:
         """Check if player can investigate target.
         Returns tuple (bool, str) to indicate whether investigation is possible
         and reason why not if not."""
         try:
             # check if target is in same location as player
-            if not State.get_current_room_id(target) == State.get_current_room_id():
+            if not State.get_current_room_id(
+                    target) == State.get_current_room_id():
                 return (False, "different location")
             else:
                 return (True, "")

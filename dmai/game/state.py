@@ -89,8 +89,6 @@ class State(metaclass=StateMeta):
 
     @classmethod
     def roleplay(cls, target: str) -> None:
-        t = State.get_dm().npcs.get_entity(target).name
-        OutputBuilder.append(NLG.roleplay(t))
         if not cls.roleplaying:
             cls.set_current_game_mode("roleplay")
             cls.in_combat = False
@@ -374,6 +372,15 @@ class State(metaclass=StateMeta):
     def halt(cls) -> None:
         """Method to set stationary to true"""
         cls.stationary = True
+    
+    @classmethod
+    def get_room_name(cls, room_id: str) -> str:
+        """Method to return the name of a room."""
+        try:
+            if cls._check_room_exists(room_id):
+                    return cls.dm.adventure.get_room(room_id).name
+        except UnrecognisedRoomError:
+            raise
 
     @classmethod
     def set_init_room(cls, entity: str, room_id: str) -> str:

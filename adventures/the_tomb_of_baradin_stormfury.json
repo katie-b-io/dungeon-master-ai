@@ -66,6 +66,7 @@
             "monsters": {},
             "puzzles": {},
             "treasure": [],
+            "visibility": true,
             "text": {
                 "enter": "On this particularly cold morning you find yourself at the Stout Meal Inn. This tavern is very large, with a long central hearth that helps to keep the cold at bay against the thick stone walls. Bundles of herbs dangle from the wooden rafters, filling the space with a plethora of fragrant aromas. The tavern floor is empty apart from a lone figure. Corvus Stouthammer, the wrinkly whitebearded dwarf proprietor prepares the inn for the day's patrons, polishing the top of a nearby table to a brilliant sheen. There is a doorway down to the cellar behind the bar. As you come closer Corvus' attention comes to you and he stops polishing. He turns to you with a slight smile under his beard and welcomes you, saying: \"About time you showed up!\"",
                 "description": "Homely tavern.",
@@ -114,6 +115,7 @@
             },
             "puzzles": {},
             "treasure": [],
+            "visibility": false,
             "text": {
                 "enter": "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness. The landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus' stock and the loud protesting meows of Anvil-Jumper, Corvus' cat.",
                 "visibility": "You see a terrible scene in front of you. Anvil-Jumper the cat is sitting on top of one of the barrels in the north-east corner of the room, meowing pathetically at the giant rats who are entirely indifferent to his plight. There are a total of four giant rats in the cellar tearing through the food supplies. The rats have burst through a 5 ft by 5 ft hole in the eastern wall of the cellar.",
@@ -220,6 +222,7 @@
                 }
             },
             "treasure": [],
+            "visibility": false,
             "text": {
                 "enter": "The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. Two exits from this room, one to the east and one to the south are blocked by lowered portcullises. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a humanoid form hunched over the far corner of the room. Another smaller humanoid form appears to be lying motionless in front of the hunched one.",
                 "description": "It's a storage room.",
@@ -336,6 +339,7 @@
                 }
             },
             "treasure": [],
+            "visibility": false,
             "text": {
                 "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open. On the eastern wall there's a double metal door with a large grinning skull engraved on the centre. There are simple unadorned stone pedestals on either side of the door. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
                 "description": "You see six unmarked stone vault doors.",
@@ -361,6 +365,7 @@
             "monsters": {},
             "puzzles": {},
             "treasure": [],
+            "visibility": false,
             "text": {
                 "enter": "You make your way deeper into the darkness, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side. There are sconces with torches on the pillars but they are all unlit. You can see a light on the far side of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance. You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the next area, appear to be speaking in hushed voices and it's hard to distinguish what they are saying from here.",
                 "description": "It's a dusty corridor.",
@@ -434,6 +439,7 @@
                 }
             },
             "treasure": [],
+            "visibility": false,
             "text": {
                 "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. An open door leads to another corridor to the north. On the south there is a wooden door reinforced with iron.",
                 "description": "It's a circular room.",
@@ -552,6 +558,7 @@
             "treasure": [
                 "wand_of_magic_missiles"
             ],
+            "visibility": false,
             "text": {
                 "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the wall to the south.",
                 "description": "It's a long corridor with an elaborate door at the end.",
@@ -575,6 +582,7 @@
             "treasure": [
                 "dwarven_thrower"
             ],
+            "visibility": false,
             "text": {
                 "enter": "This large room is occupied by a single open sarcophagus without a lid. The sarcophagus is tilted upwards at an angle so that its contents are visible as you enter the room. Inside the sarcophagus lie the skeletal remains of a dwarven warrior in a dusty metal armor. The warrior is holding a warhammer. The warhammer's head is made of white stone and framed with gold. An emerald is in the centre of the hammer head. The warhammer appears completely clean and free of dust and cobwebs, almost as if it was placed there moments and not centuries ago. There are dwarven runes inscribed around the perimeter of the sarcophagus, on the along the top of each side. Large iron candle holders sit on either side of the sarcophagus with five melted candles on each. Fire braziers adorn the western and eastern walls of the room. On the southern wall, behind the sarcophagus, there is a large round engraving of a hammer in front of an anvil.",
                 "description": "It's a large room with a single open sarcophagus without a lid.",

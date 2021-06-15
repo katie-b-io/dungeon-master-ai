@@ -102,6 +102,12 @@ class NLG(metaclass=NLGMeta):
         elif reason == "locked":
             return "You cannot move to {room} because the way is locked!".format(
                 room=room)
+        elif reason == "no visibility":
+            return "You cannot move to {room} because it's too dark for you to find the way!".format(
+                room=room)
+        elif reason == "no quest":
+            return "You cannot move to {room} because you haven't accepted the quest!".format(
+                room=room)
         elif reason == "unknown":
             return "You cannot move to unknown location: {room}!".format(
                 room=room)
