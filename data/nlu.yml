@@ -24,6 +24,7 @@ nlu:
     - thanks for inviting me
     - how's business?
     - greet [corvus](npc)
+    - say to [corvus stouthammer](npc) hello
 
 - intent: goodbye
   examples: |
@@ -108,6 +109,7 @@ nlu:
     - go to [inn cellar](location)
     - go to the [cellar inn](location)
     - go [downstairs](location)
+    - go [behind the bar](location)
     - move [down stairs](location)
     - travel [down the stairs](location)
     - go [up stairs](location)
@@ -620,6 +622,7 @@ nlu:
     - down stairs
     - down the stairs
     - cellar inn
+    - behind the bar
 
 - synonym: storage_room
   examples: |

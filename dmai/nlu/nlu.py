@@ -171,6 +171,12 @@ class NLU(metaclass=NLUMeta):
             return ("unequip", {"nlu_entities": entities})
         if intent == "converse":
             return ("converse", {"nlu_entities": entities})
+        if intent == "greet":
+            return ("converse", {"nlu_entities": entities})
+        if intent == "affirm":
+            return ("affirm", {})
+        if intent == "deny":
+            return ("deny", {})
         else:
             # check for stored intent in State
             if State.stored_intent:

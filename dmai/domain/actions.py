@@ -226,6 +226,7 @@ class Actions:
             if self.npcs.get_entity(target).dialogue:
                 # TODO make the dialogue options flexible
                 if not State.quest_received:
+                    State.set_conversation_target(target)
                     State.received_quest()
                     OutputBuilder.append(
                         self.npcs.get_entity(target).dialogue["gives_quest"])

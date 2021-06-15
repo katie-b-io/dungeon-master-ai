@@ -39,7 +39,9 @@ class DM:
             "stop_using": self.stop_using,
             "equip": self.equip,
             "unequip": self.unequip,
-            "converse": self.converse
+            "converse": self.converse,
+            "affirm": self.affirm,
+            "deny": self.deny
         }
 
     def input(
@@ -304,3 +306,22 @@ class DM:
             logger.info("player is conversing with {t}!".format(t=target))
             conversation = self.actions.converse(target)
         return conversation
+    
+    def affirm(self) -> None:
+        """Player has uttered an affirmation.
+        Appends the hint to output with the OutputBuilder.
+        """
+        if State.roleplaying and State.received_quest and not State.questing:
+            npc = self.npcs.get_entity(State.current_conversation)
+            OutputBuilder.append(npc.dialogue["accepts_quest"])
+            State.quest()
+
+    def deny(self) -> None:
+        """Player has uttered a denial.
+        Appends the hint to output with the OutputBuilder.
+        """
+        if State.roleplaying and State.received_quest and not State.questing:
+            # this is a game end condition
+            npc = self.npcs.get_entity(State.current_conversation)
+            OutputBuilder.append(npc.dialogue["turns_down_quest"])
+            dmai.dmai_helpers.gameover()
