@@ -40,6 +40,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--skip-intro",
                         action="store_true",
                         help="Skip the intro")
+    parser.add_argument("--cleanup",
+                        action="store_true",
+                        help="On exit, remove any files produced during game")
     return parser
 
 
@@ -58,6 +61,10 @@ def main() -> None:
 
     # get the command line arguments
     args = build_arg_parser().parse_args()
+
+     # set cleanup state in Config
+    if args.cleanup:
+        Config.cleanup_on_exit()
 
     # start the game
     char_class = None

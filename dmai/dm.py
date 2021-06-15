@@ -36,7 +36,13 @@ class DM:
             "move": self.move,
             "attack": self.attack,
             "use": self.use,
-            "stop_using": self.stop_using
+            "stop_using": self.stop_using,
+            "equip": self.equip,
+            "unequip": self.unequip,
+            "converse": self.converse,
+            "affirm": self.affirm,
+            "deny": self.deny,
+            "explore": self.explore
         }
 
     def input(
@@ -77,7 +83,8 @@ class DM:
         # prepare next monster moves
         for monster in self.npcs.get_all_monsters():
             if State.is_alive(monster.unique_id):
-                if State.get_current_room_id() == State.get_current_room_id(monster.unique_id):
+                if State.get_current_room_id() == State.get_current_room_id(
+                        monster.unique_id):
                     monster.prepare_next_move()
                     # TODO decide where to trigger the monster moves
                     monster.print_next_move()
@@ -131,7 +138,8 @@ class DM:
 
     def _get_target(self, nlu_entities: dict) -> str:
         """Extract a target from NLU entities dictionary.
-        Returns a string with destination"""
+        Returns a string with target ID"""
+        # TODO support non-entity targets
         monster = None
         i = None
         npc = None
@@ -164,11 +172,26 @@ class DM:
         if npc:
             return npc
 
+    def _get_npc(self) -> str:
+        """Get an NPC.
+        Returns a string with NPC ID"""
+        for npc in self.npcs.get_all_npc_ids():
+            if State.get_current_room_id() == State.get_current_room_id(npc):
+                return npc
+
     def _get_equipment(self, nlu_entities: dict) -> str:
         """Extract a equipment from NLU entities dictionary.
         Returns a string with equipment"""
         for entity in nlu_entities:
             if entity["entity"] == "equipment" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
+                return entity["value"]
+
+    def _get_weapon(self, nlu_entities: dict) -> str:
+        """Extract a weapon from NLU entities dictionary.
+        Returns a string with weapon"""
+        for entity in nlu_entities:
+            if entity["entity"] == "weapon" and entity[
                     "confidence"] >= self.ENTITY_CONFIDENCE:
                 return entity["value"]
 
@@ -204,7 +227,7 @@ class DM:
 
         if not target:
             attacked = False
-            OutputBuilder.append(NLG.no_target())
+            OutputBuilder.append(NLG.no_target("attack"))
         else:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)
@@ -240,3 +263,95 @@ class DM:
                         entity=entity,
                         nlu_entities=nlu_entities,
                         stop=True)
+
+    def equip(self,
+              weapon: str = None,
+              entity: str = None,
+              nlu_entities: dict = None):
+        """Attempt to equip a weapon.
+        Returns whether equipping was successful."""
+        if not entity:
+            entity = "player"
+        if not weapon and nlu_entities:
+            weapon = self._get_weapon(nlu_entities)
+
+        if not weapon:
+            equipped = False
+            OutputBuilder.append(NLG.no_weapon(unequip=False))
+        else:
+            logger.info("{e} is equipping {q}!".format(e=entity, q=weapon))
+            equipped = self.actions.equip(weapon, entity)
+        return equipped
+
+    def unequip(self,
+                weapon: str = None,
+                entity: str = None,
+                nlu_entities: dict = None) -> bool:
+        """Attempt to unequip a weapon.
+        Returns whether unequipping was successful."""
+        if not entity:
+            entity = "player"
+        if not weapon and nlu_entities:
+            weapon = self._get_weapon(nlu_entities)
+
+        if not weapon:
+            unequipped = False
+            OutputBuilder.append(NLG.no_weapon(unequip=True))
+        else:
+            logger.info("{e} is unequipping {q}!".format(e=entity, q=weapon))
+            unequipped = self.actions.unequip(weapon, entity)
+        return unequipped
+    
+    def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
+        """Attempt an attack by attacker against target determined by NLU or specified.
+        Returns whether the action was successful."""
+        if not target and nlu_entities:
+            target = self._get_target(nlu_entities)
+        elif not nlu_entities:
+            target = self._get_npc()
+
+        if not target:
+            conversation = False
+            OutputBuilder.append(NLG.no_target("talk to"))
+        else:
+            logger.info("player is conversing with {t}!".format(t=target))
+            conversation = self.actions.converse(target)
+        return conversation
+    
+    def affirm(self) -> None:
+        """Player has uttered an affirmation.
+        Appends the hint to output with the OutputBuilder.
+        """
+        if State.roleplaying and State.received_quest and not State.questing:
+            npc = self.npcs.get_entity(State.current_conversation)
+            OutputBuilder.append(npc.dialogue["accepts_quest"])
+            State.quest()
+
+    def deny(self) -> None:
+        """Player has uttered a denial.
+        Appends the hint to output with the OutputBuilder.
+        """
+        if State.roleplaying and State.received_quest and not State.questing:
+            # this is a game end condition
+            npc = self.npcs.get_entity(State.current_conversation)
+            OutputBuilder.append(npc.dialogue["turns_down_quest"])
+            dmai.dmai_helpers.gameover()
+
+    def explore(self, target: str = None, nlu_entities: dict = None) -> bool:
+        """Attempt to explore/investigate.
+        Returns whether the action was successful."""
+        if not target and nlu_entities:
+            target = self._get_target(nlu_entities)
+
+        if not target:
+            logger.info("player is exploring!")
+            room = State.get_current_room()
+            if State.torch_lit or State.get_player().character.has_darkvision():
+                OutputBuilder.append(room.text["description"]["text"])
+            else:
+                OutputBuilder.append(room.text["no_visibility_description"]["text"])
+            explore = True
+        else:
+            logger.info("player is investigating {t}!".format(t=target))
+            explore = self.actions.investigate(target)
+        return explore

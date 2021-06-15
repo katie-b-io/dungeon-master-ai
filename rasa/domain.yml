@@ -18,6 +18,8 @@ intents:
   - dodge
   - hide
   - search
+  - equip
+  - unequip
   - use
   - stop_using
   - cast_spell

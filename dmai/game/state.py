@@ -46,11 +46,14 @@ class State(metaclass=StateMeta):
     started = False
     paused = False
     talking = False
-    questing = True
+    quest_received = False
+    questing = False
     complete = False
     in_combat = False
+    roleplaying = False
     torch_lit = False
     stationary = False
+    current_conversation = None
     current_room = {}
     current_status = {}
     current_hp = {}
@@ -71,18 +74,27 @@ class State(metaclass=StateMeta):
         if not cls.in_combat:
             cls.set_current_game_mode("combat")
             cls.in_combat = True
+            cls.roleplaying = False
             cls.set_target(target)
+            cls.clear_conversation()
             OutputBuilder.append(NLG.transition_to_combat())
 
     @classmethod
     def explore(cls) -> None:
         cls.set_current_game_mode("explore")
         cls.in_combat = False
+        cls.roleplaying = False
+        cls.clear_target()
+        cls.clear_conversation()
 
     @classmethod
-    def roleplay(cls) -> None:
-        cls.set_current_game_mode("roleplay")
-        cls.in_combat = False
+    def roleplay(cls, target: str) -> None:
+        if not cls.roleplaying:
+            cls.set_current_game_mode("roleplay")
+            cls.in_combat = False
+            cls.roleplaying = True
+            cls.clear_target()
+            cls.set_conversation_target(target)
 
     @classmethod
     def set_current_game_mode(cls, game_mode: str) -> None:
@@ -108,6 +120,10 @@ class State(metaclass=StateMeta):
 
     @classmethod
     def received_quest(cls) -> None:
+        cls.quest_received = True
+    
+    @classmethod
+    def quest(cls) -> None:
         cls.questing = True
     
     @classmethod
@@ -176,7 +192,7 @@ class State(metaclass=StateMeta):
     def get_current_status(cls, entity: str = "player") -> str:
         """Method to get the current status for specified entity."""
         try:
-            return cls.current_status[entity].value
+            return cls.current_status[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
@@ -184,7 +200,7 @@ class State(metaclass=StateMeta):
     @classmethod
     def is_alive(cls, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is alive"""
-        return cls.get_current_status(entity) == "alive"
+        return cls.get_current_status(entity) == Status("alive")
 
     @classmethod
     def set_init_attitude(cls, entity: str, attitude: str) -> None:
@@ -204,10 +220,24 @@ class State(metaclass=StateMeta):
     def get_current_attitude(cls, entity: str = "player") -> str:
         """Method to get the current attitude towards player for specified entity."""
         try:
-            return cls.current_attitude[entity].value
+            return cls.current_attitude[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
+
+    ############################################################
+    # METHODS RELATING TO CONVERSATION
+    @classmethod
+    def set_conversation_target(cls, target: str) -> None:
+        """Method to set the current target for a conversation"""
+        logger.debug("Setting current conversation target: {t}".format(t=target))
+        cls.current_conversation = target
+
+    @classmethod
+    def clear_conversation(cls, entity: str = "player") -> None:
+        """Method to clear the conversation for an entity"""
+        logger.debug("Clearing current conversation")
+        cls.current_conversation = None
 
     ############################################################
     # METHODS RELATING TO ITEMS
@@ -342,6 +372,15 @@ class State(metaclass=StateMeta):
     def halt(cls) -> None:
         """Method to set stationary to true"""
         cls.stationary = True
+    
+    @classmethod
+    def get_room_name(cls, room_id: str) -> str:
+        """Method to return the name of a room."""
+        try:
+            if cls._check_room_exists(room_id):
+                    return cls.dm.adventure.get_room(room_id).name
+        except UnrecognisedRoomError:
+            raise
 
     @classmethod
     def set_init_room(cls, entity: str, room_id: str) -> str:

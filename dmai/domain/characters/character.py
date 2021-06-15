@@ -109,6 +109,26 @@ class Character(ABC):
         """Method to stop using specified equipment"""
         self.equipment.stop_using_equipment(equipment)
 
+    def can_equip(self, weapon: str) -> tuple:
+        """Method to check whether player can equip specified weapon"""
+        return self.weapons.can_equip(weapon)
+
+    def can_unequip(self, weapon: str) -> tuple:
+        """Method to check whether player can unequip specified weapon"""
+        return self.weapons.can_unequip(weapon)
+
+    def is_equipped(self, weapon: str) -> bool:
+        """Method to check whether weapon is equipped"""
+        return self.weapons.is_equipped(weapon)
+
+    def equip_weapon(self, weapon: str) -> None:
+        """Method to equip specified weapon"""
+        self.weapons.equip_weapon(weapon)
+
+    def unequip_weapon(self, weapon: str) -> None:
+        """Method to unequip specified weapon"""
+        self.weapons.unequip_weapon(weapon)
+
     def get_proficiencies(self, prof_type: str) -> list:
         """Method to return list of proficiencies of specified type"""
         all_prof = []

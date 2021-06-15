@@ -24,6 +24,7 @@ nlu:
     - thanks for inviting me
     - how's business?
     - greet [corvus](npc)
+    - say to [corvus stouthammer](npc) hello
 
 - intent: goodbye
   examples: |
@@ -49,6 +50,10 @@ nlu:
     - correct
     - okay
     - sure
+    - I accept
+    - accept
+    - alright
+    - alright, I'll have a look
 
 - intent: deny
   examples: |
@@ -59,6 +64,10 @@ nlu:
     - don't like that
     - no way
     - not really
+    - nah
+    - I don't feel like it
+    - I deny
+    - deny
 
 - intent: bot_challenge
   examples: |
@@ -106,6 +115,7 @@ nlu:
     - go to [inn cellar](location)
     - go to the [cellar inn](location)
     - go [downstairs](location)
+    - go [behind the bar](location)
     - move [down stairs](location)
     - travel [down the stairs](location)
     - go [up stairs](location)
@@ -115,6 +125,7 @@ nlu:
     - proceed to the [stout meal inn](location)
     - go [upstairs](location)
     - go to the [storage room](location)
+    - go through [the hole](location)
     - head to [storage](location)
     - travel to [store room](location)
     - progress to [store](location)
@@ -232,6 +243,25 @@ nlu:
     - overwhelm [zombie](monster)
     - wallop [skeleton](monster)
     - pounce the [cat](monster)
+    - I swing my [shortsword](weapon)
+    - I use my [sword](weapon)
+    - I hit the [skeleton](monster) with my [short sword](weapon)
+    - I stab the [first](id) [rat](monster) with the [dagger](weapon)
+    - I attack [corvus](npc) with my [daggers](weapon)
+    - I swing my [greataxe](weapon) at the [skeleton](monster)
+    - I use the [great axe](weapon) against the [goblin](monster)
+    - I strike the [zombie](monster) with my [greatax](weapon)
+    - I swing my [handaxe](weapon) at the [skeleton](monster)
+    - I use my [hand axe](weapon) against the [goblin](monster)
+    - I slash the [zombie](monster) with the [handax](weapon)
+    - I attack with my [javelin](weapon)
+    - I stab [anvil](npc) with the [javellin](weapon)
+    - swing with the [quaterstaff](weapon)
+    - use the [quarter staff](weapon) on the [giant rat](monster)
+    - attack with the [quaterstaff](weapon)
+    - swing my [scimitar](weapon) at the [skeleton](monster)
+    - bash the [zombie](monster) with my [warhammer](weapon)
+    - swing the [war hammer](weapon) at the [second](id) [giant rat](monster)
 
 - intent: ranged_attack
   examples: |
@@ -311,6 +341,32 @@ nlu:
     - I use my action to search
     - I take the search action
 
+- intent: equip
+  examples: |
+    - I equip my [crossbow](weapon)
+    - equip my [dagger](weapon)
+    - I equip the [greataxe](weapon)
+    - equip the [handaxe](weapon)
+    - I equip my [javelin](weapon)
+    - equip my [quarterstaff](weapon)
+    - I equip the [scimitar](weapon)
+    - equip the [shortbow](weapon)
+    - I equip my [shortsword](weapon)
+    - I equip [warhammer](weapon)
+
+- intent: unequip
+  examples: |
+    - I unequip my [crossbow](weapon)
+    - unequip my [dagger](weapon)
+    - I unequip the [greataxe](weapon)
+    - unequip the [handaxe](weapon)
+    - I unequip my [javelin](weapon)
+    - unequip my [quarterstaff](weapon)
+    - I unequip the [scimitar](weapon)
+    - unequip the [shortbow](weapon)
+    - I unequip my [shortsword](weapon)
+    - I unequip [warhammer](weapon)
+
 - intent: use
   examples: |
     - I want to use [thieves tools](equipment)
@@ -389,6 +445,14 @@ nlu:
     - chat with [the dwarf](npc)
     - converse with [stouthammer](npc)
     - say to [corvus](npc)
+    - talk to [anvil](npc)
+    - speak to [anvil-jumper](npc)
+    - communicate with [giant rat](monster)
+    - commune with the [skeleton](monster)
+    - speak with [zombie](monster)
+    - talk to the [first](id) [rat](monster)
+    - talk with [goblin](monster)
+    - say to the [3rd](id) [goblin](monster)
 
 - intent: question_npc
   examples: |
@@ -565,6 +629,7 @@ nlu:
     - down stairs
     - down the stairs
     - cellar inn
+    - behind the bar
 
 - synonym: storage_room
   examples: |
@@ -572,6 +637,7 @@ nlu:
     - storage
     - store room
     - store
+    - the hole
 
 - synonym: burial_chamber
   examples: |
@@ -695,7 +761,7 @@ nlu:
     - masons tool
     - mason tool
 
-- synonym: light_crossbow
+- synonym: crossbow_light
   examples: |
     - light crossbow
     - crossbow
@@ -768,3 +834,35 @@ nlu:
 - synonym: sleight_of_hand
   examples: |
     - sleight of hand
+
+- synonym: shortsword
+  examples: |
+    - short sword
+    - sword
+
+- synonym: dagger
+  examples: |
+    - daggers
+
+- synonym: greataxe
+  examples: |
+    - great axe
+    - greatax
+
+- synonym: handaxe
+  examples: |
+    - hand axe
+    - handax
+
+- synonym: javelin
+  examples: |
+    - javellin
+
+- synonym: quarterstaff
+  examples: |
+    - quarter staff
+    - quaterstaff
+
+- synonym: warhammer
+  examples: |
+    - war hammer

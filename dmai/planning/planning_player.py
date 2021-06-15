@@ -223,7 +223,6 @@ class PlanningPlayer(PlanningAgent):
                 "open_door_with_attack",
                 "force_door",
                 "use_door_switch",
-                "use_thieves_tools",
                 "attack_door",
                 "breaks_down_door",
                 "receive_quest",
@@ -233,6 +232,8 @@ class PlanningPlayer(PlanningAgent):
                 "attack_monster",
                 "kill_monster"
             ]
+            if State.get_player().has_equipment("thieves_tools")[0]:
+                actions.append("use_thieves_tools")
             writer.write(self._construct_actions(actions))
             writer.write(self._construct_domain_footer())
 
@@ -328,6 +329,8 @@ class PlanningPlayer(PlanningAgent):
                 init.append([skill[0], skill[0]])
             for weapon in State.get_player().get_all_weapon_ids():
                 init.append(["has", "player", weapon])
+                if State.get_player().is_equipped(weapon):
+                    init.append(["equipped", "player", weapon])
             for equipment in State.get_player().get_all_equipment_ids():
                 init.append([equipment, equipment])
                 init.append(["has", "player", equipment])
@@ -344,7 +347,7 @@ class PlanningPlayer(PlanningAgent):
             init.append(["degrade_attitude", "friendly", "indifferent"])
             init.append(["degrade_attitude", "indifferent", "hostile"])
             for npc in State.get_dm().npcs.get_all_npcs():
-                init.append(["attitude_towards_player", npc.id, State.get_current_attitude(npc.id)])
+                init.append(["attitude_towards_player", npc.id, State.get_current_attitude(npc.id).value])
 
             # Monsters
             for monster in State.get_dm().npcs.get_all_monsters():

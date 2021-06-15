@@ -85,7 +85,7 @@ class NLU(metaclass=NLUMeta):
         should be paused and string is the updated player utterance."""
 
         # first check if the user is issuing a command
-        if player_cmd[0] == "/":
+        if player_cmd[0] == "/" or player_cmd[0] == "\\":
             try:
                 return cls._regex_and_exec(player_cmd)
             except UnrecognisedCommandError as e:
@@ -165,6 +165,20 @@ class NLU(metaclass=NLUMeta):
             return ("stop_using", {"nlu_entities": entities})
         if intent == "hint":
             return ("hint", {})
+        if intent == "equip":
+            return ("equip", {"nlu_entities": entities})
+        if intent == "unequip":
+            return ("unequip", {"nlu_entities": entities})
+        if intent == "converse":
+            return ("converse", {"nlu_entities": entities})
+        if intent == "greet":
+            return ("converse", {"nlu_entities": entities})
+        if intent == "affirm":
+            return ("affirm", {})
+        if intent == "deny":
+            return ("deny", {})
+        if intent == "explore":
+            return ("explore", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

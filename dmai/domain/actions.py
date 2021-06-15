@@ -1,7 +1,7 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.loader import Loader
-from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment
+from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon, UnrecognisedEntityError
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
@@ -34,11 +34,21 @@ class Actions:
         and reason why not if not."""
         try:
             # check if destination is accessible
-            current = State.get_current_room_id(entity)
-            if current == destination:
+            current = State.get_current_room(entity)
+            if current.id == destination:
                 return (False, "same")
 
-            if State.travel_allowed(current, destination):
+            # can't move if can't see
+            if not current.visibility:
+                if not State.torch_lit or State.get_player(
+                ).character.has_darkvision():
+                    return (False, "no visibility")
+            
+            # can't move without quest
+            if not State.questing:
+                return (False, "no quest")
+
+            if State.travel_allowed(current.id, destination):
                 return (True, "")
             else:
                 return (False, "locked")
@@ -56,7 +66,8 @@ class Actions:
         if can_move:
             State.set_current_room(entity, destination)
         else:
-            OutputBuilder.append(NLG.cannot_move(destination, reason))
+            OutputBuilder.append(
+                NLG.cannot_move(State.get_room_name(destination), reason))
         return can_move
 
     def _can_attack(self, attacker: str, target: str) -> tuple:
@@ -83,12 +94,13 @@ class Actions:
                     # this is a game end condition
                     OutputBuilder.append(NLG.attack_npc_end_game(target))
                     dmai.dmai_helpers.gameover()
-
+            attacker = "You" if attacker == "player" else attacker
             OutputBuilder.append("{a} attacked {t}!".format(a=attacker,
                                                             t=target))
             State.combat(attacker, target)
             return can_attack
         else:
+            attacker = "You" if attacker == "player" else attacker
             OutputBuilder.append("{a} can't attack {t}!\n{r}".format(
                 a=attacker, t=target, r=reason))
             return can_attack
@@ -102,7 +114,6 @@ class Actions:
         try:
             (has_equipment, reason) = entity.has_equipment(equipment)
             if has_equipment:
-                print("has equipment")
                 return (True, "")
             else:
                 return (False, reason)
@@ -134,3 +145,135 @@ class Actions:
             else:
                 OutputBuilder.append(NLG.cannot_use(equipment, reason))
         return can_use
+
+    def _can_equip(self, entity, weapon: str) -> tuple:
+        """Check if an entity can equip specified weapon.
+        Returns tuple (bool, str) to indicate whether equip is possible
+        and reason why not if not."""
+
+        # check if entity has weapon in their Weapons
+        try:
+            (can_equip, reason) = entity.can_equip(weapon)
+            if can_equip:
+                return (True, "")
+            else:
+                return (False, reason)
+        except UnrecognisedWeapon:
+            return (False, "unknown")
+
+    def equip(self, weapon: str, entity: str = "player") -> bool:
+        """Attempt to equip a specified weapon.
+        Returns a bool to indicate whether the action was successful"""
+
+        # get entity object
+        if entity == "player":
+            entity = State.get_player()
+        else:
+            entity = self.npcs.get_entity(entity)
+
+        # check if weapon can be equipped
+        (can_equip, reason) = self._can_equip(entity, weapon)
+        if can_equip:
+            entity.equip_weapon(weapon)
+            OutputBuilder.append(NLG.equip_weapon(weapon))
+        else:
+            OutputBuilder.append(NLG.cannot_equip(weapon, reason))
+        return can_equip
+
+    def _can_unequip(self, entity, weapon: str) -> tuple:
+        """Check if an entity can unequip specified weapon.
+        Returns tuple (bool, str) to indicate whether unequip is possible
+        and reason why not if not."""
+
+        # check if entity has weapon equipped
+        try:
+            (can_unequip, reason) = entity.can_unequip(weapon)
+            if can_unequip:
+                return (True, "")
+            else:
+                return (False, reason)
+        except UnrecognisedWeapon:
+            return (False, "unknown")
+
+    def unequip(self, weapon: str, entity: str = "player") -> bool:
+        """Attempt to unequip a specified weapon.
+        Returns a bool to indicate whether the action was successful"""
+
+        # get entity object
+        if entity == "player":
+            entity = State.get_player()
+        else:
+            entity = self.npcs.get_entity(entity)
+
+        # check if weapon can be unequipped
+        (can_unequip, reason) = self._can_unequip(entity, weapon)
+        if can_unequip:
+            entity.unequip_weapon(weapon)
+            OutputBuilder.append(NLG.unequip_weapon(weapon))
+        else:
+            OutputBuilder.append(NLG.cannot_unequip(weapon, reason))
+        return can_unequip
+
+    def _can_converse(self, target: str) -> tuple:
+        """Check if a target can have a conversation.
+        Returns tuple (bool, str) to indicate whether conversation is possible
+        and reason why not if not."""
+
+        # check if player and target are within converse range
+        if not State.get_current_room() == State.get_current_room(target):
+            return (False, "Different location")
+        # check if target is a monster
+        if self.npcs.get_type(target) == "monster":
+            return (False, "monster")
+        return (True, "")
+
+    def converse(self, target: str) -> bool:
+        """Attempt to converse with a specified target.
+        Returns a bool to indicate whether the action was successful"""
+
+        # check if conversation can happen
+        (can_converse, reason) = self._can_converse(target)
+        if can_converse:
+            if self.npcs.get_entity(target).dialogue:
+                # TODO make the dialogue options flexible
+                if not State.quest_received:
+                    State.set_conversation_target(target)
+                    State.received_quest()
+                    OutputBuilder.append(
+                        self.npcs.get_entity(target).dialogue["gives_quest"])
+                else:
+                    t = State.get_dm().npcs.get_entity(target).name
+                    OutputBuilder.append(NLG.roleplay(t))
+                State.roleplay(target)
+            return can_converse
+        else:
+            OutputBuilder.append("You can't converse with {t}!\n{r}".format(
+                t=target, r=reason))
+            return can_converse
+
+    def _can_investigate(self, target: str) -> tuple:
+        """Check if player can investigate target.
+        Returns tuple (bool, str) to indicate whether investigation is possible
+        and reason why not if not."""
+        try:
+            # check if target is in same location as player
+            if not State.get_current_room_id(
+                    target) == State.get_current_room_id():
+                return (False, "different location")
+            else:
+                return (True, "")
+        except UnrecognisedEntityError:
+            return (False, "unknown entity")
+
+    def investigate(self, target: str) -> bool:
+        """Attempt to investigate current location.
+        Returns a bool to indicate whether the action was successful"""
+
+        # check if entity can investigate
+        (can_investigate, reason) = self._can_investigate(target)
+        if can_investigate:
+            # TODO add investigation descriptions to entities in adventure
+            OutputBuilder.append("You investigate {t}...".format(t=target))
+        else:
+            OutputBuilder.append(NLG.cannot_investigate(target, reason))
+        return can_investigate

@@ -26,16 +26,18 @@ class Room:
         trigger_map = {
             "enter": self.enter,
             "exit": print,
-            "visibility": self.visibility
+            "visibility": self.trigger_visibility
         }
 
         # populate the self.text object
         for text_type in self.text:
             text = self.text[text_type]
+            trigger = trigger_map[
+                text_type] if text_type in trigger_map else None
             self.text[text_type] = {
                 "text": text,
-                "can_trigger": True,
-                "trigger": trigger_map[text_type]
+                "can_trigger": text_type in trigger_map,
+                "trigger": trigger
             }
 
     def __repr__(self) -> str:
@@ -52,12 +54,14 @@ class Room:
                 OutputBuilder.append(NLG.enter_room(self.name))
             State.halt()
 
-    def visibility(self) -> str:
+    def trigger_visibility(self) -> str:
         """Method when triggering visibility text"""
         logger.debug("Triggering visibility in room: {r}".format(r=self.id))
-        if State.torch_lit or State.get_player().character.has_darkvision():
-            OutputBuilder.append(self.text["visibility"]["text"])
-            self.text["visibility"]["can_trigger"] = False
+        if not self.visibility:
+            if State.torch_lit or State.get_player().character.has_darkvision(
+            ):
+                OutputBuilder.append(self.text["visibility"]["text"])
+                self.text["visibility"]["can_trigger"] = False
 
     def trigger(self) -> None:
         """Method to print any new text if conditions met"""

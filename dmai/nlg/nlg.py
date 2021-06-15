@@ -102,6 +102,12 @@ class NLG(metaclass=NLGMeta):
         elif reason == "locked":
             return "You cannot move to {room} because the way is locked!".format(
                 room=room)
+        elif reason == "no visibility":
+            return "You cannot move to {room} because it's too dark for you to find the way!".format(
+                room=room)
+        elif reason == "no quest":
+            return "You cannot move to {room} because you haven't accepted the quest!".format(
+                room=room)
         elif reason == "unknown":
             return "You cannot move to unknown location: {room}!".format(
                 room=room)
@@ -131,12 +137,12 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
-    def no_target(cls) -> str:
+    def no_target(cls, verb: str) -> str:
         """Return the utterance for no target"""
         utters = [
             "Can you confirm your target",
-            "Who, or what, do you want to attack?",
-            "I'm not sure what you want to attack, can you repeat your target",
+            "Who, or what, do you want to {v}?".format(v=verb),
+            "I'm not sure who or what you want to {v}, can you repeat your target".format(v=verb),
         ]
         return random.choice(utters)
 
@@ -155,6 +161,70 @@ class NLG(metaclass=NLGMeta):
                 "Sorry, what do you want to use?",
                 "I'm not sure where you want to use, can you repeat the equipment",
             ]
+        return random.choice(utters)
+
+    @classmethod
+    def no_weapon(cls, unequip: bool = False) -> str:
+        """Return the utterance for no weapon"""
+        if unequip:
+            utters = [
+                "Can you confirm the weapon you want to unequip",
+                "Sorry, what do you want to unequip?",
+                "I'm not sure where you want to unequip, can you repeat the weapon",
+            ]
+        else:
+            utters = [
+                "Can you confirm the weapon you want to equip",
+                "Sorry, what do you want to equip?",
+                "I'm not sure where you want to equip, can you repeat the weapon",
+            ]
+        return random.choice(utters)
+
+    @classmethod
+    def cannot_equip(cls, weapon: str, reason: str = None) -> str:
+        """Return the utterance for not allowing equipping of weapon"""
+        if not reason:
+            return "You cannot equip {w}".format(w=weapon)
+        elif reason == "unknown":
+            return "You cannot equip unknown equipment: {w}!".format(w=weapon)
+        elif reason == "not owned":
+            return "You cannot equip {w} because it's not in your inventory!".format(
+                w=weapon)
+        elif reason == "no free slots":
+            return "You cannot equip {w} because you don't have any free slots! Unequip something first.".format(
+                w=weapon)
+        elif reason == "already equipped":
+            return "You cannot equip {w} because it's already equipped!".format(
+                w=weapon)
+
+    @classmethod
+    def cannot_unequip(cls, weapon: str, reason: str = None) -> str:
+        """Return the utterance for not allowing unequipping of weapon"""
+        if not reason:
+            return "You cannot unequip {w}".format(w=weapon)
+        elif reason == "unknown":
+            return "You cannot unequip unknown equipment: {w}!".format(w=weapon)
+        elif reason == "not owned":
+            return "You cannot unequip {w} because it's not in your inventory!".format(
+                w=weapon)
+        elif reason == "not equipped":
+            return "You cannot unequip {w} because it's not equipped!".format(
+                w=weapon)
+
+    @classmethod
+    def equip_weapon(cls, weapon: str) -> str:
+        """Return the utterance for equipping a weapon"""
+        utters = [
+            "You equipped {w}".format(w=weapon)
+        ]
+        return random.choice(utters)
+
+    @classmethod
+    def unequip_weapon(cls, weapon: str) -> str:
+        """Return the utterance for unequipping a weapon"""
+        utters = [
+            "You unequipped {w}".format(w=weapon)
+        ]
         return random.choice(utters)
 
     @classmethod
@@ -187,16 +257,11 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
-    def attack_npc_end_game(cls, npc_id: str) -> str:
-        """Return the utterance for ending the game by attacking npc"""
-        n = cls.game.dm.npcs.get_npc(npc_id).short_name
+    def roleplay(cls, target: str) -> str:
+        """Return the utterance for getting roleplay prompt"""
+        n = cls.game.player.name
         utters = [
-            "You attacked and fatally wounded {n}. He was a much loved member of the community and retribution was swift. You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=n),
-            "Your unprovoked attack took your good friend {n} completely unawares. As the light left his eyes, he managed to utter a quiet \"why?\" with his dying breath. Why indeed? You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=n),
-            "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=n),
+            "{n}, what do you say to {t}?".format(n=n, t=target)
         ]
         return random.choice(utters)
 
@@ -239,3 +304,32 @@ class NLG(metaclass=NLGMeta):
     def explain_critical(cls) -> str:
         """Return the utterance for explaining a critical hit"""
         return "Critical means the damage dice are doubled. Roll for damage, double that, and add your modifier after that."
+
+    ############################################################
+    # Exploration and investigation utterances
+    @classmethod
+    def cannot_investigate(cls, target: str, reason: str = None) -> str:
+        """Return the utterance for not allowing investigate of target"""
+        if not reason:
+            return "You cannot investigate {t}".format(t=target)
+        elif reason == "unknown entity":
+            return "You cannot investigate unknown target: {t}!".format(t=target)
+        elif reason == "different location":
+            return "You cannot investigate target {t}, you're not in the same location!".format(t=target)
+
+    ############################################################
+    # Gameover utterances
+    @classmethod
+    def attack_npc_end_game(cls, npc_id: str) -> str:
+        """Return the utterance for ending the game by attacking npc"""
+        n = cls.game.dm.npcs.get_npc(npc_id).short_name
+        utters = [
+            "You attacked and fatally wounded {n}. He was a much loved member of the community and retribution was swift. You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
+            .format(n=n),
+            "Your unprovoked attack took your good friend {n} completely unawares. As the light left his eyes, he managed to utter a quiet \"why?\" with his dying breath. Why indeed? You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
+            .format(n=n),
+            "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
+            .format(n=n),
+        ]
+        return random.choice(utters)
+    
