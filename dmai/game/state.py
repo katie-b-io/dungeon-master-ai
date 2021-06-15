@@ -53,6 +53,7 @@ class State(metaclass=StateMeta):
     roleplaying = False
     torch_lit = False
     stationary = False
+    current_conversation = None
     current_room = {}
     current_status = {}
     current_hp = {}
@@ -75,6 +76,7 @@ class State(metaclass=StateMeta):
             cls.in_combat = True
             cls.roleplaying = False
             cls.set_target(target)
+            cls.clear_conversation()
             OutputBuilder.append(NLG.transition_to_combat())
 
     @classmethod
@@ -83,6 +85,7 @@ class State(metaclass=StateMeta):
         cls.in_combat = False
         cls.roleplaying = False
         cls.clear_target()
+        cls.clear_conversation()
 
     @classmethod
     def roleplay(cls, target: str) -> None:
@@ -93,6 +96,7 @@ class State(metaclass=StateMeta):
             cls.in_combat = False
             cls.roleplaying = True
             cls.clear_target()
+            cls.set_conversation_target(target)
 
     @classmethod
     def set_current_game_mode(cls, game_mode: str) -> None:
@@ -222,6 +226,20 @@ class State(metaclass=StateMeta):
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
+
+    ############################################################
+    # METHODS RELATING TO CONVERSATION
+    @classmethod
+    def set_conversation_target(cls, target: str) -> None:
+        """Method to set the current target for a conversation"""
+        logger.debug("Setting current conversation target: {t}".format(t=target))
+        cls.current_conversation = target
+
+    @classmethod
+    def clear_conversation(cls, entity: str = "player") -> None:
+        """Method to clear the conversation for an entity"""
+        logger.debug("Clearing current conversation")
+        cls.current_conversation = None
 
     ############################################################
     # METHODS RELATING TO ITEMS
