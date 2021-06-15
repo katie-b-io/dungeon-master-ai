@@ -41,7 +41,8 @@ class DM:
             "unequip": self.unequip,
             "converse": self.converse,
             "affirm": self.affirm,
-            "deny": self.deny
+            "deny": self.deny,
+            "explore": self.explore
         }
 
     def input(
@@ -138,6 +139,7 @@ class DM:
     def _get_target(self, nlu_entities: dict) -> str:
         """Extract a target from NLU entities dictionary.
         Returns a string with destination"""
+        # TODO support non-entity targets
         monster = None
         i = None
         npc = None
@@ -295,7 +297,7 @@ class DM:
     
     def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
         """Attempt an attack by attacker against target determined by NLU or specified.
-        Returns whether the attack was successful."""
+        Returns whether the action was successful."""
         if not target and nlu_entities:
             target = self._get_target(nlu_entities)
 
@@ -325,3 +327,22 @@ class DM:
             npc = self.npcs.get_entity(State.current_conversation)
             OutputBuilder.append(npc.dialogue["turns_down_quest"])
             dmai.dmai_helpers.gameover()
+
+    def explore(self, target: str = None, nlu_entities: dict = None) -> bool:
+        """Attempt to explore/investigate.
+        Returns whether the action was successful."""
+        if not target and nlu_entities:
+            target = self._get_target(nlu_entities)
+
+        if not target:
+            logger.info("player is exploring!")
+            room = State.get_current_room()
+            if State.torch_lit or State.get_player().character.has_darkvision():
+                OutputBuilder.append(room.text["description"]["text"])
+            else:
+                OutputBuilder.append(room.text["no_visibility_description"]["text"])
+            explore = True
+        else:
+            logger.info("player is investigating {t}!".format(t=target))
+            explore = self.actions.investigate(target)
+        return explore

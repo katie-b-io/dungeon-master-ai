@@ -50,6 +50,10 @@ nlu:
     - correct
     - okay
     - sure
+    - I accept
+    - accept
+    - alright
+    - alright, I'll have a look
 
 - intent: deny
   examples: |
@@ -62,6 +66,8 @@ nlu:
     - not really
     - nah
     - I don't feel like it
+    - I deny
+    - deny
 
 - intent: bot_challenge
   examples: |
@@ -248,7 +254,7 @@ nlu:
     - I use my [hand axe](weapon) against the [goblin](monster)
     - I slash the [zombie](monster) with the [handax](weapon)
     - I attack with my [javelin](weapon)
-    - I stab [anvil](npc) with the [javelin](weapon)
+    - I stab [anvil](npc) with the [javellin](weapon)
     - swing with the [quaterstaff](weapon)
     - use the [quarter staff](weapon) on the [giant rat](monster)
     - attack with the [quaterstaff](weapon)
@@ -845,6 +851,10 @@ nlu:
   examples: |
     - hand axe
     - handax
+
+- synonym: javelin
+  examples: |
+    - javellin
 
 - synonym: quarterstaff
   examples: |

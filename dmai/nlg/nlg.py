@@ -136,7 +136,7 @@ class NLG(metaclass=NLGMeta):
         utters = [
             "Can you confirm your target",
             "Who, or what, do you want to {v}?".format(v=verb),
-            "I'm not sure what you want to {v}, can you repeat your target".format(v=verb),
+            "I'm not sure who or what you want to {v}, can you repeat your target".format(v=verb),
         ]
         return random.choice(utters)
 
@@ -298,6 +298,18 @@ class NLG(metaclass=NLGMeta):
     def explain_critical(cls) -> str:
         """Return the utterance for explaining a critical hit"""
         return "Critical means the damage dice are doubled. Roll for damage, double that, and add your modifier after that."
+
+    ############################################################
+    # Exploration and investigation utterances
+    @classmethod
+    def cannot_investigate(cls, target: str, reason: str = None) -> str:
+        """Return the utterance for not allowing investigate of target"""
+        if not reason:
+            return "You cannot investigate {t}".format(t=target)
+        elif reason == "unknown entity":
+            return "You cannot investigate unknown target: {t}!".format(t=target)
+        elif reason == "different location":
+            return "You cannot investigate target {t}, you're not in the same location!".format(t=target)
 
     ############################################################
     # Gameover utterances

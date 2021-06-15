@@ -177,6 +177,8 @@ class NLU(metaclass=NLUMeta):
             return ("affirm", {})
         if intent == "deny":
             return ("deny", {})
+        if intent == "explore":
+            return ("explore", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

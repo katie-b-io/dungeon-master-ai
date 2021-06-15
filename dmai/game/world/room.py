@@ -34,8 +34,8 @@ class Room:
             text = self.text[text_type]
             self.text[text_type] = {
                 "text": text,
-                "can_trigger": True,
-                "trigger": trigger_map[text_type]
+                "can_trigger": text_type in trigger_map,
+                "trigger": trigger_map[text_type] if text_type in trigger_map else None
             }
 
     def __repr__(self) -> str:

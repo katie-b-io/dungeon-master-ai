@@ -210,7 +210,7 @@ class Actions:
 
         # check if player and target are within converse range
         if not State.get_current_room() == State.get_current_room(target):
-            return (False, "different location")
+            return (False, "Different location")
         # check if target is a monster
         if self.npcs.get_type(target) == "monster":
             return (False, "monster")
@@ -236,3 +236,29 @@ class Actions:
             OutputBuilder.append("You can't converse with {t}!\n{r}".format(
                 t=target, r=reason))
             return can_converse
+    
+    def _can_investigate(self, target: str) -> tuple:
+        """Check if player can investigate target.
+        Returns tuple (bool, str) to indicate whether investigation is possible
+        and reason why not if not."""
+        try:
+            # check if target is in same location as player
+            if not State.get_current_room_id(target) == State.get_current_room_id():
+                return (False, "different location")
+            else:
+                return (True, "")
+        except UnrecognisedEntityError:
+            return (False, "unknown entity")
+
+    def investigate(self, target: str) -> bool:
+        """Attempt to investigate current location.
+        Returns a bool to indicate whether the action was successful"""
+
+        # check if entity can investigate
+        (can_investigate, reason) = self._can_investigate(target)
+        if can_investigate:
+            # TODO add investigation descriptions to entities in adventure
+            OutputBuilder.append("You investigate {t}...".format(t=target))
+        else:
+            OutputBuilder.append(NLG.cannot_investigate(target, reason))
+        return can_investigate
