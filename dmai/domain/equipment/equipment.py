@@ -23,6 +23,7 @@ class Equipment(ABC):
 
     def use(self) -> None:
         print("Using this doesn't do anything special")
+        return True
 
     def stop(self) -> None:
-        pass
+        return True

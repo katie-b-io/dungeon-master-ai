@@ -44,32 +44,57 @@ class EquipmentCollection:
         """Set the self.equipment_data class variable data"""
         self.equipment_data = Loader.load_domain("equipment")
 
+    def _check_equipment(self, equipment_id: str) -> bool:
+        """Method to return whether specified equipment exists.
+        Returns a boolean."""
+        if equipment_id not in self.equipment_data:
+            msg = "Equipment {e} does not exist!".format(e=equipment_id)
+            raise UnrecognisedEquipment(msg)
+        return True
+
     def has_equipment(self, equipment_id: str) -> tuple:
         """Method to return whether specified equipment exists.
         Returns a tuple with the boolean and a string with a reason."""
-        if not equipment_id in self.equipment:
-            return (False, "not equipped")
-        if not self.quantity_above_zero(equipment_id):
-            return (False, "quantity")
-        return (True, "")
+        try:
+            if self._check_equipment(equipment_id):
+                if not equipment_id in self.equipment:
+                    return (False, "not equipped")
+                if not self.quantity_above_zero(equipment_id):
+                    return (False, "quantity")
+                return (True, "")
+            return (False, "unknown")
+        except UnrecognisedEquipment:
+            return (False, "unknown")
 
     def quantity_above_zero(self, equipment_id: str) -> bool:
         """Method to return whether quantity of specified equipment is above zero"""
         if equipment_id in self.equipment:
             return self.equipment[equipment_id]["quantity"] > 0
 
-    def use_equipment(self, equipment_id: str) -> None:
-        """Method to use specified equipment"""
-        (has_equipment, reason) = self.has_equipment(equipment_id)
-        if has_equipment:
-            self.equipment[equipment_id][
-                "quantity"] = self.equipment[equipment_id]["quantity"] - 1
-            self.equipment[equipment_id]["equipment"].use()
+    def use_equipment(self, equipment_id: str) -> bool:
+        """Method to use specified equipment.
+        Returns bool for whether equipment was used"""
+        try:
+            if self._check_equipment(equipment_id):
+                (has_equipment, reason) = self.has_equipment(equipment_id)
+                if has_equipment:
+                    self.equipment[equipment_id][
+                        "quantity"] = self.equipment[equipment_id]["quantity"] - 1
+                    return self.equipment[equipment_id]["equipment"].use()
+                return False
+        except UnrecognisedEquipment:
+            return False
 
-    def stop_using_equipment(self, equipment_id: str) -> None:
-        """Method to stop using specified equipment"""
-        if equipment_id in self.equipment:
-            self.equipment[equipment_id]["equipment"].stop()
+    def stop_using_equipment(self, equipment_id: str) -> bool:
+        """Method to stop using specified equipment.
+        Returns bool for whether equipment was stopped being used"""
+        try:
+            if self._check_equipment(equipment_id):
+                if equipment_id in self.equipment:
+                    return self.equipment[equipment_id]["equipment"].stop()
+                return False
+        except UnrecognisedEquipment:
+            return False
 
     def get_all(self) -> list:
         """Return a list with all the equipment ids"""

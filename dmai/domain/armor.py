@@ -46,10 +46,22 @@ class Armor:
     def get_equipped(self, slot) -> dict:
         """Method to get equipped armor.
         Returns a dictionary"""
-        if slot == "body":
+        if slot == "body" and self.body:
             return self.armor_data[self.body]
-        if slot == "shield":
+        if slot == "shield" and self.shield:
             return self.armor_data[self.shield]
+
+    def is_equipped(self, armor_id: str) -> bool:
+        """Method to determine if armor is equipped.
+        Returns bool"""
+        body_armor = self.get_equipped("body")
+        shield_armor = self.get_equipped("shield")
+
+        if body_armor and armor_id == body_armor["id"]:
+            return True
+        if shield_armor and armor_id == shield_armor["id"]:
+            return True
+        return False
 
     def calculate_armor_class(self, dex: int) -> int:
         """Method to calculate the armor class given a dexterity modifier"""
@@ -70,6 +82,10 @@ class Armor:
 
         return ac
 
+    def get_all(self) -> list:
+        """Return a list with all the equipment ids"""
+        return self.armor.keys()
+
     def get_proficient(self) -> str:
         """Return the proficient armor in a list"""
         all_profs = []
@@ -82,3 +98,12 @@ class Armor:
                     if armor["type"] == prof:
                         all_profs.append(armor)
         return all_profs
+    
+    def get_formatted(self, armor_id) -> str:
+        """Return the formatted armor"""
+        if armor_id in self.armor_data:
+            armor = self.armor_data[armor_id]
+            if self.is_equipped(armor_id):
+               return "{a} (equipped)".format(a=armor["name"])
+            else:
+                return "{q}".format(a=armor["name"])

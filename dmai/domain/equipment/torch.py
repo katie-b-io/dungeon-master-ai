@@ -13,12 +13,16 @@ class Torch(Equipment):
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
-    def use(self) -> None:
+    def use(self) -> bool:
         logger.debug("Lighting a torch")
         if not State.torch_lit:
             State.light_torch()
+            return True
+        return False
 
     def stop(self) -> None:
         logger.debug("Extinguishing a torch")
         if State.torch_lit:
             State.extinguish_torch()
+            return True
+        return False

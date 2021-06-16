@@ -97,17 +97,17 @@ class Character(ABC):
         return self.features.contains(
             "darkvision_elf") or self.features.contains("darkvision_dwarf")
 
-    def has_equipment(self, equipment: str) -> bool:
+    def has_equipment(self, equipment: str) -> tuple:
         """Method to check whether player has specified equipment"""
         return self.equipment.has_equipment(equipment)
 
-    def use_equipment(self, equipment: str) -> None:
+    def use_equipment(self, equipment: str) -> bool:
         """Method to use specified equipment"""
-        self.equipment.use_equipment(equipment)
+        return self.equipment.use_equipment(equipment)
 
-    def stop_using_equipment(self, equipment: str) -> None:
+    def stop_using_equipment(self, equipment: str) -> bool:
         """Method to stop using specified equipment"""
-        self.equipment.stop_using_equipment(equipment)
+        return self.equipment.stop_using_equipment(equipment)
 
     def can_equip(self, weapon: str) -> tuple:
         """Method to check whether player can equip specified weapon"""
@@ -121,19 +121,20 @@ class Character(ABC):
         """Method to check whether weapon is equipped"""
         return self.weapons.is_equipped(weapon)
 
-    def equip_weapon(self, weapon: str) -> None:
+    def equip_weapon(self, weapon: str) -> bool:
         """Method to equip specified weapon"""
-        self.weapons.equip_weapon(weapon)
+        return self.weapons.equip_weapon(weapon)
 
-    def unequip_weapon(self, weapon: str = None) -> None:
+    def unequip_weapon(self, weapon: str = None) -> bool:
         """Method to unequip specified weapon"""
-        self.weapons.unequip_weapon(weapon)
+        return self.weapons.unequip_weapon(weapon)
 
     def get_proficiencies(self, prof_type: str) -> list:
         """Method to return list of proficiencies of specified type"""
         all_prof = []
-        if self.char_class.get_proficiencies(prof_type):
-            all_prof.extend(self.char_class.get_proficiencies(prof_type))
+        if prof_type != "skills":
+            if self.char_class.get_proficiencies(prof_type):
+                all_prof.extend(self.char_class.get_proficiencies(prof_type))
         if prof_type in self.proficiencies:
             for prof_reason in self.proficiencies[prof_type]:
                 all_prof.extend(self.proficiencies[prof_type][prof_reason])
@@ -169,6 +170,8 @@ class Character(ABC):
             value = "+{v}".format(v=value)
         elif value == 0:
             value = " {v}".format(v=value)
+        else:
+            value = "{v}".format(v=value)
         return value
 
     def get_signed_ability_modifier(self, ability: str) -> str:
@@ -250,6 +253,13 @@ class Character(ABC):
             return "{d} ({t})".format(d=d, t=t)
         else:
             return "{d} {m} ({t})".format(d=d, m=m, t=t)
+
+    def get_formatted_armor(self) -> str:
+        """Method to return the armor formatted string"""
+        armor_str = ", ".join([
+            self.armor.get_formatted(e) for e in self.armor.get_all()
+        ])
+        return "\n".join(textwrap.wrap(armor_str, 75))
 
     def get_formatted_equipment(self) -> str:
         """Method to return the equipment formatted string"""
