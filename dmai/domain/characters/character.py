@@ -125,7 +125,7 @@ class Character(ABC):
         """Method to equip specified weapon"""
         self.weapons.equip_weapon(weapon)
 
-    def unequip_weapon(self, weapon: str) -> None:
+    def unequip_weapon(self, weapon: str = None) -> None:
         """Method to unequip specified weapon"""
         self.weapons.unequip_weapon(weapon)
 

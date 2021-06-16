@@ -75,7 +75,7 @@ class State(metaclass=StateMeta):
             cls.set_current_game_mode("combat")
             cls.in_combat = True
             cls.roleplaying = False
-            cls.set_target(target)
+            cls.set_target(target, attacker)
             cls.clear_conversation()
             OutputBuilder.append(NLG.transition_to_combat())
 
@@ -378,7 +378,7 @@ class State(metaclass=StateMeta):
         """Method to return the name of a room."""
         try:
             if cls._check_room_exists(room_id):
-                    return cls.dm.adventure.get_room(room_id).name
+                return cls.dm.adventure.get_room(room_id).name
         except UnrecognisedRoomError:
             raise
 

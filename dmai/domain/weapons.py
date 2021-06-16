@@ -61,6 +61,12 @@ class Weapons:
     def can_unequip(self, weapon_id: str) -> tuple:
         """Method to return whether specified weapon can be unequipped.
         Returns a tuple with the boolean and a string with a reason."""
+        if not weapon_id:
+            if not self.get_equipped("right_hand") and not self.get_equipped("left_hand"):
+                return (False, "nothing equipped")
+            else:
+                return (True, "")
+
         if not weapon_id in self.weapons:
             return (False, "not owned")
         
@@ -112,11 +118,11 @@ class Weapons:
                         return
                     self.__setattr__("right_hand", weapon_id)
 
-    def unequip_weapon(self, weapon_id: str) -> None:
+    def unequip_weapon(self, weapon_id: str = None) -> None:
         """Method to unequip specified weapon"""
-        if self.right_hand == weapon_id:
+        if not weapon_id or self.right_hand == weapon_id:
             self.right_hand = None
-        if self.left_hand == weapon_id:
+        if not weapon_id or self.left_hand == weapon_id:
             self.left_hand = None
 
     def get_equipped(self, slot) -> dict:

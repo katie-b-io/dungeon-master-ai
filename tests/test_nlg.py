@@ -12,7 +12,7 @@ from dmai.game.game import Game
 class TestNLG(unittest.TestCase):
     """Test the NLG class"""
     def setUp(self) -> None:
-        self.game = Game()
+        self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
         NLG.set_game(self.game)
 
     def test_enter_room(self) -> None:
@@ -25,18 +25,18 @@ class TestNLG(unittest.TestCase):
 
     def test_cannot_move_same(self) -> None:
         room = "room"
-        reason1 = "same"
+        reason = "same"
         self.assertEqual(
             "You cannot move to room because you're already there!",
-            NLG.cannot_move(room, "same"),
+            NLG.cannot_move(room, reason),
         )
 
     def test_cannot_move_locked(self) -> None:
         room = "room"
-        reason2 = "locked"
+        reason = "locked"
         self.assertEqual(
             "You cannot move to room because the way is locked!",
-            NLG.cannot_move(room, "locked"),
+            NLG.cannot_move(room, reason),
         )
 
 

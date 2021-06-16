@@ -13,9 +13,30 @@ from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 class TestState(unittest.TestCase):
     """Test the State class"""
     def setUp(self) -> None:
-        self.game = Game()
+        self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
         self.game.load()
         self.adventure = self.game.dm.adventure
+
+    def test_get_room_name(self) -> None:
+        room = "burial_chamber"
+        self.assertEqual("Burial Chamber", State.get_room_name(room))
+    
+    def test_get_room_name_malformed(self) -> None:
+        room = "the bar"
+        with self.assertRaises(UnrecognisedRoomError):
+            State.get_room_name(room)
+
+    def test__check_room_exists(self) -> None:
+        room = "burial_chamber"
+        self.assertEqual(True, State._check_room_exists(room))
+
+    def test__check_room_exists_malformed(self) -> None:
+        room1 = "the bar"
+        room2 = "moon"
+        with self.assertRaises(UnrecognisedRoomError):
+            State._check_room_exists(room1)
+        with self.assertRaises(UnrecognisedRoomError):
+            State._check_room_exists(room2)
 
     def test_get_current_room_player(self) -> None:
         entity = "player"
@@ -74,9 +95,12 @@ class TestState(unittest.TestCase):
 
     def test_travel_allowed_malformed_destination(self) -> None:
         current = "stout_meal_inn"
-        destination = "the_moon"
+        destination1 = "the_moon"
+        destination2 = "the"
         with self.assertRaises(UnrecognisedRoomError):
-            State.travel_allowed(current, destination)
+            State.travel_allowed(current, destination1)
+        with self.assertRaises(UnrecognisedRoomError):
+            State.travel_allowed(current, destination2)
 
     def test_travel_allowed_malformed_current(self) -> None:
         current = "the_moon"
@@ -119,6 +143,33 @@ class TestState(unittest.TestCase):
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
             State.break_door(room1, room2)
+
+
+class TestAdventure(unittest.TestCase):
+    """Test the Adventure class"""
+    def setUp(self) -> None:
+        self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
+        self.game.load()
+        self.adventure = self.game.dm.adventure
+
+    def test_get_init_room(self) -> None:
+        room = "stout_meal_inn"
+        self.assertEqual(room, self.adventure.get_init_room())
+
+    def test_get_room(self) -> None:
+        room = "inns_cellar"
+        self.assertEqual(self.adventure.get_room(room),
+                         self.adventure.rooms[room])
+
+    def test_get_room_malformed(self) -> None:
+        room = "the"
+        with self.assertRaises(UnrecognisedRoomError):
+            self.adventure.get_room(room)
+    
+    def test_get_all_rooms(self) -> None:
+        room_ids = ["stout_meal_inn", "inns_cellar", "storage_room", "burial_chamber", "western_corridor", "antechamber", "southern_corridor", "baradins_crypt"]
+        rooms = self.adventure.get_all_rooms()
+        self.assertListEqual(room_ids, [room.id for room in rooms])
 
 
 if __name__ == "__main__":

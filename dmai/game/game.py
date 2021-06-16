@@ -15,12 +15,13 @@ class Game:
     def __init__(self,
                  char_class: str = None,
                  char_name: str = None,
-                 skip_intro: bool = False) -> None:
+                 skip_intro: bool = False,
+                 adventure: str = "the_tomb_of_baradin_stormfury") -> None:
         """Main class for the game"""
         self.char_class = char_class
         self.char_name = char_name
         self.skip_intro = skip_intro
-        self.adventure = "the_tomb_of_baradin_stormfury"
+        self.adventure = adventure
 
     def load(self) -> None:
         logger.info("Initialising adventure: {a}".format(a=self.adventure))

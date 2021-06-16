@@ -210,6 +210,8 @@ class NLG(metaclass=NLGMeta):
         elif reason == "not equipped":
             return "You cannot unequip {w} because it's not equipped!".format(
                 w=weapon)
+        elif reason == "nothing equipped":
+            return "You cannot unequip because nothing is equipped!"
 
     @classmethod
     def equip_weapon(cls, weapon: str) -> str:
@@ -222,6 +224,8 @@ class NLG(metaclass=NLGMeta):
     @classmethod
     def unequip_weapon(cls, weapon: str) -> str:
         """Return the utterance for unequipping a weapon"""
+        if not weapon:
+            return "You unequipped all weapons"
         utters = [
             "You unequipped {w}".format(w=weapon)
         ]
