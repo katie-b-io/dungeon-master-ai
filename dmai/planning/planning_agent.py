@@ -45,13 +45,14 @@ class PlanningAgent(ABC):
                 p=planner)
             raise ValueError(msg)
 
-    def prepare_next_move(self) -> None:
-        """Method to prepare the next move.
-        Planning agents build a plan"""
+    def prepare_next_move(self) -> bool:
+        """Method to prepare the next move, e.g. planning agents build a plan.
+        Returns bool for whether plan was built."""
         self.build_domain()
         self.build_problem()
         # TODO do something with succeed
         succeed = self.planner.build_plan()
+        return succeed
 
     def get_next_move(self) -> str:
         plan = self.planner.parse_plan()
