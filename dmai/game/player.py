@@ -140,6 +140,11 @@ class Player(PlayerAgent):
                 v=self.character.get_formatted_attack(weapon),
             )
 
+        # Armor
+        char_str += div
+        char_str += "Armor (equipped):\n"
+        char_str += "{e}\n".format(e=self.character.get_formatted_armor())
+
         # Equipment
         char_str += div
         char_str += "Equipment:\n"

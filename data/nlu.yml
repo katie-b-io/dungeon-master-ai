@@ -54,6 +54,7 @@ nlu:
     - accept
     - alright
     - alright, I'll have a look
+    - accept quest
 
 - intent: deny
   examples: |
@@ -68,6 +69,7 @@ nlu:
     - I don't feel like it
     - I deny
     - deny
+    - turn down quest
 
 - intent: bot_challenge
   examples: |
@@ -375,7 +377,7 @@ nlu:
     - Can I use [masons tools](equipment)
     - I use my [torch](equipment)
     - I light my [torch](equipment)
-    - I bring out my [torch](equipment)
+    - I bring out my [light](equipment)
     - I use [bless](spell)
     - I use [burning hands](spell)
     - I use [cure wounds](spell)
@@ -753,6 +755,10 @@ nlu:
     - thief tools
     - thiefs tools
     - thiefs tool
+
+- synonym: torch
+  examples: |
+    - light
 
 - synonym: masons_tools
   examples: |

@@ -1,5 +1,6 @@
 {
     "armor_scraps": {
+        "id": "armor_scraps",
         "name": "Armor scraps",
         "type": "monster",
         "cost": 0,
@@ -16,6 +17,7 @@
         "slot": "body"
     },
     "chain_mail": {
+        "id": "chain_mail",
         "name": "Chain mail",
         "type": "heavy",
         "cost": 7500,
@@ -32,6 +34,7 @@
         "slot": "body"
     },
     "leather": {
+        "id": "leather",
         "name": "Leather",
         "type": "light",
         "cost": 1000,
@@ -48,6 +51,7 @@
         "slot": "body"
     },
     "padded": {
+        "id": "padded",
         "name": "Padded",
         "type": "light",
         "cost": 500,
@@ -64,6 +68,7 @@
         "slot": "body"
     },
     "scale_mail": {
+        "id": "scale_mail",
         "name": "Scale mail",
         "type": "medium",
         "cost": 5000,
@@ -80,6 +85,7 @@
         "slot": "body"
     },
     "shield": {
+        "id": "shield",
         "name": "Shield",
         "type": "shield",
         "cost": 1000,

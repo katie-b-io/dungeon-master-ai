@@ -60,14 +60,17 @@ class Actions:
     def move(self, entity: str, destination: str) -> bool:
         """Attempt to move an entity to the specified destination.
         Returns a bool to indicate whether the action was successful"""
-
+        
         # check if entity can move
         (can_move, reason) = self._can_move(entity, destination)
         if can_move:
             State.set_current_room(entity, destination)
         else:
-            OutputBuilder.append(
-                NLG.cannot_move(State.get_room_name(destination), reason))
+            try:
+                destination = State.get_room_name(destination)
+            except UnrecognisedRoomError:
+                pass
+            OutputBuilder.append(NLG.cannot_move(destination, reason))
         return can_move
 
     def _can_attack(self, attacker: str, target: str) -> tuple:
@@ -76,10 +79,13 @@ class Actions:
         and reason why not if not."""
 
         # check if attacker and target are within attack range
-        if not State.get_current_room(attacker) == State.get_current_room(
-                target):
-            return (False, "Different location")
-        return (True, "")
+        try:
+            if not State.get_current_room(attacker) == State.get_current_room(
+                    target):
+                return (False, "Different location")
+            return (True, "")
+        except UnrecognisedEntityError:
+            return (False, "Unknown target")
 
     def attack(self, attacker: str, target: str) -> bool:
         """Attempt to attack a specified target.
@@ -94,10 +100,10 @@ class Actions:
                     # this is a game end condition
                     OutputBuilder.append(NLG.attack_npc_end_game(target))
                     dmai.dmai_helpers.gameover()
+            State.combat(attacker, target)
             attacker = "You" if attacker == "player" else attacker
             OutputBuilder.append("{a} attacked {t}!".format(a=attacker,
                                                             t=target))
-            State.combat(attacker, target)
             return can_attack
         else:
             attacker = "You" if attacker == "player" else attacker
@@ -195,7 +201,7 @@ class Actions:
         except UnrecognisedWeapon:
             return (False, "unknown")
 
-    def unequip(self, weapon: str, entity: str = "player") -> bool:
+    def unequip(self, weapon: str = None, entity: str = "player") -> bool:
         """Attempt to unequip a specified weapon.
         Returns a bool to indicate whether the action was successful"""
 
@@ -220,12 +226,15 @@ class Actions:
         and reason why not if not."""
 
         # check if player and target are within converse range
-        if not State.get_current_room() == State.get_current_room(target):
-            return (False, "Different location")
-        # check if target is a monster
-        if self.npcs.get_type(target) == "monster":
-            return (False, "monster")
-        return (True, "")
+        try:
+            if not State.get_current_room() == State.get_current_room(target):
+                return (False, "Different location")
+            # check if target is a monster
+            if self.npcs.get_type(target) == "monster":
+                return (False, "monster")
+            return (True, "")
+        except UnrecognisedEntityError:
+            return (False, "Unknown target")
 
     def converse(self, target: str) -> bool:
         """Attempt to converse with a specified target.

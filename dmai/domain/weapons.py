@@ -61,6 +61,12 @@ class Weapons:
     def can_unequip(self, weapon_id: str) -> tuple:
         """Method to return whether specified weapon can be unequipped.
         Returns a tuple with the boolean and a string with a reason."""
+        if not weapon_id:
+            if not self.get_equipped("right_hand") and not self.get_equipped("left_hand"):
+                return (False, "nothing equipped")
+            else:
+                return (True, "")
+
         if not weapon_id in self.weapons:
             return (False, "not owned")
         
@@ -96,28 +102,34 @@ class Weapons:
             damage = self.weapons_data[weapon_id]["damage"]
             return damage["type"]
 
-    def equip_weapon(self, weapon_id: str, slot: str = None) -> None:
+    def equip_weapon(self, weapon_id: str, slot: str = None) -> bool:
         """Method to equip specified weapon"""
-        if weapon_id in self.weapons_data:
+        if weapon_id in self.weapons:
             if slot:
                 self.__setattr__(slot, weapon_id)
+                return True
             else:
                 if self.has_property(weapon_id, "two_handed"):
                     self.__setattr__("left_hand", weapon_id)
                     self.__setattr__("right_hand", weapon_id)
-                    return
+                    return True
                 else:
                     if self.get_equipped("right_hand"):
                         self.__setattr__("left_hand", weapon_id)
-                        return
+                        return True
                     self.__setattr__("right_hand", weapon_id)
+                    return True
+        return False
 
-    def unequip_weapon(self, weapon_id: str) -> None:
+    def unequip_weapon(self, weapon_id: str = None) -> bool:
         """Method to unequip specified weapon"""
-        if self.right_hand == weapon_id:
+        if not weapon_id or self.right_hand == weapon_id:
             self.right_hand = None
-        if self.left_hand == weapon_id:
+            return True
+        if not weapon_id or self.left_hand == weapon_id:
             self.left_hand = None
+            return True
+        return False
 
     def get_equipped(self, slot) -> dict:
         """Method to get equipped weapon.

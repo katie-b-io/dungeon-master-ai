@@ -295,11 +295,11 @@ class DM:
             weapon = self._get_weapon(nlu_entities)
 
         if not weapon:
-            unequipped = False
-            OutputBuilder.append(NLG.no_weapon(unequip=True))
+            logger.info("{e} is unequipping all!".format(e=entity))
+            unequipped = self.actions.unequip(entity=entity)
         else:
             logger.info("{e} is unequipping {q}!".format(e=entity, q=weapon))
-            unequipped = self.actions.unequip(weapon, entity)
+            unequipped = self.actions.unequip(weapon=weapon, entity=entity)
         return unequipped
     
     def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
