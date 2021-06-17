@@ -58,7 +58,7 @@ class NPCCollection:
                                        monster_dict["must_kill"]):
                     # create a monster with unique id
                     i = 1 + sum(
-                        1 for m in monsters.values() if m.name == monster.name)
+                        1 for m in monsters.values() if m.id == monster_id)
                     unique_id = "{m}_{i}".format(i=i, m=monster_id)
                     monster = MonsterCollection.get_monster(monster_id, unique_id=unique_id)
                     monster.set_treasure(treasure)
@@ -78,10 +78,13 @@ class NPCCollection:
 
     def get_entity(self, npc_id):
         """Return the Monster/NPC with specified id"""
-        if self.get_type(npc_id) == "npc":
-            return self.get_npc(npc_id)
-        elif self.get_type(npc_id) == "monster":
-            return self.get_monster(npc_id)
+        try:
+            if self.get_type(npc_id) == "npc":
+                return self.get_npc(npc_id)
+            elif self.get_type(npc_id) == "monster":
+                return self.get_monster(npc_id)
+        except UnrecognisedEntityError:
+            raise
 
     def get_npc(self, npc_id: str) -> NPC:
         """Return NPC with specified id"""
@@ -90,7 +93,7 @@ class NPCCollection:
             npc = self.npcs[npc_id]
         except KeyError as e:
             msg = "NPC id not recognised: {e}".format(e=e)
-            raise KeyError(msg)
+            raise UnrecognisedEntityError(msg)
         return npc
 
     def get_monster(self, monster_id: str) -> Monster:
@@ -100,15 +103,8 @@ class NPCCollection:
             monster = self.monsters[monster_id]
         except KeyError as e:
             msg = "Monster id not recognised: {e}".format(e=e)
-            raise KeyError(msg)
+            raise UnrecognisedEntityError(msg)
         return monster
-
-    def set_monsters(self, monster_dict: dict) -> None:
-        for monster_type in monster_dict:
-            for i in range(len(monster_dict[monster_type])):
-                monster = self.get_monster(monster_type)
-                monster_id = "monster_{i}".format(i=i)
-                self.monsters[monster_id] = monster
 
     def get_monster_id(self,
                        monster_type: str,

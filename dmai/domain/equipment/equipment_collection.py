@@ -81,7 +81,7 @@ class EquipmentCollection:
                     self.equipment[equipment_id][
                         "quantity"] = self.equipment[equipment_id]["quantity"] - 1
                     return self.equipment[equipment_id]["equipment"].use()
-                return False
+            return False
         except UnrecognisedEquipment:
             return False
 
@@ -92,7 +92,7 @@ class EquipmentCollection:
             if self._check_equipment(equipment_id):
                 if equipment_id in self.equipment:
                     return self.equipment[equipment_id]["equipment"].stop()
-                return False
+            return False
         except UnrecognisedEquipment:
             return False
 

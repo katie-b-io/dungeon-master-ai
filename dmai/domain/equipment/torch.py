@@ -20,7 +20,7 @@ class Torch(Equipment):
             return True
         return False
 
-    def stop(self) -> None:
+    def stop(self) -> bool:
         logger.debug("Extinguishing a torch")
         if State.torch_lit:
             State.extinguish_torch()

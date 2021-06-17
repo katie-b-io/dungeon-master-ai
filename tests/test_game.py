@@ -5,8 +5,14 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
+from dmai.game.npcs.npc import NPC
+from dmai.domain.monsters.monster_collection import MonsterCollection
+from dmai.domain.monsters.skeleton import Skeleton
+from dmai.domain.monsters.giant_rat import GiantRat
+from dmai.game.adventure import Adventure
 from dmai.game.state import State
 from dmai.game.game import Game
+from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 
 
@@ -171,6 +177,81 @@ class TestAdventure(unittest.TestCase):
         rooms = self.adventure.get_all_rooms()
         self.assertListEqual(room_ids, [room.id for room in rooms])
 
+
+class TestNPCCollection(unittest.TestCase):
+    """Test the NPCCollection class"""
+    def setUp(self) -> None:
+        self.adventure = Adventure("the_tomb_of_baradin_stormfury")
+        self.npc_collection = NPCCollection(self.adventure)
+        MonsterCollection.load()
+    
+    def test__create_npcs(self) -> None:
+        npcs = self.npc_collection._create_npcs()
+        self.assertListEqual(["corvus", "anvil"], [npc for npc in npcs])
+    
+    def test__create_monsters(self) -> None:
+        monsters = self.npc_collection._create_monsters()
+        self.assertListEqual(["giant_rat_1", "giant_rat_2", "giant_rat_3", "giant_rat_4", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m for m in monsters])
+    
+    def test_get_type(self) -> None:
+        self.npc_collection.load()
+        self.assertEqual(self.npc_collection.get_type("corvus"), "npc")
+        self.assertEqual(self.npc_collection.get_type("goblin_2"), "monster")
+        self.assertIsNone(self.npc_collection.get_type("yoda"))
+
+    def test_get_entity(self) -> None:
+        self.npc_collection.load()
+        self.assertIsInstance(self.npc_collection.get_entity("corvus"), NPC)
+        self.assertEqual(self.npc_collection.get_entity("corvus").long_name, "Corvus Stouthammer")
+        self.assertIsInstance(self.npc_collection.get_entity("skeleton_1"), Skeleton)
+        self.assertEqual(self.npc_collection.get_entity("skeleton_1").name, "Skeleton")
+        self.assertIsNone(self.npc_collection.get_entity("yoda"))
+        
+    def test_get_npc(self) -> None:
+        self.npc_collection.load()
+        self.assertIsInstance(self.npc_collection.get_npc("corvus"), NPC)
+        self.assertEqual(self.npc_collection.get_npc("corvus").long_name, "Corvus Stouthammer")
+        with self.assertRaises(UnrecognisedEntityError):
+            self.npc_collection.get_npc("yoda")
+
+    def test_get_monster(self) -> None:
+        self.npc_collection.load()
+        self.assertIsInstance(self.npc_collection.get_monster("skeleton_1"), Skeleton)
+        self.assertEqual(self.npc_collection.get_monster("skeleton_1").name, "Skeleton")
+        with self.assertRaises(UnrecognisedEntityError):
+            self.npc_collection.get_monster("yoda")
+
+    def test_get_monster_id(self) -> None:
+        self.npc_collection.load()
+        monster_1 = self.npc_collection.get_monster_id(monster_type="giant_rat", status="alive", location="inns_cellar")
+        monster_2 = self.npc_collection.get_monster_id(monster_type="goblin", location="antechamber")
+        monster_3 = self.npc_collection.get_monster_id(monster_type="goblin", status="dead")
+        monster_4 = self.npc_collection.get_monster_id(monster_type="skeleton")
+        self.assertEqual(monster_1, "giant_rat_1")
+        self.assertEqual(monster_2, "goblin_2")
+        self.assertEqual(monster_3, "goblin_1")
+        self.assertEqual(monster_4, "skeleton_1")
+
+    def test_get_all_npcs(self) -> None:
+        self.npc_collection.load()
+        npcs = self.npc_collection.get_all_npcs()
+        self.assertListEqual(["corvus", "anvil"], [npc.id for npc in npcs])
+
+    def test_get_all_npc_ids(self) -> None:
+        self.npc_collection.load()
+        npcs = self.npc_collection.get_all_npc_ids()
+        self.assertListEqual(["corvus", "anvil"], [npc for npc in npcs])
+
+    def test_get_all_monsters(self) -> None:
+        self.npc_collection.load()
+        monsters = self.npc_collection.get_all_monsters()
+        self.assertListEqual(["giant_rat_1", "giant_rat_2", "giant_rat_3", "giant_rat_4", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m.unique_id for m in monsters])
+
+    def test_get_all_monster_ids(self) -> None:
+        self.npc_collection.load()
+        monsters = self.npc_collection.get_all_monster_ids()
+        self.assertListEqual(["giant_rat_1", "giant_rat_2", "giant_rat_3", "giant_rat_4", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m for m in monsters])
+    
 
 if __name__ == "__main__":
     unittest.main()
