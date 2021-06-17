@@ -8,6 +8,7 @@ RUN apt-get update && \
   apt-get install -y software-properties-common && \
   add-apt-repository ppa:deadsnakes/ppa && \
   apt-get install -y --no-install-recommends \
+  wget \
   curl \
   python3.8 \
   python3-venv \
@@ -79,6 +80,11 @@ RUN cd /app && \
   poetry config virtualenvs.create false && \
   poetry install && \
   rm -rf dist *.egg-info
+
+# download the Rasa NLU model
+RUN cd /app && \
+  mkdir models && \
+  wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1cLnC9KPyplNSQePya1_t6Bn4VyVpwqcy' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1cLnC9KPyplNSQePya1_t6Bn4VyVpwqcy" -O models/dmai_nlu.tar.gz && rm -rf /tmp/cookies.txt
 
 # add entrypoint
 ENTRYPOINT ["./entrypoint.sh"]
