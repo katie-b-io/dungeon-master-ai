@@ -140,9 +140,7 @@ class Actions:
             entity = self.npcs.get_entity(entity)
 
         if stop:
-            entity.stop_using_equipment(equipment)
-            can_use = True
-
+            can_use = entity.stop_using_equipment(equipment)
         else:
             # check if equipment can be used
             (can_use, reason) = self._can_use(entity, equipment)
@@ -239,7 +237,7 @@ class Actions:
     def converse(self, target: str) -> bool:
         """Attempt to converse with a specified target.
         Returns a bool to indicate whether the action was successful"""
-
+        
         # check if conversation can happen
         (can_converse, reason) = self._can_converse(target)
         if can_converse:

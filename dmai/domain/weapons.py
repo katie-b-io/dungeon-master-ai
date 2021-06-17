@@ -123,10 +123,14 @@ class Weapons:
 
     def unequip_weapon(self, weapon_id: str = None) -> bool:
         """Method to unequip specified weapon"""
-        if not weapon_id or self.right_hand == weapon_id:
+        if not weapon_id:
+            self.right_hand = None
+            self.left_hand = None
+            return True
+        if self.right_hand == weapon_id:
             self.right_hand = None
             return True
-        if not weapon_id or self.left_hand == weapon_id:
+        if self.left_hand == weapon_id:
             self.left_hand = None
             return True
         return False

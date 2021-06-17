@@ -37,13 +37,13 @@ class Player(PlayerAgent):
         Returns a tuple with the boolean and a string with a reason."""
         return self.character.has_equipment(equipment)
 
-    def use_equipment(self, equipment: str) -> None:
+    def use_equipment(self, equipment: str) -> bool:
         """Method to use specified equipment"""
-        self.character.use_equipment(equipment)
+        return self.character.use_equipment(equipment)
 
-    def stop_using_equipment(self, equipment: str) -> None:
+    def stop_using_equipment(self, equipment: str) -> bool:
         """Method to stop using specified equipment"""
-        self.character.stop_using_equipment(equipment)
+        return self.character.stop_using_equipment(equipment)
 
     def can_equip(self, weapon: str) -> tuple:
         """Method to return whether the player can equip specified weapon.

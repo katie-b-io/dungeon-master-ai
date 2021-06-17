@@ -122,11 +122,11 @@ class DM:
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
 
-    def hint(self) -> None:
+    def hint(self) -> bool:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the OutputBuilder.
         """
-        State.get_player().print_next_move()
+        return State.get_player().print_next_move()
 
     def _get_destination(self, nlu_entities: dict) -> str:
         """Extract a destination from NLU entities dictionary.
@@ -307,7 +307,7 @@ class DM:
         Returns whether the action was successful."""
         if not target and nlu_entities:
             target = self._get_target(nlu_entities)
-        elif not nlu_entities:
+        elif not target and not nlu_entities:
             target = self._get_npc()
 
         if not target:
@@ -342,7 +342,6 @@ class DM:
         Returns whether the action was successful."""
         if not target and nlu_entities:
             target = self._get_target(nlu_entities)
-
         if not target:
             logger.info("player is exploring!")
             room = State.get_current_room()

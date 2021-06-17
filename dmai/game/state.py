@@ -334,7 +334,7 @@ class State(metaclass=StateMeta):
     def get_current_target(cls, entity: str = "player"):
         """Method to get the current target for specified entity."""
         try:
-            return cls.dm.npcs.get_monster(cls.get_current_target_id(entity))
+            return cls.dm.npcs.get_entity(cls.get_current_target_id(entity))
         except UnrecognisedEntityError:
             raise
 
@@ -348,10 +348,10 @@ class State(metaclass=StateMeta):
         logger.debug("Setting current target: {t}".format(t=target))
         if cls.get_current_target_id(entity):
             cls.dm.deregister_trigger(
-                cls.dm.npcs.get_monster(cls.get_current_target_id(entity)))
+                cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
         cls.current_target[entity] = target
         cls.dm.register_trigger(
-            cls.dm.npcs.get_monster(cls.get_current_target_id(entity)))
+            cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
 
     @classmethod
     def clear_target(cls, entity: str = "player") -> None:
@@ -363,7 +363,7 @@ class State(metaclass=StateMeta):
         logger.debug("Clearing current target")
         if cls.get_current_target_id(entity):
             cls.dm.deregister_trigger(
-                cls.dm.npcs.get_monster(cls.get_current_target_id(entity)))
+                cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
             cls.current_target[entity] = None
 
     ############################################################
