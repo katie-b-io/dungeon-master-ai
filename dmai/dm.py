@@ -135,6 +135,16 @@ class DM:
             if entity["entity"] == "location" and entity[
                     "confidence"] >= self.ENTITY_CONFIDENCE:
                 return entity["value"]
+            if entity["entity"] == "monster" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
+                monster = self._get_target(nlu_entities)
+                if monster:
+                    return State.get_current_room_id(monster)
+            if entity["entity"] == "npc" and entity[
+                    "confidence"] >= self.ENTITY_CONFIDENCE:
+                npc = self._get_target(nlu_entities)
+                if npc:
+                    return State.get_current_room_id(npc)
 
     def _get_target(self, nlu_entities: dict) -> str:
         """Extract a target from NLU entities dictionary.
@@ -208,7 +218,9 @@ class DM:
 
         if not destination:
             moved = False
-            OutputBuilder.append(NLG.no_destination())
+            connected_rooms = State.get_current_room().get_connected_rooms()
+            possible_destinations = [State.get_room_name(room) for room in connected_rooms]
+            OutputBuilder.append(NLG.no_destination(possible_destinations))
         else:
             logger.info("Moving {e} to {d}!".format(e=entity, d=destination))
             moved = self.actions.move(entity, destination)
@@ -227,7 +239,7 @@ class DM:
 
         if not target:
             attacked = False
-            OutputBuilder.append(NLG.no_target("attack"))
+            OutputBuilder.append(NLG.no_target("attack", State.get_formatted_possible_monster_targets()))
         else:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)

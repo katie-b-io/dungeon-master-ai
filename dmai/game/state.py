@@ -1,6 +1,7 @@
-from dmai.utils.output_builder import OutputBuilder
+from collections import Counter
 from enum import Enum
 
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
 from dmai.utils.logger import get_logger
@@ -162,7 +163,18 @@ class State(metaclass=StateMeta):
     def get_player(cls) -> None:
         """Method to return player"""
         return cls.player
-
+    
+    @classmethod
+    def get_name(cls, entity: str = None) -> None:
+        """Method to return name of entity"""
+        try:
+            if not entity or entity == "player":
+                return cls.get_player().name
+            else:
+                return cls.get_dm().npcs.get_entity(entity).name
+        except UnrecognisedEntityError:
+            return ""
+    
     ############################################################
     # METHODS RELATING TO STATUS AND ATTITUDE
     @classmethod
@@ -522,3 +534,36 @@ class State(metaclass=StateMeta):
                 cls._update_connection(room_id1, room_id2, "broken", True)
         except (UnrecognisedRoomError, RoomConnectionError):
             raise
+
+    @classmethod
+    def get_possible_monster_targets(cls, entity: str = "player") -> list:
+        """Method to count the number of monsters of each type in current room"""
+        targets = []
+        for monster in cls.get_dm().npcs.get_all_monsters():
+            if cls.get_current_room_id(monster.unique_id) == cls.get_current_room_id(entity):
+                if cls.is_alive(monster.unique_id):
+                    targets.append(monster)
+        return targets
+    
+    @classmethod
+    def get_formatted_possible_monster_targets(cls, entity: str = "player") -> str:
+        """Method to return a formatted string of possible monster targets"""
+        monsters = cls.get_possible_monster_targets(entity)
+        possible_targets = [monster.name for monster in monsters]
+        count_targets = dict(Counter(possible_targets))
+        if monsters:
+            formatted_array = []
+            for t in count_targets:
+                c = count_targets.get(t)
+                if c > 1:
+                    formatted_array.append("the {c} {t}s".format(c=c, t=t))
+                else:
+                    formatted_array.append("the {t}".format(t=t))
+            if len(formatted_array) == 1:
+                formatted_str = "You could attack {a}.".format(a=formatted_array[0])
+            else:
+                formatted_str = "You could attack {a}".format(a=", ".join(formatted_array[0:-1]))
+                formatted_str += " or {a}.".format(a=formatted_array[-1])
+            return formatted_str
+        else:
+            return ""
