@@ -21,13 +21,13 @@ class TestNLG(unittest.TestCase):
 
     def test_cannot_move(self) -> None:
         room = "room"
-        self.assertEqual("You cannot move to room", NLG.cannot_move(room))
+        self.assertEqual("You cannot move to room. ", NLG.cannot_move(room))
 
     def test_cannot_move_same(self) -> None:
         room = "room"
         reason = "same"
         self.assertEqual(
-            "You cannot move to room because you're already there!",
+            "You cannot move to room because you're already there! ",
             NLG.cannot_move(room, reason),
         )
 
@@ -35,7 +35,7 @@ class TestNLG(unittest.TestCase):
         room = "room"
         reason = "locked"
         self.assertEqual(
-            "You cannot move to room because the way is locked!",
+            "You cannot move to room because the way is locked! ",
             NLG.cannot_move(room, reason),
         )
 

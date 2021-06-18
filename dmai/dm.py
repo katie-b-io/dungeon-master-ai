@@ -239,7 +239,7 @@ class DM:
 
         if not target:
             attacked = False
-            OutputBuilder.append(NLG.no_target("attack"))
+            OutputBuilder.append(NLG.no_target("attack", State.get_formatted_possible_monster_targets()))
         else:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)

@@ -205,7 +205,8 @@ class TestNPCCollection(unittest.TestCase):
         self.assertEqual(self.npc_collection.get_entity("corvus").long_name, "Corvus Stouthammer")
         self.assertIsInstance(self.npc_collection.get_entity("skeleton_1"), Skeleton)
         self.assertEqual(self.npc_collection.get_entity("skeleton_1").name, "Skeleton")
-        self.assertIsNone(self.npc_collection.get_entity("yoda"))
+        with self.assertRaises(UnrecognisedEntityError):
+            self.npc_collection.get_npc("yoda")
         
     def test_get_npc(self) -> None:
         self.npc_collection.load()

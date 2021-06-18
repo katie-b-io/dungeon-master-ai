@@ -131,7 +131,7 @@ class Actions:
             OutputBuilder.append(NLG.attack(State.get_name(attacker), State.get_name(target)))
             return can_attack
         else:
-            OutputBuilder.append(NLG.cannot_attack(State.get_name(attacker), State.get_name(target), reason))
+            OutputBuilder.append(NLG.cannot_attack(State.get_name(attacker), State.get_name(target), reason, State.get_formatted_possible_monster_targets()))
             return can_attack
 
     def _can_use(self, entity, equipment: str) -> tuple:

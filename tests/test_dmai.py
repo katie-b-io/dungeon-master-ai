@@ -151,6 +151,7 @@ class TestDM(unittest.TestCase):
         
     def test_attack_target_npc(self) -> None:
         State.set_current_room("player", "inns_cellar")
+        State.light_torch()
         self.assertEqual(True, self.dm.attack(target="anvil"))
     
     def test_attack_target_npc_gameover(self) -> None:
@@ -160,6 +161,7 @@ class TestDM(unittest.TestCase):
 
     def test_attack_target_monster(self) -> None:
         State.set_current_room("player", "inns_cellar")
+        State.light_torch()
         self.assertEqual(True, self.dm.attack(target="giant_rat_1"))
 
     def test_attack_target_bad(self) -> None:
@@ -169,14 +171,22 @@ class TestDM(unittest.TestCase):
     
     def test_attack_nlu_entities_npc_good(self) -> None:
         State.set_current_room("player", "inns_cellar")
+        State.light_torch()
         nlu_entities = [{"entity": "npc", "confidence": 1, "value": "anvil"}]
         self.assertEqual(True, self.dm.attack(nlu_entities=nlu_entities))
     
     def test_attack_nlu_entities_monster_good(self) -> None:
         State.set_current_room("player", "inns_cellar")
+        State.light_torch()
         nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
         self.assertEqual(True, self.dm.attack(nlu_entities=nlu_entities))
     
+    def test_attack_nlu_entities_no_visibility(self) -> None:
+        State.set_current_room("player", "inns_cellar")
+        State.extinguish_torch()
+        nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
+        self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities))
+        
     def test_attack_nlu_entities_monster_bad(self) -> None:
         nlu_entities1 = [{"entity": "npc", "confidence": 1, "value": "yoda"}]
         nlu_entities2 = [{"entity": "monster", "confidence": 1, "value": "yoda"}]

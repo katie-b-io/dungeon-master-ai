@@ -83,6 +83,8 @@ class NPCCollection:
                 return self.get_npc(npc_id)
             elif self.get_type(npc_id) == "monster":
                 return self.get_monster(npc_id)
+            msg = "NPC id not recognised: {e}".format(e=npc_id)
+            raise UnrecognisedEntityError(msg)
         except UnrecognisedEntityError:
             raise
 

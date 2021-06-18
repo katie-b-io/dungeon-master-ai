@@ -113,18 +113,19 @@ class NLG(metaclass=NLGMeta):
                     p += " or the {p}".format(p=poss)
                 else:
                     p += ", the {p}".format(p=poss)
+            p += "."
         else:
             p = ""
         if not reason:
-            return "You cannot move to {room}. {p}.".format(room=room, p=p)
+            return "You cannot move to {room}. {p}".format(room=room, p=p)
         elif reason == "same":
-            return "You cannot move to {room} because you're already there! {p}.".format(
+            return "You cannot move to {room} because you're already there! {p}".format(
                 room=room, p=p)
         elif reason == "locked":
-            return "You cannot move to {room} because the way is locked! {p}.".format(
+            return "You cannot move to {room} because the way is locked! {p}".format(
                 room=room, p=p)
         elif reason == "not connected":
-            return "You cannot move to {room} because it's not connected to this room. {p}.".format(
+            return "You cannot move to {room} because it's not connected to this room. {p}".format(
                 room=room, p=p)
         elif reason == "no visibility":
             return "You cannot move to {room} because it's too dark for you to find the way!".format(
@@ -136,17 +137,26 @@ class NLG(metaclass=NLGMeta):
             return "You cannot move to {room} because there are monsters in here you must deal with!".format(
                 room=room)
         elif reason == "unknown destination":
-            return "You cannot move to unknown room: {room}! {p}.".format(
+            return "You cannot move to unknown room: {room}! {p}".format(
                 room=room, p=p)
         else:
-            return "You cannot move to {room}, although, I'm not sure why not... {p}.".format(
+            return "You cannot move to {room}, although, I'm not sure why not... {p}".format(
                 room=room, p=p)
 
     @classmethod
-    def cannot_attack(cls, attacker: str, target: str, reason: str = None) -> str:
+    def cannot_attack(cls, attacker: str, target: str, reason: str = None, possible_targets: list = []) -> str:
         """Return the utterance for not allowing attack"""
         if attacker == "player" or attacker == cls.game.player.name:
             attacker = "You"
+        
+        if possible_targets:
+            p = "You could target {p}".format(p=possible_targets[0])
+            for poss in possible_targets[1:]:
+                if possible_targets[-1] == poss:
+                    p += " or the {p}".format(p=poss)
+                else:
+                    p += ", the {p}".format(p=poss)
+                    
         if not reason:
             return "{a} cannot attack {t}".format(a=attacker, t=target)
         elif reason == "unknown target":
@@ -186,18 +196,19 @@ class NLG(metaclass=NLGMeta):
                     p += " or the {p}".format(p=poss)
                 else:
                     p += ", the {p}".format(p=poss)
+            p += "."
                 
-            return "{u} {p}.".format(u=random.choice(utters), p=p)
+            return "{u} {p}".format(u=random.choice(utters), p=p)
         else:
             return "{u}.".format(u=random.choice(utters))
 
     @classmethod
-    def no_target(cls, verb: str) -> str:
+    def no_target(cls, verb: str, possible_targets: str = "") -> str:
         """Return the utterance for no target"""
         utters = [
-            "Can you confirm your target",
-            "Who, or what, do you want to {v}?".format(v=verb),
-            "I'm not sure who or what you want to {v}, can you repeat your target".format(v=verb),
+            "Can you confirm your target. {p}".format(p=possible_targets),
+            "Who, or what, do you want to {v}? {p}".format(v=verb, p=possible_targets),
+            "I'm not sure who or what you want to {v}. {p}".format(v=verb, p=possible_targets),
         ]
         return random.choice(utters)
 
