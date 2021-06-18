@@ -92,25 +92,43 @@ class NLG(metaclass=NLGMeta):
             return adventure.get_room(room).enter()
 
     @classmethod
-    def cannot_move(cls, room: str, reason: str = None) -> str:
+    def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
+        if possible_destinations:
+            p = "You could go to the {p}".format(p=possible_destinations[0])
+            for poss in possible_destinations[1:]:
+                if possible_destinations[-1] == poss:
+                    p += " or the {p}".format(p=poss)
+                else:
+                    p += ", the {p}".format(p=poss)
+        else:
+            p = ""
         if not reason:
-            return "You cannot move to {room}".format(room=room)
+            return "You cannot move to {room} {p}.".format(room=room, p=p)
         elif reason == "same":
-            return "You cannot move to {room} because you're already there!".format(
-                room=room)
+            return "You cannot move to {room} because you're already there! {p}.".format(
+                room=room, p=p)
         elif reason == "locked":
-            return "You cannot move to {room} because the way is locked!".format(
-                room=room)
+            return "You cannot move to {room} because the way is locked! {p}.".format(
+                room=room, p=p)
+        elif reason == "not connected":
+            return "You cannot move to {room} because it's not connected to this room. {p}.".format(
+                room=room, p=p)
         elif reason == "no visibility":
-            return "You cannot move to {room} because it's too dark for you to find the way!".format(
-                room=room)
+            return "You cannot move to {room} because it's too dark for you to find the way! {p}.".format(
+                room=room, p=p)
         elif reason == "no quest":
-            return "You cannot move to {room} because you haven't accepted the quest!".format(
-                room=room)
-        elif reason == "unknown":
-            return "You cannot move to unknown location: {room}!".format(
-                room=room)
+            return "You cannot move to {room} because you haven't accepted the quest! {p}.".format(
+                room=room, p=p)
+        elif reason == "must kill":
+            return "You cannot move to {room} because there are monsters in here you must deal with! {p}.".format(
+                room=room, p=p)
+        elif reason == "unknown destination":
+            return "You cannot move to unknown room: {room}! {p}.".format(
+                room=room, p=p)
+        else:
+            return "You cannot move to {room}, although, I'm not sure why not... {p}.".format(
+                room=room, p=p)
 
     @classmethod
     def cannot_use(cls, equipment: str, reason: str = None) -> str:
@@ -135,16 +153,16 @@ class NLG(metaclass=NLGMeta):
             "I'm not sure where you want to go, can you repeat your destination.",
         ]
         if possible_destinations:
-            p = "the {p}".format(p=possible_destinations[0])
+            p = "You could go to the {p}".format(p=possible_destinations[0])
             for poss in possible_destinations[1:]:
                 if possible_destinations[-1] == poss:
                     p += " or the {p}".format(p=poss)
                 else:
                     p += ", the {p}".format(p=poss)
                 
-            return "{u} You could go to {p}".format(u=random.choice(utters), p=p)
+            return "{u} {p}.".format(u=random.choice(utters), p=p)
         else:
-            return "{u}".format(u=random.choice(utters))
+            return "{u}.".format(u=random.choice(utters))
 
     @classmethod
     def no_target(cls, verb: str) -> str:

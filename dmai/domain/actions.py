@@ -37,21 +37,34 @@ class Actions:
             current = State.get_current_room(entity)
             if current.id == destination:
                 return (False, "same")
-
-            # can't move if can't see
-            if not current.visibility:
-                if not State.torch_lit or State.get_player(
-                ).character.has_darkvision():
-                    return (False, "no visibility")
             
-            # can't move without quest
-            if not State.questing:
-                return (False, "no quest")
-
+            # check if travel is allowed
             if State.travel_allowed(current.id, destination):
+
+                # can't move if can't see
+                if not current.visibility:
+                    if not State.torch_lit or State.get_player(
+                    ).character.has_darkvision():
+                        return (False, "no visibility")
+                
+                # can't move if in a room with monsters that must be killed
+                for monster in State.get_dm().npcs.get_all_monsters():
+                    if monster.must_kill and State.is_alive(monster.unique_id):
+                        if State.get_current_room_id() == State.get_current_room_id(monster.unique_id):
+                            return (False, "must kill")
+                
+                # can't move without quest
+                if not State.questing:
+                    return (False, "no quest")
+
+                # none of the above situations were triggered so allow travel
                 return (True, "")
+            
             else:
-                return (False, "locked")
+                if destination in State.get_current_room().get_connected_rooms():
+                    return (False, "locked")
+                else:
+                    return (False, "not connected")
         except UnrecognisedRoomError:
             return (False, "unknown destination")
         except UnrecognisedEntityError:
@@ -70,7 +83,9 @@ class Actions:
                 destination = State.get_room_name(destination)
             except UnrecognisedRoomError:
                 pass
-            OutputBuilder.append(NLG.cannot_move(destination, reason))
+            connected_rooms = State.get_current_room().get_connected_rooms()
+            possible_destinations = [State.get_room_name(room) for room in connected_rooms]
+            OutputBuilder.append(NLG.cannot_move(destination, reason, possible_destinations))
         return can_move
 
     def _can_attack(self, attacker: str, target: str) -> tuple:
