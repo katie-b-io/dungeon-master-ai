@@ -127,14 +127,24 @@ class NLG(metaclass=NLGMeta):
                 e=equipment)
 
     @classmethod
-    def no_destination(cls) -> str:
+    def no_destination(cls, possible_destinations: list = []) -> str:
         """Return the utterance for no destination"""
         utters = [
-            "Can you confirm your destination",
+            "Can you confirm your destination.",
             "Sorry, where do you want to go?",
-            "I'm not sure where you want to go, can you repeat your destination",
+            "I'm not sure where you want to go, can you repeat your destination.",
         ]
-        return random.choice(utters)
+        if possible_destinations:
+            p = "the {p}".format(p=possible_destinations[0])
+            for poss in possible_destinations[1:]:
+                if possible_destinations[-1] == poss:
+                    p += " or the {p}".format(p=poss)
+                else:
+                    p += ", the {p}".format(p=poss)
+                
+            return "{u} You could go to {p}".format(u=random.choice(utters), p=p)
+        else:
+            return "{u}".format(u=random.choice(utters))
 
     @classmethod
     def no_target(cls, verb: str) -> str:

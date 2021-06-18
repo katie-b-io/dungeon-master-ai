@@ -596,14 +596,15 @@ nlu:
 
 - intent: hint
   examples: |
-    - how can I progress?
-    - what do I do next?
-    - where do I go next?
-    - how can I make progress?
-    - can you help me
-    - can you give me a hint
-    - what should I do?
-    - where should I go?
+    - [how](question) can I progress?
+    - [what](question) do I do next?
+    - [where](question) do I go next?
+    - [how](question) can I make progress?
+    - [can](question) you help me
+    - [can](question) you give me a hint
+    - [what](question) should I do?
+    - [where](question) should I go?
+    - [where](question) can I go?
     - help
     - hint
     - give me help

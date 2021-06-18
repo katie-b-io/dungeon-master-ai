@@ -84,10 +84,29 @@ class TestDM(unittest.TestCase):
         self.dm.input("", utter_type="test")
         self.assertEqual(True, self.dm.hint())
 
-    def test__get_destination(self) -> None:
+    def test__get_destination_location(self) -> None:
         nlu_entities = [{"entity": "location", "confidence": 1, "value": "inns_cellar"}]
         self.assertEqual("inns_cellar", self.dm._get_destination(nlu_entities))
 
+    def test__get_destination_npc(self) -> None:
+        nlu_entities = [{"entity": "npc", "confidence": 1, "value": "corvus"}]
+        self.assertEqual("stout_meal_inn", self.dm._get_destination(nlu_entities))
+
+    def test__get_destination_npc_diff(self) -> None:
+        State.set_current_room("player", "inns_cellar")
+        nlu_entities = [{"entity": "npc", "confidence": 1, "value": "corvus"}]
+        self.assertEqual("stout_meal_inn", self.dm._get_destination(nlu_entities))
+        
+    def test__get_destination_monster(self) -> None:
+        State.set_current_room("player", "inns_cellar")
+        nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
+        self.assertEqual("inns_cellar", self.dm._get_destination(nlu_entities))
+    
+    def test__get_destination_monster_diff(self) -> None:
+        State.set_current_room("player", "stout_meal_inn")
+        nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
+        self.assertEqual(None, self.dm._get_destination(nlu_entities))
+        
     def test__get_target_npc(self) -> None:
         nlu_entities = [{"entity": "npc", "confidence": 1, "value": "corvus"}]
         self.assertEqual("corvus", self.dm._get_target(nlu_entities))
