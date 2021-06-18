@@ -162,7 +162,18 @@ class State(metaclass=StateMeta):
     def get_player(cls) -> None:
         """Method to return player"""
         return cls.player
-
+    
+    @classmethod
+    def get_name(cls, entity: str = None) -> None:
+        """Method to return name of entity"""
+        try:
+            if not entity or entity == "player":
+                return cls.get_player().name
+            else:
+                return cls.get_dm().npcs.get_entity(entity).name
+        except UnrecognisedEntityError:
+            return ""
+    
     ############################################################
     # METHODS RELATING TO STATUS AND ATTITUDE
     @classmethod

@@ -92,6 +92,18 @@ class NLG(metaclass=NLGMeta):
             return adventure.get_room(room).enter()
 
     @classmethod
+    def attack(cls, attacker: str, target: str) -> str:
+        """Return the utterance for attacking"""
+        # TODO different utterances for different weapons?
+        attacker = "You" if attacker == "player" else attacker
+        utters = [
+            "{a} attacked {t}!".format(a=attacker, t=target),
+            "{a} launched an assault on {t}".format(a=attacker, t=target),
+            "{a} struck at {t}".format(a=attacker, t=target),
+        ]
+        return random.choice(utters)
+        
+    @classmethod
     def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
         if possible_destinations:
@@ -104,7 +116,7 @@ class NLG(metaclass=NLGMeta):
         else:
             p = ""
         if not reason:
-            return "You cannot move to {room} {p}.".format(room=room, p=p)
+            return "You cannot move to {room}. {p}.".format(room=room, p=p)
         elif reason == "same":
             return "You cannot move to {room} because you're already there! {p}.".format(
                 room=room, p=p)
@@ -115,20 +127,35 @@ class NLG(metaclass=NLGMeta):
             return "You cannot move to {room} because it's not connected to this room. {p}.".format(
                 room=room, p=p)
         elif reason == "no visibility":
-            return "You cannot move to {room} because it's too dark for you to find the way! {p}.".format(
+            return "You cannot move to {room} because it's too dark for you to find the way!".format(
                 room=room, p=p)
         elif reason == "no quest":
-            return "You cannot move to {room} because you haven't accepted the quest! {p}.".format(
+            return "You cannot move to {room} because you haven't accepted the quest!".format(
                 room=room, p=p)
         elif reason == "must kill":
-            return "You cannot move to {room} because there are monsters in here you must deal with! {p}.".format(
-                room=room, p=p)
+            return "You cannot move to {room} because there are monsters in here you must deal with!".format(
+                room=room)
         elif reason == "unknown destination":
             return "You cannot move to unknown room: {room}! {p}.".format(
                 room=room, p=p)
         else:
             return "You cannot move to {room}, although, I'm not sure why not... {p}.".format(
                 room=room, p=p)
+
+    @classmethod
+    def cannot_attack(cls, attacker: str, target: str, reason: str = None) -> str:
+        """Return the utterance for not allowing attack"""
+        if attacker == "player" or attacker == cls.game.player.name:
+            attacker = "You"
+        if not reason:
+            return "{a} cannot attack {t}".format(a=attacker, t=target)
+        elif reason == "unknown target":
+            return "{a} cannot attack unknown target: {t}!".format(a=attacker, t=target)
+        elif reason == "different loction":
+            return "{a} cannot attack {t} as it's not in the same location as you!".format(a=attacker, t=target)
+        elif reason == "no visibility":
+            return "{a} cannot attack {t} because it's too dark to see them!".format(
+                a=attacker, t=target)
 
     @classmethod
     def cannot_use(cls, equipment: str, reason: str = None) -> str:

@@ -84,7 +84,10 @@ class Actions:
             except UnrecognisedRoomError:
                 pass
             connected_rooms = State.get_current_room().get_connected_rooms()
-            possible_destinations = [State.get_room_name(room) for room in connected_rooms]
+            if reason == "locked":
+                possible_destinations = [State.get_room_name(room) for room in connected_rooms if State.travel_allowed(State.get_current_room_id(), room)]
+            else:
+                possible_destinations = [State.get_room_name(room) for room in connected_rooms]
             OutputBuilder.append(NLG.cannot_move(destination, reason, possible_destinations))
         return can_move
 
@@ -95,12 +98,21 @@ class Actions:
 
         # check if attacker and target are within attack range
         try:
-            if not State.get_current_room(attacker) == State.get_current_room(
-                    target):
-                return (False, "Different location")
+            current = State.get_current_room(attacker)
+            if not current == State.get_current_room(target):
+                return (False, "different location")
+            
+            # can't attack if can't see
+            # TODO change this to blinded condition - disadvantage on attack roll and not knowing whether hit was successful
+            if not current.visibility:
+                if attacker == "player":
+                    if not State.torch_lit or State.get_player().character.has_darkvision():
+                        return (False, "no visibility")
+            
+            # none of the above situations were triggered so allow attack
             return (True, "")
         except UnrecognisedEntityError:
-            return (False, "Unknown target")
+            return (False, "unknown target")
 
     def attack(self, attacker: str, target: str) -> bool:
         """Attempt to attack a specified target.
@@ -116,14 +128,10 @@ class Actions:
                     OutputBuilder.append(NLG.attack_npc_end_game(target))
                     dmai.dmai_helpers.gameover()
             State.combat(attacker, target)
-            attacker = "You" if attacker == "player" else attacker
-            OutputBuilder.append("{a} attacked {t}!".format(a=attacker,
-                                                            t=target))
+            OutputBuilder.append(NLG.attack(State.get_name(attacker), State.get_name(target)))
             return can_attack
         else:
-            attacker = "You" if attacker == "player" else attacker
-            OutputBuilder.append("{a} can't attack {t}!\n{r}".format(
-                a=attacker, t=target, r=reason))
+            OutputBuilder.append(NLG.cannot_attack(State.get_name(attacker), State.get_name(target), reason))
             return can_attack
 
     def _can_use(self, entity, equipment: str) -> tuple:
@@ -264,8 +272,7 @@ class Actions:
                     OutputBuilder.append(
                         self.npcs.get_entity(target).dialogue["gives_quest"])
                 else:
-                    t = State.get_dm().npcs.get_entity(target).name
-                    OutputBuilder.append(NLG.roleplay(t))
+                    OutputBuilder.append(NLG.roleplay(State.get_name(target)))
                 State.roleplay(target)
             return can_converse
         else:
