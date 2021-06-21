@@ -24,12 +24,13 @@
             "status": "alive",
             "treasure": [],
             "must_kill": false,
+            "will_attack_player": false,
             "dialogue": {
                 "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a nice cask of ale and a little coin in it for you of course! What do you say, do you accept the quest?\"",
                 "payment": "He says: \"1 silver piece per rat.\"",
                 "good_negotiation": "He lets out a gentle chuckle and says: \"Well go on then, seeing as we're old friends, 2 silver piece per rat!\"",
                 "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 1 silver piece per rat is more than fair.\"\"",
-                "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar through the door behind the bar.\"",
+                "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster."
             }
         },
@@ -45,6 +46,7 @@
             "status": "alive",
             "treasure": [],
             "must_kill": false,
+            "will_attack_player": false,
             "dialogue": {}
         }
     },
@@ -110,6 +112,12 @@
                         true,
                         true,
                         true
+                    ],
+                    "will_attack_player": [
+                        false,
+                        false,
+                        false,
+                        false
                     ]
                 }
             },
@@ -154,6 +162,9 @@
                     ],
                     "must_kill": [
                         true
+                    ],
+                    "will_attack_player": [
+                        true
                     ]
                 },
                 "goblin": {
@@ -169,6 +180,9 @@
                         ]
                     ],
                     "must_kill": [
+                        false
+                    ],
+                    "will_attack_player": [
                         false
                     ]
                 }
@@ -250,6 +264,9 @@
                         []
                     ],
                     "must_kill": [
+                        false
+                    ],
+                    "will_attack_player": [
                         false
                     ]
                 }
@@ -404,6 +421,10 @@
                         ]
                     ],
                     "must_kill": [
+                        true,
+                        true
+                    ],
+                    "will_attack_player": [
                         true,
                         true
                     ]

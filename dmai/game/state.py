@@ -26,6 +26,14 @@ class Attitude(Enum):
     HOSTILE = "hostile"
 
 
+class Combat(Enum):
+    INITIATIVE = 0
+    DECLARE = 1
+    ATTACK_ROLL = 2
+    DAMAGE_ROLL = 3
+    WAIT = 4
+
+
 class StateMeta(type):
     _instances = {}
 
@@ -65,6 +73,8 @@ class State(metaclass=StateMeta):
     current_goal = ("at", "player", "southern_corridor")
     current_items = {}
     current_attitude = {}
+    attacked_by_player = []
+    current_combat_status = {}
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -73,12 +83,15 @@ class State(metaclass=StateMeta):
     @classmethod
     def combat(cls, attacker: str, target: str) -> None:
         if not cls.in_combat:
+            cls.reset_combat_status(0)
             cls.set_current_game_mode("combat")
             cls.in_combat = True
             cls.roleplaying = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
             OutputBuilder.append(NLG.transition_to_combat())
+        else:
+            cls.progress_combat_status()
 
     @classmethod
     def explore(cls) -> None:
@@ -158,14 +171,15 @@ class State(metaclass=StateMeta):
         cls.current_hp["player"] = player.character.hp_max
         cls.current_status["player"] = Status.ALIVE
         cls.current_target["player"] = None
+        cls.current_combat_status["player"] = Combat.INITIATIVE
 
     @classmethod
-    def get_player(cls) -> None:
+    def get_player(cls):
         """Method to return player"""
         return cls.player
     
     @classmethod
-    def get_name(cls, entity: str = None) -> None:
+    def get_name(cls, entity: str = None) -> str:
         """Method to return name of entity"""
         try:
             if not entity or entity == "player":
@@ -173,7 +187,17 @@ class State(metaclass=StateMeta):
             else:
                 return cls.get_dm().npcs.get_entity(entity).name
         except UnrecognisedEntityError:
+            logger.error("Unrecognised entity: {e}".format(e=entity))
             return ""
+    
+    @classmethod
+    def get_entity(cls, entity: str = None):
+        """Method to return entity"""
+        try:
+            return cls.get_dm().npcs.get_entity(entity)
+        except UnrecognisedEntityError:
+            logger.error("Unrecognised entity: {e}".format(e=entity))
+            return None
     
     ############################################################
     # METHODS RELATING TO STATUS AND ATTITUDE
@@ -334,6 +358,26 @@ class State(metaclass=StateMeta):
     ############################################################
     # METHODS RELATING TO COMBAT
     @classmethod
+    def _set_combat_status(cls, entity: str, status: int) -> str:
+        """Method to set the combat status for specified entity."""
+        cls.current_combat_status[entity] = Combat(status)
+    
+    @classmethod
+    def reset_combat_status(cls, entity: str) -> str:
+        """Method to set the combat status for specified entity."""
+        cls.current_combat_status[entity] = Combat(0)
+    
+    @classmethod
+    def progress_combat_status(cls, entity: str = "player") -> str:
+        """Method to progress the combat status for specified entity."""
+        try:
+            current = cls.current_combat_status[entity]
+            print(current)
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
+    @classmethod
     def get_current_target_id(cls, entity: str = "player") -> str:
         """Method to get the current target id for specified entity."""
         try:
@@ -364,6 +408,8 @@ class State(metaclass=StateMeta):
         cls.current_target[entity] = target
         cls.dm.register_trigger(
             cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
+        if target != "player" and target not in cls.attacked_by_player:
+            cls.attacked_by_player.append(target)
 
     @classmethod
     def clear_target(cls, entity: str = "player") -> None:
@@ -378,6 +424,11 @@ class State(metaclass=StateMeta):
                 cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
             cls.current_target[entity] = None
 
+    @classmethod
+    def was_attacked(cls, monster_id: str) -> bool:
+        """Method to determine if monster was attacked by player"""
+        return monster_id in cls.attacked_by_player
+    
     ############################################################
     # METHODS RELATING TO LOCATION
     @classmethod
@@ -537,7 +588,7 @@ class State(metaclass=StateMeta):
 
     @classmethod
     def get_possible_monster_targets(cls, entity: str = "player") -> list:
-        """Method to count the number of monsters of each type in current room"""
+        """Method to get all monsters in a room that specified entity is in"""
         targets = []
         for monster in cls.get_dm().npcs.get_all_monsters():
             if cls.get_current_room_id(monster.unique_id) == cls.get_current_room_id(entity):

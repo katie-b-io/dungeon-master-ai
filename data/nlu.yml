@@ -146,7 +146,8 @@ nlu:
     - go to the [zombie](monster)
     - go towards [skeleton](monster)
     - move to the [zombie](monster)
-    - pounce the [cat](monster)
+    - walk to the [cat](npc)
+    - go to [anvil](npc)
     - I go where the [goblin](monster) is
     - I go where the [goblins](monster) are
     - I go next to the [giant rat](monster)
@@ -216,7 +217,7 @@ nlu:
     - assault [stouthammer](npc)
     - beat [anvil-jumper](npc)
     - punch [stouthammer](npc)
-    - blast [cat](monster)
+    - blast the [cat](npc)
     - charge [giant rat](monster)
     - harm [first](id) [giant rat](monster)
     - hit [second](id) [giant rat](monster)
@@ -245,7 +246,7 @@ nlu:
     - attack [giant rat](monster) [4](id)
     - overwhelm [zombie](monster)
     - wallop [skeleton](monster)
-    - pounce the [cat](monster)
+    - pounce the [cat](npc)
     - I swing my [shortsword](weapon)
     - I use my [sword](weapon)
     - I hit the [skeleton](monster) with my [short sword](weapon)
@@ -449,7 +450,7 @@ nlu:
     - converse with [stouthammer](npc)
     - say to [corvus](npc)
     - talk to [anvil](npc)
-    - speak to [anvil-jumper](npc)
+    - speak to [anvil jumper](npc)
     - communicate with [giant rat](monster)
     - commune with the [skeleton](monster)
     - speak with [zombie](monster)
@@ -673,9 +674,12 @@ nlu:
     - stouthammer
     - the dwarf
 
-- synonym: cat
+- synonym: anvil
   examples: |
-    - cats
+    - anvil
+    - anvil-jumper
+    - anvil jumper
+    - cat
 
 - synonym: giant_rat
   examples: |

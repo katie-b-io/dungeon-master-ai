@@ -5,6 +5,8 @@ from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, 
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
+from dmai.domain.actions.attack import Attack
+from dmai.domain.actions.roll import Roll
 import dmai
 
 
@@ -91,48 +93,11 @@ class Actions:
             OutputBuilder.append(NLG.cannot_move(destination, reason, possible_destinations))
         return can_move
 
-    def _can_attack(self, attacker: str, target: str) -> tuple:
-        """Check if a target can be attacked by an attacker.
-        Returns tuple (bool, str) to indicate whether attack is possible
-        and reason why not if not."""
-
-        # check if attacker and target are within attack range
-        try:
-            current = State.get_current_room(attacker)
-            if not current == State.get_current_room(target):
-                return (False, "different location")
-            
-            # can't attack if can't see
-            # TODO change this to blinded condition - disadvantage on attack roll and not knowing whether hit was successful
-            if not current.visibility:
-                if attacker == "player":
-                    if not State.torch_lit or State.get_player().character.has_darkvision():
-                        return (False, "no visibility")
-            
-            # none of the above situations were triggered so allow attack
-            return (True, "")
-        except UnrecognisedEntityError:
-            return (False, "unknown target")
-
     def attack(self, attacker: str, target: str) -> bool:
         """Attempt to attack a specified target.
         Returns a bool to indicate whether the action was successful"""
-
-        # check if attack can happen
-        (can_attack, reason) = self._can_attack(attacker, target)
-        if can_attack:
-            # check if target will end game
-            if self.npcs.get_type(target) == "npc":
-                if self.npcs.get_npc(target).attack_ends_game:
-                    # this is a game end condition
-                    OutputBuilder.append(NLG.attack_npc_end_game(target))
-                    dmai.dmai_helpers.gameover()
-            State.combat(attacker, target)
-            OutputBuilder.append(NLG.attack(State.get_name(attacker), State.get_name(target)))
-            return can_attack
-        else:
-            OutputBuilder.append(NLG.cannot_attack(State.get_name(attacker), State.get_name(target), reason, State.get_formatted_possible_monster_targets()))
-            return can_attack
+        attack = Attack(attacker, target)
+        return attack.execute()
 
     def _can_use(self, entity, equipment: str) -> tuple:
         """Check if an entity can use specified equipment.
@@ -306,3 +271,9 @@ class Actions:
         else:
             OutputBuilder.append(NLG.cannot_investigate(target, reason))
         return can_investigate
+
+    def roll(self, roll_type: str, nlu_entities: dict, die: str = "d20") -> bool:
+        """Attempt to roll a specified type.
+        Returns a bool to indicate whether the action was successful"""
+        roll = Roll(roll_type, die, nlu_entities)
+        return roll.execute()

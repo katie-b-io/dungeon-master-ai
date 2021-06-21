@@ -5,12 +5,10 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.domain.actions import Actions
 from dmai.game.game import Game
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.utils.output_builder import OutputBuilder
-from dmai.utils.exceptions import UnrecognisedRoomError
 
 
 class TestActions(unittest.TestCase):
@@ -128,32 +126,6 @@ class TestActions(unittest.TestCase):
         self.actions.move(entity, "inns_cellar")
         attacked = self.actions.attack(entity, target)
         self.assertEqual(attacked, False)
-            
-    def test__can_attack_unknown_target(self) -> None:
-        entity = "player"
-        target = "yoda"
-        State.set_current_room(entity, "inns_cellar")
-        (attacked, reason) = self.actions._can_attack(entity, target)
-        self.assertEqual(attacked, False)
-        self.assertEqual(reason, "unknown target")
-    
-    def test__can_attack_different_location(self) -> None:
-        entity = "player"
-        target = "zombie_1"
-        State.set_current_room(entity, "inns_cellar")
-        State.extinguish_torch()
-        (attacked, reason) = self.actions._can_attack(entity, target)
-        self.assertEqual(attacked, False)
-        self.assertEqual(reason, "different location")
-        
-    def test__can_attack_no_visibility(self) -> None:
-        entity = "player"
-        target = "giant_rat_1"
-        State.set_current_room(entity, "inns_cellar")
-        State.extinguish_torch()
-        (attacked, reason) = self.actions._can_attack(entity, target)
-        self.assertEqual(attacked, False)
-        self.assertEqual(reason, "no visibility")
 
     def test_use_good_equipment(self) -> None:
         entity = "player"
