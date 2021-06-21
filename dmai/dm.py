@@ -1,7 +1,7 @@
 import dmai
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
-from dmai.domain.actions import Actions
+from dmai.domain.actions.actions import Actions
 from dmai.nlg.nlg import NLG
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.output_builder import OutputBuilder
