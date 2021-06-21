@@ -38,13 +38,6 @@ class NLU(metaclass=NLUMeta):
             "help": "Exit the game",
             "cmd": "dmai.dmai_helpers.gameover()"
         },
-        "roll": {
-            "text": "/roll [die]",
-            "help":
-            "Roll a specified die, options: d4, d6, d8, d10, d12, d20, d100 (d20 by default)",
-            "cmd": "roll_die(cls.param)",
-            "default_param": "d20"
-        },
         "stats": {
             "text":
             "/stats",
@@ -52,13 +45,7 @@ class NLU(metaclass=NLUMeta):
             "Show your character stats in a character sheet",
             "cmd":
             "OutputBuilder.append(cls.game.player.get_character_sheet(), wrap=False)"
-        },
-        "say": {
-            "text": "/say [utterance]",
-            "help": "Have your character say specified utterance",
-            "cmd": "State.talk()",
-            "return": (False, "param")
-        },
+        }
     }
 
     def __init__(self) -> None:
@@ -179,6 +166,8 @@ class NLU(metaclass=NLUMeta):
             return ("deny", {})
         if intent == "explore":
             return ("explore", {"nlu_entities": entities})
+        if intent == "roll_die":
+            return ("roll_die", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

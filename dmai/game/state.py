@@ -26,6 +26,14 @@ class Attitude(Enum):
     HOSTILE = "hostile"
 
 
+class Combat(Enum):
+    INITIATIVE = 0
+    DECLARE = 1
+    ATTACK_ROLL = 2
+    DAMAGE_ROLL = 3
+    WAIT = 4
+
+
 class StateMeta(type):
     _instances = {}
 
@@ -66,6 +74,7 @@ class State(metaclass=StateMeta):
     current_items = {}
     current_attitude = {}
     attacked_by_player = []
+    current_combat_status = {}
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -74,12 +83,15 @@ class State(metaclass=StateMeta):
     @classmethod
     def combat(cls, attacker: str, target: str) -> None:
         if not cls.in_combat:
+            cls.reset_combat_status(0)
             cls.set_current_game_mode("combat")
             cls.in_combat = True
             cls.roleplaying = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
             OutputBuilder.append(NLG.transition_to_combat())
+        else:
+            cls.progress_combat_status()
 
     @classmethod
     def explore(cls) -> None:
@@ -159,6 +171,7 @@ class State(metaclass=StateMeta):
         cls.current_hp["player"] = player.character.hp_max
         cls.current_status["player"] = Status.ALIVE
         cls.current_target["player"] = None
+        cls.current_combat_status["player"] = Combat.INITIATIVE
 
     @classmethod
     def get_player(cls):
@@ -344,6 +357,26 @@ class State(metaclass=StateMeta):
 
     ############################################################
     # METHODS RELATING TO COMBAT
+    @classmethod
+    def _set_combat_status(cls, entity: str, status: int) -> str:
+        """Method to set the combat status for specified entity."""
+        cls.current_combat_status[entity] = Combat(status)
+    
+    @classmethod
+    def reset_combat_status(cls, entity: str) -> str:
+        """Method to set the combat status for specified entity."""
+        cls.current_combat_status[entity] = Combat(0)
+    
+    @classmethod
+    def progress_combat_status(cls, entity: str = "player") -> str:
+        """Method to progress the combat status for specified entity."""
+        try:
+            current = cls.current_combat_status[entity]
+            print(current)
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
     @classmethod
     def get_current_target_id(cls, entity: str = "player") -> str:
         """Method to get the current target id for specified entity."""

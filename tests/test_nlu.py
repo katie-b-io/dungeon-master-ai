@@ -22,18 +22,12 @@ class TestNLU(unittest.TestCase):
         actual = "Commands:\n"
         actual += "/help               Show these commands\n"
         actual += "/exit               Exit the game\n"
-        actual += "/roll [die]         Roll a specified die, options: d4, d6, d8, d10, d12, d20, d100 (d20 by default)\n"
         actual += "/stats              Show your character stats in a character sheet\n"
-        actual += "/say [utterance]    Have your character say specified utterance\n"
 
         self.assertEqual(NLU.show_commands(), actual)
 
     def test_process_player_command_help(self) -> None:
         self.assertEqual(NLU.process_player_command(self.help_cmd), (True, ""))
-
-    def test_process_player_command_roll(self) -> None:
-        self.assertEqual(NLU.process_player_command(self.roll_cmd1),
-                         (True, ""))
 
     def test_process_player_command_exit(self) -> None:
         with self.assertRaises(SystemExit):
@@ -47,9 +41,6 @@ class TestNLU(unittest.TestCase):
 
     def test_regex_help(self) -> None:
         self.assertEqual(NLU._regex_and_exec(self.help_cmd), (True, ""))
-
-    def test_regex_roll(self) -> None:
-        self.assertEqual(NLU._regex_and_exec(self.roll_cmd1), (True, ""))
 
     def test_regex_exit(self) -> None:
         with self.assertRaises(SystemExit):

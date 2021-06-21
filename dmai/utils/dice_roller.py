@@ -66,13 +66,13 @@ class DiceRoller(metaclass=DiceRollerMeta):
                 dice_spec = {"die": die[d:], "total": total, "mod": 0}
 
             dice_val = cls.roll_dice(dice_spec)
+            return dice_val
 
-        except (KeyError, TypeError, ValueError):
+        except (KeyError, TypeError, ValueError) as e:
             msg = 'Cannot roll dice: "{d}"\nUse format /roll d4 or /roll 2d12+2 for example'.format(
                 d=die)
             raise DiceFormatError(msg)
 
-        return dice_val
 
     @classmethod
     def roll_die(cls, die: str) -> int:
@@ -106,11 +106,21 @@ class DiceRoller(metaclass=DiceRollerMeta):
             die = cls.construct_dice_spec_string(dice_spec)
             OutputBuilder.append("Rolling {d}... {t}".format(d=die,
                                                              t=total_roll))
-        except (KeyError, TypeError, ValueError):
+        except (KeyError, TypeError, ValueError) as e:
             raise
 
         return total_roll
 
+    @classmethod
+    def check(cls, die: str) -> None:
+        """Method to check a die, does not output anything.
+        Raises a DiceFormatError if badly formatted."""
+        try:
+            cls.dice_map[die]
+        except:
+            msg = 'Cannot roll unrecognised dice: "{d}"\n'.format(d=die)
+            raise DiceFormatError(msg)
+        
     @classmethod
     def get_max(cls, die: str) -> int:
         return cls.dice_map[die]

@@ -42,7 +42,8 @@ class DM:
             "converse": self.converse,
             "affirm": self.affirm,
             "deny": self.deny,
-            "explore": self.explore
+            "explore": self.explore,
+            "roll_die": self.roll_die,
         }
 
     def input(
@@ -84,7 +85,8 @@ class DM:
         for monster in self.npcs.get_all_monsters():
             if State.is_alive(monster.unique_id):
                 if State.get_current_room_id() == State.get_current_room_id(
-                        monster.unique_id):
+                    monster.unique_id
+                ):
                     monster.prepare_next_move()
                     # TODO decide where to trigger the monster moves
                     monster.print_next_move()
@@ -132,16 +134,22 @@ class DM:
         """Extract a destination from NLU entities dictionary.
         Returns a string with destination"""
         for entity in nlu_entities:
-            if entity["entity"] == "location" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "location"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 return entity["value"]
-            if entity["entity"] == "monster" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "monster"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 monster = self._get_target(nlu_entities)
                 if monster:
                     return State.get_current_room_id(monster)
-            if entity["entity"] == "npc" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "npc"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 npc = self._get_target(nlu_entities)
                 if npc:
                     return State.get_current_room_id(npc)
@@ -154,14 +162,20 @@ class DM:
         i = None
         npc = None
         for entity in nlu_entities:
-            if entity["entity"] == "monster" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "monster"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 monster = entity["value"]
-            if entity["entity"] == "id" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "id"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 i = entity["value"]
-            if entity["entity"] == "npc" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "npc"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 npc = entity["value"]
 
         # monsters are indexed by a unique id, determine it if possible
@@ -173,9 +187,8 @@ class DM:
                 # player hasn't appeared to specify particular individual, pick first alive one
                 # TODO get player confirmation about which monster to target
                 monster_id = self.npcs.get_monster_id(
-                    monster,
-                    status="alive",
-                    location=State.get_current_room_id())
+                    monster, status="alive", location=State.get_current_room_id()
+                )
             return monster_id
 
         # NPCs have unique ids
@@ -193,22 +206,35 @@ class DM:
         """Extract a equipment from NLU entities dictionary.
         Returns a string with equipment"""
         for entity in nlu_entities:
-            if entity["entity"] == "equipment" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "equipment"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 return entity["value"]
 
     def _get_weapon(self, nlu_entities: dict) -> str:
         """Extract a weapon from NLU entities dictionary.
         Returns a string with weapon"""
         for entity in nlu_entities:
-            if entity["entity"] == "weapon" and entity[
-                    "confidence"] >= self.ENTITY_CONFIDENCE:
+            if (
+                entity["entity"] == "weapon"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
                 return entity["value"]
 
-    def move(self,
-             destination: str = None,
-             entity: str = None,
-             nlu_entities: dict = None) -> bool:
+    def _get_die(self, nlu_entities: dict) -> str:
+        """Extract a die from NLU entities dictionary.
+        Returns a string with die"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "die"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return entity["value"]
+
+    def move(
+        self, destination: str = None, entity: str = None, nlu_entities: dict = None
+    ) -> bool:
         """Attempt to move an entity to a destination determined by NLU or specified.
         Returns whether the move was successful."""
         if not entity:
@@ -219,17 +245,18 @@ class DM:
         if not destination:
             moved = False
             connected_rooms = State.get_current_room().get_connected_rooms()
-            possible_destinations = [State.get_room_name(room) for room in connected_rooms]
+            possible_destinations = [
+                State.get_room_name(room) for room in connected_rooms
+            ]
             OutputBuilder.append(NLG.no_destination(possible_destinations))
         else:
             logger.info("Moving {e} to {d}!".format(e=entity, d=destination))
             moved = self.actions.move(entity, destination)
         return moved
 
-    def attack(self,
-               target: str = None,
-               attacker: str = None,
-               nlu_entities: dict = None) -> bool:
+    def attack(
+        self, target: str = None, attacker: str = None, nlu_entities: dict = None
+    ) -> bool:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the attack was successful."""
         if not attacker:
@@ -239,17 +266,21 @@ class DM:
 
         if not target:
             attacked = False
-            OutputBuilder.append(NLG.no_target("attack", State.get_formatted_possible_monster_targets()))
+            OutputBuilder.append(
+                NLG.no_target("attack", State.get_formatted_possible_monster_targets())
+            )
         else:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)
         return attacked
 
-    def use(self,
-            equipment: str = None,
-            entity: str = None,
-            nlu_entities: dict = None,
-            stop: bool = False) -> bool:
+    def use(
+        self,
+        equipment: str = None,
+        entity: str = None,
+        nlu_entities: dict = None,
+        stop: bool = False,
+    ) -> bool:
         """Attempt to use an equipment.
         Returns whether the use was successful."""
         if not entity:
@@ -265,21 +296,16 @@ class DM:
             used = self.actions.use(equipment, entity, stop)
         return used
 
-    def stop_using(self,
-                   equipment: str = None,
-                   entity: str = None,
-                   nlu_entities: dict = None) -> bool:
+    def stop_using(
+        self, equipment: str = None, entity: str = None, nlu_entities: dict = None
+    ) -> bool:
         """Attempt to stop using an equipment.
         Returns whether the stoppage was successful."""
-        return self.use(equipment=equipment,
-                        entity=entity,
-                        nlu_entities=nlu_entities,
-                        stop=True)
+        return self.use(
+            equipment=equipment, entity=entity, nlu_entities=nlu_entities, stop=True
+        )
 
-    def equip(self,
-              weapon: str = None,
-              entity: str = None,
-              nlu_entities: dict = None):
+    def equip(self, weapon: str = None, entity: str = None, nlu_entities: dict = None):
         """Attempt to equip a weapon.
         Returns whether equipping was successful."""
         if not entity:
@@ -295,10 +321,9 @@ class DM:
             equipped = self.actions.equip(weapon, entity)
         return equipped
 
-    def unequip(self,
-                weapon: str = None,
-                entity: str = None,
-                nlu_entities: dict = None) -> bool:
+    def unequip(
+        self, weapon: str = None, entity: str = None, nlu_entities: dict = None
+    ) -> bool:
         """Attempt to unequip a weapon.
         Returns whether unequipping was successful."""
         if not entity:
@@ -313,7 +338,7 @@ class DM:
             logger.info("{e} is unequipping {q}!".format(e=entity, q=weapon))
             unequipped = self.actions.unequip(weapon=weapon, entity=entity)
         return unequipped
-    
+
     def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the action was successful."""
@@ -329,7 +354,7 @@ class DM:
             logger.info("player is conversing with {t}!".format(t=target))
             conversation = self.actions.converse(target)
         return conversation
-    
+
     def affirm(self) -> None:
         """Player has uttered an affirmation.
         Appends the hint to output with the OutputBuilder.
@@ -366,3 +391,26 @@ class DM:
             logger.info("player is investigating {t}!".format(t=target))
             explore = self.actions.investigate(target)
         return explore
+
+    def roll_die(
+        self, entity: str = "player", die: str = None, nlu_entities: dict = {}
+    ) -> bool:
+        """Attempt to roll die.
+        Returns whether the action was successful."""
+        if not die and nlu_entities:
+            die = self._get_die(nlu_entities)
+        else:
+            # TODO to something smarter here - default to the die that makes sense
+            # or ask for clarification
+            print(die)
+            die = "d20"
+            
+
+        if State.stored_intent:
+            if "nlu_entities" in State.stored_intent["params"]:
+                nlu_entities.extend(State.stored_intent["params"]["nlu_entities"])
+
+            if State.stored_intent["intent"] == "attack":
+                return self.actions.roll("attack", nlu_entities, die)
+        
+        return self.actions.roll("roll", nlu_entities, die)

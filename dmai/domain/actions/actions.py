@@ -6,6 +6,7 @@ from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.attack import Attack
+from dmai.domain.actions.roll import Roll
 import dmai
 
 
@@ -270,3 +271,9 @@ class Actions:
         else:
             OutputBuilder.append(NLG.cannot_investigate(target, reason))
         return can_investigate
+
+    def roll(self, roll_type: str, nlu_entities: dict, die: str = "d20") -> bool:
+        """Attempt to roll a specified type.
+        Returns a bool to indicate whether the action was successful"""
+        roll = Roll(roll_type, die, nlu_entities)
+        return roll.execute()
