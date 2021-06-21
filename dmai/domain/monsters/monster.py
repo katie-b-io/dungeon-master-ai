@@ -53,6 +53,7 @@ class Monster(NPC, MonsterAgent):
         self.unique_id = unique_id
         self.treasure = None
         self.must_kill = False
+        self.will_attack_player = False
 
         self.trigger_map = {
             "attack_of_opportunity": {
@@ -68,10 +69,14 @@ class Monster(NPC, MonsterAgent):
         """Method to set treasure."""
         self.treasure = treasure
 
-    def set_must_kill(self, must_kill: str) -> None:
+    def set_must_kill(self, must_kill: bool) -> None:
         """Method to set must_kill."""
         self.must_kill = must_kill
 
+    def set_will_attack_player(self, will_attack_player: bool) -> None:
+        """Method to set will_attack_player."""
+        self.will_attack_player = will_attack_player
+        
     def attack_of_opportunity(self) -> None:
         """Method to perform an attack of opportunity"""
         logger.debug("Triggering attack of opportunity in monster: {m}".format(
@@ -84,3 +89,7 @@ class Monster(NPC, MonsterAgent):
         for trigger_type in self.trigger_map:
             if self.trigger_map[trigger_type]["can_trigger"]:
                 self.trigger_map[trigger_type]["trigger"]()
+    
+    def get_all_attack_ids(self) -> list:
+        """Method to get all attack IDs of monster"""
+        return self.attacks.get_all_attack_ids()

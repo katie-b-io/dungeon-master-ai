@@ -53,9 +53,10 @@ class NPCCollection:
             for monster_id in self.adventure.rooms[room].monsters:
                 monster_dict = self.adventure.rooms[room].monsters[monster_id]
                 for (status, treasure,
-                     must_kill) in zip(monster_dict["status"],
+                     must_kill, will_attack_player) in zip(monster_dict["status"],
                                        monster_dict["treasure"],
-                                       monster_dict["must_kill"]):
+                                       monster_dict["must_kill"],
+                                       monster_dict["will_attack_player"]):
                     # create a monster with unique id
                     i = 1 + sum(
                         1 for m in monsters.values() if m.id == monster_id)
@@ -63,6 +64,7 @@ class NPCCollection:
                     monster = MonsterCollection.get_monster(monster_id, unique_id=unique_id)
                     monster.set_treasure(treasure)
                     monster.set_must_kill(must_kill)
+                    monster.set_will_attack_player(will_attack_player)
                     monsters[unique_id] = monster
                     # update state with monster location and status
                     State.set_init_room(unique_id, room)

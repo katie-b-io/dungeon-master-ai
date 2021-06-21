@@ -61,7 +61,7 @@ class TestMonsterAgent(unittest.TestCase):
         Config.set_uuid()
         Config.agent.set_monster("planning")
         Config.planner.set_monster("fd")
-        self.problem = "giant_rat"
+        self.problem = "giant_rat_1"
         self.agent = MonsterAgent(problem=self.problem)
 
     def tearDown(self) -> None:

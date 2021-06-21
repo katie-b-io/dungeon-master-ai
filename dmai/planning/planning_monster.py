@@ -173,6 +173,7 @@ class PlanningMonster(PlanningAgent):
 
     def build_problem(self) -> None:
         logger.debug("Building problem")
+        monster = State.get_entity(self.problem)
         problem_file = os.path.join(
             Config.directory.planning,
             "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem),
@@ -181,7 +182,7 @@ class PlanningMonster(PlanningAgent):
         with open(problem_file, "w") as writer:
             ################################################
             # Construct the problem file header
-            writer.write(self._construct_problem_header(self.problem, "monster"))
+            writer.write(self._construct_problem_header(monster.unique_id, "monster"))
 
             ################################################
             # Construct the problem file objects
@@ -191,14 +192,14 @@ class PlanningMonster(PlanningAgent):
             objects.append(("player", "player"))
 
             # Monsters
-            objects.append(("giant_rat_1", "monster"))
+            objects.append((monster.unique_id, "monster"))
 
-            # Room
-            objects.append(("inns_cellar", "room"))
+            # Roomz
+            objects.append((State.get_current_room_id(monster.unique_id), "room"))
 
             # Weapons
-            objects.append(("bite", "weapon"))
-            objects.append(("claws", "weapon"))
+            for attack in monster.get_all_attack_ids():
+                objects.append((attack, "weapon"))
 
             # Construct the string
             writer.write(self._construct_objects(objects))
@@ -213,19 +214,26 @@ class PlanningMonster(PlanningAgent):
                 init.append(("alive", "player"))
 
             # Monsters
-            init.append(("at", "giant_rat_1", State.get_current_room("giant_rat_1").id))
-            if State.is_alive("giant_rat_1"):
-                init.append(("alive", "giant_rat_1"))
+            init.append(("at", monster.unique_id, State.get_current_room(monster.unique_id).id))
+            if State.is_alive(monster.unique_id):
+                init.append(("alive", monster.unique_id))
 
-            # TODO create these statements automatically
             # Weapons
-            init.append(("has", "giant_rat_1", "bite"))
-            init.append(("has", "giant_rat_1", "claws"))
-            init.append(("equipped", "giant_rat_1", "bite"))
-            init.append(("equipped", "giant_rat_1", "claws"))
+            for attack in monster.get_all_attack_ids():
+                init.append(("has", monster.unique_id, attack))
+                init.append(("equipped", monster.unique_id, attack))
 
             # Combat
-            init.append(("must_kill", "player"))
+            if monster.will_attack_player:
+                # TODO check if player is visible to monster
+                init.append(("must_kill", "player"))
+            else:
+                for m in State.get_possible_monster_targets(monster.unique_id):
+                    if State.was_attacked(m.unique_id):
+                        init.append(("must_kill", "player"))
+                        break
+            if State.was_attacked(monster.unique_id):
+                init.append(("attacked", "player", monster.unique_id))
 
             # Construct the string
             writer.write(self._construct_init(init))
@@ -233,7 +241,8 @@ class PlanningMonster(PlanningAgent):
             ################################################
             # Construct the problem file goal
             goal = []
-            goal.append(("not", "attacked", "player", "giant_rat_1"))
+            goal.append(("not", "must_kill", "player"))
+            goal.append(("not", "attacked", "player", monster.unique_id))
             alt_goal = []
             alt_goal.append(("not", "alive", "player"))
 

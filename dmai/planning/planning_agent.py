@@ -94,7 +94,7 @@ class PlanningAgent(ABC):
         Tuples will be constructed into PDDL strings, e.g. (one, two, three)
         becomes (one two three)"""
         if alt_goal:
-            goal_str = "(:goal (or\n"
+            goal_str = "(:goal (or (and\n"
         else:
             goal_str = "(:goal (and\n"
         for obj in goal:
@@ -108,6 +108,7 @@ class PlanningAgent(ABC):
                 else:
                     goal_str += "({g})\n".format(g=" ".join(obj))
         if alt_goal:
+            goal_str += ")\n(and\n"
             for obj in alt_goal:
                 if len(obj) == 1:
                     goal_str += "({s})\n".format(s=obj[0])
@@ -118,7 +119,10 @@ class PlanningAgent(ABC):
                         goal_str += ")\n"
                     else:
                         goal_str += "({g})\n".format(g=" ".join(obj))
-        goal_str += "))\n"
+        if alt_goal:
+            goal_str += ")))\n"
+        else:
+            goal_str += "))\n"
         return goal_str
 
     ################################################
