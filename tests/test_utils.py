@@ -6,7 +6,19 @@ p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
 from dmai.utils.dice_roller import DiceRoller
+from dmai.utils.text import Text
 from dmai.utils.loader import Loader
+
+
+class TestText(unittest.TestCase):
+    """Test the Text class"""
+    def setUp(self) -> None:
+        pass
+    
+    def test_get_signed_value(self) -> None:
+        self.assertEqual(Text.get_signed_value(0), " 0")
+        self.assertEqual(Text.get_signed_value(-1), "-1")
+        self.assertEqual(Text.get_signed_value(1), "+1")
 
 
 class TestDiceRoller(unittest.TestCase):

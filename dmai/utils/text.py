@@ -20,3 +20,14 @@ class Text(metaclass=TextMeta):
         tokens = text.split(delimiter)
         for token in tokens:
             yield token
+
+    @staticmethod
+    def get_signed_value(value: int) -> str:
+        """Method to convert an integer to a signed string"""
+        if value > 0:
+            value = "+{v}".format(v=value)
+        elif value == 0:
+            value = " {v}".format(v=value)
+        else:
+            value = "{v}".format(v=value)
+        return value

@@ -214,11 +214,6 @@ class TestCharacter(unittest.TestCase):
     def test_get_skill_modifier(self) -> None:
         ability = "athletics"
         self.assertEqual(self.fighter.get_skill_modifier(ability), 5)
-
-    def test_get_signed_value(self) -> None:
-        self.assertEqual(self.fighter.get_signed_value(0), " 0")
-        self.assertEqual(self.fighter.get_signed_value(-1), "-1")
-        self.assertEqual(self.fighter.get_signed_value(1), "+1")
     
     def test_get_signed_attack_bonus(self) -> None:
         weapon1 = "dagger"
