@@ -26,7 +26,6 @@ class Config(metaclass=ConfigMeta):
         @classmethod
         def set_root(cls, root) -> None:
             cls.root = root
-            print(root)
 
         @property
         def data(self) -> str:

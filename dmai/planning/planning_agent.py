@@ -57,9 +57,14 @@ class PlanningAgent(ABC):
     def get_next_move(self) -> str:
         plan = self.planner.parse_plan()
         if len(plan) > 0:
-            return plan[0]
+            return self.planner.to_natural_language(plan[0])
         else:
             return False
+    
+    def perform_next_move(self) -> None:
+        plan = self.planner.parse_plan()
+        if len(plan) > 0:
+            self.planner.call_function(plan[0])
 
     ################################################
     # Methods for PDDL problem files
@@ -190,5 +195,5 @@ class PlanningAgent(ABC):
         Action PDDL strings will be looked up and appended to string"""
         actions_str = ""
         for action in actions:
-            actions_str += "{a}\n".format(a=planning_actions[action])
+            actions_str += "{a}\n".format(a=planning_actions[action]["pddl"])
         return actions_str

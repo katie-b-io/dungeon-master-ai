@@ -1,5 +1,9 @@
+from dmai.nlg.nlg import NLG
+
+
 planning_actions = {
-    "ability_check": """
+    "ability_check": {
+        "pddl": """
 ; Entity succeeds on an ability check
 (:action ability_check
     :parameters (?entity - entity ?ability - ability ?target - object ?location - room)
@@ -23,9 +27,10 @@ planning_actions = {
         (not (can_ability_check ?entity ?ability ?target))
         (ability_check_success ?entity ?ability ?target)
     )
-)""",
+)"""},
 
-    "ability_check_with_advantage": """
+    "ability_check_with_advantage": {
+        "pddl": """
 ; Entity succeeds on an ability check with advantage
 (:action ability_check_with_advantage
     :parameters (?entity - entity ?ability - ability ?target - object ?location - room)
@@ -41,9 +46,10 @@ planning_actions = {
         (not (can_ability_check ?entity ?ability ?target))
         (ability_check_success ?entity ?ability ?target)
     )
-)""",
+)"""},
 
-    "ability_check_with_disadvantage": """
+    "ability_check_with_disadvantage": {
+        "pddl": """
 ; Entity succeeds on an ability check with disadvantage
 (:action ability_check_with_disadvantage
     :parameters (?entity - entity ?ability - ability ?target - object ?location - room)
@@ -59,9 +65,10 @@ planning_actions = {
         (not (can_ability_check ?entity ?ability ?target))
         (ability_check_success ?entity ?ability ?target)
     )
-)""",
+)"""},
 
-    "equipment_check": """
+    "equipment_check": {
+        "pddl": """
 ; Entity succeeds on an equipment check
 (:action equipment_check
     :parameters (?entity - entity ?equipment - equipment ?target - object ?location - room)
@@ -85,9 +92,10 @@ planning_actions = {
         (not (can_equipment_check ?entity ?equipment ?target))
         (equipment_check_success ?entity ?equipment ?target)
     )
-)""",
+)"""},
 
-    "equipment_check_with_advantage": """
+    "equipment_check_with_advantage": {
+        "pddl": """
 ; Entity succeeds on an equipment check with advantage
 (:action equipment_check_with_advantage
     :parameters (?entity - entity ?equipment - equipment ?target - object ?location - room)
@@ -103,9 +111,10 @@ planning_actions = {
         (not (can_equipment_check ?entity ?equipment ?target))
         (equipment_check_success ?entity ?equipment ?target)
     )
-)""",
+)"""},
 
-    "equipment_check_with_disadvantage": """
+    "equipment_check_with_disadvantage": {
+        "pddl": """
 ; Entity succeeds on an equipment check with disadvantage
 (:action equipment_check_with_disadvantage
     :parameters (?entity - entity ?equipment - equipment ?target - object ?location - room)
@@ -121,9 +130,10 @@ planning_actions = {
         (not (can_equipment_check ?entity ?equipment ?target))
         (equipment_check_success ?entity ?equipment ?target)
     )
-)""",
+)"""},
 
-    "attack_roll": """
+    "attack_roll": {
+        "pddl": """
 ; Entity succeeds on an attack roll
 (:action attack_roll
     :parameters (?entity - entity ?weapon - weapon ?target - object ?location - room)
@@ -149,9 +159,10 @@ planning_actions = {
         (attack_roll_success ?entity ?target)
         (higher_than_ac ?target)
     )
-)""",
+)"""},
 
-    "attack_roll_with_advantage": """
+    "attack_roll_with_advantage": {
+        "pddl": """
 ; Entity succeeds on an attack roll with advantage
 (:action attack_roll_with_advantage
     :parameters (?entity - entity ?weapon - weapon ?target - object ?location - room)
@@ -169,9 +180,10 @@ planning_actions = {
         (attack_roll_success ?entity ?target)
         (higher_than_ac ?target)
     )
-)""",
+)"""},
 
-    "attack_roll_with_disadvantage": """
+    "attack_roll_with_disadvantage": {
+        "pddl": """
 ; Entity succeeds on an attack roll with disadvantage
 (:action attack_roll_with_disadvantage
     :parameters (?entity - entity ?weapon - weapon ?target - object ?location - room)
@@ -189,9 +201,10 @@ planning_actions = {
         (attack_roll_success ?entity ?target)
         (higher_than_ac ?target)
     )
-)""",
+)"""},
 
-    "damage_roll": """
+    "damage_roll": {
+        "pddl": """
 ; Entity damages a target
 (:action damage_roll
     :parameters (?entity - entity ?target - object ?location - room)
@@ -207,9 +220,10 @@ planning_actions = {
         (not (higher_than_ac ?target))
         (damaged ?target)
     )
-)""",
+)"""},
 
-    "equip": """
+    "equip": {
+        "pddl": """
 ; Entity equips weapon or equipment
 (:action equip
     :parameters (?entity - entity ?object - object)
@@ -220,9 +234,10 @@ planning_actions = {
     :effect (and 
         (equipped ?entity ?object)
     )
-)""",
+)"""},
 
-    "unequip": """
+    "unequip": {
+        "pddl": """
 ; Entity unequips weapon or equipment
 (:action unequip
     :parameters (?entity - entity ?object - object)
@@ -233,9 +248,10 @@ planning_actions = {
     :effect (and 
         (not (equipped ?entity ?object))
     )
-)""",
+)"""},
 
-    "move": """
+    "move": {
+        "pddl": """
 ; Player moves from one room to another
 (:action move
     :parameters (?player - player ?door - door ?location - room ?destination - room)
@@ -264,9 +280,10 @@ planning_actions = {
         (not (at ?player ?location))
         (at ?player ?destination)
     )
-)""",
+)"""},
 
-    "open_door_with_ability": """
+    "open_door_with_ability": {
+        "pddl": """
 ; Player wants to open a door with an ability/skill
 (:action open_door_with_ability
     :parameters (?player - player ?ability - ability ?door - door ?location - room ?destination - room)
@@ -283,9 +300,10 @@ planning_actions = {
         (can_ability_check ?player ?ability ?door)
         (action)
     )
-)""",
+)"""},
 
-    "open_door_with_equipment": """
+    "open_door_with_equipment": {
+        "pddl": """
 ; Player wants to open a door with equipment
 (:action open_door_with_equipment
     :parameters (?player - player ?equipment - equipment ?door - door ?location - room ?destination - room)
@@ -302,9 +320,10 @@ planning_actions = {
         (can_equipment_check ?player ?equipment ?door)
         (action)
     )
-)""",
+)"""},
 
-    "open_door_with_attack": """
+    "open_door_with_attack": {
+        "pddl": """
 ; Player wants to open a door with attack
 (:action open_door_with_attack
     :parameters (?player - player ?door - door ?location - room ?destination - room)
@@ -320,9 +339,10 @@ planning_actions = {
         (can_attack_roll ?player ?door)
         (action)
     )
-)""",
+)"""},
 
-    "force_door": """
+    "force_door": {
+        "pddl": """
 ; Player forces open a door
 (:action force_door
     :parameters (?player - player ?str - ability ?door - door ?location - room ?destination - room)
@@ -340,9 +360,10 @@ planning_actions = {
         (not (locked ?door))
         (not (ability_check_success ?player ?str ?door))
     )
-)""",
+)"""},
 
-    "use_door_switch": """
+    "use_door_switch": {
+        "pddl": """
 ; Player uses a switch to open a door
 (:action use_door_switch
     :parameters (?player - player ?perception - skill ?door - door ?location - room ?destination - room)
@@ -360,9 +381,10 @@ planning_actions = {
         (not (locked ?door))
         (not (ability_check_success ?player ?perception ?door))
     )
-)""",
+)"""},
 
-    "use_thieves_tools": """
+    "use_thieves_tools": {
+        "pddl": """
 ; Player uses thieves tools to open a door
 (:action use_thieves_tools
     :parameters (?player - player ?thieves_tools - equipment ?door - door ?location - room ?destination - room)
@@ -382,9 +404,10 @@ planning_actions = {
         (not (equipped ?player ?thieves_tools))
         (not (equipment_check_success ?player ?thieves_tools ?door))
     )
-)""",
+)"""},
 
-    "attack_door": """
+    "attack_door": {
+        "pddl": """
 ; Player attacks a door
 (:action attack_door
     :parameters (?player - player ?weapon - weapon ?door - door ?location - room ?destination - room)
@@ -401,9 +424,10 @@ planning_actions = {
         (can_damage_roll ?player ?door)
         (not (attack_roll_success ?player ?door))
     )
-)""",
+)"""},
 
-    "breaks_down_door": """
+    "breaks_down_door": {
+        "pddl": """
 ; Player breaks down a door
 (:action breaks_down_door
     :parameters (?player - player ?door - door ?location - room ?destination - room)
@@ -420,9 +444,10 @@ planning_actions = {
         (not (locked ?door))
         (not (alive ?door))
     )
-)""",
+)"""},
 
-    "receive_quest": """
+    "receive_quest": {
+        "pddl": """
 ; Player receives quest from NPC that can give quests
 (:action receive_quest
     :parameters (?player - player ?npc - npc ?friendly - friendly ?location - room)
@@ -437,9 +462,10 @@ planning_actions = {
     :effect (and
         (quest)
     )
-)""",
+)"""},
 
-    "roleplay_positively": """
+    "roleplay_positively": {
+        "pddl": """
 ; Player roleplays positively, which improves the NPC's attitude towards the player
 (:action roleplay_positively
     :parameters (?player - player ?npc - npc ?current - attitude ?next - attitude ?location - room)
@@ -455,9 +481,10 @@ planning_actions = {
         (not (attitude_towards_player ?npc ?current))
         (attitude_towards_player ?npc ?next)
     )
-)""",
+)"""},
 
-    "roleplay_negatively": """
+    "roleplay_negatively": {
+        "pddl": """
 ; Player roleplays negatively, which degrades the NPC's attitude towards the player
 (:action roleplay_negatively
     :parameters (?player - player ?npc - npc ?current - attitude ?next - attitude ?location - room)
@@ -473,9 +500,11 @@ planning_actions = {
         (not (attitude_towards_player ?npc ?current))
         (attitude_towards_player ?npc ?next)
     )
-)""",
+)"""},
 
-    "declare_attack_against_entity": """
+    "declare_attack_against_entity": {
+        "function": NLG.attack,
+        "pddl": """
 ; Entity wants to attack another entity
 (:action declare_attack_against_entity
     :parameters (?entity - entity ?target - entity ?location - room)
@@ -490,9 +519,10 @@ planning_actions = {
         (can_attack_roll ?entity ?target)
         (action)
     )
-)""",
+)"""},
 
-    "attack_monster": """
+    "attack_monster": {
+        "pddl": """
 ; Player attacks a monster
 (:action attack_monster
     :parameters (?player - player ?weapon - weapon ?monster - monster ?location - room)
@@ -510,9 +540,10 @@ planning_actions = {
         (can_damage_roll ?player ?monster)
         (not (attack_roll_success ?player ?monster))
     )
-)""",
+)"""},
 
-    "attack_player": """
+    "attack_player": {
+        "pddl": """
 ; Monster attacks a player
 (:action attack_player
     :parameters (?monster - monster ?weapon - weapon ?player - player ?location - room)
@@ -530,9 +561,10 @@ planning_actions = {
         (can_damage_roll ?monster ?player)
         (not (attack_roll_success ?monster ?player))
     )
-)""",
+)"""},
 
-    "kill_monster": """
+    "kill_monster": {
+        "pddl": """
 ; Player kills a monster
 (:action kill_monster
     :parameters (?player - player ?monster - monster ?location - room)
@@ -550,9 +582,10 @@ planning_actions = {
         (not (combat))
         (not (alive ?monster))
     )
-)""",
+)"""},
 
-    "kill_player": """
+    "kill_player": {
+        "pddl": """
 ; Monster kills a player
 (:action kill_player
     :parameters (?monster - monster ?player - player ?location - room)
@@ -570,5 +603,5 @@ planning_actions = {
         (not (combat))
         (not (alive ?player))
     )
-)"""
+)"""}
 }

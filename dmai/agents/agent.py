@@ -32,7 +32,7 @@ class Agent(ABC):
     def perform_next_move(self) -> bool:
         """Method to perform the next move"""
         logger.debug("Performing the next move")
-        self.print_next_move()
+        self.agent.perform_next_move()
         
         # TODO parse the PDDL and act accordinging 
         # e.g. Steps of combat:

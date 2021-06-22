@@ -41,14 +41,14 @@ class NLG(metaclass=NLGMeta):
     @classmethod
     def roll_reaction(cls, result: int) -> str:
         """Return utterance for reacting to a dice roll"""
-        if result == 1:
+        if result < 1:
             utters = [
                 "Ouch!",
                 "That is painful",
                 "How unfortunate",
                 "Oof"
             ]
-        elif result == 20:
+        elif result > 19:
             utters = [
                 "Nice!",
                 "Truly magnificent"
@@ -113,7 +113,7 @@ class NLG(metaclass=NLGMeta):
             return adventure.get_room(room).enter()
 
     @classmethod
-    def attack(cls, attacker: str, target: str) -> str:
+    def attack(cls, attacker: str, target: str, *args) -> str:
         """Return the utterance for attacking"""
         # TODO different utterances for different weapons?
         attacker = "You" if attacker == "player" else attacker
@@ -123,7 +123,7 @@ class NLG(metaclass=NLGMeta):
             "{a} struck at {t}".format(a=attacker, t=target),
         ]
         return random.choice(utters)
-        
+    
     @classmethod
     def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
