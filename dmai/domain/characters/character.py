@@ -15,6 +15,7 @@ from dmai.domain.weapons import Weapons
 from dmai.domain.characters.character_class import CharacterClass
 from dmai.domain.characters.race import Race
 from dmai.utils.dice_roller import DiceRoller
+from dmai.utils.text import Text
 from dmai.utils.money import Money
 from dmai.utils.logger import get_logger
 
@@ -164,31 +165,21 @@ class Character(ABC):
         """Method to return the specified skill modifier"""
         return self.skills.get_modifier(skill)
 
-    def get_signed_value(self, value) -> str:
-        """Method to convert an integer to a signed string"""
-        if value > 0:
-            value = "+{v}".format(v=value)
-        elif value == 0:
-            value = " {v}".format(v=value)
-        else:
-            value = "{v}".format(v=value)
-        return value
-
     def get_signed_ability_modifier(self, ability: str) -> str:
         """Method to return the signed ability modifier"""
-        return self.get_signed_value(self.get_ability_modifier(ability))
+        return Text.get_signed_value(self.get_ability_modifier(ability))
 
     def get_signed_saving_throw(self, ability: str) -> str:
         """Method to return the signed saving throw"""
-        return self.get_signed_value(self.get_saving_throw(ability))
+        return Text.get_signed_value(self.get_saving_throw(ability))
 
     def get_signed_skill_modifier(self, skill: str) -> str:
         """Method to return the skill signed modifier"""
-        return self.get_signed_value(self.get_skill_modifier(skill))
+        return Text.get_signed_value(self.get_skill_modifier(skill))
 
     def get_signed_initiative(self) -> str:
         """Method to return the signed initiative"""
-        return self.get_signed_value(self.initiative)
+        return Text.get_signed_value(self.initiative)
 
     def get_signed_attack_bonus(self, weapon_id: str) -> str:
         """Method to return the signed attack bonus"""
@@ -197,7 +188,7 @@ class Character(ABC):
             m = self.get_ability_modifier("dex")
         else:
             m = self.get_ability_modifier("str")
-        return self.get_signed_value(m + self.proficiency_bonus)
+        return Text.get_signed_value(m + self.proficiency_bonus)
 
     def get_saving_throw(self, ability: str) -> int:
         """Method to return the specified saving throw"""

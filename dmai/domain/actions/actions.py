@@ -1,5 +1,4 @@
 from dmai.utils.output_builder import OutputBuilder
-from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon, UnrecognisedEntityError
 from dmai.game.state import State
@@ -15,7 +14,7 @@ class Actions:
     # class variables
     action_data = dict()
 
-    def __init__(self, adventure: Adventure, npcs: NPCCollection) -> None:
+    def __init__(self, adventure: Adventure, npcs) -> None:
         """Actions class"""
         self.adventure = adventure
         self.npcs = npcs
@@ -277,3 +276,21 @@ class Actions:
         Returns a bool to indicate whether the action was successful"""
         roll = Roll(roll_type, die, nlu_entities)
         return roll.execute()
+
+    @staticmethod
+    def declare_attack_against_entity(attacker: str, target: str, *args) -> None:
+        """Method to delcare attack against entity"""
+        attacker = State.get_entity(attacker)
+        OutputBuilder.append(NLG.attack(attacker.name, target))
+    
+    @staticmethod
+    def attack_player(*args) -> None:
+        print("Attack player")
+    
+    @staticmethod
+    def attack_roll(*args) -> None:
+        print("Attack roll")
+    
+    @staticmethod
+    def damage_roll(*args) -> None:
+        print("damage roll")

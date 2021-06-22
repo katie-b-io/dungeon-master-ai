@@ -88,8 +88,6 @@ class DM:
                     monster.unique_id
                 ):
                     monster.prepare_next_move()
-                    # TODO decide where to trigger the monster moves
-                    monster.print_next_move()
 
         # last thing to do: maintain state
         State.maintenance()
@@ -402,7 +400,6 @@ class DM:
         else:
             # TODO to something smarter here - default to the die that makes sense
             # or ask for clarification
-            print(die)
             die = "d20"
             
 

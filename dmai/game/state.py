@@ -1,5 +1,6 @@
 from collections import Counter
 from enum import Enum
+import operator
 
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
@@ -75,6 +76,8 @@ class State(metaclass=StateMeta):
     current_attitude = {}
     attacked_by_player = []
     current_combat_status = {}
+    expected_intent = None
+    initiative_order = []
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -83,15 +86,19 @@ class State(metaclass=StateMeta):
     @classmethod
     def combat(cls, attacker: str, target: str) -> None:
         if not cls.in_combat:
-            cls.reset_combat_status(0)
+            cls.reset_combat_status()
             cls.set_current_game_mode("combat")
             cls.in_combat = True
             cls.roleplaying = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
             OutputBuilder.append(NLG.transition_to_combat())
+            cls.set_expected_intent("roll_die") #TODO change to "roll"
         else:
             cls.progress_combat_status()
+            OutputBuilder.append(NLG.attack(attacker, target))
+            if cls.current_combat_status == Combat(2) or cls.current_combat_status == Combat(3):
+                cls.set_expected_intent("roll_die")
 
     @classmethod
     def explore(cls) -> None:
@@ -100,6 +107,7 @@ class State(metaclass=StateMeta):
         cls.roleplaying = False
         cls.clear_target()
         cls.clear_conversation()
+        cls.clear_expected_intent()
 
     @classmethod
     def roleplay(cls, target: str) -> None:
@@ -109,6 +117,7 @@ class State(metaclass=StateMeta):
             cls.roleplaying = True
             cls.clear_target()
             cls.set_conversation_target(target)
+            cls.clear_expected_intent()
 
     @classmethod
     def set_current_game_mode(cls, game_mode: str) -> None:
@@ -260,6 +269,16 @@ class State(metaclass=StateMeta):
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
+    
+    @classmethod
+    def set_expected_intent(cls, intent: str) -> None:
+        """Method to set the expected intent"""
+        cls.expected_intent = intent
+
+    @classmethod
+    def clear_expected_intent(cls) -> None:
+        """Method to clear the expected intent"""
+        cls.expected_intent = None
 
     ############################################################
     # METHODS RELATING TO CONVERSATION
@@ -358,24 +377,80 @@ class State(metaclass=StateMeta):
     ############################################################
     # METHODS RELATING TO COMBAT
     @classmethod
-    def _set_combat_status(cls, entity: str, status: int) -> str:
+    def get_combat_status(cls, entity: str = "player") -> Combat:
+        """Method to set the combat status for specified entity."""
+        try:
+            return cls.current_combat_status[entity]
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
+    @classmethod
+    def set_combat_status(cls, status: int, entity: str = "player") -> None:
         """Method to set the combat status for specified entity."""
         cls.current_combat_status[entity] = Combat(status)
     
     @classmethod
-    def reset_combat_status(cls, entity: str) -> str:
+    def reset_combat_status(cls, entity: str = "player") -> None:
         """Method to set the combat status for specified entity."""
         cls.current_combat_status[entity] = Combat(0)
     
     @classmethod
-    def progress_combat_status(cls, entity: str = "player") -> str:
+    def progress_combat_status(cls, entity: str = "player", can_reset: bool = False) -> str:
         """Method to progress the combat status for specified entity."""
         try:
-            current = cls.current_combat_status[entity]
-            print(current)
+            next_value = cls.current_combat_status[entity].value + 1
+            max_value = max([e.value for e in Combat])
+            if next_value > max_value:
+                next_value = 0 if can_reset else 1
+            cls.set_combat_status(next_value, entity)
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
+    
+    @classmethod
+    def set_initiative_order(cls) -> None:
+        """Method to set the initative order"""
+        rolls = {}
+
+        # get player initiative
+        player_result = State.get_player().roll_initiative()
+        if player_result == 1 or player_result == 20:
+            OutputBuilder.append(NLG.roll_reaction(player_result))
+        rolls["player"] = player_result
+        
+        # initiative rolls for monsters in the room
+        monsters = cls.get_possible_monster_targets()
+        for monster in monsters:
+            rolls[monster.unique_id] = monster.roll_initiative()
+        
+        # order the rolls dict and set keys as initiative order
+        sorted_rolls = dict(sorted(rolls.items(), key=operator.itemgetter(1), reverse=True))
+        cls.initiative_order = list(sorted_rolls.keys())
+        
+        # set combat status depending on player initiative
+        print(cls.initiative_order)
+        print(cls.current_target)
+        if cls.initiative_order.index("player") == 0:
+            # we have a target, so get an attack roll from player
+            cls.set_combat_status(2)
+        else:
+            # player doesn't go first - wait til their turn
+            cls.set_combat_status(4)
+            OutputBuilder.append("You'll have to wait your turn.")
+    
+    @classmethod
+    def update_initiative_order(cls, *args) -> None:
+        """Method to update the initiative order by popping from front of list
+        and appending to end"""
+        logger.debug("Updating initiative order")
+        cls.initiative_order.append(cls.initiative_order.pop(0))
+    
+    @classmethod
+    def get_currently_acting_entity(cls) -> str:
+        """Method to return the id of the entity at the front of the initiative
+        order"""
+        return cls.initiative_order[0]
         
     @classmethod
     def get_current_target_id(cls, entity: str = "player") -> str:

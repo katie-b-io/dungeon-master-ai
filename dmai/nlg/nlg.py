@@ -39,6 +39,27 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
+    def roll_reaction(cls, result: int) -> str:
+        """Return utterance for reacting to a dice roll"""
+        if result < 1:
+            utters = [
+                "Ouch!",
+                "That is painful",
+                "How unfortunate",
+                "Oof"
+            ]
+        elif result > 19:
+            utters = [
+                "Nice!",
+                "Truly magnificent"
+                "Natural 20, way to go!"
+                "That's how you do it!"
+            ]
+        else:
+            utters = ["Well, it's a number!"]
+        return random.choice(utters)
+    
+    @classmethod
     def get_player_name(cls) -> str:
         """Return the utterance for getting player's name"""
         c = cls.game.player.character_class
@@ -92,7 +113,7 @@ class NLG(metaclass=NLGMeta):
             return adventure.get_room(room).enter()
 
     @classmethod
-    def attack(cls, attacker: str, target: str) -> str:
+    def attack(cls, attacker: str, target: str, *args) -> str:
         """Return the utterance for attacking"""
         # TODO different utterances for different weapons?
         attacker = "You" if attacker == "player" else attacker
@@ -102,7 +123,7 @@ class NLG(metaclass=NLGMeta):
             "{a} struck at {t}".format(a=attacker, t=target),
         ]
         return random.choice(utters)
-        
+    
     @classmethod
     def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
@@ -321,11 +342,19 @@ class NLG(metaclass=NLGMeta):
     def transition_to_combat(cls) -> str:
         """Return the utterance for transitioning to combat"""
         utters = [
-            "Okay, let's fight!", "You're now starting combat",
-            "Let's begin the combat round", "Moving into combat"
+            "Okay let's fight, roll for initiative!", "You're now starting combat, roll for initiative!",
+            "Let's begin the combat round, roll for initiative!", "Moving into combat, roll for initiative!"
         ]
         return random.choice(utters)
 
+    @classmethod
+    def perform_attack_roll(cls) -> str:
+        """Return the utterance for getting player to perform attack roll"""
+        utters = [
+            "Your turn, make your attack roll"
+        ]
+        return random.choice(utters)
+    
     @classmethod
     def roleplay(cls, target: str) -> str:
         """Return the utterance for getting roleplay prompt"""

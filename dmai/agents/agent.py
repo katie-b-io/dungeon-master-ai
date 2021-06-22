@@ -24,7 +24,18 @@ class Agent(ABC):
 
     def print_next_move(self) -> bool:
         """Method to print the next move"""
-        logger.debug("Getting next move")
+        logger.debug("Printing next move")
         move = self.agent.get_next_move()
         OutputBuilder.append(move)
         return bool(move)
+
+    def perform_next_move(self) -> bool:
+        """Method to perform the next move"""
+        logger.debug("Performing the next move")
+        self.agent.perform_next_move()
+        
+        # TODO parse the PDDL and act accordinging 
+        # e.g. Steps of combat:
+        # 1. declare target
+        # 1. attack roll - damage_roll() if exceeds target AC else return
+        # 2. damage roll - apply_damage()"""

@@ -141,6 +141,13 @@ class NLU(metaclass=NLUMeta):
             print("intent: " + intent)
         if entities:
             print(entities)
+            
+        # check if there's an expected intent
+        if State.expected_intent:
+            if intent != State.expected_intent:
+                # TODO make exception for hints or questions
+                OutputBuilder.append("I was expecting you to {i}".format(i=State.expected_intent))
+                return (None, {})
 
         if intent == "move":
             return ("move", {"nlu_entities": entities})

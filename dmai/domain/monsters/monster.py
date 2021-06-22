@@ -13,6 +13,8 @@ from dmai.domain.spells import Spells
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.dice_roller import DiceRoller
+from dmai.utils.text import Text
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -65,6 +67,20 @@ class Monster(NPC, MonsterAgent):
     def __repr__(self) -> str:
         return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
 
+    @property
+    def initiative(self) -> int:
+        """Method to return the initiative attribute"""
+        return self.abilities.get_modifier("dex")
+
+    def get_signed_initiative(self) -> str:
+        """Method to return the signed initiative"""
+        return Text.get_signed_value(self.initiative)
+    
+    def roll_initiative(self) -> int:
+        """Method to roll initiative"""
+        die = "d20{m}".format(m=self.get_signed_initiative())
+        return DiceRoller.roll(die, silent=True)
+    
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""
         self.treasure = treasure
@@ -93,3 +109,4 @@ class Monster(NPC, MonsterAgent):
     def get_all_attack_ids(self) -> list:
         """Method to get all attack IDs of monster"""
         return self.attacks.get_all_attack_ids()
+    

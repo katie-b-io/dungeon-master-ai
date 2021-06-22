@@ -1,4 +1,5 @@
 import shutil
+import os
 
 from dmai.game.game import Game
 from dmai.ui.ui import UserInterface
@@ -47,6 +48,7 @@ def gameover() -> None:
     OutputBuilder.print()
     if Config.cleanup:
         shutil.rmtree(Config.directory.planning)
+        os.remove("dmai.log")
     exit_game()
 
 
