@@ -1,5 +1,6 @@
 from dmai.nlg.nlg import NLG
-
+from dmai.game.state import State
+from dmai.domain.actions.actions import Actions
 
 planning_actions = {
     "ability_check": {
@@ -133,6 +134,7 @@ planning_actions = {
 )"""},
 
     "attack_roll": {
+        "function": Actions.attack_roll,
         "pddl": """
 ; Entity succeeds on an attack roll
 (:action attack_roll
@@ -204,6 +206,7 @@ planning_actions = {
 )"""},
 
     "damage_roll": {
+        "function": Actions.damage_roll,
         "pddl": """
 ; Entity damages a target
 (:action damage_roll
@@ -503,7 +506,7 @@ planning_actions = {
 )"""},
 
     "declare_attack_against_entity": {
-        "function": NLG.attack,
+        "function": Actions.declare_attack_against_entity,
         "pddl": """
 ; Entity wants to attack another entity
 (:action declare_attack_against_entity
@@ -543,6 +546,7 @@ planning_actions = {
 )"""},
 
     "attack_player": {
+        "function": Actions.attack_player,
         "pddl": """
 ; Monster attacks a player
 (:action attack_player
@@ -585,6 +589,7 @@ planning_actions = {
 )"""},
 
     "kill_player": {
+        "function": State.update_initiative_order,
         "pddl": """
 ; Monster kills a player
 (:action kill_player

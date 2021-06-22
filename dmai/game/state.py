@@ -440,12 +440,11 @@ class State(metaclass=StateMeta):
             OutputBuilder.append("You'll have to wait your turn.")
     
     @classmethod
-    def update_initiative_order(cls) -> None:
+    def update_initiative_order(cls, *args) -> None:
         """Method to update the initiative order by popping from front of list
         and appending to end"""
-        print(cls.initiative_order)
         logger.debug("Updating initiative order")
-        cls.initiative_order.append(cls.initiative_order.pop())
+        cls.initiative_order.append(cls.initiative_order.pop(0))
     
     @classmethod
     def get_currently_acting_entity(cls) -> str:

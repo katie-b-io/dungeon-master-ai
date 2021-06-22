@@ -64,13 +64,16 @@ class Roll(Action):
         # get attack roll from player
         if State.get_combat_status() == Combat.ATTACK_ROLL:
             OutputBuilder.append(NLG.perform_attack_roll())
+            return
             
-        elif State.get_combat_status() == Combat.WAIT:
-            # monster(s) have their go now
-            OutputBuilder.append("{e} is having a go!".format(e=State.get_currently_acting_entity()))
-            monster = State.get_entity(State.get_currently_acting_entity())
-            monster.perform_next_move()
-        
-        # update the initiative order
-        State.update_initiative_order()
+        # monster(s) have their go now
+        while State.get_combat_status() == Combat.WAIT:
+            entity = State.get_currently_acting_entity()
+            OutputBuilder.append("{e} is having a go!".format(e=entity))
+            if entity == "player":
+                State.progress_combat_status()
+            else:
+                monster = State.get_entity(entity)
+                monster.perform_next_move()
+
         

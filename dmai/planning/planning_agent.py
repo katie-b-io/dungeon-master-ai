@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from dmai.game.state import State
 from dmai.planning.planner_adapter import PlannerAdapter
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
 from dmai.planning.planning_actions import planning_actions
@@ -52,19 +53,20 @@ class PlanningAgent(ABC):
         self.build_problem()
         # TODO do something with succeed
         succeed = self.planner.build_plan()
+        if succeed:
+            self.planner.parse_plan()
         return succeed
 
     def get_next_move(self) -> str:
-        plan = self.planner.parse_plan()
-        if len(plan) > 0:
-            return self.planner.to_natural_language(plan[0])
+        if bool(self.planner.plan):
+            return self.planner.to_natural_language(self.planner.plan[0])
         else:
             return False
     
     def perform_next_move(self) -> None:
-        plan = self.planner.parse_plan()
-        if len(plan) > 0:
-            self.planner.call_function(plan[0])
+        move = self.planner.pop_move()
+        if move:
+            self.planner.call_function(move)
 
     ################################################
     # Methods for PDDL problem files

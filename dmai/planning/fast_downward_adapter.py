@@ -43,8 +43,8 @@ class FastDownwardAdapter(PlannerAdapter):
 
         return p.returncode == 0
 
-    def parse_plan(self) -> list:
-        """Reads the plan file and returns a list"""
+    def parse_plan(self) -> None:
+        """Reads the plan file, saves to self.plan"""
         plan_file = os.path.join(
             Config.directory.planning,
             "{u}.{d}-{p}.plan".format(u=Config.uuid,
@@ -57,4 +57,4 @@ class FastDownwardAdapter(PlannerAdapter):
         if "; cost = 0 (unit cost)" in plan[-1]:
             del plan[-1]
 
-        return plan
+        self.plan = plan

@@ -13,6 +13,7 @@ class PlannerAdapter(ABC):
         """PlannerAdapter abstract class"""
         self.domain = domain
         self.problem = problem
+        self.plan = None
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -25,19 +26,28 @@ class PlannerAdapter(ABC):
     def parse_plan(self) -> None:
         pass
     
+    def pop_move(self) -> str:
+        """Method to pop the first action from the plan"""
+        if not self.plan:
+            self.parse_plan()
+        if len(self.plan) > 0:
+            return self.plan.pop(0)
+        
     def to_natural_language(self, step: str) -> str:
         """Method to convert a step in a plan to natural language"""
         return step
     
     def call_function(self, step: str) -> object:
         """Method to convert a step to an function"""
-        step = step.replace("(", "").replace(")", "")
+        step = step.replace("(", "").replace(")", "").replace("\n", "")
         action = step.split(" ")[0]
         params = step.split(" ")[1:]
+        
         if action in planning_actions:
             function = planning_actions[action]["function"]
             # if the function is NLG, it needs to be wrapped in the OutputBuilder
-            if function.__self__.__name__ == "NLG":
-                params[0] = State.get_name(params[0])
+            if hasattr(function, ".__self__") and function.__self__.__name__ == "NLG":
                 OutputBuilder.append(function(*params))
+            else:
+                function(*params)
         
