@@ -83,6 +83,7 @@ nlu:
 - intent: roll_die
   examples: |
     - roll
+    - roll initiative
     - I roll my [d4](die)
     - I roll the [d6](die)
     - I roll my [d8](die)

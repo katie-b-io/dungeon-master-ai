@@ -16,6 +16,9 @@ class Attack(Action):
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
 
+    def execute(self, **kwargs) -> bool:
+        return self._attack()
+
     def _can_attack(self) -> tuple:
         """Check if a target can be attacked by an attacker.
         Returns tuple (bool, str) to indicate whether attack is possible
@@ -56,9 +59,6 @@ class Attack(Action):
                     OutputBuilder.append(NLG.attack_npc_end_game(self.target))
                     dmai.dmai_helpers.gameover()
             State.combat(self.attacker, self.target)
-            OutputBuilder.append(
-                NLG.attack(State.get_name(self.attacker), State.get_name(self.target))
-            )
             return can_attack
         else:
             OutputBuilder.append(
@@ -70,6 +70,4 @@ class Attack(Action):
                 )
             )
             return can_attack
-
-    def execute(self, **kwargs) -> bool:
-        return self._attack()
+        

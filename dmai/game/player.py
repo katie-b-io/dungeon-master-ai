@@ -3,6 +3,7 @@ from dmai.agents.player_agent import PlayerAgent
 from dmai.domain.skills import Skills
 from dmai.domain.abilities import Abilities
 from dmai.game.state import State
+from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -67,6 +68,11 @@ class Player(PlayerAgent):
         """Method to check whether weapon is equipped"""
         return self.character.is_equipped(weapon)
 
+    def roll_initiative(self) -> int:
+        """Method to roll initiative"""
+        die = "d20{m}".format(m=self.character.get_signed_initiative())
+        return DiceRoller.roll(die)
+    
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
         div = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
