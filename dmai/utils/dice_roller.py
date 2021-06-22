@@ -33,7 +33,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
         pass
 
     @classmethod
-    def roll(cls, die: str) -> int:
+    def roll(cls, die: str, silent: bool = False) -> int:
         """Roll a die supplied by the user"""
         die = die.lower()
 
@@ -65,7 +65,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
             else:
                 dice_spec = {"die": die[d:], "total": total, "mod": 0}
 
-            dice_val = cls.roll_dice(dice_spec)
+            dice_val = cls.roll_dice(dice_spec, silent)
             return dice_val
 
         except (KeyError, TypeError, ValueError) as e:
@@ -75,21 +75,22 @@ class DiceRoller(metaclass=DiceRollerMeta):
 
 
     @classmethod
-    def roll_die(cls, die: str) -> int:
+    def roll_die(cls, die: str, silent: bool = False) -> int:
         """Roll singular specified die"""
         die = die.lower()
 
         try:
             max_val = cls.dice_map[die]
             val = random.randint(1, max_val)
-            OutputBuilder.append("Rolling {d}... {v}".format(d=die, v=val))
+            if not silent:
+                OutputBuilder.append("Rolling {d}... {v}".format(d=die, v=val))
         except KeyError as e:
             raise
 
         return val
 
     @classmethod
-    def roll_dice(cls, dice_spec: dict) -> int:
+    def roll_dice(cls, dice_spec: dict, silent: bool = False) -> int:
         """Roll dice according to spec in dictionary:\n
         {
             "die": "d4",
@@ -104,8 +105,9 @@ class DiceRoller(metaclass=DiceRollerMeta):
             rolls = [random.randint(1, max_val) for _ in dice]
             total_roll = sum(rolls) + modifier
             die = cls.construct_dice_spec_string(dice_spec)
-            OutputBuilder.append("Rolling {d}... {t}".format(d=die,
-                                                             t=total_roll))
+            if not silent:
+                OutputBuilder.append("Rolling {d}... {t}".format(d=die,
+                                                                t=total_roll))
         except (KeyError, TypeError, ValueError) as e:
             raise
 
