@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 class DM:
 
     # class variables
-    ENTITY_CONFIDENCE = 0.75
+    ENTITY_CONFIDENCE = 0.5
 
     def __init__(self, adventure: str) -> None:
         """Main DM class"""
@@ -402,12 +402,11 @@ class DM:
             # or ask for clarification
             die = "d20"
             
-
         if State.stored_intent:
             if "nlu_entities" in State.stored_intent["params"]:
                 nlu_entities.extend(State.stored_intent["params"]["nlu_entities"])
 
-            if State.stored_intent["intent"] == "attack":
-                return self.actions.roll("attack", nlu_entities, die)
+        if State.in_combat or State.stored_intent["intent"] == "attack":
+            return self.actions.roll("attack", nlu_entities, die)
         
         return self.actions.roll("roll", nlu_entities, die)

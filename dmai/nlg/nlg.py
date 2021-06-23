@@ -319,14 +319,38 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
+    def entity_turn(cls, entity: str) -> str:
+        """Return the utterance for telling the player whose turn it is"""
+        entity = "your" if entity == "player" else "{e}'s".format(e=entity)
+        utters = [
+            "Okay, it's {e} turn...".format(e=entity)
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def declare_attack(cls) -> str:
+        """Return the utterance for getting player to declare an attack"""
+        utters = [
+            "Your turn, who do you want to attack?"
+        ]
+        return random.choice(utters)
+    
+    @classmethod
     def perform_attack_roll(cls) -> str:
         """Return the utterance for getting player to perform attack roll"""
         utters = [
-            "Your turn, make your attack roll"
+            "Make your attack roll"
         ]
         return random.choice(utters)
 
-
+    @classmethod
+    def perform_damage_roll(cls) -> str:
+        """Return the utterance for getting player to perform damage roll"""
+        utters = [
+            "Make your damage roll"
+        ]
+        return random.choice(utters)
+    
     @classmethod
     def attack(cls, attacker: str, target: str, *args) -> str:
         """Return the utterance for attacking"""

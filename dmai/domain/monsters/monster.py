@@ -61,7 +61,7 @@ class Monster(NPC, MonsterAgent):
         self.unique_name = unique_name
         if not self.unique_name:
             i = self.unique_id.split("_")[-1]
-            self.unique_name = "{n} {i}".format(n=self.name, i={i})
+            self.unique_name = "{n} {i}".format(n=self.name, i=i)
 
         self.trigger_map = {
             "attack_of_opportunity": {
