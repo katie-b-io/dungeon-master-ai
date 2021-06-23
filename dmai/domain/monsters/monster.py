@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 
 class Monster(NPC, MonsterAgent):
-    def __init__(self, monster_data: dict, npc_data: dict = None, unique_id: str = None) -> None:
+    def __init__(self, monster_data: dict, npc_data: dict = None, unique_id: str = None, unique_name: str = None) -> None:
         """Monster abstract class"""
         if unique_id:
             MonsterAgent.__init__(self, problem=unique_id)
@@ -50,12 +50,18 @@ class Monster(NPC, MonsterAgent):
             logger.error(
                 "Cannot create monster, incorrect attribute: {e}".format(e=e))
             raise
-
+        
         # Initialise additional variables
         self.unique_id = unique_id
         self.treasure = None
         self.must_kill = False
         self.will_attack_player = False
+        
+        # set unique name
+        self.unique_name = unique_name
+        if not self.unique_name:
+            i = self.unique_id.split("_")[-1]
+            self.unique_name = "{n} {i}".format(n=self.name, i={i})
 
         self.trigger_map = {
             "attack_of_opportunity": {

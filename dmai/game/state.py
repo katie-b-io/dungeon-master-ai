@@ -194,7 +194,10 @@ class State(metaclass=StateMeta):
             if not entity or entity == "player":
                 return cls.get_player().name
             else:
-                return cls.get_dm().npcs.get_entity(entity).name
+                if hasattr(cls.get_dm().npcs.get_entity(entity), "unique_name"):
+                    return cls.get_dm().npcs.get_entity(entity).unique_name
+                else:
+                    return cls.get_dm().npcs.get_entity(entity).name
         except UnrecognisedEntityError:
             logger.error("Unrecognised entity: {e}".format(e=entity))
             return ""
