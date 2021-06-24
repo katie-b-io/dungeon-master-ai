@@ -165,7 +165,6 @@ class PlanningMonster(PlanningAgent):
                 "equip",
                 "unequip",
                 "declare_attack_against_entity",
-                "attack_player",
                 "kill_player",
             ]
             writer.write(self._construct_actions(actions))

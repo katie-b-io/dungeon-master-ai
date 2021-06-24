@@ -285,10 +285,6 @@ class Actions:
         OutputBuilder.append(NLG.attack(attacker, target))
     
     @staticmethod
-    def attack_player(*args) -> None:
-        return
-    
-    @staticmethod
     def attack_roll(*args) -> None:
         return
     

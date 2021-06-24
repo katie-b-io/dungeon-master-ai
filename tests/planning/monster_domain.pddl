@@ -183,6 +183,7 @@
             (not (can_attack_roll ?monster ?target))
             (attack_roll_success ?monster ?target)
             (higher_than_ac ?target)
+            (can_damage_roll ?monster ?target)
         )
     )
 
@@ -203,6 +204,7 @@
             (not (can_attack_roll ?monster ?target))
             (attack_roll_success ?monster ?target)
             (higher_than_ac ?target)
+            (can_damage_roll ?monster ?target)
         )
     )
 
@@ -222,6 +224,7 @@
             (not (can_attack_roll ?monster ?target))
             (attack_roll_success ?monster ?target)
             (higher_than_ac ?target)
+            (can_damage_roll ?monster ?target)
         )
     )
 
@@ -239,6 +242,7 @@
             (not (can_damage_roll ?monster ?target))
             (not (higher_than_ac ?target))
             (damaged ?target)
+            (not (attack_roll_success ?monster ?target))
         )
     )
 
@@ -285,25 +289,7 @@
         :effect (and 
             (can_attack_roll ?monster ?target)
             (action)
-        )
-    )
-
-    ; Monster attacks a target
-    (:action attack_target
-        :parameters (?monster - monster ?weapon - weapon ?target - entity ?location - room)
-        :precondition (and 
-            (action)
-            (alive ?monster)
-            (alive ?target)
-            (at ?monster ?location)
-            (at ?target ?location)
-            (equipped ?monster ?weapon)
-            (attack_roll_success ?monster ?target)
-        )
-        :effect (and 
             (combat)
-            (can_damage_roll ?monster ?target)
-            (not (attack_roll_success ?monster ?target))
         )
     )
 

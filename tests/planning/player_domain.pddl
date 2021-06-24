@@ -269,6 +269,7 @@
             (not (can_attack_roll ?player ?target))
             (attack_roll_success ?player ?target)
             (higher_than_ac ?target)
+            (can_damage_roll ?player ?target)
         )
     )
 
@@ -288,6 +289,7 @@
             (not (can_attack_roll ?player ?target))
             (attack_roll_success ?player ?target)
             (higher_than_ac ?target)
+            (can_damage_roll ?player ?target)
         )
     )
 
@@ -307,6 +309,7 @@
             (not (can_attack_roll ?player ?target))
             (attack_roll_success ?player ?target)
             (higher_than_ac ?target)
+            (can_damage_roll ?player ?target)
         )
     )
 
@@ -324,6 +327,7 @@
             (not (can_damage_roll ?player ?target))
             (not (higher_than_ac ?target))
             (damaged ?target)
+            (not (attack_roll_success ?player ?target))
         )
     )
 
@@ -604,25 +608,7 @@
         :effect (and 
             (can_attack_roll ?player ?target)
             (action)
-        )
-    )
-
-    ; Player attacks a monster
-    (:action attack_monster
-        :parameters (?player - player ?weapon - weapon ?monster - monster ?location - room)
-        :precondition (and 
-            (action)
-            (alive ?player)
-            (alive ?monster)
-            (at ?player ?location)
-            (at ?monster ?location)
-            (equipped ?player ?weapon)
-            (attack_roll_success ?player ?monster)
-        )
-        :effect (and 
             (combat)
-            (can_damage_roll ?player ?monster)
-            (not (attack_roll_success ?player ?monster))
         )
     )
 
