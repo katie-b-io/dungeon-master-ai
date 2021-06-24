@@ -44,10 +44,10 @@ class PlannerAdapter(ABC):
         params = step.split(" ")[1:]
         
         if action in planning_actions:
-            function = planning_actions[action]["function"]
+            func = planning_actions[action]["func"]
             # if the function is NLG, it needs to be wrapped in the OutputBuilder
-            if hasattr(function, ".__self__") and function.__self__.__name__ == "NLG":
-                OutputBuilder.append(function(*params))
+            if hasattr(func, ".__self__") and func.__self__.__name__ == "NLG":
+                OutputBuilder.append(func(*params))
             else:
-                function(*params)
+                func(*params)
         

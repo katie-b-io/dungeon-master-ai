@@ -229,6 +229,7 @@ class Actions:
         (can_converse, reason) = self._can_converse(target)
         if can_converse:
             if self.npcs.get_entity(target).dialogue:
+                State.roleplay(target)
                 # TODO make the dialogue options flexible
                 if not State.quest_received:
                     State.set_conversation_target(target)
@@ -237,7 +238,6 @@ class Actions:
                         self.npcs.get_entity(target).dialogue["gives_quest"])
                 else:
                     OutputBuilder.append(NLG.roleplay(State.get_name(target)))
-                State.roleplay(target)
             return can_converse
         else:
             OutputBuilder.append("You can't converse with {t}!\n{r}".format(
@@ -280,17 +280,18 @@ class Actions:
     @staticmethod
     def declare_attack_against_entity(attacker: str, target: str, *args) -> None:
         """Method to delcare attack against entity"""
-        attacker = State.get_entity(attacker)
-        OutputBuilder.append(NLG.attack(attacker.name, target))
+        State.set_target(target, attacker)
+        attacker = State.get_name(attacker)
+        OutputBuilder.append(NLG.attack(attacker, target))
     
     @staticmethod
     def attack_player(*args) -> None:
-        print("Attack player")
+        return
     
     @staticmethod
     def attack_roll(*args) -> None:
-        print("Attack roll")
+        return
     
     @staticmethod
     def damage_roll(*args) -> None:
-        print("damage roll")
+        return

@@ -31,3 +31,16 @@ class Text(metaclass=TextMeta):
         else:
             value = "{v}".format(v=value)
         return value
+
+    @staticmethod
+    def properly_format_list(
+        values: list, delimiter: str = ", ", last_delimiter: str = " and "
+    ) -> str:
+        """Method to format a list as a proper delimited string"""
+        values_str = ""
+        if len(values) == 1:
+            values_str = "{v}".format(v=values[0])
+        elif len(values) > 1:
+            values_str = "{a}".format(a=delimiter.join(values[0:-1]))
+            values_str += "{l}{a}".format(l=last_delimiter, a=values[-1])
+        return values_str

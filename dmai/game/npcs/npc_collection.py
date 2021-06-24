@@ -36,8 +36,7 @@ class NPCCollection:
                 npc = NPC(npc_data)
             else:
                 npc = MonsterCollection.get_monster_npc(npc_data)
-            State.set_init_status(npc_id, npc_data["status"])
-            State.set_init_attitude(npc_id, npc_data["attitude"])
+            State.set_init_npc(npc_data)
             npcs[npc_id] = npc
             # update state with npc location
             for room in self.adventure.rooms:
@@ -66,9 +65,8 @@ class NPCCollection:
                     monster.set_must_kill(must_kill)
                     monster.set_will_attack_player(will_attack_player)
                     monsters[unique_id] = monster
-                    # update state with monster location and status
-                    State.set_init_room(unique_id, room)
-                    State.set_init_status(unique_id, status)
+                    # initialise State
+                    State.set_init_monster(unique_id, room, status)
         return monsters
 
     def get_type(self, npc_id: str) -> bool:

@@ -15,16 +15,14 @@ class Roll(Action):
         self.roll_type = roll_type
         self.die = die
         self.nlu_entities = nlu_entities
-        self.roll_map = {
-            "attack": self._attack_roll
-        }
+        self.roll_map = {"attack": self._attack_roll}
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
 
     def execute(self, **kwargs) -> bool:
         return self._roll()
-    
+
     def _can_roll(self) -> tuple:
         """Check if a dice can be rolled.
         Returns tuple (bool, str) to indicate whether roll is possible
@@ -60,20 +58,45 @@ class Roll(Action):
         # set initiative order
         if State.get_combat_status() == Combat.INITIATIVE:
             State.set_initiative_order()
-        
-        # get attack roll from player
-        if State.get_combat_status() == Combat.ATTACK_ROLL:
-            OutputBuilder.append(NLG.perform_attack_roll())
+            OutputBuilder.append(
+                NLG.entity_turn(State.get_name(State.get_currently_acting_entity()))
+            )
             return
-            
-        # monster(s) have their go now
+        
+        # make sure the player can enter input when not waiting
+        State.play()
+        
+        # see if monster(s) have their go now
         while State.get_combat_status() == Combat.WAIT:
+            State.pause()
             entity = State.get_currently_acting_entity()
-            OutputBuilder.append("{e} is having a go!".format(e=entity))
             if entity == "player":
                 State.progress_combat_status()
+                # if player already has a target, progress to attack roll
+                if State.get_current_target():
+                    State.progress_combat_status()
+                return
             else:
                 monster = State.get_entity(entity)
                 monster.perform_next_move()
 
+        # get target declaration from player if no target,
+        if State.get_combat_status() == Combat.DECLARE:
+            State.set_expected_intents(["attack"])
+            OutputBuilder.append(NLG.declare_attack())
+            State.progress_combat_status()
+            return
         
+        # get attack roll from player
+        if State.get_combat_status() == Combat.ATTACK_ROLL:
+            OutputBuilder.append(NLG.perform_attack_roll())
+            State.progress_combat_status()
+            return
+
+        # get attack roll from player
+        if State.get_combat_status() == Combat.DAMAGE_ROLL:
+            OutputBuilder.append(NLG.perform_damage_roll())
+            State.progress_combat_status()
+            State.clear_target()
+            return
+    

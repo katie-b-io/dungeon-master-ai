@@ -149,6 +149,12 @@ class TestState(unittest.TestCase):
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
             State.break_door(room1, room2)
+    
+    def test_get_formatted_possible_monster_targets(self) -> None:
+        entity = "player"
+        State.set_current_room(entity, "inns_cellar")
+        State.light_torch()
+        self.assertEqual(State.get_formatted_possible_monster_targets(entity), "You could attack Giant Rat 1, Giant Rat 2, Giant Rat 3 or Giant Rat 4.")
 
 
 class TestAdventure(unittest.TestCase):

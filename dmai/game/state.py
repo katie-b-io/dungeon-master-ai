@@ -2,6 +2,7 @@ from collections import Counter
 from enum import Enum
 import operator
 
+from dmai.utils.text import Text
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
@@ -76,7 +77,7 @@ class State(metaclass=StateMeta):
     current_attitude = {}
     attacked_by_player = []
     current_combat_status = {}
-    expected_intent = None
+    expected_intents = []
     initiative_order = []
 
     def __init__(self) -> None:
@@ -92,13 +93,12 @@ class State(metaclass=StateMeta):
             cls.roleplaying = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
+            cls.set_expected_intents(["roll"])
             OutputBuilder.append(NLG.transition_to_combat())
-            cls.set_expected_intent("roll_die") #TODO change to "roll"
         else:
+            State.set_expected_intents(["roll"])
+            OutputBuilder.append(NLG.perform_attack_roll())
             cls.progress_combat_status()
-            OutputBuilder.append(NLG.attack(attacker, target))
-            if cls.current_combat_status == Combat(2) or cls.current_combat_status == Combat(3):
-                cls.set_expected_intent("roll_die")
 
     @classmethod
     def explore(cls) -> None:
@@ -107,7 +107,7 @@ class State(metaclass=StateMeta):
         cls.roleplaying = False
         cls.clear_target()
         cls.clear_conversation()
-        cls.clear_expected_intent()
+        cls.clear_expected_intents()
 
     @classmethod
     def roleplay(cls, target: str) -> None:
@@ -117,7 +117,7 @@ class State(metaclass=StateMeta):
             cls.roleplaying = True
             cls.clear_target()
             cls.set_conversation_target(target)
-            cls.clear_expected_intent()
+            cls.clear_expected_intents()
 
     @classmethod
     def set_current_game_mode(cls, game_mode: str) -> None:
@@ -188,22 +188,28 @@ class State(metaclass=StateMeta):
         return cls.player
     
     @classmethod
-    def get_name(cls, entity: str = None) -> str:
+    def get_name(cls, entity: str = "player") -> str:
         """Method to return name of entity"""
         try:
-            if not entity or entity == "player":
+            if entity == "player":
                 return cls.get_player().name
             else:
-                return cls.get_dm().npcs.get_entity(entity).name
+                if hasattr(cls.get_dm().npcs.get_entity(entity), "unique_name"):
+                    return cls.get_dm().npcs.get_entity(entity).unique_name
+                else:
+                    return cls.get_dm().npcs.get_entity(entity).name
         except UnrecognisedEntityError:
             logger.error("Unrecognised entity: {e}".format(e=entity))
             return ""
     
     @classmethod
-    def get_entity(cls, entity: str = None):
+    def get_entity(cls, entity: str = "player"):
         """Method to return entity"""
         try:
-            return cls.get_dm().npcs.get_entity(entity)
+            if entity == "player":
+                return cls.get_player()
+            else:
+                return cls.get_dm().npcs.get_entity(entity)
         except UnrecognisedEntityError:
             logger.error("Unrecognised entity: {e}".format(e=entity))
             return None
@@ -211,10 +217,36 @@ class State(metaclass=StateMeta):
     ############################################################
     # METHODS RELATING TO STATUS AND ATTITUDE
     @classmethod
+    def set_init_monster(cls, unique_id: str, room_id: str, status: str):
+        """Method to set the init status for data objects where 
+        no initial value is required"""
+        cls.current_target[unique_id] = None
+        cls.set_init_room(unique_id, room_id)
+        cls.set_init_status(unique_id, status)
+    
+    @classmethod
+    def set_init_npc(cls, npc_data: dict):
+        """Method to set the init status for data objects where 
+        no initial value is required"""
+        cls.current_target[npc_data["id"]] = None
+        cls.set_init_status(npc_data["id"], npc_data["status"])
+        cls.set_init_attitude(npc_data["id"], npc_data["attitude"])
+        
+    @classmethod
+    def set_init_attitude(cls, entity: str, attitude: str) -> None:
+        """Method to set the initial attitude towards player for specifed entity."""
+        cls.current_attitude[entity] = Attitude(attitude)
+    
+    @classmethod
     def set_init_status(cls, entity: str, status: str) -> str:
         """Method to set the initial status for specified entity."""
         cls.current_status[entity] = Status(status)
 
+    @classmethod
+    def set_init_room(cls, entity: str, room_id: str) -> str:
+        """Method to set the initial room for specified entity."""
+        cls.current_room[entity] = room_id
+        
     @classmethod
     def get_current_hp(cls, entity: str = "player") -> int:
         """Method to get the current hp for specified entity."""
@@ -246,11 +278,6 @@ class State(metaclass=StateMeta):
     def is_alive(cls, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is alive"""
         return cls.get_current_status(entity) == Status("alive")
-
-    @classmethod
-    def set_init_attitude(cls, entity: str, attitude: str) -> None:
-        """Method to set the initial attitude towards player for specifed entity."""
-        cls.current_attitude[entity] = Attitude(attitude)
     
     @classmethod
     def set_current_attitude(cls, entity: str = "player", attitude: str = "indifferent") -> str:
@@ -271,14 +298,14 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
     
     @classmethod
-    def set_expected_intent(cls, intent: str) -> None:
+    def set_expected_intents(cls, intents: list) -> None:
         """Method to set the expected intent"""
-        cls.expected_intent = intent
+        cls.expected_intents = intents
 
     @classmethod
-    def clear_expected_intent(cls) -> None:
+    def clear_expected_intents(cls) -> None:
         """Method to clear the expected intent"""
-        cls.expected_intent = None
+        cls.expected_intents = []
 
     ############################################################
     # METHODS RELATING TO CONVERSATION
@@ -370,9 +397,8 @@ class State(metaclass=StateMeta):
     def maintain_current_game_mode(cls) -> None:
         """Check if current game mode is still valid"""
         if cls.in_combat:
-            if "player" in cls.current_target:
-                if not cls.current_target["player"]:
-                    cls.explore()
+            if not cls.current_target["player"] and not "player" in cls.current_target.values():
+                cls.explore()
 
     ############################################################
     # METHODS RELATING TO COMBAT
@@ -404,6 +430,8 @@ class State(metaclass=StateMeta):
             if next_value > max_value:
                 next_value = 0 if can_reset else 1
             cls.set_combat_status(next_value, entity)
+            if next_value == 4:
+                cls.update_initiative_order()
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
@@ -415,8 +443,7 @@ class State(metaclass=StateMeta):
 
         # get player initiative
         player_result = State.get_player().roll_initiative()
-        if player_result == 1 or player_result == 20:
-            OutputBuilder.append(NLG.roll_reaction(player_result))
+        OutputBuilder.append(NLG.roll_reaction(player_result))
         rolls["player"] = player_result
         
         # initiative rolls for monsters in the room
@@ -429,8 +456,6 @@ class State(metaclass=StateMeta):
         cls.initiative_order = list(sorted_rolls.keys())
         
         # set combat status depending on player initiative
-        print(cls.initiative_order)
-        print(cls.current_target)
         if cls.initiative_order.index("player") == 0:
             # we have a target, so get an attack roll from player
             cls.set_combat_status(2)
@@ -438,6 +463,8 @@ class State(metaclass=StateMeta):
             # player doesn't go first - wait til their turn
             cls.set_combat_status(4)
             OutputBuilder.append("You'll have to wait your turn.")
+            # don't allow player input
+            cls.pause()
     
     @classmethod
     def update_initiative_order(cls, *args) -> None:
@@ -465,7 +492,9 @@ class State(metaclass=StateMeta):
     def get_current_target(cls, entity: str = "player"):
         """Method to get the current target for specified entity."""
         try:
-            return cls.dm.npcs.get_entity(cls.get_current_target_id(entity))
+            current_target = cls.get_current_target_id(entity)
+            if current_target:
+                return cls.get_entity(current_target)
         except UnrecognisedEntityError:
             raise
 
@@ -477,12 +506,20 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
 
         logger.debug("Setting current target: {t}".format(t=target))
+        # first, deregister any triggers from original target
         if cls.get_current_target_id(entity):
-            cls.dm.deregister_trigger(
-                cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
+            current_target_obj = cls.get_entity(cls.get_current_target_id(entity))
+            cls.dm.deregister_trigger(current_target_obj)
+            
+        # set new target
         cls.current_target[entity] = target
-        cls.dm.register_trigger(
-            cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
+        
+        # register any triggers for new target
+        target_obj = cls.get_entity(target)
+        if hasattr(target_obj, "trigger"):
+            cls.dm.register_trigger(target_obj)
+        
+        # append target to attacked_by_player list
         if target != "player" and target not in cls.attacked_by_player:
             cls.attacked_by_player.append(target)
 
@@ -496,7 +533,7 @@ class State(metaclass=StateMeta):
         logger.debug("Clearing current target")
         if cls.get_current_target_id(entity):
             cls.dm.deregister_trigger(
-                cls.dm.npcs.get_entity(cls.get_current_target_id(entity)))
+                cls.get_entity(cls.get_current_target_id(entity)))
             cls.current_target[entity] = None
 
     @classmethod
@@ -519,11 +556,6 @@ class State(metaclass=StateMeta):
                 return cls.dm.adventure.get_room(room_id).name
         except UnrecognisedRoomError:
             raise
-
-    @classmethod
-    def set_init_room(cls, entity: str, room_id: str) -> str:
-        """Method to set the initial room for specified entity."""
-        cls.current_room[entity] = room_id
 
     @classmethod
     def _check_entity_exists(cls, entity_id: str) -> bool:
@@ -675,21 +707,6 @@ class State(metaclass=StateMeta):
     def get_formatted_possible_monster_targets(cls, entity: str = "player") -> str:
         """Method to return a formatted string of possible monster targets"""
         monsters = cls.get_possible_monster_targets(entity)
-        possible_targets = [monster.name for monster in monsters]
-        count_targets = dict(Counter(possible_targets))
-        if monsters:
-            formatted_array = []
-            for t in count_targets:
-                c = count_targets.get(t)
-                if c > 1:
-                    formatted_array.append("the {c} {t}s".format(c=c, t=t))
-                else:
-                    formatted_array.append("the {t}".format(t=t))
-            if len(formatted_array) == 1:
-                formatted_str = "You could attack {a}.".format(a=formatted_array[0])
-            else:
-                formatted_str = "You could attack {a}".format(a=", ".join(formatted_array[0:-1]))
-                formatted_str += " or {a}.".format(a=formatted_array[-1])
-            return formatted_str
-        else:
-            return ""
+        possible_targets = [monster.unique_name for monster in monsters]
+        formatted_str = "You could attack {a}.".format(a=Text.properly_format_list(possible_targets, last_delimiter=" or "))
+        return formatted_str

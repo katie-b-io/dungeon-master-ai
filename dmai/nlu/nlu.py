@@ -4,8 +4,10 @@ import dmai
 from dmai.utils.exceptions import DiceFormatError, UnrecognisedCommandError
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.text import Text
 from dmai.nlu.rasa_adapter import RasaAdapter
 from dmai.game.state import State
+from dmai.game.state import Combat
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -101,7 +103,7 @@ class NLU(metaclass=NLUMeta):
             raise UnrecognisedCommandError(msg)
 
         # define a local function for wrapping the DiceRoller
-        def roll_die(die: str) -> None:
+        def roll(die: str) -> None:
             try:
                 DiceRoller.roll(die)
             except DiceFormatError as e:
@@ -134,7 +136,6 @@ class NLU(metaclass=NLUMeta):
     def _determine_intent(cls, player_utter: str) -> tuple:
         """Method to determine the player intent"""
         player_utter = player_utter.lower()
-        print("I'm thinking...")
         (intent, entities) = RasaAdapter.get_intent(player_utter)
         State.set_intent(intent)
         if intent:
@@ -143,12 +144,22 @@ class NLU(metaclass=NLUMeta):
             print(entities)
             
         # check if there's an expected intent
-        if State.expected_intent:
-            if intent != State.expected_intent:
+        if State.expected_intents:
+            if intent not in State.expected_intents:
                 # TODO make exception for hints or questions
-                OutputBuilder.append("I was expecting you to {i}".format(i=State.expected_intent))
-                return (None, {})
+                # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
+                intents = [State.get_dm().player_intent_map[intent]["desc"] for intent in State.expected_intents]
+                intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
+                OutputBuilder.append("I was expecting you to {i}".format(i=intent_str))
+                return (None, {"nlu_entities": entities})
 
+        # check if in combat before allowing any player utterance
+        if State.in_combat:
+            if State.get_combat_status() == Combat.ATTACK_ROLL:
+                return ("attack", {"nlu_entities": entities})
+            else:
+                return ("roll", {"nlu_entities": entities})
+        
         if intent == "move":
             return ("move", {"nlu_entities": entities})
         if intent == "attack":
@@ -173,8 +184,8 @@ class NLU(metaclass=NLUMeta):
             return ("deny", {})
         if intent == "explore":
             return ("explore", {"nlu_entities": entities})
-        if intent == "roll_die":
-            return ("roll_die", {"nlu_entities": entities})
+        if intent == "roll":
+            return ("roll", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

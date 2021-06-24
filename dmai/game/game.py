@@ -110,6 +110,10 @@ class Game:
 
             # store intent for next turn
             State.store_intent(intent, params)
+        
+        elif State.in_combat:
+            # proceed with combat
+            succeed = self.dm.input(player_utter, intent="roll", kwargs={"nlu_entities":[]})
 
         return
 

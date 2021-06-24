@@ -1,5 +1,7 @@
 import random
 
+from dmai.utils.text import Text
+
 
 class NLGMeta(type):
     _instances = {}
@@ -25,6 +27,8 @@ class NLG(metaclass=NLGMeta):
     def set_game(cls, game) -> None:
         cls.game = game
 
+    ############################################################
+    # Player interaction utterances
     @classmethod
     def get_char_class(cls, characters: str) -> str:
         """Return utterance for character selection"""
@@ -104,6 +108,8 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
 
+    ############################################################
+    # Action utterances
     @classmethod
     def enter_room(cls, room: str, adventure=None) -> str:
         """Return the utterance for entering a room previously visited"""
@@ -112,29 +118,12 @@ class NLG(metaclass=NLGMeta):
         else:
             return adventure.get_room(room).enter()
 
-    @classmethod
-    def attack(cls, attacker: str, target: str, *args) -> str:
-        """Return the utterance for attacking"""
-        # TODO different utterances for different weapons?
-        attacker = "You" if attacker == "player" else attacker
-        utters = [
-            "{a} attacked {t}!".format(a=attacker, t=target),
-            "{a} launched an assault on {t}".format(a=attacker, t=target),
-            "{a} struck at {t}".format(a=attacker, t=target),
-        ]
-        return random.choice(utters)
     
     @classmethod
     def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
         if possible_destinations:
-            p = "You could go to the {p}".format(p=possible_destinations[0])
-            for poss in possible_destinations[1:]:
-                if possible_destinations[-1] == poss:
-                    p += " or the {p}".format(p=poss)
-                else:
-                    p += ", the {p}".format(p=poss)
-            p += "."
+            p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
         else:
             p = ""
         if not reason:
@@ -163,30 +152,6 @@ class NLG(metaclass=NLGMeta):
         else:
             return "You cannot move to {room}, although, I'm not sure why not... {p}".format(
                 room=room, p=p)
-
-    @classmethod
-    def cannot_attack(cls, attacker: str, target: str, reason: str = None, possible_targets: list = []) -> str:
-        """Return the utterance for not allowing attack"""
-        if attacker == "player" or attacker == cls.game.player.name:
-            attacker = "You"
-        
-        if possible_targets:
-            p = "You could target {p}".format(p=possible_targets[0])
-            for poss in possible_targets[1:]:
-                if possible_targets[-1] == poss:
-                    p += " or the {p}".format(p=poss)
-                else:
-                    p += ", the {p}".format(p=poss)
-                    
-        if not reason:
-            return "{a} cannot attack {t}".format(a=attacker, t=target)
-        elif reason == "unknown target":
-            return "{a} cannot attack unknown target: {t}!".format(a=attacker, t=target)
-        elif reason == "different loction":
-            return "{a} cannot attack {t} as it's not in the same location as you!".format(a=attacker, t=target)
-        elif reason == "no visibility":
-            return "{a} cannot attack {t} because it's too dark to see them!".format(
-                a=attacker, t=target)
 
     @classmethod
     def cannot_use(cls, equipment: str, reason: str = None) -> str:
@@ -338,6 +303,8 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
 
+    ############################################################
+    # Combat utterances
     @classmethod
     def transition_to_combat(cls) -> str:
         """Return the utterance for transitioning to combat"""
@@ -348,22 +315,74 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
-    def perform_attack_roll(cls) -> str:
-        """Return the utterance for getting player to perform attack roll"""
+    def entity_turn(cls, entity: str) -> str:
+        """Return the utterance for telling the player whose turn it is"""
+        entity = "your" if entity == "player" else "{e}'s".format(e=entity)
         utters = [
-            "Your turn, make your attack roll"
+            "Okay, it's {e} turn...".format(e=entity)
         ]
         return random.choice(utters)
     
     @classmethod
-    def roleplay(cls, target: str) -> str:
-        """Return the utterance for getting roleplay prompt"""
-        n = cls.game.player.name
+    def declare_attack(cls) -> str:
+        """Return the utterance for getting player to declare an attack"""
         utters = [
-            "{n}, what do you say to {t}?".format(n=n, t=target)
+            "Your turn, who do you want to attack?"
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def perform_attack_roll(cls) -> str:
+        """Return the utterance for getting player to perform attack roll"""
+        utters = [
+            "Make your attack roll"
         ]
         return random.choice(utters)
 
+    @classmethod
+    def perform_damage_roll(cls) -> str:
+        """Return the utterance for getting player to perform damage roll"""
+        utters = [
+            "Make your damage roll"
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def attack(cls, attacker: str, target: str, *args) -> str:
+        """Return the utterance for attacking"""
+        # TODO different utterances for different weapons?
+        attacker = "You" if attacker == "player" else attacker
+        utters = [
+            "{a} attacked {t}!".format(a=attacker, t=target),
+            "{a} launched an assault on {t}".format(a=attacker, t=target),
+            "{a} struck at {t}".format(a=attacker, t=target),
+        ]
+        return random.choice(utters)
+
+    @classmethod
+    def cannot_attack(cls, attacker: str, target: str, reason: str = None, possible_targets: list = []) -> str:
+        """Return the utterance for not allowing attack"""
+        if attacker == "player" or attacker == cls.game.player.name:
+            attacker = "You"
+        
+        if possible_targets:
+            p = "You could target {p}".format(p=possible_targets[0])
+            for poss in possible_targets[1:]:
+                if possible_targets[-1] == poss:
+                    p += " or the {p}".format(p=poss)
+                else:
+                    p += ", the {p}".format(p=poss)
+                    
+        if not reason:
+            return "{a} cannot attack {t}".format(a=attacker, t=target)
+        elif reason == "unknown target":
+            return "{a} cannot attack unknown target: {t}!".format(a=attacker, t=target)
+        elif reason == "different loction":
+            return "{a} cannot attack {t} as it's not in the same location as you!".format(a=attacker, t=target)
+        elif reason == "no visibility":
+            return "{a} cannot attack {t} because it's too dark to see them!".format(
+                a=attacker, t=target) 
+    
     @classmethod
     def attack_of_opportunity(cls,
                               attacker: str = None,
@@ -394,6 +413,19 @@ class NLG(metaclass=NLGMeta):
             ]
             return random.choice(utters)
 
+    ############################################################
+    # Roleplay utterances
+    @classmethod
+    def roleplay(cls, target: str) -> str:
+        """Return the utterance for getting roleplay prompt"""
+        n = cls.game.player.name
+        utters = [
+            "{n}, what do you say to {t}?".format(n=n, t=target)
+        ]
+        return random.choice(utters)
+
+    ############################################################
+    # Query utterances
     @classmethod
     def explain_armor_class(cls) -> str:
         """Return the utterance for explaining a armos class"""

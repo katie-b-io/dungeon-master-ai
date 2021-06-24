@@ -7,6 +7,7 @@ sys.path.insert(0, p + "/../")
 
 from dmai.nlg.nlg import NLG
 from dmai.game.game import Game
+from dmai.game.state import State
 
 
 class TestNLG(unittest.TestCase):
@@ -37,6 +38,14 @@ class TestNLG(unittest.TestCase):
         self.assertEqual(
             "You cannot move to room because the way is locked! ",
             NLG.cannot_move(room, reason),
+        )
+    
+    def test_cannot_move_alt_destinations(self) -> None:
+        room = "Antechamber"
+        possible_desintations = ["Inn's Cellar", "Burial Chamber", "Western Corridor"]
+        self.assertEqual(
+            "You cannot move to Antechamber. You could go to the Inn's Cellar, the Burial Chamber or the Western Corridor.",
+            NLG.cannot_move(room, possible_destinations=possible_desintations)
         )
 
 

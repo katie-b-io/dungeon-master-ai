@@ -44,6 +44,9 @@ nlu:
   examples: |
     - yes
     - y
+    - agree
+    - absolutely
+    - true
     - indeed
     - of course
     - that sounds good
@@ -60,6 +63,7 @@ nlu:
   examples: |
     - no
     - n
+    - false
     - never
     - I don't think so
     - don't like that
@@ -80,10 +84,17 @@ nlu:
     - am I talking to an AI?
     - am I talking to a human?
 
-- intent: roll_die
+- intent: roll
   examples: |
     - roll
+    - damage
+    - initiative
     - roll initiative
+    - initiative roll
+    - attack roll
+    - damage roll
+    - roll attack
+    - roll damage
     - I roll my [d4](die)
     - I roll the [d6](die)
     - I roll my [d8](die)
@@ -106,6 +117,7 @@ nlu:
     - crawl through the door
     - progress to the next room
     - go there
+    - go
     - relocate over there
     - proceed to the next room
     - I want to run through the door
@@ -446,6 +458,8 @@ nlu:
 - intent: converse
   examples: |
     - talk to [corvus](npc)
+    - talk to [corvus stouthammer](npc)
+    - talk to [stouthammer](npc)
     - question [corvus stouthammer](npc)
     - chat with [the dwarf](npc)
     - converse with [stouthammer](npc)
