@@ -230,13 +230,14 @@
 
     ; Monster damages a target
     (:action damage_roll
-        :parameters (?monster - monster ?target - object ?location - room)
+        :parameters (?monster - monster ?weapon - weapon ?target - object ?location - room)
         :precondition (and 
             (at ?monster ?location)
             (at ?target ?location)
             (can_damage_roll ?monster ?target)
             (alive ?target)
             (higher_than_ac ?target)
+            (equipped ?monster ?weapon)
         )
         :effect (and 
             (not (can_damage_roll ?monster ?target))

@@ -541,6 +541,19 @@ class State(metaclass=StateMeta):
         """Method to determine if monster was attacked by player"""
         return monster_id in cls.attacked_by_player
     
+    @classmethod
+    def take_damage(cls, damage: int, entity: str = "player") -> int:
+        """Method to apply damage to specified entity.
+        Returns the updated hp value"""
+        try:
+            cls.current_hp[entity] = cls.current_hp[entity] - damage
+            if cls.current_hp[entity] <= 0:
+                OutputBuilder.append("{e} is dying!".format(e=entity))
+            return cls.current_hp[entity]
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
     ############################################################
     # METHODS RELATING TO LOCATION
     @classmethod

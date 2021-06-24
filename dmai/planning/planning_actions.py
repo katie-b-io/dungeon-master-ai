@@ -213,13 +213,14 @@ planning_actions = {
         "pddl": """
 ; Entity damages a target
 (:action damage_roll
-    :parameters (?entity - entity ?target - object ?location - room)
+    :parameters (?entity - entity ?weapon - weapon ?target - object ?location - room)
     :precondition (and 
         (at ?entity ?location)
         (at ?target ?location)
         (can_damage_roll ?entity ?target)
         (alive ?target)
         (higher_than_ac ?target)
+        (equipped ?entity ?weapon)
     )
     :effect (and 
         (not (can_damage_roll ?entity ?target))

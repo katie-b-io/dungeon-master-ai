@@ -53,14 +53,12 @@
                     "total": 1
                 },
                 "hit": {
-                    "damage": [
-                        {
+                    "damage": {
                             "die": "",
                             "total": 0,
                             "mod": 1,
                             "type": "slashing"
-                        }
-                    ],
+                        },
                     "extra": {}
                 }
             }
@@ -120,14 +118,12 @@
                     "total": 1
                 },
                 "hit": {
-                    "damage": [
-                        {
+                    "damage": {
                             "die": "d4",
                             "total": 1,
                             "mod": 2,
                             "type": "piercing"
-                        }
-                    ],
+                        },
                     "extra": {}
                 }
             }
@@ -148,14 +144,12 @@
                             "total": 1
                         },
                         "hit": {
-                            "damage": [
-                                {
+                            "damage": {
                                     "die": "d4",
                                     "total": 1,
                                     "mod": 2,
                                     "type": "piercing"
-                                }
-                            ],
+                                },
                             "extra": {
                                 "disease": {
                                     "name": "Diseased",
@@ -260,14 +254,12 @@
                     "total": 1
                 },
                 "hit": {
-                    "damage": [
-                        {
+                    "damage": {
                             "die": "d6",
                             "total": 1,
                             "mod": 2,
                             "type": "slashing"
-                        }
-                    ],
+                        },
                     "extra": {}
                 }
             },
@@ -284,14 +276,12 @@
                     "total": 1
                 },
                 "hit": {
-                    "damage": [
-                        {
+                    "damage": {
                             "die": "d6",
                             "total": 1,
                             "mod": 2,
                             "type": "piercing"
-                        }
-                    ],
+                        },
                     "extra": {}
                 }
             }
@@ -360,14 +350,12 @@
                     "total": 1
                 },
                 "hit": {
-                    "damage": [
-                        {
+                    "damage": {
                             "die": "d6",
                             "total": 1,
                             "mod": 2,
                             "type": "piercing"
-                        }
-                    ],
+                        },
                     "extra": {}
                 }
             },
@@ -384,14 +372,12 @@
                     "total": 1
                 },
                 "hit": {
-                    "damage": [
-                        {
+                    "damage": {
                             "die": "d6",
                             "total": 1,
                             "mod": 2,
                             "type": "piercing"
-                        }
-                    ],
+                        },
                     "extra": {}
                 }
             }
@@ -456,14 +442,12 @@
                     "total": 1
                 },
                 "hit": {
-                    "damage": [
-                        {
+                    "damage": {
                             "die": "d6",
                             "total": 1,
                             "mod": 4,
                             "type": "bludgeoning"
-                        }
-                    ],
+                        },
                     "extra": {}
                 }
             }

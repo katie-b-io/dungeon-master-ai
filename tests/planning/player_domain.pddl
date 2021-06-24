@@ -315,13 +315,14 @@
 
     ; Player damages a target
     (:action damage_roll
-        :parameters (?player - player ?target - object ?location - room)
+        :parameters (?player - player ?weapon - weapon ?target - object ?location - room)
         :precondition (and 
             (at ?player ?location)
             (at ?target ?location)
             (can_damage_roll ?player ?target)
             (alive ?target)
             (higher_than_ac ?target)
+            (equipped ?player ?weapon)
         )
         :effect (and 
             (not (can_damage_roll ?player ?target))

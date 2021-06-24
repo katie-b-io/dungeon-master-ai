@@ -290,7 +290,7 @@ class Actions:
         # TODO implement advantage/disadvantage
         attacker = State.get_entity(attacker)
         target = State.get_entity(target)
-        if attacker.attack_roll(weapon) > target.armor_class:
+        if attacker.attack_roll(weapon) <= target.armor_class:
             print("{a}: It hits!".format(a=attacker.unique_id))
         else:
             print("{a}: That's unfortunate!".format(a=attacker.unique_id))
@@ -298,6 +298,11 @@ class Actions:
         return
     
     @staticmethod
-    def damage_roll(attacker: str, target: str, *args) -> None:
-        print("{a} is now DAMAGING".format(a=attacker))
+    def damage_roll(attacker: str, weapon: str, target: str, *args) -> None:
+        """Method to perform a damage roll"""
+        attacker = State.get_entity(attacker)
+        target = State.get_entity(target)
+        damage = attacker.damage_roll(weapon)
+        hp = State.take_damage(damage)
+        print("{a} is now DAMAGING for {d} points. You have {h} hp left!".format(a=attacker.unique_name, d=damage, h=hp))
         return

@@ -92,6 +92,11 @@ class Monster(NPC, MonsterAgent):
         attack = self.attacks.get_attack(attack_id)
         return Text.get_signed_value(attack["attack_bonus"])
     
+    def get_damage_dice(self, attack_id: str) -> dict:
+        """Method to return the damage dice spec"""
+        attack = self.attacks.get_attack(attack_id)
+        return attack["hit"]["damage"]
+    
     def initiative_roll(self) -> int:
         """Method to roll initiative"""
         die = "d20{m}".format(m=self.get_signed_initiative())
@@ -100,7 +105,12 @@ class Monster(NPC, MonsterAgent):
     def attack_roll(self, weapon: str) -> int:
         """Method to roll attack"""
         die = "d20{m}".format(m=self.get_signed_attack_bonus(weapon))
-        return DiceRoller.roll(die)
+        return DiceRoller.roll(die, silent=True)
+
+    def damage_roll(self, weapon: str) -> int:
+        """Method to roll damage"""
+        dice_spec = self.get_damage_dice(weapon)
+        return DiceRoller.roll_dice(dice_spec, silent=True)
 
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""

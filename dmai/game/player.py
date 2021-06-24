@@ -82,6 +82,11 @@ class Player(PlayerAgent):
         die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon))
         return DiceRoller.roll(die)
     
+    def damage_roll(self, weapon: str) -> int:
+        """Method to roll damage"""
+        die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon))
+        return DiceRoller.roll(die)
+    
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
         div = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
