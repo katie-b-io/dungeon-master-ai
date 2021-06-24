@@ -32,18 +32,66 @@ class DM:
 
         # Initialise the player intent map
         self.player_intent_map = {
-            "hint": self.hint,
-            "move": self.move,
-            "attack": self.attack,
-            "use": self.use,
-            "stop_using": self.stop_using,
-            "equip": self.equip,
-            "unequip": self.unequip,
-            "converse": self.converse,
-            "affirm": self.affirm,
-            "deny": self.deny,
-            "explore": self.explore,
-            "roll_die": self.roll,
+            "hint": {
+                "name": "hint",
+                "desc": "ask for a hint",
+                "func": self.hint
+            },
+            "move": {
+                "name": "move",
+                "desc": "move to another room",
+                "func": self.move,
+                },
+            "attack": {
+                "name": "attack",
+                "desc": "attack a target",
+                "func": self.attack,
+                },
+            "use": {
+                "name": "use",
+                "desc": "use equipment",
+                "func": self.use,
+                },
+            "stop_using": {
+                "name": "stop using",
+                "desc": "stop using equipment",
+                "func": self.stop_using,
+                },
+            "equip": {
+                "name": "equip",
+                "desc": "equip weapon",
+                "func": self.equip,
+                },
+            "unequip": {
+                "name": "unequip",
+                "desc": "unequip weapon",
+                "func": self.unequip,
+                },
+            "converse": {
+                "name": "converse",
+                "desc": "converse with an NPC",
+                "func": self.converse,
+                },
+            "affirm": {
+                "name": "affirm",
+                "desc": "respond with an affirmation",
+                "func": self.affirm,
+                },
+            "deny": {
+                "name": "deny",
+                "desc": "respond with a denial",
+                "func": self.deny,
+                },
+            "explore": {
+                "name": "explore",
+                "desc": "explore your surroundings",
+                "func": self.explore,
+                },
+            "roll": {
+                "name": "roll",
+                "desc": "roll some dice",
+                "func": self.roll,
+                },
         }
 
     def input(
@@ -69,7 +117,7 @@ class DM:
         elif intent:
             # look up intent in map
             try:
-                succeed = self.player_intent_map[intent](**kwargs)
+                succeed = self.player_intent_map[intent]["func"](**kwargs)
             except KeyError:
                 logger.error("Intent not in map: {i}".format(i=intent))
                 raise

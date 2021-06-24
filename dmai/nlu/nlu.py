@@ -148,7 +148,8 @@ class NLU(metaclass=NLUMeta):
             if intent not in State.expected_intents:
                 # TODO make exception for hints or questions
                 # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
-                intent_str = Text.properly_format_list(State.expected_intents, last_delimiter=" or ")
+                intents = [State.get_dm().player_intent_map[intent]["desc"] for intent in State.expected_intents]
+                intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
                 OutputBuilder.append("I was expecting you to {i}".format(i=intent_str))
                 return (None, {"nlu_entities": entities})
 
