@@ -78,15 +78,30 @@ class Monster(NPC, MonsterAgent):
         """Method to return the initiative attribute"""
         return self.abilities.get_modifier("dex")
 
+    @property
+    def armor_class(self) -> int:
+        """Method to return the armor class"""
+        return self.ac
+
     def get_signed_initiative(self) -> str:
         """Method to return the signed initiative"""
         return Text.get_signed_value(self.initiative)
     
-    def roll_initiative(self) -> int:
+    def get_signed_attack_bonus(self, attack_id: str) -> str:
+        """Method to return the signed attack bonus"""
+        attack = self.attacks.get_attack(attack_id)
+        return Text.get_signed_value(attack["attack_bonus"])
+    
+    def initiative_roll(self) -> int:
         """Method to roll initiative"""
         die = "d20{m}".format(m=self.get_signed_initiative())
         return DiceRoller.roll(die, silent=True)
     
+    def attack_roll(self, weapon: str) -> int:
+        """Method to roll attack"""
+        die = "d20{m}".format(m=self.get_signed_attack_bonus(weapon))
+        return DiceRoller.roll(die)
+
     def set_treasure(self, treasure: str) -> None:
         """Method to set treasure."""
         self.treasure = treasure

@@ -442,14 +442,14 @@ class State(metaclass=StateMeta):
         rolls = {}
 
         # get player initiative
-        player_result = State.get_player().roll_initiative()
+        player_result = State.get_player().initiative_roll()
         OutputBuilder.append(NLG.roll_reaction(player_result))
         rolls["player"] = player_result
         
         # initiative rolls for monsters in the room
         monsters = cls.get_possible_monster_targets()
         for monster in monsters:
-            rolls[monster.unique_id] = monster.roll_initiative()
+            rolls[monster.unique_id] = monster.initiative_roll()
         
         # order the rolls dict and set keys as initiative order
         sorted_rolls = dict(sorted(rolls.items(), key=operator.itemgetter(1), reverse=True))

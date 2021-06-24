@@ -25,6 +25,10 @@ class Player(PlayerAgent):
     def character_class(self) -> str:
         return self.character.name
 
+    @property
+    def armor_class(self) -> int:
+        return self.character.armor_class
+    
     def get_all_equipment_ids(self) -> list:
         """Method to return a list of IDs of all the player's equipment"""
         return self.character.equipment.get_all()
@@ -67,10 +71,15 @@ class Player(PlayerAgent):
     def is_equipped(self, weapon: str) -> bool:
         """Method to check whether weapon is equipped"""
         return self.character.is_equipped(weapon)
-
-    def roll_initiative(self) -> int:
+    
+    def initiative_roll(self) -> int:
         """Method to roll initiative"""
         die = "d20{m}".format(m=self.character.get_signed_initiative())
+        return DiceRoller.roll(die)
+    
+    def attack_roll(self, weapon: str) -> int:
+        """Method to roll attack"""
+        die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon))
         return DiceRoller.roll(die)
     
     def get_character_sheet(self) -> str:
