@@ -97,32 +97,26 @@
                 "giant_rat": {
                     "status": [
                         "alive",
-                        "alive",
-                        "alive",
                         "alive"
                     ],
                     "treasure": [
-                        [],
-                        [],
                         [],
                         []
                     ],
                     "must_kill": [
                         true,
-                        true,
-                        true,
                         true
                     ],
                     "will_attack_player": [
-                        false,
-                        false,
                         false,
                         false
                     ]
                 }
             },
             "puzzles": {},
-            "treasure": [],
+            "treasure": [
+                "potion_of_healing"
+            ],
             "visibility": false,
             "text": {
                 "enter": "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness. The landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus' stock and the loud protesting meows of Anvil-Jumper, Corvus' cat.",

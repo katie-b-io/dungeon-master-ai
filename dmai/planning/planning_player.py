@@ -271,7 +271,6 @@ class PlanningPlayer(PlanningAgent):
                 "roleplay_positively",
                 "roleplay_negatively",
                 "declare_attack_against_entity",
-                "attack_monster",
                 "kill_monster",
             ]
             if State.get_player().has_equipment("thieves_tools")[0]:

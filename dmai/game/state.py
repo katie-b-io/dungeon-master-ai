@@ -442,14 +442,14 @@ class State(metaclass=StateMeta):
         rolls = {}
 
         # get player initiative
-        player_result = State.get_player().roll_initiative()
+        player_result = State.get_player().initiative_roll()
         OutputBuilder.append(NLG.roll_reaction(player_result))
         rolls["player"] = player_result
         
         # initiative rolls for monsters in the room
         monsters = cls.get_possible_monster_targets()
         for monster in monsters:
-            rolls[monster.unique_id] = monster.roll_initiative()
+            rolls[monster.unique_id] = monster.initiative_roll()
         
         # order the rolls dict and set keys as initiative order
         sorted_rolls = dict(sorted(rolls.items(), key=operator.itemgetter(1), reverse=True))
@@ -541,6 +541,19 @@ class State(metaclass=StateMeta):
         """Method to determine if monster was attacked by player"""
         return monster_id in cls.attacked_by_player
     
+    @classmethod
+    def take_damage(cls, damage: int, entity: str = "player") -> int:
+        """Method to apply damage to specified entity.
+        Returns the updated hp value"""
+        try:
+            cls.current_hp[entity] = cls.current_hp[entity] - damage
+            if cls.current_hp[entity] <= 0:
+                OutputBuilder.append("{e} is dying!".format(e=entity))
+            return cls.current_hp[entity]
+        except KeyError:
+            msg = "Entity not recognised: {e}".format(e=entity)
+            raise UnrecognisedEntityError(msg)
+        
     ############################################################
     # METHODS RELATING TO LOCATION
     @classmethod

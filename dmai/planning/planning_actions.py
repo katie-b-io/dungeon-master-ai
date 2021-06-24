@@ -160,6 +160,7 @@ planning_actions = {
         (not (can_attack_roll ?entity ?target))
         (attack_roll_success ?entity ?target)
         (higher_than_ac ?target)
+        (can_damage_roll ?entity ?target)
     )
 )"""},
 
@@ -181,6 +182,7 @@ planning_actions = {
         (not (can_attack_roll ?entity ?target))
         (attack_roll_success ?entity ?target)
         (higher_than_ac ?target)
+        (can_damage_roll ?entity ?target)
     )
 )"""},
 
@@ -202,6 +204,7 @@ planning_actions = {
         (not (can_attack_roll ?entity ?target))
         (attack_roll_success ?entity ?target)
         (higher_than_ac ?target)
+        (can_damage_roll ?entity ?target)
     )
 )"""},
 
@@ -210,18 +213,20 @@ planning_actions = {
         "pddl": """
 ; Entity damages a target
 (:action damage_roll
-    :parameters (?entity - entity ?target - object ?location - room)
+    :parameters (?entity - entity ?weapon - weapon ?target - object ?location - room)
     :precondition (and 
         (at ?entity ?location)
         (at ?target ?location)
         (can_damage_roll ?entity ?target)
         (alive ?target)
         (higher_than_ac ?target)
+        (equipped ?entity ?weapon)
     )
     :effect (and 
         (not (can_damage_roll ?entity ?target))
         (not (higher_than_ac ?target))
         (damaged ?target)
+        (not (attack_roll_success ?entity ?target))
     )
 )"""},
 
@@ -521,49 +526,7 @@ planning_actions = {
     :effect (and 
         (can_attack_roll ?entity ?target)
         (action)
-    )
-)"""},
-
-    "attack_monster": {
-        "pddl": """
-; Player attacks a monster
-(:action attack_monster
-    :parameters (?player - player ?weapon - weapon ?monster - monster ?location - room)
-    :precondition (and 
-        (action)
-        (alive ?player)
-        (alive ?monster)
-        (at ?player ?location)
-        (at ?monster ?location)
-        (equipped ?player ?weapon)
-        (attack_roll_success ?player ?monster)
-    )
-    :effect (and 
         (combat)
-        (can_damage_roll ?player ?monster)
-        (not (attack_roll_success ?player ?monster))
-    )
-)"""},
-
-    "attack_player": {
-        "func": Actions.attack_player,
-        "pddl": """
-; Monster attacks a player
-(:action attack_player
-    :parameters (?monster - monster ?weapon - weapon ?player - player ?location - room)
-    :precondition (and 
-        (action)
-        (alive ?monster)
-        (alive ?player)
-        (at ?monster ?location)
-        (at ?player ?location)
-        (equipped ?monster ?weapon)
-        (attack_roll_success ?monster ?player)
-    )
-    :effect (and 
-        (combat)
-        (can_damage_roll ?monster ?player)
-        (not (attack_roll_success ?monster ?player))
     )
 )"""},
 

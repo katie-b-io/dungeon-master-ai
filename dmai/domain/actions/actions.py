@@ -279,19 +279,30 @@ class Actions:
 
     @staticmethod
     def declare_attack_against_entity(attacker: str, target: str, *args) -> None:
-        """Method to delcare attack against entity"""
+        """Method to declare attack against entity"""
         State.set_target(target, attacker)
         attacker = State.get_name(attacker)
         OutputBuilder.append(NLG.attack(attacker, target))
     
     @staticmethod
-    def attack_player(*args) -> None:
+    def attack_roll(attacker: str, weapon: str, target: str, *args) -> None:
+        """Method to perform an attack roll"""
+        # TODO implement advantage/disadvantage
+        attacker = State.get_entity(attacker)
+        target = State.get_entity(target)
+        if attacker.attack_roll(weapon) <= target.armor_class:
+            print("{a}: It hits!".format(a=attacker.unique_id))
+        else:
+            print("{a}: That's unfortunate!".format(a=attacker.unique_id))
+            State.update_initiative_order()
         return
     
     @staticmethod
-    def attack_roll(*args) -> None:
-        return
-    
-    @staticmethod
-    def damage_roll(*args) -> None:
+    def damage_roll(attacker: str, weapon: str, target: str, *args) -> None:
+        """Method to perform a damage roll"""
+        attacker = State.get_entity(attacker)
+        target = State.get_entity(target)
+        damage = attacker.damage_roll(weapon)
+        hp = State.take_damage(damage)
+        print("{a} is now DAMAGING for {d} points. You have {h} hp left!".format(a=attacker.unique_name, d=damage, h=hp))
         return

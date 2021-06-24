@@ -22,3 +22,12 @@ class Attacks:
     def get_all_attack_ids(self) -> list:
         """Method to return all attack IDs"""
         return self.attacks.keys()
+
+    def get_attack(self, attack_id: str) -> dict:
+        """Method to get specified attack.
+        Returns dict."""
+        try:
+            return self.attacks[attack_id]
+        except KeyError:
+            msg = "Attack not recognised: {a}".format(a=attack_id)
+            raise KeyError(msg)
