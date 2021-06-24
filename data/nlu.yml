@@ -44,6 +44,9 @@ nlu:
   examples: |
     - yes
     - y
+    - agree
+    - absolutely
+    - true
     - indeed
     - of course
     - that sounds good
@@ -60,6 +63,7 @@ nlu:
   examples: |
     - no
     - n
+    - false
     - never
     - I don't think so
     - don't like that
