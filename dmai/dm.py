@@ -43,7 +43,7 @@ class DM:
             "affirm": self.affirm,
             "deny": self.deny,
             "explore": self.explore,
-            "roll_die": self.roll_die,
+            "roll_die": self.roll,
         }
 
     def input(
@@ -390,7 +390,7 @@ class DM:
             explore = self.actions.investigate(target)
         return explore
 
-    def roll_die(
+    def roll(
         self, entity: str = "player", die: str = None, nlu_entities: dict = {}
     ) -> bool:
         """Attempt to roll die.

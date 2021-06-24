@@ -6,7 +6,7 @@ intents:
   - affirm
   - deny
   - bot_challenge
-  - roll_die
+  - roll
   - move
   - stealth
   - pick_lock

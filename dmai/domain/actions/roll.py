@@ -82,7 +82,7 @@ class Roll(Action):
 
         # get target declaration from player if no target,
         if State.get_combat_status() == Combat.DECLARE:
-            State.set_expected_intent("attack")
+            State.set_expected_intents(["attack"])
             OutputBuilder.append(NLG.declare_attack())
             State.progress_combat_status()
             return

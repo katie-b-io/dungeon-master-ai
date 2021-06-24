@@ -247,7 +247,18 @@ class TestCharacter(unittest.TestCase):
 
     def test_get_formatted_speed(self) -> None:
         self.assertEqual(self.fighter.get_formatted_speed(), "30 ft")
-
+    
+    def test_get_formatted_armor(self) -> None:
+        self.assertEqual(self.fighter.get_formatted_armor(), "Chain mail (equipped)")
+    
+    def test_get_formatted_proficiencies(self) -> None:
+        profs = self.fighter.get_formatted_proficiencies()
+        self.assertTupleEqual(("Armor", "Leather, Padded, Scale mail, Chain mail, Shield"), profs[0])
+        self.assertTupleEqual(("Weapons", "Dagger, Handaxe, Javelin, Quarterstaff, Light crossbow, Shortbow, Greataxe, Scimitar, Shortsword, Warhammer"), profs[1])
+        self.assertTupleEqual(("Tools", "None"), profs[2])
+    
+    def test_get_formatted_languages(self) -> None:
+        self.assertEqual(self.fighter.get_formatted_languages(), "Common and Dwarvish")
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,7 @@
 import random
 
+from dmai.utils.text import Text
+
 
 class NLGMeta(type):
     _instances = {}
@@ -121,13 +123,7 @@ class NLG(metaclass=NLGMeta):
     def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
         if possible_destinations:
-            p = "You could go to the {p}".format(p=possible_destinations[0])
-            for poss in possible_destinations[1:]:
-                if possible_destinations[-1] == poss:
-                    p += " or the {p}".format(p=poss)
-                else:
-                    p += ", the {p}".format(p=poss)
-            p += "."
+            p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
         else:
             p = ""
         if not reason:

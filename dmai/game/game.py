@@ -113,7 +113,7 @@ class Game:
         
         elif State.in_combat:
             # proceed with combat
-            succeed = self.dm.input(player_utter, intent="roll_die", kwargs={"nlu_entities":[]})
+            succeed = self.dm.input(player_utter, intent="roll", kwargs={"nlu_entities":[]})
 
         return
 

@@ -265,7 +265,7 @@ class Character(ABC):
 
     def get_formatted_languages(self) -> str:
         """Method to return the languages formatted string"""
-        return ", ".join(
+        return Text.properly_format_list(
             [language["name"] for language in self.languages.get_all()])
 
     def get_all_features(self) -> list:

@@ -2,6 +2,7 @@ from collections import Counter
 from enum import Enum
 import operator
 
+from dmai.utils.text import Text
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
@@ -76,7 +77,7 @@ class State(metaclass=StateMeta):
     current_attitude = {}
     attacked_by_player = []
     current_combat_status = {}
-    expected_intent = None
+    expected_intents = []
     initiative_order = []
 
     def __init__(self) -> None:
@@ -92,10 +93,10 @@ class State(metaclass=StateMeta):
             cls.roleplaying = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
+            cls.set_expected_intents(["roll"])
             OutputBuilder.append(NLG.transition_to_combat())
-            cls.set_expected_intent("roll_die") #TODO change to "roll"
         else:
-            State.set_expected_intent("roll_die")
+            State.set_expected_intents(["roll"])
             OutputBuilder.append(NLG.perform_attack_roll())
             cls.progress_combat_status()
 
@@ -106,7 +107,7 @@ class State(metaclass=StateMeta):
         cls.roleplaying = False
         cls.clear_target()
         cls.clear_conversation()
-        cls.clear_expected_intent()
+        cls.clear_expected_intents()
 
     @classmethod
     def roleplay(cls, target: str) -> None:
@@ -116,7 +117,7 @@ class State(metaclass=StateMeta):
             cls.roleplaying = True
             cls.clear_target()
             cls.set_conversation_target(target)
-            cls.clear_expected_intent()
+            cls.clear_expected_intents()
 
     @classmethod
     def set_current_game_mode(cls, game_mode: str) -> None:
@@ -297,14 +298,14 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
     
     @classmethod
-    def set_expected_intent(cls, intent: str) -> None:
+    def set_expected_intents(cls, intents: list) -> None:
         """Method to set the expected intent"""
-        cls.expected_intent = intent
+        cls.expected_intents = intents
 
     @classmethod
-    def clear_expected_intent(cls) -> None:
+    def clear_expected_intents(cls) -> None:
         """Method to clear the expected intent"""
-        cls.expected_intent = None
+        cls.expected_intents = []
 
     ############################################################
     # METHODS RELATING TO CONVERSATION
@@ -442,8 +443,7 @@ class State(metaclass=StateMeta):
 
         # get player initiative
         player_result = State.get_player().roll_initiative()
-        if player_result == 1 or player_result == 20:
-            OutputBuilder.append(NLG.roll_reaction(player_result))
+        OutputBuilder.append(NLG.roll_reaction(player_result))
         rolls["player"] = player_result
         
         # initiative rolls for monsters in the room
@@ -707,21 +707,6 @@ class State(metaclass=StateMeta):
     def get_formatted_possible_monster_targets(cls, entity: str = "player") -> str:
         """Method to return a formatted string of possible monster targets"""
         monsters = cls.get_possible_monster_targets(entity)
-        possible_targets = [monster.name for monster in monsters]
-        count_targets = dict(Counter(possible_targets))
-        if monsters:
-            formatted_array = []
-            for t in count_targets:
-                c = count_targets.get(t)
-                if c > 1:
-                    formatted_array.append("the {c} {t}s".format(c=c, t=t))
-                else:
-                    formatted_array.append("the {t}".format(t=t))
-            if len(formatted_array) == 1:
-                formatted_str = "You could attack {a}.".format(a=formatted_array[0])
-            else:
-                formatted_str = "You could attack {a}".format(a=", ".join(formatted_array[0:-1]))
-                formatted_str += " or {a}.".format(a=formatted_array[-1])
-            return formatted_str
-        else:
-            return ""
+        possible_targets = [monster.unique_name for monster in monsters]
+        formatted_str = "You could attack {a}.".format(a=Text.properly_format_list(possible_targets, last_delimiter=" or "))
+        return formatted_str

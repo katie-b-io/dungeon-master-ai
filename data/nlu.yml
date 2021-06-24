@@ -80,7 +80,7 @@ nlu:
     - am I talking to an AI?
     - am I talking to a human?
 
-- intent: roll_die
+- intent: roll
   examples: |
     - roll
     - damage
