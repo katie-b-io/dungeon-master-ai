@@ -290,7 +290,7 @@ class Actions:
         # TODO implement advantage/disadvantage
         attacker = State.get_entity(attacker)
         target = State.get_entity(target)
-        if attacker.attack_roll(weapon) <= target.armor_class:
+        if attacker.attack_roll(weapon) >= target.armor_class:
             OutputBuilder.append("{a} hits!".format(a=attacker.unique_name))
         else:
             OutputBuilder.append("{a} misses!".format(a=attacker.unique_name))

@@ -386,7 +386,6 @@ class State(metaclass=StateMeta):
     def maintenance(cls) -> None:
         """Method to maintain the state correctly"""
         cls.maintain_current_target()
-        cls.maintain_current_game_mode()
 
     @classmethod
     def maintain_current_target(cls) -> None:
@@ -397,13 +396,6 @@ class State(metaclass=StateMeta):
                 if not cls.get_current_room_id(
                         entity) == cls.get_current_room_id(target):
                     cls.clear_target(entity)
-
-    @classmethod
-    def maintain_current_game_mode(cls) -> None:
-        """Check if current game mode is still valid"""
-        if cls.in_combat:
-            if not cls.current_target["player"] and not "player" in cls.current_target.values():
-                cls.explore()
 
     ############################################################
     # METHODS RELATING TO COMBAT

@@ -83,7 +83,7 @@ class Roll(Action):
             # process the last player input (attack roll)
             target = State.get_current_target()
             player = State.get_entity()
-            if player.attack_roll() > target.armor_class:
+            if player.attack_roll() >= target.armor_class:
                 # can deal damage
                 OutputBuilder.append("Okay that hits, time to deal some damage!")
             else:
