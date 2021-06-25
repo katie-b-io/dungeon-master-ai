@@ -122,10 +122,7 @@ class TestDM(unittest.TestCase):
         
     def test__get_npc(self) -> None:
         self.assertEqual("corvus", self.dm._get_npc())
-
-    def test__get_equipment(self) -> None:
         nlu_entities = [{"entity": "equipment", "confidence": 1, "value": "torch"}]
-        self.assertEqual("torch", self.dm._get_equipment(nlu_entities))
 
     def test__get_weapon(self) -> None:
         nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "greataxe"}]

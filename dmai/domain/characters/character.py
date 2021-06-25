@@ -39,8 +39,8 @@ class Character(ABC):
             self.char_class = CharacterClass(self.char_class)
             self.conditions = Conditions()
             self.equipment = EquipmentCollection(
-                equipment=self.equipment,
-                proficiencies=self.proficiencies["tools"])
+                equipment=self.equipment, proficiencies=self.proficiencies["tools"]
+            )
             self.languages = Languages(self.languages)
             self.race = Race(self.race)
             self.skills = Skills(
@@ -50,16 +50,17 @@ class Character(ABC):
             )
             self.spells = Spells(self.spells)
             self.weapons = Weapons(
-                self.weapons, proficiencies=self.get_proficiencies("weapons"))
-            self.armor = Armor(self.armor,
-                               proficiencies=self.get_proficiencies("armor"))
-            self.features = Features(char_class=self.char_class,
-                                     race=self.race)
+                self.weapons, proficiencies=self.get_proficiencies("weapons")
+            )
+            self.armor = Armor(
+                self.armor, proficiencies=self.get_proficiencies("armor")
+            )
+            self.features = Features(char_class=self.char_class, race=self.race)
 
         except AttributeError as e:
             logger.error(
-                "Cannot create character, incorrect attribute: {e}".format(
-                    e=e))
+                "Cannot create character, incorrect attribute: {e}".format(e=e)
+            )
             raise
 
     def __repr__(self) -> str:
@@ -90,13 +91,13 @@ class Character(ABC):
     @property
     def armor_class(self) -> int:
         """Method to return the armor class (AC) attribute"""
-        return self.armor.calculate_armor_class(
-            self.get_ability_modifier("dex"))
+        return self.armor.calculate_armor_class(self.get_ability_modifier("dex"))
 
     def has_darkvision(self) -> bool:
         """Method to return bool for whether character has darkvision"""
-        return self.features.contains(
-            "darkvision_elf") or self.features.contains("darkvision_dwarf")
+        return self.features.contains("darkvision_elf") or self.features.contains(
+            "darkvision_dwarf"
+        )
 
     def has_equipment(self, equipment: str) -> tuple:
         """Method to check whether player has specified equipment"""
@@ -182,13 +183,15 @@ class Character(ABC):
         return Text.get_signed_value(self.initiative)
 
     def get_signed_attack_bonus(self, weapon_id: str) -> str:
-        """Method to return the signed attack bonus"""
-        if self.weapons.has_property(
-                weapon_id, "finesse") or self.weapons.is_ranged(weapon_id):
-            m = self.get_ability_modifier("dex")
-        else:
-            m = self.get_ability_modifier("str")
-        return Text.get_signed_value(m + self.proficiency_bonus)
+        """Method to return the signed attack bonus for specified weapon"""
+        return Text.get_signed_value(
+            self.get_damage_modifier(weapon_id) + self.proficiency_bonus
+        )
+
+    def get_damage_modifier(self, weapon_id: str) -> str:
+        """Method to return the damage modifier for specified weapon"""
+        ability = self.weapons.get_damage_ability(weapon_id)
+        return self.get_ability_modifier(ability)
 
     def get_saving_throw(self, ability: str) -> int:
         """Method to return the specified saving throw"""
@@ -213,8 +216,10 @@ class Character(ABC):
     def get_formatted_skill_modifier(self, skill: str) -> str:
         """Method to return the specified skill modifier formatted string"""
         m = self.get_signed_skill_modifier(skill)
-        if ("expertise" in self.proficiencies["skills"]
-                and skill in self.proficiencies["skills"]["expertise"]):
+        if (
+            "expertise" in self.proficiencies["skills"]
+            and skill in self.proficiencies["skills"]["expertise"]
+        ):
             return "{m} (expertise)".format(m=m)
         elif skill in self.proficiencies["skills"]["class"]:
             return "{m} (proficiency)".format(m=m)
@@ -227,14 +232,14 @@ class Character(ABC):
 
     def get_all_weapons(self) -> list:
         """Method to return a list of character's weapons in tuple (id, name)"""
-        return [(weapon["id"], weapon["name"])
-                for weapon in self.weapons.get_all()]
+        return [(weapon["id"], weapon["name"]) for weapon in self.weapons.get_all()]
 
     def get_formatted_attack(self, weapon_id: str) -> str:
         """Method to return the attack formatted string"""
         d = self.weapons.get_damage(weapon_id)
-        if self.weapons.has_property(
-                weapon_id, "finesse") or self.weapons.is_ranged(weapon_id):
+        if self.weapons.has_property(weapon_id, "finesse") or self.weapons.is_ranged(
+            weapon_id
+        ):
             m = self.get_signed_ability_modifier("dex")
         else:
             m = self.get_signed_ability_modifier("str")
@@ -247,16 +252,16 @@ class Character(ABC):
 
     def get_formatted_armor(self) -> str:
         """Method to return the armor formatted string"""
-        armor_str = ", ".join([
-            self.armor.get_formatted(e) for e in self.armor.get_all()
-        ])
+        armor_str = ", ".join(
+            [self.armor.get_formatted(e) for e in self.armor.get_all()]
+        )
         return "\n".join(textwrap.wrap(armor_str, 75))
 
     def get_formatted_equipment(self) -> str:
         """Method to return the equipment formatted string"""
-        equipment_str = ", ".join([
-            self.equipment.get_formatted(e) for e in self.equipment.get_all()
-        ])
+        equipment_str = ", ".join(
+            [self.equipment.get_formatted(e) for e in self.equipment.get_all()]
+        )
         return "\n".join(textwrap.wrap(equipment_str, 75))
 
     def get_formatted_money(self) -> str:
@@ -266,16 +271,14 @@ class Character(ABC):
     def get_formatted_languages(self) -> str:
         """Method to return the languages formatted string"""
         return Text.properly_format_list(
-            [language["name"] for language in self.languages.get_all()])
+            [language["name"] for language in self.languages.get_all()]
+        )
 
     def get_all_features(self) -> list:
         """Method to return a list of character's features in tuple (id, name)"""
-        return [(feature["id"], feature["name"])
-                for feature in self.features.get_all()]
+        return [(feature["id"], feature["name"]) for feature in self.features.get_all()]
 
-    def get_feature_description(self,
-                                feature_id: str,
-                                indent_length: int = 20) -> str:
+    def get_feature_description(self, feature_id: str, indent_length: int = 20) -> str:
         """Method to return the feature description string"""
         desc = self.features.get_description(feature_id)
         empty_str = " " * indent_length
@@ -295,9 +298,11 @@ class Character(ABC):
         prof_weapons = [w["name"] for w in self.weapons.get_proficient()]
         prof_tools = [e["name"] for e in self.equipment.get_proficient()]
 
-        for (prof_type, profs) in [("Armor", prof_armor),
-                                   ("Weapons", prof_weapons),
-                                   ("Tools", prof_tools)]:
+        for (prof_type, profs) in [
+            ("Armor", prof_armor),
+            ("Weapons", prof_weapons),
+            ("Tools", prof_tools),
+        ]:
             if len(profs) == 0:
                 prof_list.append((prof_type, "None"))
             else:

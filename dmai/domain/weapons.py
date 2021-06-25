@@ -1,4 +1,5 @@
 from dmai.utils.loader import Loader
+from dmai.game.state import State
 
 
 class Weapons:
@@ -37,7 +38,7 @@ class Weapons:
         """Method to return specified weapon"""
         if weapon_id in self.weapons_data:
             return self.weapons_data[weapon_id]
-    
+
     def can_equip(self, weapon_id: str) -> tuple:
         """Method to return whether specified weapon can be equipped.
         Returns a tuple with the boolean and a string with a reason."""
@@ -62,14 +63,16 @@ class Weapons:
         """Method to return whether specified weapon can be unequipped.
         Returns a tuple with the boolean and a string with a reason."""
         if not weapon_id:
-            if not self.get_equipped("right_hand") and not self.get_equipped("left_hand"):
+            if not self.get_equipped("right_hand") and not self.get_equipped(
+                "left_hand"
+            ):
                 return (False, "nothing equipped")
             else:
                 return (True, "")
 
         if not weapon_id in self.weapons:
             return (False, "not owned")
-        
+
         if not self.is_equipped(weapon_id):
             return (False, "not equipped")
         return (True, "")
@@ -90,17 +93,31 @@ class Weapons:
                 return True
         return False
 
+    def get_damage_dice(self, weapon_id: str) -> dict:
+        """Method to return the weapon damage dice spec"""
+        if weapon_id in self.weapons_data:
+            return self.weapons_data[weapon_id]["damage"]
+        
     def get_damage(self, weapon_id: str) -> str:
         """Method to return the weapon damage"""
-        if weapon_id in self.weapons_data:
-            damage = self.weapons_data[weapon_id]["damage"]
-            return "{t}{d}".format(t=damage["total"], d=damage["die"])
+        damage = self.get_damage_dice(weapon_id)
+        return "{t}{d}".format(t=damage["total"], d=damage["die"])
 
     def get_damage_type(self, weapon_id: str) -> str:
         """Method to return the weapon damage type"""
-        if weapon_id in self.weapons_data:
-            damage = self.weapons_data[weapon_id]["damage"]
-            return damage["type"]
+        damage = self.get_damage_dice(weapon_id)
+        return damage["type"]
+
+    def get_damage_ability(self, weapon_id: str) -> str:
+        """Method to return the damage modifier ability"""
+        if self.has_property(weapon_id, "finesse"):
+            if self.is_ranged(weapon_id):
+                return "dex"
+            else:
+                c = State.get_player().character
+                if c.get_ability_modifier("dex") > c.get_ability_modifier("str"):
+                    return "dex"
+        return "str"
 
     def equip_weapon(self, weapon_id: str, slot: str = None) -> bool:
         """Method to equip specified weapon"""
@@ -135,14 +152,19 @@ class Weapons:
             return True
         return False
 
-    def get_equipped(self, slot) -> dict:
+    def get_equipped(self, slot: str = None) -> dict:
         """Method to get equipped weapon.
         Returns a dictionary"""
         if slot == "right_hand" and self.right_hand:
             return self.weapons_data[self.right_hand]
         if slot == "left_hand" and self.left_hand:
             return self.weapons_data[self.left_hand]
-    
+        if slot == "any":
+            if self.right_hand:
+                return self.weapons_data[self.right_hand]
+            elif self.left_hand:
+                return self.weapons_data[self.left_hand]
+
     def is_equipped(self, weapon_id: str) -> bool:
         """Method to determine if weapon is equipped.
         Returns bool"""

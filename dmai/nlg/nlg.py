@@ -111,6 +111,20 @@ class NLG(metaclass=NLGMeta):
     ############################################################
     # Action utterances
     @classmethod
+    def health_update(cls, current_hp, hp_max: int = None):
+        """Return the utterance updating player about their current hp"""
+        if not hp_max:
+            m = ""
+        else:
+            m = " out of a maximum of {h}".format(h=hp_max)
+        utters = [
+            "You've got {h} hp left{m}.".format(h=current_hp, m=m)
+        ]
+        return random.choice(utters)
+        
+    ############################################################
+    # Action utterances
+    @classmethod
     def enter_room(cls, room: str, adventure=None) -> str:
         """Return the utterance for entering a room previously visited"""
         if not adventure:

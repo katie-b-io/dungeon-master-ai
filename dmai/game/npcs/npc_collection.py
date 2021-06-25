@@ -66,7 +66,7 @@ class NPCCollection:
                     monster.set_will_attack_player(will_attack_player)
                     monsters[unique_id] = monster
                     # initialise State
-                    State.set_init_monster(unique_id, room, status)
+                    State.set_init_monster(unique_id, room, status, monster.hp_max)
         return monsters
 
     def get_type(self, npc_id: str) -> bool:

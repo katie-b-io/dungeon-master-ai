@@ -97,6 +97,7 @@ class State(metaclass=StateMeta):
             cls.set_expected_intents(["roll"])
             OutputBuilder.append(NLG.transition_to_combat())
         else:
+            cls.set_target(target, attacker)
             State.set_expected_intents(["roll"])
             OutputBuilder.append(NLG.perform_attack_roll())
             cls.progress_combat_status()
@@ -218,10 +219,11 @@ class State(metaclass=StateMeta):
     ############################################################
     # METHODS RELATING TO STATUS AND ATTITUDE
     @classmethod
-    def set_init_monster(cls, unique_id: str, room_id: str, status: str):
+    def set_init_monster(cls, unique_id: str, room_id: str, status: str, hp: int):
         """Method to set the init status for data objects where 
         no initial value is required"""
         cls.current_target[unique_id] = None
+        cls.current_hp[unique_id] = hp
         cls.set_init_room(unique_id, room_id)
         cls.set_init_status(unique_id, status)
     
@@ -548,10 +550,16 @@ class State(metaclass=StateMeta):
         Returns the updated hp value"""
         try:
             cls.current_hp[entity] = cls.current_hp[entity] - damage
-            if cls.current_hp[entity] <= 0 and entity == "player":
-                # if the entity is player, this is a gameover state
-                OutputBuilder.append(NLG.hp_end_game(attacker))
-                dmai.dmai_helpers.gameover()
+            if cls.current_hp[entity] <= 0:
+                if entity == "player":
+                    # if the entity is player, this is a gameover state
+                    OutputBuilder.append(NLG.hp_end_game(attacker))
+                    dmai.dmai_helpers.gameover()
+                else:
+                    # player has killed a monster
+                    name = State.get_name(entity)
+                    OutputBuilder.append("You killed {n}!".format(n=name))
+                    cls.set_current_status(entity, "dead")
             return cls.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)

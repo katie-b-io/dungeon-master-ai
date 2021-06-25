@@ -29,6 +29,10 @@ class Player(PlayerAgent):
     def armor_class(self) -> int:
         return self.character.armor_class
     
+    @property
+    def hp_max(self) -> int:
+        return self.character.hp_max
+    
     def get_all_equipment_ids(self) -> list:
         """Method to return a list of IDs of all the player's equipment"""
         return self.character.equipment.get_all()
@@ -77,15 +81,24 @@ class Player(PlayerAgent):
         die = "d20{m}".format(m=self.character.get_signed_initiative())
         return DiceRoller.roll(die)
     
-    def attack_roll(self, weapon: str) -> int:
+    def attack_roll(self, weapon_id: str = None) -> int:
         """Method to roll attack"""
-        die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon))
+        if weapon_id and self.character.weapons.is_equipped(weapon_id):
+            weapon = self.character.weapons.get_weapon(weapon_id)
+        else:
+            weapon = self.character.weapons.get_equipped("any")
+        die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon["id"]))
         return DiceRoller.roll(die)
     
-    def damage_roll(self, weapon: str) -> int:
+    def damage_roll(self, weapon_id: str = None) -> int:
         """Method to roll damage"""
-        die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon))
-        return DiceRoller.roll(die)
+        if weapon_id and self.character.weapons.is_equipped(weapon_id):
+            weapon = self.character.weapons.get_weapon(weapon_id)
+        else:
+            weapon = self.character.weapons.get_equipped("any")
+        dice_spec = self.character.weapons.get_damage_dice(weapon["id"])
+        dice_spec["mod"] = self.character.get_damage_modifier(weapon["id"])
+        return DiceRoller.roll_dice(dice_spec)
     
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
