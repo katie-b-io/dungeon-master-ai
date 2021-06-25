@@ -6,7 +6,7 @@
         "size": "tiny",
         "alignment": "unaligned",
         "ac": 12,
-        "hp_max": 2,
+        "hp_max": 1,
         "hit_dice": {
             "die": "d4",
             "total": 1,
@@ -72,7 +72,7 @@
         "size": "small",
         "alignment": "unaligned",
         "ac": 12,
-        "hp_max": 7,
+        "hp_max": 2,
         "hit_dice": {
             "die": "d6",
             "total": 2,
@@ -198,7 +198,7 @@
         "size": "small",
         "alignment": "neutral_evil",
         "ac": 15,
-        "hp_max": 7,
+        "hp_max": 2,
         "hit_dice": {
             "die": "d6",
             "total": 2,
@@ -295,7 +295,7 @@
         "size": "medium",
         "alignment": "lawful_evil",
         "ac": 13,
-        "hp_max": 13,
+        "hp_max": 6,
         "hit_dice": {
             "die": "d8",
             "total": 2,
@@ -391,7 +391,7 @@
         "size": "medium",
         "alignment": "neutral_evil",
         "ac": 8,
-        "hp_max": 22,
+        "hp_max": 12,
         "hit_dice": {
             "die": "d8",
             "total": 3,
