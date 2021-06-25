@@ -1,6 +1,6 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError
-from dmai.game.state import State
+from dmai.game.state import State, Status
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
 import dmai
@@ -29,6 +29,10 @@ class Attack(Action):
             current = State.get_current_room(self.attacker)
             if not current == State.get_current_room(self.target):
                 return (False, "different location")
+            
+            # can't attack a dead target
+            if State.get_current_status(self.target) == Status("dead"):
+                return (False, "dead target")
 
             # can't attack if can't see
             # TODO change this to blinded condition - disadvantage on attack roll and not knowing whether hit was successful

@@ -55,18 +55,12 @@ class Roll(Action):
         """Execute an attack roll.
         Returns a bool to indicate whether the action was successful"""
         
-        print("================================")
-        print("CURRENT: " + State.get_combat_status().name)
-        print("TARGET: " + str(State.get_current_target_id()))
-        print("")
-        
         # set initiative order
         if State.get_combat_status() == Combat.INITIATIVE:
             State.set_initiative_order()
             OutputBuilder.append(
                 NLG.entity_turn(State.get_name(State.get_currently_acting_entity()))
             )
-            return
         
         # make sure the player can enter input when not waiting
         State.play()
@@ -80,6 +74,11 @@ class Roll(Action):
                 damage = player.damage_roll()
                 hp = State.take_damage(damage, "player", entity=target.unique_id)
                 OutputBuilder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
+                # end the fight if we're not in combat any more
+                if not State.in_combat:
+                    return
+            OutputBuilder.append("Okay, now the monsters get to have their turn!")
+            State.pause()
         elif State.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)
             target = State.get_current_target()
@@ -90,12 +89,11 @@ class Roll(Action):
             else:
                 # can't deal damage, clear target
                 State.clear_target()
-                OutputBuilder.append("That does't hit. Monster's turn now.")
+                OutputBuilder.append("That doesn't hit. Monster's turn now.")
                 State.pause()
 
         # see if monster(s) have their go now
         while State.get_combat_status() == Combat.WAIT:
-            State.pause()
             entity = State.get_currently_acting_entity()
             if entity == "player":
                 # progress to declare target
@@ -124,8 +122,7 @@ class Roll(Action):
                 OutputBuilder.append(NLG.perform_damage_roll())
                 State.progress_combat_status()
             else:
-                # didn't hit, skip damage roll by progressing combat twice
-                State.progress_combat_status()
+                # didn't hit, skip damage roll
                 State.progress_combat_status()
             return
     

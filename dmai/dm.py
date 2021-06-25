@@ -312,9 +312,12 @@ class DM:
 
         if not target:
             attacked = False
-            OutputBuilder.append(
-                NLG.no_target("attack", State.get_formatted_possible_monster_targets())
-            )
+            if not State.get_possible_monster_targets():
+                OutputBuilder.append(NLG.no_monster_targets())
+            else:
+                OutputBuilder.append(
+                    NLG.no_target("attack", State.get_formatted_possible_monster_targets())
+                )
         else:
             logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
             attacked = self.actions.attack(attacker, target)
@@ -453,8 +456,10 @@ class DM:
         if State.stored_intent:
             if "nlu_entities" in State.stored_intent["params"]:
                 nlu_entities.extend(State.stored_intent["params"]["nlu_entities"])
+            if State.stored_intent["intent"] == "attack":
+                return self.actions.roll("attack", nlu_entities, die)
 
-        if State.in_combat or State.stored_intent["intent"] == "attack":
+        if State.in_combat:
             return self.actions.roll("attack", nlu_entities, die)
         
         return self.actions.roll("roll", nlu_entities, die)

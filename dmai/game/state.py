@@ -107,6 +107,7 @@ class State(metaclass=StateMeta):
         cls.set_current_game_mode("explore")
         cls.in_combat = False
         cls.roleplaying = False
+        cls.initiative_order = []
         cls.clear_target()
         cls.clear_conversation()
         cls.clear_expected_intents()
@@ -117,6 +118,7 @@ class State(metaclass=StateMeta):
             cls.set_current_game_mode("roleplay")
             cls.in_combat = False
             cls.roleplaying = True
+            cls.initiative_order = []
             cls.clear_target()
             cls.set_conversation_target(target)
             cls.clear_expected_intents()
@@ -460,11 +462,13 @@ class State(metaclass=StateMeta):
         
         # set combat status depending on player initiative
         if cls.initiative_order.index("player") == 0:
-            # we have a target, so get an attack roll from player
-            cls.set_combat_status(2)
+            # get the target from the player
+            cls.set_combat_status(1)
+            cls.set_expected_intents(["attack"])
         else:
             # player doesn't go first - wait til their turn
             cls.set_combat_status(4)
+            cls.clear_target()
             OutputBuilder.append("You'll have to wait your turn.")
             # don't allow player input
             cls.pause()
@@ -556,14 +560,27 @@ class State(metaclass=StateMeta):
                     OutputBuilder.append(NLG.hp_end_game(attacker))
                     dmai.dmai_helpers.gameover()
                 else:
-                    # player has killed a monster
-                    name = State.get_name(entity)
-                    OutputBuilder.append("You killed {n}!".format(n=name))
-                    cls.set_current_status(entity, "dead")
+                    cls.kill_monster(entity)
             return cls.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
+    
+    @classmethod
+    def kill_monster(cls, entity: str) -> None:
+        # player has killed a monster
+        name = State.get_name(entity)
+        OutputBuilder.append("You killed {n}!".format(n=name))
+        cls.set_current_status(entity, "dead")
+        cls.clear_target()
+        cls.initiative_order.remove(entity)
+        if len(cls.initiative_order) == 1:
+            cls.end_fight()
+
+    @classmethod
+    def end_fight(cls) -> None:
+        OutputBuilder.append(NLG.won_fight())
+        cls.explore()
         
     ############################################################
     # METHODS RELATING TO LOCATION
