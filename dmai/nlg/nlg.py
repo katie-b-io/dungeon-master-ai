@@ -464,3 +464,12 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
     
+    @classmethod
+    def hp_end_game(cls, entity: str) -> str:
+        """Return the utterance for ending the game by running out of hp"""
+        utters = [
+            "You were attacked and fatally wounded by {e}.".format(e=entity),
+            "{e} killed you!".format(e=entity),
+            "Nooo, you tried your hardest but {e} struck the killing blow.".format(e=entity),
+        ]
+        return random.choice(utters)

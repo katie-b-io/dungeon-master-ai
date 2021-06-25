@@ -7,6 +7,7 @@ from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
 from dmai.utils.logger import get_logger
+import dmai
 
 logger = get_logger(__name__)
 
@@ -542,13 +543,15 @@ class State(metaclass=StateMeta):
         return monster_id in cls.attacked_by_player
     
     @classmethod
-    def take_damage(cls, damage: int, entity: str = "player") -> int:
+    def take_damage(cls, damage: int, attacker: str, entity: str = "player") -> int:
         """Method to apply damage to specified entity.
         Returns the updated hp value"""
         try:
             cls.current_hp[entity] = cls.current_hp[entity] - damage
-            if cls.current_hp[entity] <= 0:
-                OutputBuilder.append("{e} is dying!".format(e=entity))
+            if cls.current_hp[entity] <= 0 and entity == "player":
+                # if the entity is player, this is a gameover state
+                OutputBuilder.append(NLG.hp_end_game(attacker))
+                dmai.dmai_helpers.gameover()
             return cls.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)

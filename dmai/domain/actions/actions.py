@@ -303,6 +303,5 @@ class Actions:
         attacker = State.get_entity(attacker)
         target = State.get_entity(target)
         damage = attacker.damage_roll(weapon)
-        hp = State.take_damage(damage)
-        print("{a} is now DAMAGING for {d} points. You have {h} hp left!".format(a=attacker.unique_name, d=damage, h=hp))
+        hp = State.take_damage(damage, attacker.unique_name)
         return
