@@ -154,7 +154,7 @@ class TestState(unittest.TestCase):
         entity = "player"
         State.set_current_room(entity, "inns_cellar")
         State.light_torch()
-        self.assertEqual(State.get_formatted_possible_monster_targets(entity), "You could attack Giant Rat 1, Giant Rat 2, Giant Rat 3 or Giant Rat 4.")
+        self.assertEqual(State.get_formatted_possible_monster_targets(entity), "You could attack Giant Rat 1 or Giant Rat 2.")
 
 
 class TestAdventure(unittest.TestCase):
@@ -197,7 +197,7 @@ class TestNPCCollection(unittest.TestCase):
     
     def test__create_monsters(self) -> None:
         monsters = self.npc_collection._create_monsters()
-        self.assertListEqual(["giant_rat_1", "giant_rat_2", "giant_rat_3", "giant_rat_4", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m for m in monsters])
+        self.assertListEqual(["giant_rat_1", "giant_rat_2", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m for m in monsters])
     
     def test_get_type(self) -> None:
         self.npc_collection.load()
@@ -252,12 +252,12 @@ class TestNPCCollection(unittest.TestCase):
     def test_get_all_monsters(self) -> None:
         self.npc_collection.load()
         monsters = self.npc_collection.get_all_monsters()
-        self.assertListEqual(["giant_rat_1", "giant_rat_2", "giant_rat_3", "giant_rat_4", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m.unique_id for m in monsters])
+        self.assertListEqual(["giant_rat_1", "giant_rat_2", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m.unique_id for m in monsters])
 
     def test_get_all_monster_ids(self) -> None:
         self.npc_collection.load()
         monsters = self.npc_collection.get_all_monster_ids()
-        self.assertListEqual(["giant_rat_1", "giant_rat_2", "giant_rat_3", "giant_rat_4", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m for m in monsters])
+        self.assertListEqual(["giant_rat_1", "giant_rat_2", "zombie_1", "goblin_1", "skeleton_1", "goblin_2", "goblin_3"], [m for m in monsters])
     
 
 if __name__ == "__main__":

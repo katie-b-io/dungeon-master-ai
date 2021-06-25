@@ -290,10 +290,10 @@ class Actions:
         # TODO implement advantage/disadvantage
         attacker = State.get_entity(attacker)
         target = State.get_entity(target)
-        if attacker.attack_roll(weapon) <= target.armor_class:
-            print("{a}: It hits!".format(a=attacker.unique_id))
+        if attacker.attack_roll(weapon) >= target.armor_class:
+            OutputBuilder.append("{a} hits!".format(a=attacker.unique_name))
         else:
-            print("{a}: That's unfortunate!".format(a=attacker.unique_id))
+            OutputBuilder.append("{a} misses!".format(a=attacker.unique_name))
             State.update_initiative_order()
         return
     
@@ -303,6 +303,8 @@ class Actions:
         attacker = State.get_entity(attacker)
         target = State.get_entity(target)
         damage = attacker.damage_roll(weapon)
-        hp = State.take_damage(damage)
-        print("{a} is now DAMAGING for {d} points. You have {h} hp left!".format(a=attacker.unique_name, d=damage, h=hp))
+        hp = State.take_damage(damage, attacker.unique_name)
+        OutputBuilder.append("{a} deals {d} points of damage.".format(a=attacker.unique_name, d=damage))
+        if target == State.get_player():
+            OutputBuilder.append(NLG.health_update(hp, hp_max=target.hp_max))
         return

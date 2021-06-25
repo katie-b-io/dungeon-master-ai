@@ -55,9 +55,9 @@ class NLG(metaclass=NLGMeta):
         elif result > 19:
             utters = [
                 "Nice!",
-                "Truly magnificent"
-                "Natural 20, way to go!"
-                "That's how you do it!"
+                "Truly magnificent",
+                "Natural 20, way to go!",
+                "That's how you do it!",
             ]
         else:
             utters = ["Well, it's a number!"]
@@ -108,6 +108,20 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
 
+    ############################################################
+    # Action utterances
+    @classmethod
+    def health_update(cls, current_hp, hp_max: int = None):
+        """Return the utterance updating player about their current hp"""
+        if not hp_max:
+            m = ""
+        else:
+            m = " out of a maximum of {h}".format(h=hp_max)
+        utters = [
+            "You've got {h} hp left{m}.".format(h=current_hp, m=m)
+        ]
+        return random.choice(utters)
+        
     ############################################################
     # Action utterances
     @classmethod
@@ -198,6 +212,16 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
 
+    @classmethod
+    def no_monster_targets(cls) -> str:
+        """Return the utterance for no mosnter targets"""
+        utters = [
+            "There are no monsters in here for you to attack!",
+            "You don't have any targets in here",
+            "Nope, there are no monsters here"
+        ]
+        return random.choice(utters)
+    
     @classmethod
     def no_equipment(cls, stop: bool = False) -> str:
         """Return the utterance for no equipment"""
@@ -382,6 +406,9 @@ class NLG(metaclass=NLGMeta):
         elif reason == "no visibility":
             return "{a} cannot attack {t} because it's too dark to see them!".format(
                 a=attacker, t=target) 
+        elif reason == "dead target":
+            return "{a} cannot attack {t} because they're already dead!".format(
+                a=attacker, t=target) 
     
     @classmethod
     def attack_of_opportunity(cls,
@@ -412,6 +439,16 @@ class NLG(metaclass=NLGMeta):
                 .format(t=target)
             ]
             return random.choice(utters)
+    
+    @classmethod
+    def won_fight(cls) -> str:
+        """Method to return the utterance for winning a fight"""
+        utters = [
+            "You won the battle, congratulations!",
+            "You put up a good fight and it paid off",
+            "Awesome, they won't be bothering you again!"
+        ]
+        return random.choice(utters)
 
     ############################################################
     # Roleplay utterances
@@ -464,3 +501,12 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
     
+    @classmethod
+    def hp_end_game(cls, entity: str) -> str:
+        """Return the utterance for ending the game by running out of hp"""
+        utters = [
+            "You were attacked and fatally wounded by {e}.".format(e=entity),
+            "{e} killed you!".format(e=entity),
+            "Nooo, you tried your hardest but {e} struck the killing blow.".format(e=entity),
+        ]
+        return random.choice(utters)
