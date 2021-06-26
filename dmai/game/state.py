@@ -549,7 +549,10 @@ class State(metaclass=StateMeta):
             if cls.current_hp[entity] <= 0:
                 if entity == "player":
                     # if the entity is player, this is a gameover state
-                    OutputBuilder.append(NLG.hp_end_game(attacker))
+                    attacker = State.get_entity(attacker)
+                    death_text = attacker.text["killed_player"]
+                    OutputBuilder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
+                    OutputBuilder.append(cls.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover()
                 else:
                     cls.kill_monster(entity)

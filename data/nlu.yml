@@ -142,6 +142,10 @@ nlu:
     - go [upstairs](location)
     - go to the [storage room](location)
     - go through [the hole](location)
+    - head through [the hole](location) in the wall
+    - go through the [tunnel](location)
+    - go through the [tunnel](location) in the eastern wall
+    - walk into [hole](location)
     - head to [storage](location)
     - travel to [store room](location)
     - progress to [store](location)
@@ -659,6 +663,8 @@ nlu:
     - store room
     - store
     - the hole
+    - hole
+    - tunnel
 
 - synonym: burial_chamber
   examples: |

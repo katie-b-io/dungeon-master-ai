@@ -236,6 +236,13 @@ class Actions:
                     State.received_quest()
                     OutputBuilder.append(
                         self.npcs.get_entity(target).dialogue["gives_quest"])
+                elif not State.get_dm().npcs.get_monster_id("giant_rat", status="alive", location="inns_cellar"):
+                    # TODO this condition is hardcoded for the baradin tomb quest - don't hardcode it
+                    State.set_conversation_target(target)
+                    OutputBuilder.append(
+                        self.npcs.get_entity(target).dialogue["turn_in_quest"])
+                    OutputBuilder.append(State.get_dm().get_bad_ending())
+                    dmai.dmai_helpers.gameover()
                 else:
                     OutputBuilder.append(NLG.roleplay(State.get_name(target)))
             return can_converse
@@ -303,8 +310,7 @@ class Actions:
         attacker = State.get_entity(attacker)
         target = State.get_entity(target)
         damage = attacker.damage_roll(weapon)
-        hp = State.take_damage(damage, attacker.unique_name)
-        OutputBuilder.append("{a} deals {d} points of damage.".format(a=attacker.unique_name, d=damage))
+        hp = State.take_damage(damage, attacker.unique_id)
         if target == State.get_player():
             OutputBuilder.append(NLG.health_update(hp, hp_max=target.hp_max))
         return

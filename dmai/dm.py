@@ -169,8 +169,14 @@ class DM:
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
+    
+    def get_good_ending(self) -> str:
+        return self.adventure.text["conclusion"]["good_ending"]
+    
+    def get_bad_ending(self) -> str:
+        return self.adventure.text["conclusion"]["bad_ending"]
 
-    def hint(self) -> bool:
+    def hint(self, **kwargs) -> bool:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the OutputBuilder.
         """
@@ -404,7 +410,7 @@ class DM:
             conversation = self.actions.converse(target)
         return conversation
 
-    def affirm(self) -> None:
+    def affirm(self, **kwargs) -> bool:
         """Player has uttered an affirmation.
         Appends the hint to output with the OutputBuilder.
         """
@@ -412,8 +418,9 @@ class DM:
             npc = self.npcs.get_entity(State.current_conversation)
             OutputBuilder.append(npc.dialogue["accepts_quest"])
             State.quest()
+        return True
 
-    def deny(self) -> None:
+    def deny(self, **kwargs) -> bool:
         """Player has uttered a denial.
         Appends the hint to output with the OutputBuilder.
         """
@@ -421,7 +428,9 @@ class DM:
             # this is a game end condition
             npc = self.npcs.get_entity(State.current_conversation)
             OutputBuilder.append(npc.dialogue["turns_down_quest"])
+            OutputBuilder.append(self.get_bad_ending())
             dmai.dmai_helpers.gameover()
+        return True
 
     def explore(self, target: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to explore/investigate.

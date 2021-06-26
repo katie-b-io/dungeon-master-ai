@@ -26,7 +26,8 @@ class Room:
         trigger_map = {
             "enter": self.enter,
             "exit": print,
-            "visibility": self.trigger_visibility
+            "visibility": self.trigger_visibility,
+            "fight_ends": self.trigger_fight_ends
         }
 
         # populate the self.text object
@@ -62,7 +63,14 @@ class Room:
             ):
                 OutputBuilder.append(self.text["visibility"]["text"])
                 self.text["visibility"]["can_trigger"] = False
-
+    
+    def trigger_fight_ends(self) -> str:
+        """Method when triggering fight ends text"""
+        logger.debug("Triggering fight ending in room: {r}".format(r=self.id))
+        if not State.get_possible_monster_targets():
+            OutputBuilder.append(self.text["fight_ends"]["text"])
+            self.text["fight_ends"]["can_trigger"] = False
+            
     def trigger(self) -> None:
         """Method to print any new text if conditions met"""
         for text_type in self.text:
