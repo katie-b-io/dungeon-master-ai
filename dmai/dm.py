@@ -440,14 +440,13 @@ class DM:
         if not target:
             logger.info("player is exploring!")
             room = State.get_current_room()
-            if State.torch_lit or State.get_player().character.has_darkvision():
-                OutputBuilder.append(room.text["description"]["text"])
-            else:
-                OutputBuilder.append(room.text["no_visibility_description"]["text"])
+            OutputBuilder.append(room.get_description())
             explore = True
         else:
             logger.info("player is investigating {t}!".format(t=target))
             explore = self.actions.investigate(target)
+        if explore:
+            State.explore()
         return explore
 
     def roll(

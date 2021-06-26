@@ -70,9 +70,14 @@ class TestDM(unittest.TestCase):
         self.assertListEqual([_trigger], self.dm.triggers)
 
     def test_deregister_trigger(self) -> None:
-        trigger = self.dm.triggers[0]
-        self.dm.deregister_trigger(trigger)
-        self.assertListEqual([], self.dm.triggers)
+        trigger1 = self.dm.triggers[0]
+        trigger2 = self.dm.triggers[3]
+        trigger3 = self.dm.triggers[6]
+        self.dm.deregister_trigger(trigger1)
+        self.assertNotIn(trigger1, self.dm.triggers)
+        self.dm.deregister_trigger(trigger2)
+        self.assertNotIn(trigger2, self.dm.triggers)
+        self.assertIn(trigger3, self.dm.triggers)
 
     def test_get_intro_text(self) -> None:
         intro = self.dm.get_intro_text()

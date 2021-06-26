@@ -189,18 +189,13 @@ class NLG(metaclass=NLGMeta):
             "Sorry, where do you want to go?",
             "I'm not sure where you want to go, can you repeat your destination.",
         ]
+        
         if possible_destinations:
-            p = "You could go to the {p}".format(p=possible_destinations[0])
-            for poss in possible_destinations[1:]:
-                if possible_destinations[-1] == poss:
-                    p += " or the {p}".format(p=poss)
-                else:
-                    p += ", the {p}".format(p=poss)
-            p += "."
-                
-            return "{u} {p}".format(u=random.choice(utters), p=p)
+            p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
         else:
-            return "{u}.".format(u=random.choice(utters))
+            p = ""
+        
+        return "{u} {p}".format(u=random.choice(utters), p=p)
 
     @classmethod
     def no_target(cls, verb: str, possible_targets: str = "") -> str:

@@ -760,3 +760,48 @@ class State(metaclass=StateMeta):
         possible_targets = [monster.unique_name for monster in monsters]
         formatted_str = "You could attack {a}.".format(a=Text.properly_format_list(possible_targets, last_delimiter=" or "))
         return formatted_str
+    
+    @classmethod
+    def get_monster_status_summary(cls, location: str) -> dict:
+        """Method to return a dictionary of monster status of specified location"""
+        monster_status = {"alive": [], "dead": []}
+        for monster in cls.get_dm().npcs.get_all_monsters():
+            if cls.get_current_room_id(monster.unique_id) == location:
+                if cls.is_alive(monster.unique_id):
+                    monster_status["alive"].append(monster.name)
+                else:
+                    monster_status["dead"].append(monster.name)
+        status_count = {}
+        for status in monster_status:
+            status_count[status] = dict(Counter(monster_status[status]))
+        return status_count
+    
+    @classmethod
+    def get_formatted_monster_status_summary(cls, location: str) -> str:
+        """Method to return a formatted string of monster status of specified location"""
+        monster_status = cls.get_monster_status_summary(location)
+        # format alive monsters
+        formatted_monsters = {"alive": [], "dead": []}
+        for status in monster_status:
+            for monster in monster_status[status]:
+                count = monster_status[status][monster]
+                if count > 1:
+                    formatted_monsters[status].append("{c} {m}s".format(c=count, m=monster))
+                else:
+                    formatted_monsters[status].append("a {m}".format(c=count, m=monster))
+                  
+        if monster_status["alive"] and monster_status["dead"]:
+            summary = "We've got {a} alive and {d} dead.".format(
+                a=Text.properly_format_list(formatted_monsters["alive"]),
+                d=Text.properly_format_list(formatted_monsters["dead"]))
+        elif monster_status["alive"]:
+            summary = "We've got {a} alive.".format(
+                a=Text.properly_format_list(formatted_monsters["alive"]))
+        elif monster_status["dead"]:
+            summary = "We've got {d} that are dead.".format(
+                d=Text.properly_format_list(formatted_monsters["dead"]))
+        else:
+            summary = ""
+
+        return summary
+        
