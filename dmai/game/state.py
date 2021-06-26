@@ -172,6 +172,14 @@ class State(metaclass=StateMeta):
         init_room = cls.dm.adventure.get_init_room()
         cls.dm.register_trigger(cls.dm.adventure.get_room(init_room))
         cls.current_room["player"] = init_room
+        # register monster triggers
+        for monster in cls.dm.npcs.get_all_monsters():
+            if hasattr(monster, "trigger"):
+                cls.dm.register_trigger(monster)
+        # register npc triggers
+        for npc in cls.dm.npcs.get_all_npcs():
+            if hasattr(npc, "trigger"):
+                cls.dm.register_trigger(npc)
 
     @classmethod
     def get_dm(cls) -> None:
@@ -556,6 +564,9 @@ class State(metaclass=StateMeta):
                     dmai.dmai_helpers.gameover()
                 else:
                     cls.kill_monster(entity)
+                    # deregister triggers
+                    if hasattr(State.get_entity(entity), "trigger"):
+                        cls.dm.register_trigger(State.get_entity(entity))
             return cls.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
@@ -653,10 +664,13 @@ class State(metaclass=StateMeta):
                     room_id):
                 logger.debug("Setting current room for {e}: {r}".format(
                     e=entity, r=room_id))
-                cls.stationary = False
-                cls.dm.deregister_trigger(cls.get_current_room(entity))
-                cls.current_room[entity] = room_id
-                cls.dm.register_trigger(cls.get_current_room(entity))
+                if entity == "player":
+                    cls.stationary = False
+                    cls.dm.deregister_trigger(cls.get_current_room(entity))
+                    cls.current_room[entity] = room_id
+                    cls.dm.register_trigger(cls.get_current_room(entity))
+                else:
+                    cls.current_room[entity] = room_id
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
 

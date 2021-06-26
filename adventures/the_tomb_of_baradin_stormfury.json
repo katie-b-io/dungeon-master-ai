@@ -33,7 +33,8 @@
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
                 "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats. You share a drink together and then take your leave, with a slightly heavier coin purse and a cask of fine ale. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
-            }
+            },
+            "triggers": {}
         },
         "anvil": {
             "id": "anvil",
@@ -48,7 +49,13 @@
             "treasure": [],
             "must_kill": false,
             "will_attack_player": false,
-            "dialogue": {}
+            "dialogue": {},
+            "triggers": {
+                "move": "stout_meal_inn",
+                "conditions": {
+                    "monsters": "dead"
+                }
+            }
         }
     },
     "rooms": {
@@ -72,8 +79,8 @@
             "visibility": true,
             "text": {
                 "enter": "On this particularly cold morning you find yourself at the Stout Meal Inn. This tavern is very large, with a long central hearth that helps to keep the cold at bay against the thick stone walls. Bundles of herbs dangle from the wooden rafters, filling the space with a plethora of fragrant aromas. The tavern floor is empty apart from a lone figure. Corvus Stouthammer, the wrinkly whitebearded dwarf proprietor prepares the inn for the day's patrons, polishing the top of a nearby table to a brilliant sheen. There is a doorway down to the cellar behind the bar. As you come closer Corvus' attention comes to you and he stops polishing. He turns to you with a slight smile under his beard and welcomes you, saying: \"About time you showed up!\"",
-                "description": "Homely tavern.",
-                "no_visibility_description": "Homely tavern."
+                "description": "Homely tavern with a few tables, a well stocked bar and a whitebearded dwarf preparing the room for the day's visitors.",
+                "no_visibility_description": "Homely tavern with a few tables, a well stocked bar and a whitebearded dwarf preparing the room for the day's visitors."
             }
         },
         "inns_cellar": {
