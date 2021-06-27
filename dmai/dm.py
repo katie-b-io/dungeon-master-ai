@@ -92,6 +92,11 @@ class DM:
                 "desc": "roll some dice",
                 "func": self.roll,
                 },
+            "pick_up": {
+                "name": "pick up",
+                "desc": "pick up an item",
+                "func": self.pick_up
+            }
         }
 
     def input(
@@ -169,8 +174,14 @@ class DM:
 
     def get_intro_text(self) -> str:
         return self.adventure.intro_text
+    
+    def get_good_ending(self) -> str:
+        return self.adventure.text["conclusion"]["good_ending"]
+    
+    def get_bad_ending(self) -> str:
+        return self.adventure.text["conclusion"]["bad_ending"]
 
-    def hint(self) -> bool:
+    def hint(self, **kwargs) -> bool:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the OutputBuilder.
         """
@@ -274,6 +285,16 @@ class DM:
         for entity in nlu_entities:
             if (
                 entity["entity"] == "die"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return entity["value"]
+    
+    def _get_item(self, nlu_entities: dict) -> str:
+        """Extract an item from NLU entities dictionary.
+        Returns a string with item"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "item"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
                 return entity["value"]
@@ -404,7 +425,7 @@ class DM:
             conversation = self.actions.converse(target)
         return conversation
 
-    def affirm(self) -> None:
+    def affirm(self, **kwargs) -> bool:
         """Player has uttered an affirmation.
         Appends the hint to output with the OutputBuilder.
         """
@@ -412,8 +433,9 @@ class DM:
             npc = self.npcs.get_entity(State.current_conversation)
             OutputBuilder.append(npc.dialogue["accepts_quest"])
             State.quest()
+        return True
 
-    def deny(self) -> None:
+    def deny(self, **kwargs) -> bool:
         """Player has uttered a denial.
         Appends the hint to output with the OutputBuilder.
         """
@@ -421,7 +443,9 @@ class DM:
             # this is a game end condition
             npc = self.npcs.get_entity(State.current_conversation)
             OutputBuilder.append(npc.dialogue["turns_down_quest"])
+            OutputBuilder.append(self.get_bad_ending())
             dmai.dmai_helpers.gameover()
+        return True
 
     def explore(self, target: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to explore/investigate.
@@ -431,14 +455,13 @@ class DM:
         if not target:
             logger.info("player is exploring!")
             room = State.get_current_room()
-            if State.torch_lit or State.get_player().character.has_darkvision():
-                OutputBuilder.append(room.text["description"]["text"])
-            else:
-                OutputBuilder.append(room.text["no_visibility_description"]["text"])
+            OutputBuilder.append(room.get_description())
             explore = True
         else:
             logger.info("player is investigating {t}!".format(t=target))
             explore = self.actions.investigate(target)
+        if explore:
+            State.explore()
         return explore
 
     def roll(
@@ -448,7 +471,7 @@ class DM:
         Returns whether the action was successful."""
         if not die and nlu_entities:
             die = self._get_die(nlu_entities)
-        else:
+        elif not die:
             # TODO to something smarter here - default to the die that makes sense
             # or ask for clarification
             die = "d20"
@@ -463,3 +486,19 @@ class DM:
             return self.actions.roll("attack", nlu_entities, die)
         
         return self.actions.roll("roll", nlu_entities, die)
+
+    def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:
+        """Attempt to pick up an item.
+        Returns whether the action was successful."""
+        if not entity:
+            entity = "player"
+        if not item and nlu_entities:
+            item = self._get_item(nlu_entities)
+
+        if not item:
+            picked_up = False
+            OutputBuilder.append(NLG.no_item())
+        else:
+            logger.info("{e} is picking up {i}!".format(e=entity, i=item))
+            picked_up = self.actions.pick_up(item, entity)
+        return picked_up

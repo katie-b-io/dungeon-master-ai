@@ -266,6 +266,10 @@ planning_actions = {
     :precondition (and 
         (quest)
         (alive ?player)
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
         (at ?player ?location)
         (connected ?door ?location ?destination)
         (not (locked ?door))
@@ -303,6 +307,10 @@ planning_actions = {
         (locked ?door)
         (ability_solution ?door ?ability)
         (not (action))
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (can_ability_check ?player ?ability ?door)
@@ -323,6 +331,10 @@ planning_actions = {
         (locked ?door)
         (equipment_solution ?door ?equipment)
         (not (action))
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (can_equipment_check ?player ?equipment ?door)
@@ -342,6 +354,10 @@ planning_actions = {
         (connected ?door ?location ?destination)
         (locked ?door)
         (not (action))
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (can_attack_roll ?player ?door)
@@ -362,6 +378,10 @@ planning_actions = {
         (locked ?door)
         (strength ?str)
         (ability_check_success ?player ?str ?door)
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (not (action))
@@ -383,6 +403,10 @@ planning_actions = {
         (locked ?door)
         (perception ?perception)
         (ability_check_success ?player ?perception ?door)
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (not (action))
@@ -405,6 +429,10 @@ planning_actions = {
         (equipped ?player ?thieves_tools)
         (thieves_tools ?thieves_tools)
         (equipment_check_success ?player ?thieves_tools ?door)
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (not (action))
@@ -427,6 +455,10 @@ planning_actions = {
         (locked ?door)
         (equipped ?player ?weapon)
         (attack_roll_success ?player ?door)
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (can_damage_roll ?player ?door)
@@ -446,6 +478,10 @@ planning_actions = {
         (connected ?door ?location ?destination)
         (locked ?door)
         (damaged ?door)
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (not (action))
@@ -453,7 +489,40 @@ planning_actions = {
         (not (alive ?door))
     )
 )"""},
+    
+    "light_torch": {
+        "pddl": """
+; Player lights a torch
+(:action light_torch
+    :parameters (?player - player ?torch - equipment)
+    :precondition (and 
+        (alive ?player)
+        (torch ?torch)
+        (has ?player ?torch)
+    )
+    :effect (and
+        (torch_lit)
+    )
+)"""},
 
+    "extinguish_torch": {
+        "pddl": """
+    ; Extinguish torch
+    (:action extinguish_torch
+        :parameters (?player - player ?torch - equipment)
+        :precondition (and 
+            (alive ?player)
+            (torch ?torch)
+            (has ?player ?torch)
+            (torch_lit)
+        )
+        :effect (and
+            (when (not (darkvision))
+                (not (torch_lit))
+            )
+        )
+    )"""},
+    
     "receive_quest": {
         "pddl": """
 ; Player receives quest from NPC that can give quests
@@ -522,6 +591,10 @@ planning_actions = {
         (at ?entity ?location)
         (at ?target ?location)
         (not (action))
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
     )
     :effect (and 
         (can_attack_roll ?entity ?target)

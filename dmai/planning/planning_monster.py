@@ -150,6 +150,9 @@ class PlanningMonster(PlanningAgent):
                     "params": [("entity", "entity"), ("target", "object")],
                 }
             )
+            predicates.append({"predicate": "torch_lit", "params": []})
+            predicates.append({"predicate": "darkvision", "params": []})
+            predicates.append({"predicate": "dark", "params": [("room", "room")]})
             writer.write(self._construct_predicates(predicates))
 
             ################################################
@@ -188,17 +191,17 @@ class PlanningMonster(PlanningAgent):
             objects = []
 
             # Player
-            objects.append(("player", "player"))
+            objects.append(["player", "player"])
 
             # Monsters
-            objects.append((monster.unique_id, "monster"))
+            objects.append([monster.unique_id, "monster"])
 
-            # Roomz
-            objects.append((State.get_current_room_id(monster.unique_id), "room"))
+            # Rooms
+            objects.append([State.get_current_room_id(monster.unique_id), "room"])
 
             # Weapons
             for attack in monster.get_all_attack_ids():
-                objects.append((attack, "weapon"))
+                objects.append([attack, "weapon"])
 
             # Construct the string
             writer.write(self._construct_objects(objects))
@@ -208,31 +211,35 @@ class PlanningMonster(PlanningAgent):
             init = []
 
             # Player
-            init.append(("at", "player", State.get_current_room().id))
+            init.append(["at", "player", State.get_current_room().id])
             if State.is_alive():
-                init.append(("alive", "player"))
+                init.append(["alive", "player"])
 
             # Monsters
-            init.append(("at", monster.unique_id, State.get_current_room(monster.unique_id).id))
+            init.append(["at", monster.unique_id, State.get_current_room(monster.unique_id).id])
             if State.is_alive(monster.unique_id):
-                init.append(("alive", monster.unique_id))
+                init.append(["alive", monster.unique_id])
+            if monster.has_darkvision():
+                init.append(["darkvision"])
+            if not State.get_current_room(monster.unique_id).visibility:
+                init.append(["dark", State.get_current_room(monster.unique_id).id])
 
             # Weapons
             for attack in monster.get_all_attack_ids():
-                init.append(("has", monster.unique_id, attack))
-                init.append(("equipped", monster.unique_id, attack))
+                init.append(["has", monster.unique_id, attack])
+                init.append(["equipped", monster.unique_id, attack])
 
             # Combat
             if monster.will_attack_player:
                 # TODO check if player is visible to monster
-                init.append(("must_kill", "player"))
+                init.append(["must_kill", "player"])
             else:
                 for m in State.get_possible_monster_targets(monster.unique_id):
                     if State.was_attacked(m.unique_id):
-                        init.append(("must_kill", "player"))
+                        init.append(["must_kill", "player"])
                         break
             if State.was_attacked(monster.unique_id):
-                init.append(("attacked", "player", monster.unique_id))
+                init.append(["attacked", "player", monster.unique_id])
 
             # Construct the string
             writer.write(self._construct_init(init))
@@ -240,10 +247,10 @@ class PlanningMonster(PlanningAgent):
             ################################################
             # Construct the problem file goal
             goal = []
-            goal.append(("not", "must_kill", "player"))
-            goal.append(("not", "attacked", "player", monster.unique_id))
+            goal.append(["not", "must_kill", "player"])
+            goal.append(["not", "attacked", "player", monster.unique_id])
             alt_goal = []
-            alt_goal.append(("not", "alive", "player"))
+            alt_goal.append(["not", "alive", "player"])
 
             writer.write(self._construct_goal(goal, alt_goal=alt_goal))
             writer.write(self._construct_problem_footer())

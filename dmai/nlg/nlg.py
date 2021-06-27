@@ -189,18 +189,13 @@ class NLG(metaclass=NLGMeta):
             "Sorry, where do you want to go?",
             "I'm not sure where you want to go, can you repeat your destination.",
         ]
+        
         if possible_destinations:
-            p = "You could go to the {p}".format(p=possible_destinations[0])
-            for poss in possible_destinations[1:]:
-                if possible_destinations[-1] == poss:
-                    p += " or the {p}".format(p=poss)
-                else:
-                    p += ", the {p}".format(p=poss)
-            p += "."
-                
-            return "{u} {p}".format(u=random.choice(utters), p=p)
+            p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
         else:
-            return "{u}.".format(u=random.choice(utters))
+            p = ""
+        
+        return "{u} {p}".format(u=random.choice(utters), p=p)
 
     @classmethod
     def no_target(cls, verb: str, possible_targets: str = "") -> str:
@@ -256,6 +251,28 @@ class NLG(metaclass=NLGMeta):
             ]
         return random.choice(utters)
 
+    @classmethod
+    def no_item(cls) -> str:
+        """Return the utterance for no item"""
+        utters = [
+            "Can you confirm the item you want to pick up",
+            "Sorry, what do you want to pick up?",
+            "I'm not sure where you want to pick up, can you repeat the item",
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def cannot_pick_up(cls, item: str, reason: str = None) -> str:
+        """Return the utterance for not allowing picking up item"""
+        if not reason:
+            return "You cannot pick up {i}".format(i=item)
+        elif reason == "not in room":
+            return "You cannot pick up {i} because it's not in this room!".format(i=item)
+        elif reason == "no visibility":
+            return "You cannot pick up {i} because it's too dark to see it!".format(i=item)
+        elif reason == "unknown entity":
+            return "You cannot pick up {i}".format(i=item)
+    
     @classmethod
     def cannot_equip(cls, weapon: str, reason: str = None) -> str:
         """Return the utterance for not allowing equipping of weapon"""
@@ -502,11 +519,11 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def hp_end_game(cls, entity: str) -> str:
+    def hp_end_game(cls, entity: str, death_text: str = "") -> str:
         """Return the utterance for ending the game by running out of hp"""
         utters = [
-            "You were attacked and fatally wounded by {e}.".format(e=entity),
-            "{e} killed you!".format(e=entity),
-            "Nooo, you tried your hardest but {e} struck the killing blow.".format(e=entity),
+            "You were attacked and fatally wounded by {e}. {d}".format(e=entity, d=death_text),
+            "{e} killed you! {d}".format(e=entity, d=death_text),
+            "Nooo, you tried your hardest but it wasn't to be. {d}".format(e=entity, d=death_text),
         ]
         return random.choice(utters)

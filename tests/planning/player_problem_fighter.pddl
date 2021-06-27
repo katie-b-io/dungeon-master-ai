@@ -48,6 +48,7 @@
         perception - skill
         ; Equipment
         thieves_tools - equipment
+        torch - equipment
         ; Weapons
         greataxe - weapon
         javelin - weapon
@@ -78,7 +79,9 @@
         (has player crossbow_light)
         ; set equipment
         (thieves_tools thieves_tools)
+        (torch torch)
         (has player thieves_tools)
+        (has player torch)
 
         ; =======================================
         ; NPCs
@@ -149,6 +152,13 @@
         (locked door4)
         (locked door6)
         (locked door7)
+        (dark inns_cellar)
+        (dark storage_room)
+        (dark burial_chamber)
+        (dark western_corridor)
+        (dark antechamber)
+        (dark southern_corridor)
+        (dark baradins_crypt)
 
         ; =======================================
         ; Combat

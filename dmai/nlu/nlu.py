@@ -186,6 +186,8 @@ class NLU(metaclass=NLUMeta):
             return ("explore", {"nlu_entities": entities})
         if intent == "roll":
             return ("roll", {"nlu_entities": entities})
+        if intent == "pick_up":
+            return ("pick_up", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

@@ -91,6 +91,10 @@
         (attack_roll_success ?monster - monster ?target - object)
         ; Action is performed
         (action)
+        ; Visibility
+        (torch_lit)
+        (darkvision)
+        (dark ?room - room)
         ; Combat
         (combat)
         (must_kill ?player - player)
@@ -286,6 +290,10 @@
             (at ?monster ?location)
             (at ?target ?location)
             (not (action))
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (can_attack_roll ?monster ?target)

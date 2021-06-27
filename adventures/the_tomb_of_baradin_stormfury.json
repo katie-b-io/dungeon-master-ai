@@ -4,8 +4,8 @@
     "text": {
         "intro": "Greyforge, the mountain city in the north of the Kaldarian lands is home to the proud dwarves who settled in the area over 8,000 years ago, led by a silver dragon, according to some stories.\nFamous for their expertise in crafting and artifice, the Greyforge dwarves use giant lava powered furnaces, deep underground, to process the toughest metals.\nScholars and mages travel here from all over the continent in search of ancient lore in the dusty tomes of the Greyforge library, which is famed as the largest library in all Aradia.\nMost of the city lies safely under the surface of the mountain making it easily defensible. A strong military force is ready to defend the city at all times from threats of goblinoid clans vying for control of the natural resources of the area and hungry herds of monstrous beasts.\nQueen Mabaegar Thunderarmour is the recently appointed Queen after her predecessor was found dead under mysterious circumstances. Young but wise, she seeks advice from the older members of the Council of Twelve. She is honest and honourable and wants the best for her people.\nApart from dwarves, many other ancestries call Greyforge home: humans, gnomes, halflings, tieflings and dragonborn.\nMore than anything, Greyforge is your home. You spend your whole life in the sheltered walls of the great stone city. Today, a day like any other, you are summoned by Corvus Stouthammer, proprietor of the Stout Meal Inn, one of the oldest establishments in the city. He said he has a quick job for you.",
         "conclusion": {
-            "good_ending": "",
-            "bad_ending": ""
+            "good_ending": "Well done! You discovered the secret tomb underneath the Stout Meal Inn.",
+            "bad_ending": "You never discovered the secret underneath the Stout Meal Inn..."
         }
     },
     "npcs": {
@@ -31,8 +31,10 @@
                 "good_negotiation": "He lets out a gentle chuckle and says: \"Well go on then, seeing as we're old friends, 2 silver piece per rat!\"",
                 "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 1 silver piece per rat is more than fair.\"\"",
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
-                "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster."
-            }
+                "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
+                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats. You share a drink together and then take your leave, with a slightly heavier coin purse and a cask of fine ale. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
+            },
+            "triggers": {}
         },
         "anvil": {
             "id": "anvil",
@@ -47,7 +49,13 @@
             "treasure": [],
             "must_kill": false,
             "will_attack_player": false,
-            "dialogue": {}
+            "dialogue": {},
+            "triggers": {
+                "move": "stout_meal_inn",
+                "conditions": {
+                    "monsters": "dead"
+                }
+            }
         }
     },
     "rooms": {
@@ -71,8 +79,8 @@
             "visibility": true,
             "text": {
                 "enter": "On this particularly cold morning you find yourself at the Stout Meal Inn. This tavern is very large, with a long central hearth that helps to keep the cold at bay against the thick stone walls. Bundles of herbs dangle from the wooden rafters, filling the space with a plethora of fragrant aromas. The tavern floor is empty apart from a lone figure. Corvus Stouthammer, the wrinkly whitebearded dwarf proprietor prepares the inn for the day's patrons, polishing the top of a nearby table to a brilliant sheen. There is a doorway down to the cellar behind the bar. As you come closer Corvus' attention comes to you and he stops polishing. He turns to you with a slight smile under his beard and welcomes you, saying: \"About time you showed up!\"",
-                "description": "Homely tavern.",
-                "no_visibility_description": "Homely tavern."
+                "description": "Homely tavern with a few tables, a well stocked bar and a whitebearded dwarf preparing the room for the day's visitors.",
+                "no_visibility_description": "Homely tavern with a few tables, a well stocked bar and a whitebearded dwarf preparing the room for the day's visitors."
             }
         },
         "inns_cellar": {
@@ -123,7 +131,8 @@
                 "visibility": "You see a terrible scene in front of you. Anvil-Jumper the cat is sitting on top of one of the barrels in the north-east corner of the room, meowing pathetically at the giant rats who are entirely indifferent to his plight. There are a total of four giant rats in the cellar tearing through the food supplies. The rats have burst through a 5 ft by 5 ft hole in the eastern wall of the cellar.",
                 "exit": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar.",
                 "description": "Dark and damp cellar.",
-                "no_visibility_description": "The room is too dark to see anything."
+                "no_visibility_description": "The room is too dark to see anything.",
+                "fight_ends": "You vanquished the giant rats! With a swish of his tail, Anvil-Jumper leaps from the barrel and dashes upstairs. Corvus will be pleased, if you choose you can return to him to receive your handsome reward. It may be worth investigating this room further to see if you find anything of value. You may also want to determine what caused the giant rats to come here, there may be something to investigate in the storage room accessible through the hole in the eastern wall."
             }
         },
         "storage_room": {

@@ -63,7 +63,10 @@
                 }
             }
         },
-        "variants": {}
+        "variants": {},
+        "text": {
+            "killed_player": "You were slashed to death by this feisty feline."
+        }
     },
     "giant_rat": {
         "id": "giant_rat",
@@ -189,6 +192,9 @@
                     }
                 }
             }
+        },
+        "text": {
+            "killed_player": "You were gnawed to death by the horrific giant rat."
         }
     },
     "goblin": {
@@ -286,7 +292,10 @@
                 }
             }
         },
-        "variants": {}
+        "variants": {},
+        "text": {
+            "killed_player": "The goblin let out an evil chuckle as it dealth the killing blow."
+        }
     },
     "skeleton": {
         "id": "skeleton",
@@ -382,7 +391,10 @@
                 }
             }
         },
-        "variants": {}
+        "variants": {},
+        "text": {
+            "killed_player": "The skeleton finished you off with a shot to the head."
+        }
     },
     "zombie": {
         "id": "zombie",
@@ -452,6 +464,9 @@
                 }
             }
         },
-        "variants": {}
+        "variants": {},
+        "text": {
+            "killed_player": "The zombie overwhelmed you and ripped out your throat, killing you almost instantly."
+        }
     }
 }

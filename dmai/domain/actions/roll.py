@@ -45,7 +45,8 @@ class Roll(Action):
             if self.roll_type in self.roll_map:
                 can_roll = self.roll_map[self.roll_type]()
             else:
-                return False
+                DiceRoller.roll(self.die)
+                can_roll = True
             return can_roll
         else:
             OutputBuilder.append("Can't roll!")
@@ -76,7 +77,7 @@ class Roll(Action):
                 OutputBuilder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
                 # end the fight if we're not in combat any more
                 if not State.in_combat:
-                    return
+                    return True
             OutputBuilder.append("Okay, now the monsters get to have their turn!")
             State.pause()
         elif State.get_combat_status() == Combat.DAMAGE_ROLL:
@@ -98,7 +99,7 @@ class Roll(Action):
             if entity == "player":
                 # progress to declare target
                 State.progress_combat_status()
-                return
+                return True
             else:
                 monster = State.get_entity(entity)
                 monster.perform_next_move()
@@ -108,7 +109,7 @@ class Roll(Action):
             State.set_expected_intents(["attack"])
             OutputBuilder.append(NLG.declare_attack())
             State.progress_combat_status()
-            return
+            return True
         
         # get attack roll from player
         if State.get_combat_status() == Combat.ATTACK_ROLL:
@@ -124,5 +125,4 @@ class Roll(Action):
             else:
                 # didn't hit, skip damage roll
                 State.progress_combat_status()
-            return
-    
+        return True

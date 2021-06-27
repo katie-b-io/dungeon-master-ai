@@ -80,6 +80,7 @@ class State(metaclass=StateMeta):
     current_combat_status = {}
     expected_intents = []
     initiative_order = []
+    player_inventory = {}
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -172,6 +173,14 @@ class State(metaclass=StateMeta):
         init_room = cls.dm.adventure.get_init_room()
         cls.dm.register_trigger(cls.dm.adventure.get_room(init_room))
         cls.current_room["player"] = init_room
+        # register monster triggers
+        for monster in cls.dm.npcs.get_all_monsters():
+            if hasattr(monster, "trigger"):
+                cls.dm.register_trigger(monster)
+        # register npc triggers
+        for npc in cls.dm.npcs.get_all_npcs():
+            if hasattr(npc, "trigger"):
+                cls.dm.register_trigger(npc)
 
     @classmethod
     def get_dm(cls) -> None:
@@ -311,7 +320,31 @@ class State(metaclass=StateMeta):
     def clear_expected_intents(cls) -> None:
         """Method to clear the expected intent"""
         cls.expected_intents = []
-
+        
+    ############################################################
+    # METHODS RELATING TO INVENTORY
+    @classmethod
+    def add_to_inventory(cls, item: str, quantity: int = 1) -> None:
+        """Method to add item of specified quantity to inventory"""
+        if item in cls.player_inventory:
+            cls.player_inventory[item] += quantity
+        else:
+            cls.player_inventory[item] = quantity
+    
+    @classmethod
+    def remove_from_inventory(cls, item: str, quantity: int = 1) -> None:
+        """Method to remove item of specified quantity from inventory"""
+        if item in cls.player_inventory:
+            cls.player_inventory[item] -= quantity
+        for item in cls.player_inventory:
+            if cls.player_inventory[item] <= 0:
+                del cls.player_inventory[item]
+    
+    @classmethod
+    def clear_inventory(cls) -> None:
+        """Method to clear inventory"""
+        cls.player_inventory = {}
+    
     ############################################################
     # METHODS RELATING TO CONVERSATION
     @classmethod
@@ -549,10 +582,16 @@ class State(metaclass=StateMeta):
             if cls.current_hp[entity] <= 0:
                 if entity == "player":
                     # if the entity is player, this is a gameover state
-                    OutputBuilder.append(NLG.hp_end_game(attacker))
+                    attacker = State.get_entity(attacker)
+                    death_text = attacker.text["killed_player"]
+                    OutputBuilder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
+                    OutputBuilder.append(cls.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover()
                 else:
                     cls.kill_monster(entity)
+                    # deregister triggers
+                    if hasattr(State.get_entity(entity), "trigger"):
+                        cls.dm.register_trigger(State.get_entity(entity))
             return cls.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
@@ -650,10 +689,13 @@ class State(metaclass=StateMeta):
                     room_id):
                 logger.debug("Setting current room for {e}: {r}".format(
                     e=entity, r=room_id))
-                cls.stationary = False
-                cls.dm.deregister_trigger(cls.get_current_room(entity))
-                cls.current_room[entity] = room_id
-                cls.dm.register_trigger(cls.get_current_room(entity))
+                if entity == "player":
+                    cls.stationary = False
+                    cls.dm.deregister_trigger(cls.get_current_room(entity))
+                    cls.current_room[entity] = room_id
+                    cls.dm.register_trigger(cls.get_current_room(entity))
+                else:
+                    cls.current_room[entity] = room_id
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
 
@@ -743,3 +785,48 @@ class State(metaclass=StateMeta):
         possible_targets = [monster.unique_name for monster in monsters]
         formatted_str = "You could attack {a}.".format(a=Text.properly_format_list(possible_targets, last_delimiter=" or "))
         return formatted_str
+    
+    @classmethod
+    def get_monster_status_summary(cls, location: str) -> dict:
+        """Method to return a dictionary of monster status of specified location"""
+        monster_status = {"alive": [], "dead": []}
+        for monster in cls.get_dm().npcs.get_all_monsters():
+            if cls.get_current_room_id(monster.unique_id) == location:
+                if cls.is_alive(monster.unique_id):
+                    monster_status["alive"].append(monster.name)
+                else:
+                    monster_status["dead"].append(monster.name)
+        status_count = {}
+        for status in monster_status:
+            status_count[status] = dict(Counter(monster_status[status]))
+        return status_count
+    
+    @classmethod
+    def get_formatted_monster_status_summary(cls, location: str) -> str:
+        """Method to return a formatted string of monster status of specified location"""
+        monster_status = cls.get_monster_status_summary(location)
+        # format alive monsters
+        formatted_monsters = {"alive": [], "dead": []}
+        for status in monster_status:
+            for monster in monster_status[status]:
+                count = monster_status[status][monster]
+                if count > 1:
+                    formatted_monsters[status].append("{c} {m}s".format(c=count, m=monster))
+                else:
+                    formatted_monsters[status].append("a {m}".format(c=count, m=monster))
+                  
+        if monster_status["alive"] and monster_status["dead"]:
+            summary = "We've got {a} alive and {d} dead.".format(
+                a=Text.properly_format_list(formatted_monsters["alive"]),
+                d=Text.properly_format_list(formatted_monsters["dead"]))
+        elif monster_status["alive"]:
+            summary = "We've got {a} alive.".format(
+                a=Text.properly_format_list(formatted_monsters["alive"]))
+        elif monster_status["dead"]:
+            summary = "We've got {d} that are dead.".format(
+                d=Text.properly_format_list(formatted_monsters["dead"]))
+        else:
+            summary = ""
+
+        return summary
+        
