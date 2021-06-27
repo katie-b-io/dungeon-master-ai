@@ -113,8 +113,13 @@
         (attack_roll_success ?player - player ?target - object)
         ; Tools
         (thieves_tools ?equipment - equipment)
+        (torch ?equipment - equipment)
         ; Action is performed
         (action)
+        ; Visibility
+        (torch_lit)
+        (darkvision)
+        (dark ?room - room)
         ; NPC attitudes
         (attitude_towards_player ?npc - npc ?attitude - attitude)
         (improve_attitude ?current - attitude ?next - attitude)
@@ -368,6 +373,10 @@
         :precondition (and 
             (quest)
             (alive ?player)
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
             (at ?player ?location)
             (connected ?door ?location ?destination)
             (not (locked ?door))
@@ -403,6 +412,10 @@
             (locked ?door)
             (ability_solution ?door ?ability)
             (not (action))
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (can_ability_check ?player ?ability ?door)
@@ -421,6 +434,10 @@
             (locked ?door)
             (equipment_solution ?door ?equipment)
             (not (action))
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (can_equipment_check ?player ?equipment ?door)
@@ -438,6 +455,10 @@
             (connected ?door ?location ?destination)
             (locked ?door)
             (not (action))
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (can_attack_roll ?player ?door)
@@ -456,6 +477,10 @@
             (locked ?door)
             (strength ?str)
             (ability_check_success ?player ?str ?door)
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (not (action))
@@ -475,6 +500,10 @@
             (locked ?door)
             (perception ?perception)
             (ability_check_success ?player ?perception ?door)
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (not (action))
@@ -495,6 +524,10 @@
             (equipped ?player ?thieves_tools)
             (thieves_tools ?thieves_tools)
             (equipment_check_success ?player ?thieves_tools ?door)
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (not (action))
@@ -515,6 +548,10 @@
             (locked ?door)
             (equipped ?player ?weapon)
             (attack_roll_success ?player ?door)
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (can_damage_roll ?player ?door)
@@ -532,11 +569,44 @@
             (connected ?door ?location ?destination)
             (locked ?door)
             (damaged ?door)
+            (or
+                (not (dark ?location))
+                (or (torch_lit) (darkvision))
+            )
         )
         :effect (and 
             (not (action))
             (not (locked ?door))
             (not (alive ?door))
+        )
+    )
+
+    ; Player lights a torch
+    (:action light_torch
+        :parameters (?player - player ?torch - equipment)
+        :precondition (and 
+            (alive ?player)
+            (torch ?torch)
+            (has ?player ?torch)
+        )
+        :effect (and
+            (torch_lit)
+        )
+    )
+
+    ; Extinguish torch
+    (:action extinguish_torch
+        :parameters (?player - player ?torch - equipment)
+        :precondition (and 
+            (alive ?player)
+            (torch ?torch)
+            (has ?player ?torch)
+            (torch_lit)
+        )
+        :effect (and
+            (when (not (darkvision))
+                (not (torch_lit))
+            )
         )
     )
 
@@ -605,6 +675,7 @@
             (at ?player ?location)
             (at ?target ?location)
             (not (action))
+            (or (torch_lit) (darkvision))
         )
         :effect (and 
             (can_attack_roll ?player ?target)

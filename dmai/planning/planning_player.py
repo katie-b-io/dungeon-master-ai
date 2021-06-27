@@ -196,6 +196,9 @@ class PlanningPlayer(PlanningAgent):
                     {"predicate": equipment, "params": [("equipment", "equipment")]}
                 )
             predicates.append({"predicate": "action", "params": []})
+            predicates.append({"predicate": "torch_lit", "params": []})
+            predicates.append({"predicate": "darkvision", "params": []})
+            predicates.append({"predicate": "dark", "params": [("room", "room")]})
             predicates.append(
                 {
                     "predicate": "attitude_towards_player",
@@ -275,6 +278,10 @@ class PlanningPlayer(PlanningAgent):
             ]
             if State.get_player().has_equipment("thieves_tools")[0]:
                 actions.append("use_thieves_tools")
+            if State.get_player().has_equipment("torch")[0]:
+                actions.append("light_torch")
+                actions.append("extinguish_torch")
+            
             writer.write(self._construct_actions(actions))
             writer.write(self._construct_domain_footer())
 
@@ -364,6 +371,10 @@ class PlanningPlayer(PlanningAgent):
             init.append(["at", "player", State.get_current_room().id])
             if State.is_alive():
                 init.append(["alive", "player"])
+            if State.torch_lit:
+                init.append(["torch_lit"])
+            if State.get_player().character.has_darkvision():
+                init.append(["darkvision"])
             for ability in Abilities.get_all_abilities():
                 init.append([ability[1].lower(), ability[0]])
             for skill in Skills.get_all_skills():
@@ -418,6 +429,11 @@ class PlanningPlayer(PlanningAgent):
                     init.append(["must_kill", monster.unique_id])
 
             # Rooms
+            for room in State.get_dm().adventure.get_all_rooms():
+                if not room.visibility:
+                    init.append(["dark", room.id])
+                    
+            # Room connections
             for door in doors:
                 room1 = door.split("---")[0]
                 room2 = door.split("---")[1]

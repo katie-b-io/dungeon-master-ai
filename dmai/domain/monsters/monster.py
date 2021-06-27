@@ -101,6 +101,10 @@ class Monster(NPC, MonsterAgent):
     def armor_class(self) -> int:
         """Method to return the armor class"""
         return self.ac
+    
+    def has_darkvision(self) -> bool:
+        """Method to return whether monster has darkvision"""
+        return "darkvision" in self.senses
 
     def get_signed_initiative(self) -> str:
         """Method to return the signed initiative"""
