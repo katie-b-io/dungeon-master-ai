@@ -397,6 +397,12 @@ nlu:
     - I use my [torch](equipment)
     - I light my [torch](equipment)
     - I bring out my [light](equipment)
+    - I use the [potion of healing](item)
+    - I drink the [potion of healing](item)
+    - I use the [healing potion](item)
+    - Drink the [healing potion](item)
+    - Use the [potion](item)
+    - Drink the [potion](item)
     - I use [bless](spell)
     - I use [burning hands](spell)
     - I use [cure wounds](spell)
@@ -636,6 +642,8 @@ nlu:
 - intent: pick_up
   examples: |
     - pick up [potion](item)
+    - pick up [healing potion](item)
+    - pick up the [potion of healing](item)
     - gather [potion of healing](item)
     - take up [healing potion](item)
     - grab [pouch](item)

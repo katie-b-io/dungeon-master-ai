@@ -17,6 +17,7 @@ from dmai.domain.characters.race import Race
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
 from dmai.utils.money import Money
+from dmai.domain.items.item_collection import ItemCollection
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -41,6 +42,7 @@ class Character(ABC):
             self.equipment = EquipmentCollection(
                 equipment=self.equipment, proficiencies=self.proficiencies["tools"]
             )
+            self.items = ItemCollection()
             self.languages = Languages(self.languages)
             self.race = Race(self.race)
             self.skills = Skills(

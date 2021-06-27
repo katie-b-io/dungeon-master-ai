@@ -80,7 +80,6 @@ class State(metaclass=StateMeta):
     current_combat_status = {}
     expected_intents = []
     initiative_order = []
-    player_inventory = {}
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -322,30 +321,6 @@ class State(metaclass=StateMeta):
         cls.expected_intents = []
         
     ############################################################
-    # METHODS RELATING TO INVENTORY
-    @classmethod
-    def add_to_inventory(cls, item: str, quantity: int = 1) -> None:
-        """Method to add item of specified quantity to inventory"""
-        if item in cls.player_inventory:
-            cls.player_inventory[item] += quantity
-        else:
-            cls.player_inventory[item] = quantity
-    
-    @classmethod
-    def remove_from_inventory(cls, item: str, quantity: int = 1) -> None:
-        """Method to remove item of specified quantity from inventory"""
-        if item in cls.player_inventory:
-            cls.player_inventory[item] -= quantity
-        for item in cls.player_inventory:
-            if cls.player_inventory[item] <= 0:
-                del cls.player_inventory[item]
-    
-    @classmethod
-    def clear_inventory(cls) -> None:
-        """Method to clear inventory"""
-        cls.player_inventory = {}
-    
-    ############################################################
     # METHODS RELATING TO CONVERSATION
     @classmethod
     def set_conversation_target(cls, target: str) -> None:
@@ -362,25 +337,14 @@ class State(metaclass=StateMeta):
     ############################################################
     # METHODS RELATING TO ITEMS
     @classmethod
-    def add_item(cls, item: str) -> None:
-        """Method to add item"""
-        if item in cls.current_items:
-            cls.current_items[item] = cls.current_items[item] + 1
-        else:
-            cls.current_items[item] = 1
-    
-    @classmethod
-    def remove_item(cls, item: str) -> None:
-        """Method to remove item"""
-        if item in cls.current_items:
-            cls.current_items[item] = cls.current_items[item] - 1
-        if cls.current_items[item] == 0:
-            del cls.current_items[item]
-    
-    @classmethod
     def get_all_item_ids(cls) -> list:
         """Method to return all item IDs in list"""
-        return list(cls.current_items.keys())
+        return list(cls.get_item_collection().get_all())
+    
+    @classmethod
+    def get_item_collection(cls):
+        """Method to return item collection"""
+        return cls.get_player().character.items
 
     ############################################################
     # METHODS RELATING TO ACTIONS
@@ -395,6 +359,15 @@ class State(metaclass=StateMeta):
         """Method to extinguish a torch"""
         cls.torch_lit = False
         OutputBuilder.append(NLG.extinguish_torch())
+    
+    @classmethod
+    def heal(cls, hp: int, hp_max: int = None, entity: str = "player") -> None:
+        """Method to heal a number of hit points, up to a max"""
+        new_hp = cls.get_current_hp(entity) + hp
+        if hp_max:
+            new_hp = min(hp_max, new_hp)
+        cls.current_hp[entity] = new_hp
+        OutputBuilder.append(NLG.heal(hp, new_hp))
 
     ############################################################
     # METHODS RELATING TO INTENTS

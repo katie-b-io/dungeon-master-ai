@@ -9,7 +9,7 @@ class EquipmentCollection:
     # class variables
     equipment_data = dict()
 
-    def __init__(self, equipment: str, proficiencies=None) -> None:
+    def __init__(self, equipment: dict, proficiencies=None) -> None:
         """EquipmentCollection class"""
         self.equipment = equipment
         self.proficiencies = proficiencies
