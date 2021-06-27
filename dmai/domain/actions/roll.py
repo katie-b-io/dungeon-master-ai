@@ -45,7 +45,8 @@ class Roll(Action):
             if self.roll_type in self.roll_map:
                 can_roll = self.roll_map[self.roll_type]()
             else:
-                can_roll = False
+                DiceRoller.roll(self.die)
+                can_roll = True
             return can_roll
         else:
             OutputBuilder.append("Can't roll!")

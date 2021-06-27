@@ -80,6 +80,7 @@ class State(metaclass=StateMeta):
     current_combat_status = {}
     expected_intents = []
     initiative_order = []
+    player_inventory = {}
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -319,7 +320,31 @@ class State(metaclass=StateMeta):
     def clear_expected_intents(cls) -> None:
         """Method to clear the expected intent"""
         cls.expected_intents = []
-
+        
+    ############################################################
+    # METHODS RELATING TO INVENTORY
+    @classmethod
+    def add_to_inventory(cls, item: str, quantity: int = 1) -> None:
+        """Method to add item of specified quantity to inventory"""
+        if item in cls.player_inventory:
+            cls.player_inventory[item] += quantity
+        else:
+            cls.player_inventory[item] = quantity
+    
+    @classmethod
+    def remove_from_inventory(cls, item: str, quantity: int = 1) -> None:
+        """Method to remove item of specified quantity from inventory"""
+        if item in cls.player_inventory:
+            cls.player_inventory[item] -= quantity
+        for item in cls.player_inventory:
+            if cls.player_inventory[item] <= 0:
+                del cls.player_inventory[item]
+    
+    @classmethod
+    def clear_inventory(cls) -> None:
+        """Method to clear inventory"""
+        cls.player_inventory = {}
+    
     ############################################################
     # METHODS RELATING TO CONVERSATION
     @classmethod

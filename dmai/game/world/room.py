@@ -88,6 +88,17 @@ class Room:
     def get_connected_rooms(self) -> list:
         """Method to return the connected rooms"""
         return list(self.connections.keys())
+    
+    def has_item(self, item: str) -> bool:
+        """Method to determine if query item is in the room's treasure"""
+        return bool(item in self.treasure)
+    
+    def get_item(self, item: str) -> None:
+        """Method to return an item from the room's treasure"""
+        # TODO return Item
+        if self.has_item(item):
+            # TODO factory method to make and return an Item object
+            return self.treasure[item]
 
     def get_description(self) -> str:
         """Method to get the room description, including any treasure and puzzles"""

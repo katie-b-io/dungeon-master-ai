@@ -133,6 +133,14 @@ class TestDM(unittest.TestCase):
         nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "greataxe"}]
         self.assertEqual("greataxe", self.dm._get_weapon(nlu_entities))
 
+    def test__get_die(self) -> None:
+        nlu_entities = [{"entity": "die", "confidence": 1, "value": "d12"}]
+        self.assertEqual("d12", self.dm._get_die(nlu_entities))
+        
+    def test__get_item(self) -> None:
+        nlu_entities = [{"entity": "item", "confidence": 1, "value": "wand_of_magic_missiles"}]
+        self.assertEqual("wand_of_magic_missiles", self.dm._get_item(nlu_entities))
+        
     def test_move_destination_good(self) -> None:
         State.quest()
         self.assertEqual(True, self.dm.move(destination="inns_cellar"))
@@ -345,9 +353,47 @@ class TestDM(unittest.TestCase):
         self.assertEqual(False, self.dm.explore(nlu_entities=nlu_entities3))
         
     def test_explore_monster_different_room(self) -> None:
-        nlu_entities4 = [{"entity": "monster", "confidence": 1, "value": "zombie"}]
-        self.assertEqual(True, self.dm.explore(nlu_entities=nlu_entities4))
-        
+        nlu_entities = [{"entity": "monster", "confidence": 1, "value": "zombie"}]
+        self.assertEqual(True, self.dm.explore(nlu_entities=nlu_entities))
 
+    def test_roll_die_good(self) -> None:
+        self.assertEqual(True, self.dm.roll(die="d12"))
+
+    def test_roll_die_bad(self) -> None:
+        self.assertEqual(False, self.dm.roll(die="d13"))
+    
+    def test_roll_nlu_entities_good(self) -> None:
+        nlu_entities = [{"entity": "die", "confidence": 1, "value": "d8"}]
+        self.assertEqual(True, self.dm.roll(nlu_entities=nlu_entities))
+
+    def test_roll_nlu_entities_bad(self) -> None:
+        nlu_entities = [{"entity": "die", "confidence": 1, "value": "d7"}]
+        self.assertEqual(False, self.dm.roll(nlu_entities=nlu_entities))
+
+    def test_pick_up_item_good(self) -> None:
+        State.set_current_room("player", "inns_cellar")
+        State.light_torch()
+        self.assertEqual(True, self.dm.pick_up(item="potion_of_healing"))
+
+    def test_pick_up_item_bad(self) -> None:
+        State.set_current_room("player", "stout_meal_inn")
+        self.assertEqual(False, self.dm.pick_up(item="potion_of_healing"))
+        self.assertEqual(False, self.dm.pick_up(item="toaster"))
+    
+    def test_pick_up_nlu_entities_good(self) -> None:
+        State.set_current_room("player", "inns_cellar")
+        State.light_torch()
+        nlu_entities = [{"entity": "item", "confidence": 1, "value": "potion_of_healing"}]
+        self.assertEqual(True, self.dm.pick_up(nlu_entities=nlu_entities))
+
+    def test_pick_up_nlu_entities_bad(self) -> None:
+        State.set_current_room("player", "stout_meal_inn")
+        nlu_entities1 = [{"entity": "item", "confidence": 1, "value": "potion_of_healing"}]
+        nlu_entities2 = [{"entity": "item", "confidence": 0.1, "value": "potion_of_healing"}]
+        nlu_entities3 = [{"entity": "item", "confidence": 1, "value": "toaster"}]
+        self.assertEqual(False, self.dm.pick_up(nlu_entities=nlu_entities1))
+        self.assertEqual(False, self.dm.pick_up(nlu_entities=nlu_entities2))
+        self.assertEqual(False, self.dm.pick_up(nlu_entities=nlu_entities3))
+        
 if __name__ == "__main__":
     unittest.main()

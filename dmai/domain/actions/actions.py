@@ -6,6 +6,7 @@ from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.attack import Attack
 from dmai.domain.actions.roll import Roll
+from dmai.domain.actions.pick_up import PickUp
 import dmai
 
 
@@ -283,6 +284,12 @@ class Actions:
         Returns a bool to indicate whether the action was successful"""
         roll = Roll(roll_type, die, nlu_entities)
         return roll.execute()
+
+    def pick_up(self, item: str, entity: str = "player") -> bool:
+        """Attempt to pick up specified item.
+        Returns a bool to indicate whether the action was successful"""
+        pick_up = PickUp(item, entity)
+        return pick_up.execute()
 
     @staticmethod
     def declare_attack_against_entity(attacker: str, target: str, *args) -> None:

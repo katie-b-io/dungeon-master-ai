@@ -92,6 +92,11 @@ class DM:
                 "desc": "roll some dice",
                 "func": self.roll,
                 },
+            "pick_up": {
+                "name": "pick up",
+                "desc": "pick up an item",
+                "func": self.pick_up
+            }
         }
 
     def input(
@@ -283,6 +288,16 @@ class DM:
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
                 return entity["value"]
+    
+    def _get_item(self, nlu_entities: dict) -> str:
+        """Extract an item from NLU entities dictionary.
+        Returns a string with item"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "item"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return entity["value"]
 
     def move(
         self, destination: str = None, entity: str = None, nlu_entities: dict = None
@@ -456,7 +471,7 @@ class DM:
         Returns whether the action was successful."""
         if not die and nlu_entities:
             die = self._get_die(nlu_entities)
-        else:
+        elif not die:
             # TODO to something smarter here - default to the die that makes sense
             # or ask for clarification
             die = "d20"
@@ -471,3 +486,19 @@ class DM:
             return self.actions.roll("attack", nlu_entities, die)
         
         return self.actions.roll("roll", nlu_entities, die)
+
+    def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:
+        """Attempt to pick up an item.
+        Returns whether the action was successful."""
+        if not entity:
+            entity = "player"
+        if not item and nlu_entities:
+            item = self._get_item(nlu_entities)
+
+        if not item:
+            picked_up = False
+            OutputBuilder.append(NLG.no_item())
+        else:
+            logger.info("{e} is picking up {i}!".format(e=entity, i=item))
+            picked_up = self.actions.pick_up(item, entity)
+        return picked_up

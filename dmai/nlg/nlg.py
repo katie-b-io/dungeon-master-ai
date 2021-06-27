@@ -252,6 +252,28 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
+    def no_item(cls) -> str:
+        """Return the utterance for no item"""
+        utters = [
+            "Can you confirm the item you want to pick up",
+            "Sorry, what do you want to pick up?",
+            "I'm not sure where you want to pick up, can you repeat the item",
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def cannot_pick_up(cls, item: str, reason: str = None) -> str:
+        """Return the utterance for not allowing picking up item"""
+        if not reason:
+            return "You cannot pick up {i}".format(i=item)
+        elif reason == "not in room":
+            return "You cannot pick up {i} because it's not in this room!".format(i=item)
+        elif reason == "no visibility":
+            return "You cannot pick up {i} because it's too dark to see it!".format(i=item)
+        elif reason == "unknown entity":
+            return "You cannot pick up {i}".format(i=item)
+    
+    @classmethod
     def cannot_equip(cls, weapon: str, reason: str = None) -> str:
         """Return the utterance for not allowing equipping of weapon"""
         if not reason:

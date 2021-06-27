@@ -633,6 +633,24 @@ nlu:
     - help me out
     - give me a hint
 
+- intent: pick_up
+  examples: |
+    - pick up [potion](item)
+    - gather [potion of healing](item)
+    - take up [healing potion](item)
+    - grab [pouch](item)
+    - grasp [coin pouch](item)
+    - hold up [purse](item)
+    - obtain [coin purse](item)
+    - acquire [wand of magic missiles](item)
+    - get [wand](item)
+    - take [magic missile wand](item)
+    - have [magic wand](item)
+    - gain [wand of missiles](item)
+    - raise up [dwarven thrower](item)
+    - get [thrower](item)
+    - take [warhammer](weapon)
+
 - synonym: stout_meal_inn
   examples: |
     - inn
@@ -900,3 +918,28 @@ nlu:
 - synonym: warhammer
   examples: |
     - war hammer
+
+- synonym: potion_of_healing
+  examples: |
+    - potion of healing
+    - healing potion
+    - potion
+
+- synonym: pouch
+  examples: |
+    - coin pouch
+    - purse
+    - coin purse
+
+- synonym: wand_of_magic_missiles
+  examples: |
+    - wand of magic missiles
+    - wand
+    - magic missile wand
+    - magic wand
+    - wand of missiles
+
+- synonym: dwarven_thrower
+  examples: |
+    - dwarven thrower
+    - thrower
