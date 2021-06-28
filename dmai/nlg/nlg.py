@@ -222,6 +222,19 @@ class NLG(metaclass=NLGMeta):
                 e=equipment)
 
     @classmethod
+    def cannot_converse(cls, target: str, reason: str = None) -> str:
+        """Return the utterance for not allowing converse of equipment"""
+        if not reason:
+            return "You cannot converse with {t}".format(t=target)
+        elif reason == "unknown":
+            return "You cannot converse with unknown entity: {t}!".format(t=target)
+        elif reason == "monster":
+            return "You try to converse with {t} but it's pointless as the monster can't understand.".format(
+                t=target)
+        elif reason == "different location":
+            return "You cannot converse with {t} as it's not in the same location as you!".format(t=target)
+
+    @classmethod
     def no_destination(cls, possible_destinations: list = []) -> str:
         """Return the utterance for no destination"""
         utters = [

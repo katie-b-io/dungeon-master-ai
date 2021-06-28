@@ -474,6 +474,7 @@ nlu:
     - chat with [the dwarf](npc)
     - converse with [stouthammer](npc)
     - say to [corvus](npc)
+    - say to [anvil](npc)
     - talk to [anvil](npc)
     - speak to [anvil jumper](npc)
     - communicate with [giant rat](monster)
@@ -482,6 +483,10 @@ nlu:
     - talk to the [first](id) [rat](monster)
     - talk with [goblin](monster)
     - say to the [3rd](id) [goblin](monster)
+    - say to the [goblin](monster)
+    - say to the [giant rat](monster)
+    - say to the [skeleton](monster)
+    - say to the [zombie]
 
 - intent: question_npc
   examples: |
