@@ -257,6 +257,34 @@ planning_actions = {
         (not (equipped ?entity ?object))
     )
 )"""},
+    
+    "explore": {
+        "pddl": """
+; Player explores room
+(:action explore
+    :parameters (?player - player ?location - room)
+    :precondition (and 
+        (at ?player ?location)
+        (treasure ?location)
+        (forall (?monster - monster)
+            (or
+                (not (at ?monster ?location))
+                (and
+                    (at ?monster ?location)
+                    (not (must_kill ?monster))
+                )
+                (and 
+                    (at ?monster ?location)
+                    (must_kill ?monster)
+                    (not (alive ?monster))
+                )
+            )
+        )
+    )
+    :effect (and 
+        (not (treasure ?location))
+    )
+)"""},
 
     "move": {
         "pddl": """
@@ -270,6 +298,7 @@ planning_actions = {
             (not (dark ?location))
             (or (torch_lit) (darkvision))
         )
+        (not (treasure ?location))
         (at ?player ?location)
         (connected ?door ?location ?destination)
         (not (locked ?door))

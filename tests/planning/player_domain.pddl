@@ -49,6 +49,7 @@
         (quest) ; player has received quest
         (complete) ; player has completed quest
         (gives_quest ?npc - npc) ; NPC can give quest
+        (treasure ?room - room)
         ; Rolls
         (advantage ?object - object)
         (disadvantage ?object - object)
@@ -364,6 +365,32 @@
         )
     )
 
+    ; Player explores room
+    (:action explore
+        :parameters (?player - player ?location - room)
+        :precondition (and 
+            (at ?player ?location)
+            (treasure ?location)
+            (forall (?monster - monster)
+                (or
+                    (not (at ?monster ?location))
+                    (and
+                        (at ?monster ?location)
+                        (not (must_kill ?monster))
+                    )
+                    (and 
+                        (at ?monster ?location)
+                        (must_kill ?monster)
+                        (not (alive ?monster))
+                    )
+                )
+            )
+        )
+        :effect (and 
+            (not (treasure ?location))
+        )
+    )
+
     ; ================================================================
     ; Movement
 
@@ -377,6 +404,7 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
+            (not (treasure ?location))
             (at ?player ?location)
             (connected ?door ?location ?destination)
             (not (locked ?door))

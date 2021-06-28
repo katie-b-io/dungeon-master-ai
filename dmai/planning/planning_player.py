@@ -83,6 +83,7 @@ class PlanningPlayer(PlanningAgent):
             predicates.append({"predicate": "quest", "params": []})
             predicates.append({"predicate": "complete", "params": []})
             predicates.append({"predicate": "gives_quest", "params": [("npc", "npc")]})
+            predicates.append({"predicate": "treasure", "params": [("room", "room")]})
             predicates.append(
                 {"predicate": "advantage", "params": [("object", "object")]}
             )
@@ -262,6 +263,7 @@ class PlanningPlayer(PlanningAgent):
                 "damage_roll",
                 "equip",
                 "unequip",
+                "explore",
                 "move",
                 "open_door_with_ability",
                 "open_door_with_equipment",
@@ -432,6 +434,8 @@ class PlanningPlayer(PlanningAgent):
             for room in State.get_dm().adventure.get_all_rooms():
                 if not room.visibility:
                     init.append(["dark", room.id])
+                if bool(room.treasure):
+                    init.append(["treasure", room.id])
                     
             # Room connections
             for door in doors:
