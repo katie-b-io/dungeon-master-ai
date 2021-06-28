@@ -158,7 +158,7 @@ class Actions:
             if can_use:
                 return entity.use_item(item)
             else:
-                OutputBuilder.append(NLG.cannot_use(State.get_item_collection().get_name(item), reason))
+                OutputBuilder.append(NLG.cannot_use(State.get_player().character.items.get_name(item), reason))
         return can_use
 
     def _can_equip(self, entity, weapon: str) -> tuple:
@@ -318,8 +318,8 @@ class Actions:
         return pick_up.execute()
 
     @staticmethod
-    def declare_attack_against_entity(attacker: str, target: str, *args) -> None:
-        """Method to declare attack against entity"""
+    def declare_attack_against_player(attacker: str, target: str, *args) -> None:
+        """Method to declare attack against player"""
         State.set_target(target, attacker)
         attacker = State.get_name(attacker)
         OutputBuilder.append(NLG.attack(attacker, target))

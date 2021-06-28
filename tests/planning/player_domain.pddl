@@ -34,6 +34,8 @@
         armor - object
         ; Equipment exists
         equipment - object
+        ; Items exist
+        item - object
         ; Damage vulnerabilities exist
         damage_vulnerability - object
         ; Damage immunities exist
@@ -115,6 +117,8 @@
         ; Tools
         (thieves_tools ?equipment - equipment)
         (torch ?equipment - equipment)
+        ; Items
+        (potion_of_healing ?item - item)
         ; Action is performed
         (action)
         ; Visibility
@@ -128,6 +132,8 @@
         ; Combat
         (combat)
         (must_kill ?monster - monster)
+        ; Health
+        (injured ?player - player)
     )
 
     ; ================================================================
@@ -391,6 +397,20 @@
         )
     )
 
+    ; Player drinks potion of healing
+    (:action use_potion_of_healing
+        :parameters (?player - player ?item - item)
+        :precondition (and 
+            (potion_of_healing ?item)
+            (injured ?player)
+            (has ?player ?item)
+        )
+        :effect (and 
+            (not (has ?player ?item))
+            (not (injured ?player))
+        )
+    )
+
     ; ================================================================
     ; Movement
 
@@ -405,6 +425,18 @@
                 (or (torch_lit) (darkvision))
             )
             (not (treasure ?location))
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
+            )
             (at ?player ?location)
             (connected ?door ?location ?destination)
             (not (locked ?door))
@@ -444,6 +476,18 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
+            )
         )
         :effect (and 
             (can_ability_check ?player ?ability ?door)
@@ -466,6 +510,18 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
+            )
         )
         :effect (and 
             (can_equipment_check ?player ?equipment ?door)
@@ -486,6 +542,18 @@
             (or
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
+            )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
             )
         )
         :effect (and 
@@ -509,6 +577,18 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
+            )
         )
         :effect (and 
             (not (action))
@@ -531,6 +611,18 @@
             (or
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
+            )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
             )
         )
         :effect (and 
@@ -556,6 +648,18 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
+            )
         )
         :effect (and 
             (not (action))
@@ -580,6 +684,18 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
+            )
         )
         :effect (and 
             (can_damage_roll ?player ?door)
@@ -600,6 +716,18 @@
             (or
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
+            )
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
             )
         )
         :effect (and 
@@ -704,6 +832,18 @@
             (at ?target ?location)
             (not (action))
             (or (torch_lit) (darkvision))
+            (or 
+                (not (injured ?player))
+                (and
+                    (injured ?player)
+                    (forall (?item - item)
+                        (and
+                            (not (potion_of_healing ?item))
+                            (not (has ?player ?item))
+                        )
+                    )
+                )
+            )
         )
         :effect (and 
             (can_attack_roll ?player ?target)

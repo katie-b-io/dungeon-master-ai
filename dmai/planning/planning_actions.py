@@ -286,6 +286,22 @@ planning_actions = {
     )
 )"""},
 
+    "use_potion_of_healing": {
+        "pddl": """
+; Player drinks potion of healing
+(:action use_potion_of_healing
+    :parameters (?player - player ?item - item)
+    :precondition (and 
+        (potion_of_healing ?item)
+        (injured ?player)
+        (has ?player ?item)
+    )
+    :effect (and 
+        (not (has ?player ?item))
+        (not (injured ?player))
+    )
+)"""},
+    
     "move": {
         "pddl": """
 ; Player moves from one room to another
@@ -299,6 +315,18 @@ planning_actions = {
             (or (torch_lit) (darkvision))
         )
         (not (treasure ?location))
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
+        )
         (at ?player ?location)
         (connected ?door ?location ?destination)
         (not (locked ?door))
@@ -340,6 +368,18 @@ planning_actions = {
             (not (dark ?location))
             (or (torch_lit) (darkvision))
         )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
+        )
     )
     :effect (and 
         (can_ability_check ?player ?ability ?door)
@@ -364,6 +404,18 @@ planning_actions = {
             (not (dark ?location))
             (or (torch_lit) (darkvision))
         )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
+        )
     )
     :effect (and 
         (can_equipment_check ?player ?equipment ?door)
@@ -386,6 +438,18 @@ planning_actions = {
         (or
             (not (dark ?location))
             (or (torch_lit) (darkvision))
+        )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
         )
     )
     :effect (and 
@@ -411,6 +475,18 @@ planning_actions = {
             (not (dark ?location))
             (or (torch_lit) (darkvision))
         )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
+        )
     )
     :effect (and 
         (not (action))
@@ -435,6 +511,18 @@ planning_actions = {
         (or
             (not (dark ?location))
             (or (torch_lit) (darkvision))
+        )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
         )
     )
     :effect (and 
@@ -462,6 +550,18 @@ planning_actions = {
             (not (dark ?location))
             (or (torch_lit) (darkvision))
         )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
+        )
     )
     :effect (and 
         (not (action))
@@ -488,6 +588,18 @@ planning_actions = {
             (not (dark ?location))
             (or (torch_lit) (darkvision))
         )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
+        )
     )
     :effect (and 
         (can_damage_roll ?player ?door)
@@ -510,6 +622,18 @@ planning_actions = {
         (or
             (not (dark ?location))
             (or (torch_lit) (darkvision))
+        )
+        (or 
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
         )
     )
     :effect (and 
@@ -609,24 +733,35 @@ planning_actions = {
 )"""},
 
     "declare_attack_against_entity": {
-        "func": Actions.declare_attack_against_entity,
         "pddl": """
-; Entity wants to attack another entity
+; Player wants to attack another entity
 (:action declare_attack_against_entity
-    :parameters (?entity - entity ?target - entity ?location - room)
+    :parameters (?player - player ?target - entity ?location - room)
     :precondition (and 
-        (alive ?entity)
+        (alive ?player)
         (alive ?target)
-        (at ?entity ?location)
+        (at ?player ?location)
         (at ?target ?location)
         (not (action))
         (or
             (not (dark ?location))
             (or (torch_lit) (darkvision))
         )
+        (or
+            (not (injured ?player))
+            (and
+                (injured ?player)
+                (forall (?item - item)
+                    (and
+                        (not (potion_of_healing ?item))
+                        (not (has ?player ?item))
+                    )
+                )
+            )
+        )
     )
     :effect (and 
-        (can_attack_roll ?entity ?target)
+        (can_attack_roll ?player ?target)
         (action)
         (combat)
     )
@@ -653,6 +788,30 @@ planning_actions = {
     )
 )"""},
 
+    "declare_attack_against_player": {
+        "func": Actions.declare_attack_against_player,
+        "pddl": """
+; Monster wants to attack player
+(:action declare_attack_against_player
+    :parameters (?monster - monster ?player - player ?location - room)
+    :precondition (and 
+        (alive ?monster)
+        (alive ?player)
+        (at ?monster ?location)
+        (at ?player ?location)
+        (not (action))
+        (or
+            (not (dark ?location))
+            (or (torch_lit) (darkvision))
+        )
+    )
+    :effect (and 
+        (can_attack_roll ?monster ?player)
+        (action)
+        (combat)
+    )
+)"""},
+    
     "kill_player": {
         "func": State.update_initiative_order,
         "pddl": """

@@ -532,6 +532,6 @@ class DM:
         """Player wants a inventory update.
         Appends the text to output with the OutputBuilder.
         """
-        item_collection = State.get_item_collection()
+        item_collection = State.get_player().character.items
         OutputBuilder.append(item_collection.get_all_formatted())
         return True

@@ -96,7 +96,7 @@ class TestPlanningMonster(unittest.TestCase):
         shutil.rmtree(Config.directory.planning)
     
     def test_giant_rat_plan(self) -> None:
-        self.assertEqual("(declare_attack_against_entity giant_rat_1 player inns_cellar)\n", self.monster.agent.get_next_move())
+        self.assertEqual("(declare_attack_against_player giant_rat_1 player inns_cellar)\n", self.monster.agent.get_next_move())
     
     def test_build_domain(self) -> None:
         file_path = os.path.join(
@@ -135,7 +135,8 @@ class TestPlanningPlayer(unittest.TestCase):
         self.player.agent.prepare_next_move()
     
     def tearDown(self) -> None:
-        shutil.rmtree(Config.directory.planning)
+        pass
+        # shutil.rmtree(Config.directory.planning)
     
     def test_player_plan(self) -> None:
         self.assertEqual("(declare_attack_against_entity player giant_rat_1 inns_cellar)\n", self.player.agent.get_next_move())

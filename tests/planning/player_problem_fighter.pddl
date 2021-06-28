@@ -44,13 +44,15 @@
         wis - ability
         ; Skills
         perception - skill
-        ; Equipment
-        thieves_tools - equipment
-        torch - equipment
         ; Weapons
         greataxe - weapon
         javelin - weapon
         crossbow_light - weapon
+        ; Equipment
+        thieves_tools - equipment
+        torch - equipment
+        ; Items
+        potion_of_healing - item
     )
 
     (:init
@@ -62,6 +64,7 @@
         ; Player
         (alive player)
         (at player stout_meal_inn)
+        (injured player)
         ; set abilities
         (charisma cha)
         (constitution con)
@@ -80,6 +83,9 @@
         (torch torch)
         (has player thieves_tools)
         (has player torch)
+        ; set items
+        (potion_of_healing potion_of_healing)
+        (has player potion_of_healing)
 
         ; =======================================
         ; NPCs

@@ -116,7 +116,7 @@ class NLG(metaclass=NLGMeta):
         if not hp_max:
             m = ""
         else:
-            m = " out of a maximum of {h}".format(h=hp_max)
+            m = " out of a maximum of {h} hp".format(h=hp_max)
         utters = [
             "You've got {h} hp left{m}.".format(h=current_hp, m=m)
         ]
