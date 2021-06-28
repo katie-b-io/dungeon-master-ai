@@ -32,6 +32,7 @@ class TestDM(unittest.TestCase):
         self.dm = self.game.dm
 
     def tearDown(self) -> None:
+        State.extinguish_torch()
         shutil.rmtree(Config.directory.planning)
         
     def test_init(self) -> None:

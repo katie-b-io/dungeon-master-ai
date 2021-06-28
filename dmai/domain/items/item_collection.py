@@ -63,7 +63,6 @@ class ItemCollection:
         if self._check_item(item_id):
             if item_id in self.items:
                 self.items[item_id]["quantity"] -= quantity
-            for item_id in self.items:
                 if self.items[item_id]["quantity"] <= 0:
                     del self.items[item_id]
     
@@ -95,8 +94,9 @@ class ItemCollection:
             if self._check_item(item_id):
                 (has_item, reason) = self.has_item(item_id)
                 if has_item:
-                    self.items[item_id]["quantity"] = self.items[item_id]["quantity"] - 1
-                    return self.items[item_id]["item"].use()
+                    used = self.items[item_id]["item"].use()
+                    self.remove_item(item_id)
+                    return used
             return False
         except UnrecognisedItem:
             return False

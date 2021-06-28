@@ -367,13 +367,19 @@ class DM:
             entity = "player"
         if not equipment and nlu_entities:
             equipment = self._get_equipment(nlu_entities)
-
+        
         if not equipment:
+            item = self._get_item(nlu_entities)
+
+        if not equipment and not item:
             used = False
             OutputBuilder.append(NLG.no_equipment(stop=stop))
-        else:
+        elif equipment:
             logger.info("{e} is using {q}!".format(e=entity, q=equipment))
-            used = self.actions.use(equipment, entity, stop)
+            used = self.actions.use(equipment=equipment, entity=entity, stop=stop)
+        elif item:
+            logger.info("{e} is using {q}!".format(e=entity, q=item))
+            used = self.actions.use(item=item, entity=entity, stop=stop)
         return used
 
     def stop_using(

@@ -20,6 +20,9 @@ class TestActions(unittest.TestCase):
         NLG.set_game(self.game)
         self.actions = self.game.dm.actions
 
+    def tearDown(self) -> None:
+        State.extinguish_torch()
+        
     def test_move_good_destination(self) -> None:
         entity = "player"
         destination = "inns_cellar"
@@ -39,7 +42,7 @@ class TestActions(unittest.TestCase):
         State.set_current_room(entity, "western_corridor")
         moved  = self.actions.move(entity, "storage_room")
         self.assertEqual(moved, False)
-        self.assertEqual("You cannot move to Storage Room because the way is locked! You could go to the Antechamber.\n", OutputBuilder.format())
+        self.assertEqual("You cannot move to Storage Room because the way is locked! You should figure out a way to get\nthrough or you could go to the Antechamber.\n", OutputBuilder.format())
         
     def test__can_move_must_kill_monsters(self) -> None:
         entity = "player"
@@ -131,13 +134,13 @@ class TestActions(unittest.TestCase):
     def test_use_good_equipment(self) -> None:
         entity = "player"
         equipment = "torch"
-        used = self.actions.use(equipment, entity)
+        used = self.actions.use(equipment=equipment, entity=entity)
         self.assertEqual(used, True)
     
     def test_use_bad_equipment(self) -> None:
         entity = "player"
         equipment = "computer"
-        used = self.actions.use(equipment, entity)
+        used = self.actions.use(equipment=equipment, entity=entity)
         self.assertEqual(used, False)
     
     def test_equip_good_weapon(self) -> None:
