@@ -170,8 +170,11 @@ class State(metaclass=StateMeta):
         logger.debug("Setting DM")
         cls.dm = dm
         init_room = cls.dm.adventure.get_init_room()
-        cls.dm.register_trigger(cls.dm.adventure.get_room(init_room))
         cls.current_room["player"] = init_room
+        # register room triggers
+        for room in cls.dm.adventure.get_all_rooms():
+             if hasattr(room, "trigger"):
+                cls.dm.register_trigger(room)
         # register monster triggers
         for monster in cls.dm.npcs.get_all_monsters():
             if hasattr(monster, "trigger"):
@@ -664,9 +667,7 @@ class State(metaclass=StateMeta):
                     e=entity, r=room_id))
                 if entity == "player":
                     cls.stationary = False
-                    cls.dm.deregister_trigger(cls.get_current_room(entity))
                     cls.current_room[entity] = room_id
-                    cls.dm.register_trigger(cls.get_current_room(entity))
                 else:
                     cls.current_room[entity] = room_id
         except (UnrecognisedRoomError, UnrecognisedEntityError):

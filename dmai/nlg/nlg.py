@@ -177,7 +177,10 @@ class NLG(metaclass=NLGMeta):
     def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
         if possible_destinations:
-            p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
+            if reason == "locked":
+                p = "You should figure out a way to get through or you could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
+            else:
+                p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
         else:
             p = ""
         if not reason:

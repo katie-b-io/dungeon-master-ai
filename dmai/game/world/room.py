@@ -26,7 +26,6 @@ class Room:
 
         trigger_map = {
             "enter": self.enter,
-            "exit": self.exit,
             "visibility": self.trigger_visibility,
             "fight_ends": self.trigger_fight_ends,
         }
@@ -55,11 +54,6 @@ class Room:
                 OutputBuilder.append(NLG.enter_room(self.name))
             State.halt()
 
-    def exit(self) -> None:
-        """Method when exiting a room"""
-        logger.debug("Triggering exit in room: {r}".format(r=self.id))
-        # TODO implement inns cellar to storage room exit text
-
     def trigger_visibility(self) -> str:
         """Method when triggering visibility text"""
         logger.debug("Triggering visibility in room: {r}".format(r=self.id))
@@ -77,11 +71,12 @@ class Room:
 
     def trigger(self) -> None:
         """Method to print any new text if conditions met"""
-        for text_type in self.text:
-            if self.text[text_type]["can_trigger"]:
-                # execute function
-                if text_type in self.text:
-                    self.text[text_type]["trigger"]()
+        if State.get_current_room_id() == self.id:
+            for text_type in self.text:
+                if self.text[text_type]["can_trigger"]:
+                    # execute function
+                    if text_type in self.text:
+                        self.text[text_type]["trigger"]()
 
     def get_connected_rooms(self) -> list:
         """Method to return the connected rooms"""
@@ -151,8 +146,9 @@ class Room:
                         State.get_item_collection().get_name(item)
                         for item in self.treasure
                     ]
-                    desc_str += " After searching the barrels and boxes thoroughly you find a {t}.".format(
-                        t=Text.properly_format_list(treasure)
+                    desc_str += " After searching the barrels and boxes thoroughly you find a {t}. You should pick {i} up.".format(
+                        t=Text.properly_format_list(treasure),
+                        i="it" if len(treasure) == 1 else "them"
                     )
 
             # TODO add description of puzzles
