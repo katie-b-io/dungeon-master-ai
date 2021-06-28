@@ -214,13 +214,13 @@ class Actions:
         # check if player and target are within converse range
         try:
             if not State.get_current_room() == State.get_current_room(target):
-                return (False, "Different location")
+                return (False, "different location")
             # check if target is a monster
             if self.npcs.get_type(target) == "monster":
                 return (False, "monster")
             return (True, "")
         except UnrecognisedEntityError:
-            return (False, "Unknown target")
+            return (False, "unknown")
 
     def converse(self, target: str) -> bool:
         """Attempt to converse with a specified target.
@@ -248,8 +248,11 @@ class Actions:
                     OutputBuilder.append(NLG.roleplay(State.get_name(target)))
             return can_converse
         else:
-            OutputBuilder.append("You can't converse with {t}!\n{r}".format(
-                t=target, r=reason))
+            if bool(State.get_name(target)):
+                target_name = State.get_name(target)
+            else:
+                target_name = target
+            OutputBuilder.append(NLG.cannot_converse(target_name, reason))
             return can_converse
 
     def _can_investigate(self, target: str) -> tuple:

@@ -111,7 +111,7 @@ class NLG(metaclass=NLGMeta):
     ############################################################
     # Action utterances
     @classmethod
-    def health_update(cls, current_hp, hp_max: int = None):
+    def health_update(cls, current_hp, hp_max: int = None) -> str:
         """Return the utterance updating player about their current hp"""
         if not hp_max:
             m = ""
@@ -121,7 +121,47 @@ class NLG(metaclass=NLGMeta):
             "You've got {h} hp left{m}.".format(h=current_hp, m=m)
         ]
         return random.choice(utters)
-        
+    
+    @classmethod
+    def heal(cls, hp, new_hp) -> str:
+        """Return the utterance for healing by a given amount"""
+        c = cls.game.player.character_class
+        if hp == 0:
+            utters = [
+                "Is this thing on? You didn't heal any hp! You've got {n} hp left.".format(n=new_hp),
+                "You healed a grand total of zero... zero hp?! You've got {n} hp left.".format(n=new_hp),
+                "That was completely ineffectual. You've still got {n} hp left.".format(n=new_hp)
+            ]
+        elif (hp/new_hp) < 0.25:
+            utters = [
+                "You feel a modest surge of wellness as you heal {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+                "You feel a slight tingle in your chest as you heal {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+                "That was nice! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+            ]
+        elif (hp/new_hp) < 0.5:
+            utters = [
+                "Ahh, that was refreshing! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp, c=c),
+                "The healing rush hits you with {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+                "You feel reinvigorated! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+            ]
+        else:
+            utters = [
+                "You feel like a new {c}! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp, c=c),
+                "That felt AMAZING! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+                "You feel invincible! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+            ]
+        return random.choice(utters)
+    
+    @classmethod
+    def pick_up(cls, item: str) -> str:
+        """Return the utterance for picking up an item"""
+        utters = [
+            "You picked up the {i}.".format(i=item),
+            "The {i} was added to your inventory.".format(i=item),
+            "You took the {i}.".format(i=item),
+        ]
+        return random.choice(utters)
+    
     ############################################################
     # Action utterances
     @classmethod
@@ -137,7 +177,10 @@ class NLG(metaclass=NLGMeta):
     def cannot_move(cls, room: str, reason: str = None, possible_destinations: str = []) -> str:
         """Return the utterance for not allowing movement"""
         if possible_destinations:
-            p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
+            if reason == "locked":
+                p = "You should figure out a way to get through or you could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
+            else:
+                p = "You could go to the {p}.".format(p=Text.properly_format_list(possible_destinations, delimiter=", the ", last_delimiter=" or the "))
         else:
             p = ""
         if not reason:
@@ -180,6 +223,19 @@ class NLG(metaclass=NLGMeta):
         elif reason == "quantity":
             return "You cannot use {e} because you've run out!".format(
                 e=equipment)
+
+    @classmethod
+    def cannot_converse(cls, target: str, reason: str = None) -> str:
+        """Return the utterance for not allowing converse of equipment"""
+        if not reason:
+            return "You cannot converse with {t}".format(t=target)
+        elif reason == "unknown":
+            return "You cannot converse with unknown entity: {t}!".format(t=target)
+        elif reason == "monster":
+            return "You try to converse with {t} but it's pointless as the monster can't understand.".format(
+                t=target)
+        elif reason == "different location":
+            return "You cannot converse with {t} as it's not in the same location as you!".format(t=target)
 
     @classmethod
     def no_destination(cls, possible_destinations: list = []) -> str:
