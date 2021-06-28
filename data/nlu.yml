@@ -628,7 +628,7 @@ nlu:
     - is the [zombie](monster) injured?
 
 - intent: inventory
-  examples:
+  examples: |
     - inventory
     - show me my inventory
     - whats in my inventory?
