@@ -57,6 +57,7 @@ class PlanningPlayer(PlanningAgent):
                         "weapon",
                         "armor",
                         "equipment",
+                        "item",
                         "damage_vulnerability",
                         "damage_immunity",
                         "condition_immunity",
@@ -83,6 +84,7 @@ class PlanningPlayer(PlanningAgent):
             predicates.append({"predicate": "quest", "params": []})
             predicates.append({"predicate": "complete", "params": []})
             predicates.append({"predicate": "gives_quest", "params": [("npc", "npc")]})
+            predicates.append({"predicate": "treasure", "params": [("room", "room")]})
             predicates.append(
                 {"predicate": "advantage", "params": [("object", "object")]}
             )
@@ -110,6 +112,7 @@ class PlanningPlayer(PlanningAgent):
                 {"predicate": "at", "params": [("object", "object"), ("room", "room")]}
             )
             predicates.append({"predicate": "alive", "params": [("object", "object")]})
+            predicates.append({"predicate": "injured", "params": [("player", "player")]})
             predicates.append(
                 {"predicate": "damaged", "params": [("object", "object")]}
             )
@@ -195,6 +198,10 @@ class PlanningPlayer(PlanningAgent):
                 predicates.append(
                     {"predicate": equipment, "params": [("equipment", "equipment")]}
                 )
+            for item in State.get_player().character.items.item_data.keys():
+                predicates.append(
+                    {"predicate": item, "params": [("item", "item")]}
+                )
             predicates.append({"predicate": "action", "params": []})
             predicates.append({"predicate": "torch_lit", "params": []})
             predicates.append({"predicate": "darkvision", "params": []})
@@ -245,6 +252,7 @@ class PlanningPlayer(PlanningAgent):
                     "params": [("target", "object"), ("item", "item")],
                 }
             )
+                
             writer.write(self._construct_predicates(predicates))
 
             ################################################
@@ -262,6 +270,8 @@ class PlanningPlayer(PlanningAgent):
                 "damage_roll",
                 "equip",
                 "unequip",
+                "explore",
+                "use_potion_of_healing",
                 "move",
                 "open_door_with_ability",
                 "open_door_with_equipment",
@@ -305,7 +315,7 @@ class PlanningPlayer(PlanningAgent):
             objects.append(["player", "player"])
             for intent in State.get_dm().player_intent_map.keys():
                 objects.append([intent, "intent"])
-            for item in State.get_all_item_ids():
+            for item in State.get_player().get_all_item_ids():
                 objects.append([item, "item"])
 
             # NPCs
@@ -371,6 +381,11 @@ class PlanningPlayer(PlanningAgent):
             init.append(["at", "player", State.get_current_room().id])
             if State.is_alive():
                 init.append(["alive", "player"])
+            if State.get_current_hp() <= (State.get_player().hp_max/2):
+                init.append(["injured", "player"])
+            for item in State.get_player().get_all_item_ids():
+                init.append([item, item])
+                init.append(["has", "player", item])
             if State.torch_lit:
                 init.append(["torch_lit"])
             if State.get_player().character.has_darkvision():
@@ -432,6 +447,8 @@ class PlanningPlayer(PlanningAgent):
             for room in State.get_dm().adventure.get_all_rooms():
                 if not room.visibility:
                     init.append(["dark", room.id])
+                if bool(room.treasure):
+                    init.append(["treasure", room.id])
                     
             # Room connections
             for door in doors:
@@ -466,7 +483,7 @@ class PlanningPlayer(PlanningAgent):
                         if puzzle.check_solution_intent(intent):
                             init.append(["intent_solution", puzzle.id, intent])
                     # Item solution
-                    for item in State.get_all_item_ids():
+                    for item in State.get_player().get_all_item_ids():
                         if puzzle.check_solution_item(item):
                             init.append(["item_solution", puzzle.id, item])
 

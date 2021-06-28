@@ -30,13 +30,11 @@
         cat - cat
         giant_rat1 - giant_rat
         giant_rat2 - giant_rat
-        giant_rat3 - giant_rat
-        giant_rat4 - giant_rat
-        ; goblin1 - goblin
-        ; goblin2 - goblin
-        ; goblin3 - goblin
-        ; skeleton - skeleton
-        ; zombie - zombie
+        goblin1 - goblin
+        goblin2 - goblin
+        goblin3 - goblin
+        skeleton - skeleton
+        zombie - zombie
         ; Abilities
         cha - ability
         con - ability
@@ -46,13 +44,15 @@
         wis - ability
         ; Skills
         perception - skill
-        ; Equipment
-        thieves_tools - equipment
-        torch - equipment
         ; Weapons
         greataxe - weapon
         javelin - weapon
         crossbow_light - weapon
+        ; Equipment
+        thieves_tools - equipment
+        torch - equipment
+        ; Items
+        potion_of_healing - item
     )
 
     (:init
@@ -64,6 +64,7 @@
         ; Player
         (alive player)
         (at player stout_meal_inn)
+        (injured player)
         ; set abilities
         (charisma cha)
         (constitution con)
@@ -82,6 +83,9 @@
         (torch torch)
         (has player thieves_tools)
         (has player torch)
+        ; set items
+        (potion_of_healing potion_of_healing)
+        (has player potion_of_healing)
 
         ; =======================================
         ; NPCs
@@ -102,21 +106,17 @@
         ; Monsters
         (at giant_rat1 inns_cellar)
         (at giant_rat2 inns_cellar)
-        (at giant_rat3 inns_cellar)
-        (at giant_rat4 inns_cellar)
-        ; (at goblin1 storage_room)
-        ; (at goblin2 antechamber)
-        ; (at goblin3 antechamber)
-        ; (at skeleton burial_chamber)
-        ; (at zombie storage_room)
+        (at goblin1 storage_room)
+        (at goblin2 antechamber)
+        (at goblin3 antechamber)
+        (at skeleton burial_chamber)
+        (at zombie storage_room)
         (alive giant_rat1)
         (alive giant_rat2)
-        (alive giant_rat3)
-        (alive giant_rat4)
-        ; (alive goblin2)
-        ; (alive goblin3)
-        ; (alive skeleton)
-        ; (alive zombie)
+        (alive goblin2)
+        (alive goblin3)
+        (alive skeleton)
+        (alive zombie)
 
         ; =======================================
         ; Rooms
@@ -159,17 +159,18 @@
         (dark antechamber)
         (dark southern_corridor)
         (dark baradins_crypt)
+        (treasure inns_cellar)
+        (treasure southern_corridor)
+        (treasure baradins_crypt)
 
         ; =======================================
         ; Combat
         (must_kill giant_rat1)
         (must_kill giant_rat2)
-        (must_kill giant_rat3)
-        (must_kill giant_rat4)
-        ; (must_kill goblin2)
-        ; (must_kill goblin3)
-        ; (must_kill skeleton)
-        ; (must_kill zombie)
+        (must_kill goblin2)
+        (must_kill goblin3)
+        (must_kill skeleton)
+        (must_kill zombie)
 
         ; =======================================
         ; Challenges

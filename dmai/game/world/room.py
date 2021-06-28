@@ -143,7 +143,7 @@ class Room:
                 # TODO replace with properly formatted names
                 if self.treasure:
                     treasure = [
-                        State.get_item_collection().get_name(item)
+                        State.get_player().character.items.get_name(item)
                         for item in self.treasure
                     ]
                     desc_str += " After searching the barrels and boxes thoroughly you find a {t}. You should pick {i} up.".format(

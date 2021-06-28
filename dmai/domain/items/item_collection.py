@@ -2,6 +2,7 @@ from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedItem
 from dmai.domain.items.potion_of_healing import PotionOfHealing
 from dmai.domain.items.item import Item
+from dmai.utils.text import Text
 
 
 class ItemCollection:
@@ -62,7 +63,6 @@ class ItemCollection:
         if self._check_item(item_id):
             if item_id in self.items:
                 self.items[item_id]["quantity"] -= quantity
-            for item_id in self.items:
                 if self.items[item_id]["quantity"] <= 0:
                     del self.items[item_id]
     
@@ -94,8 +94,9 @@ class ItemCollection:
             if self._check_item(item_id):
                 (has_item, reason) = self.has_item(item_id)
                 if has_item:
-                    self.items[item_id]["quantity"] = self.items[item_id]["quantity"] - 1
-                    return self.items[item_id]["item"].use()
+                    used = self.items[item_id]["item"].use()
+                    self.remove_item(item_id)
+                    return used
             return False
         except UnrecognisedItem:
             return False
@@ -135,9 +136,19 @@ class ItemCollection:
     def get_formatted(self, item_id: str) -> str:
         """Return the formatted item with quantities"""
         if item_id in self.item_data:
-            quantity = self.items[item_id]
+            quantity = self.items[item_id]["quantity"]
             item = self.item_data[item_id]
-            if self.items[item_id] == 1:
+            if quantity == 1:
                 return item["name"]
             else:
                 return "{q} {e}".format(q=quantity, e=item["name"])
+    
+    def get_all_formatted(self) -> str:
+        """Return the whole item collection properly formatted"""
+        if not bool(self.get_all()):
+            return "You have no items in your inventory."
+        
+        all = []
+        for item in self.get_all():
+            all.append(self.get_formatted(item))
+        return "In your inventory you have {i}.".format(i=Text.properly_format_list(all))

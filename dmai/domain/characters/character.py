@@ -105,13 +105,21 @@ class Character(ABC):
         """Method to check whether player has specified equipment"""
         return self.equipment.has_equipment(equipment)
 
+    def has_item(self, item: str) -> tuple:
+        """Method to check whether player has specified item"""
+        return self.items.has_item(item)
+    
     def use_equipment(self, equipment: str) -> bool:
         """Method to use specified equipment"""
         return self.equipment.use_equipment(equipment)
-
+    
     def stop_using_equipment(self, equipment: str) -> bool:
         """Method to stop using specified equipment"""
         return self.equipment.stop_using_equipment(equipment)
+
+    def use_item(self, item: str) -> bool:
+        """Method to use specified item"""
+        return self.items.use_item(item)
 
     def can_equip(self, weapon: str) -> tuple:
         """Method to check whether player can equip specified weapon"""

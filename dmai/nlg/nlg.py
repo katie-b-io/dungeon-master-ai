@@ -116,7 +116,7 @@ class NLG(metaclass=NLGMeta):
         if not hp_max:
             m = ""
         else:
-            m = " out of a maximum of {h}".format(h=hp_max)
+            m = " out of a maximum of {h} hp".format(h=hp_max)
         utters = [
             "You've got {h} hp left{m}.".format(h=current_hp, m=m)
         ]
@@ -126,29 +126,29 @@ class NLG(metaclass=NLGMeta):
     def heal(cls, hp, new_hp) -> str:
         """Return the utterance for healing by a given amount"""
         c = cls.game.player.character_class
-        if hp == 0:
+        if hp <= 0:
             utters = [
-                "Is this thing on? You didn't heal any hp! You've got {n} hp left.".format(n=new_hp),
-                "You healed a grand total of zero... zero hp?! You've got {n} hp left.".format(n=new_hp),
-                "That was completely ineffectual. You've still got {n} hp left.".format(n=new_hp)
+                "Is this thing on? You didn't heal any hp! You've got {n} hp in total.".format(n=new_hp),
+                "You healed a grand total of zero... zero hp?! You've got {n} hp in total.".format(n=new_hp),
+                "That was completely ineffectual. You've still got {n} hp in total.".format(n=new_hp)
             ]
         elif (hp/new_hp) < 0.25:
             utters = [
-                "You feel a modest surge of wellness as you heal {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
-                "You feel a slight tingle in your chest as you heal {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
-                "That was nice! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+                "You feel a modest surge of wellness as you heal {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
+                "You feel a slight tingle in your chest as you heal {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
+                "That was nice! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
             ]
         elif (hp/new_hp) < 0.5:
             utters = [
-                "Ahh, that was refreshing! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp, c=c),
-                "The healing rush hits you with {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
-                "You feel reinvigorated! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+                "Ahh, that was refreshing! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp, c=c),
+                "The healing rush hits you with {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
+                "You feel reinvigorated! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
             ]
         else:
             utters = [
-                "You feel like a new {c}! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp, c=c),
-                "That felt AMAZING! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
-                "You feel invincible! You healed {h} hp and you've got {n} hp left.".format(n=new_hp, h=hp),
+                "You feel like a new {c}! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp, c=c),
+                "That felt AMAZING! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
+                "You feel invincible! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
             ]
         return random.choice(utters)
     
@@ -222,6 +222,12 @@ class NLG(metaclass=NLGMeta):
                 e=equipment)
         elif reason == "quantity":
             return "You cannot use {e} because you've run out!".format(
+                e=equipment)
+        elif reason == "unknown item":
+            return "You cannot use unknown item: {e}!".format(
+                e=equipment)
+        elif reason == "not in inventory":
+            return "You cannot use {e} because it's not in your inventory!".format(
                 e=equipment)
 
     @classmethod
@@ -374,7 +380,7 @@ class NLG(metaclass=NLGMeta):
     def unequip_weapon(cls, weapon: str) -> str:
         """Return the utterance for unequipping a weapon"""
         if not weapon:
-            return "You unequipped all weapons"
+            return "You unequipped all weapons."
         utters = [
             "You unequipped {w}".format(w=weapon)
         ]
@@ -384,9 +390,9 @@ class NLG(metaclass=NLGMeta):
     def light_torch(cls) -> str:
         """Return the utterance for lighting a torch"""
         utters = [
-            "You light a torch and the space around you is now lighter",
-            "The space around you illuminates in the glow of your lit torch",
-            "Light now cascades from the point of your torch around you"
+            "You light a torch and the space around you is now lighter.",
+            "The space around you illuminates in the glow of your lit torch.",
+            "Light now cascades from the point of your torch around you."
         ]
         return random.choice(utters)
 
@@ -394,9 +400,9 @@ class NLG(metaclass=NLGMeta):
     def extinguish_torch(cls) -> str:
         """Return the utterance for extinguishing a torch"""
         utters = [
-            "You extinguish your torch and the space around you is now darker",
-            "The space around you returns to its normal light level",
-            "Light ceases to cascade from your torch"
+            "You extinguish your torch and the space around you is now darker.",
+            "The space around you returns to its normal light level.",
+            "Light ceases to cascade from your torch."
         ]
         return random.choice(utters)
 

@@ -1,6 +1,6 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.loader import Loader
-from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon, UnrecognisedEntityError
+from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon, UnrecognisedEntityError, UnrecognisedItem
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
@@ -99,7 +99,7 @@ class Actions:
         attack = Attack(attacker, target)
         return attack.execute()
 
-    def _can_use(self, entity, equipment: str) -> tuple:
+    def _can_use_equipment(self, entity, equipment: str) -> tuple:
         """Check if an entity can use specified equipment.
         Returns tuple (bool, str) to indicate whether use is possible
         and reason why not if not."""
@@ -114,8 +114,24 @@ class Actions:
         except UnrecognisedEquipment:
             return (False, "unknown")
 
+    def _can_use_item(self, entity, item: str) -> tuple:
+        """Check if an entity can use specified item.
+        Returns tuple (bool, str) to indicate whether use is possible
+        and reason why not if not."""
+
+        # check if entity has item in their item
+        try:
+            (has_item, reason) = entity.has_item(item)
+            if has_item:
+                return (True, "")
+            else:
+                return (False, reason)
+        except UnrecognisedItem:
+            return (False, "unknown item")
+        
     def use(self,
-            equipment: str,
+            equipment: str = None,
+            item: str = None,
             entity: str = "player",
             stop: bool = False) -> bool:
         """Attempt to use a specified equipment.
@@ -129,13 +145,20 @@ class Actions:
 
         if stop:
             can_use = entity.stop_using_equipment(equipment)
-        else:
+        elif equipment:
             # check if equipment can be used
-            (can_use, reason) = self._can_use(entity, equipment)
+            (can_use, reason) = self._can_use_equipment(entity, equipment)
             if can_use:
-                entity.use_equipment(equipment)
+                return entity.use_equipment(equipment)
             else:
                 OutputBuilder.append(NLG.cannot_use(equipment, reason))
+        elif item:
+            # check if item can be used
+            (can_use, reason) = self._can_use_item(entity, item)
+            if can_use:
+                return entity.use_item(item)
+            else:
+                OutputBuilder.append(NLG.cannot_use(State.get_player().character.items.get_name(item), reason))
         return can_use
 
     def _can_equip(self, entity, weapon: str) -> tuple:
@@ -295,8 +318,8 @@ class Actions:
         return pick_up.execute()
 
     @staticmethod
-    def declare_attack_against_entity(attacker: str, target: str, *args) -> None:
-        """Method to declare attack against entity"""
+    def declare_attack_against_player(attacker: str, target: str, *args) -> None:
+        """Method to declare attack against player"""
         State.set_target(target, attacker)
         attacker = State.get_name(attacker)
         OutputBuilder.append(NLG.attack(attacker, target))

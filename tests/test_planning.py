@@ -8,7 +8,6 @@ sys.path.insert(0, p + "/../")
 
 from dmai.game.game import Game
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
-from dmai.planning.planning_monster import PlanningMonster
 from dmai.utils.config import Config
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
@@ -97,7 +96,7 @@ class TestPlanningMonster(unittest.TestCase):
         shutil.rmtree(Config.directory.planning)
     
     def test_giant_rat_plan(self) -> None:
-        self.assertEqual("(declare_attack_against_entity giant_rat_1 player inns_cellar)\n", self.monster.agent.get_next_move())
+        self.assertEqual("(declare_attack_against_player giant_rat_1 player inns_cellar)\n", self.monster.agent.get_next_move())
     
     def test_build_domain(self) -> None:
         file_path = os.path.join(
@@ -114,5 +113,48 @@ class TestPlanningMonster(unittest.TestCase):
         self.assertTrue(os.path.exists(file_path))
 
 
+class TestPlanningPlayer(unittest.TestCase):
+    """Test the PlanningPlayer class"""
+    def setUp(self) -> None:
+        self.game = Game(
+            char_class="fighter",
+            char_name="Xena",
+            adventure="the_tomb_of_baradin_stormfury",
+        )
+        self.game.load()
+        NLG.set_game(self.game)
+        Config.set_uuid()
+        Config.agent.set_player("planning")
+        Config.planner.set_player("fd")
+        monster_id = "giant_rat_1"
+        State.set_current_room("player", "inns_cellar")
+        State.quest()
+        State.light_torch()
+        State.set_target(monster_id)
+        self.player = State.get_player()
+        self.player.agent.prepare_next_move()
+    
+    def tearDown(self) -> None:
+        pass
+        # shutil.rmtree(Config.directory.planning)
+    
+    def test_player_plan(self) -> None:
+        self.assertEqual("(declare_attack_against_entity player giant_rat_1 inns_cellar)\n", self.player.agent.get_next_move())
+    
+    def test_build_domain(self) -> None:
+        file_path = os.path.join(
+            Config.directory.planning,
+            "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.player.agent.domain)
+        )
+        self.assertTrue(os.path.exists(file_path))
+        
+    def test_build_problem(self) -> None:
+        file_path = os.path.join(
+            Config.directory.planning,
+            "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.player.agent.problem)
+        )
+        self.assertTrue(os.path.exists(file_path))
+        
+        
 if __name__ == "__main__":
     unittest.main()

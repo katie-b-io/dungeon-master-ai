@@ -41,11 +41,20 @@ class Player(PlayerAgent):
         """Method to return a list of IDs of all the player's weapon"""
         return [weapon[0] for weapon in self.character.get_all_weapons()]
 
+    def get_all_item_ids(self) -> list:
+        """Method to return a list of IDs of all the player's item"""
+        return self.character.items.get_all()
+    
     def has_equipment(self, equipment: str) -> tuple:
         """Method to return whether the player has specified equipment.
         Returns a tuple with the boolean and a string with a reason."""
         return self.character.has_equipment(equipment)
 
+    def has_item(self, item: str) -> tuple:
+        """Method to return whether the player has specified item.
+        Returns a tuple with the boolean and a string with a reason."""
+        return self.character.has_item(item)
+    
     def use_equipment(self, equipment: str) -> bool:
         """Method to use specified equipment"""
         return self.character.use_equipment(equipment)
@@ -54,6 +63,10 @@ class Player(PlayerAgent):
         """Method to stop using specified equipment"""
         return self.character.stop_using_equipment(equipment)
 
+    def use_item(self, item: str) -> bool:
+        """Method to use specified item"""
+        return self.character.use_item(item)
+    
     def can_equip(self, weapon: str) -> tuple:
         """Method to return whether the player can equip specified weapon.
         Returns a tuple with the boolean and a string with a reason."""

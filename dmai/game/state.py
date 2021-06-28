@@ -338,18 +338,6 @@ class State(metaclass=StateMeta):
         cls.current_conversation = None
 
     ############################################################
-    # METHODS RELATING TO ITEMS
-    @classmethod
-    def get_all_item_ids(cls) -> list:
-        """Method to return all item IDs in list"""
-        return list(cls.get_item_collection().get_all())
-    
-    @classmethod
-    def get_item_collection(cls):
-        """Method to return item collection"""
-        return cls.get_player().character.items
-
-    ############################################################
     # METHODS RELATING TO ACTIONS
     @classmethod
     def light_torch(cls) -> None:
@@ -368,6 +356,8 @@ class State(metaclass=StateMeta):
         """Method to heal a number of hit points, up to a max"""
         new_hp = cls.get_current_hp(entity) + hp
         if hp_max:
+            if new_hp > hp_max:
+                hp = hp_max - new_hp
             new_hp = min(hp_max, new_hp)
         cls.current_hp[entity] = new_hp
         OutputBuilder.append(NLG.heal(hp, new_hp))

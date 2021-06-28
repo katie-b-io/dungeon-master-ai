@@ -54,17 +54,17 @@ class PickUp(Action):
             # TODO check if picking up item will end game
             # OutputBuilder.append(State.get_dm().get_bad_ending())
             # dmai.dmai_helpers.gameover()
-            picked_up = State.get_item_collection().add_item(self.item)
+            picked_up = State.get_player().character.items.add_item(self.item)
             if picked_up:
                 State.get_current_room(self.entity).took_item(self.item)
                 OutputBuilder.append(
-                    NLG.pick_up(State.get_item_collection().get_name(self.item))
+                    NLG.pick_up(State.get_player().character.items.get_name(self.item))
                 )
             return picked_up
         else:
             OutputBuilder.append(
                 NLG.cannot_pick_up(
-                    State.get_item_collection().get_name(self.item), reason
+                    State.get_player().character.items.get_name(self.item), reason
                 )
             )
             return picked_up

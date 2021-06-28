@@ -96,6 +96,16 @@ class DM:
                 "name": "pick up",
                 "desc": "pick up an item",
                 "func": self.pick_up
+            },
+            "health": {
+                "name": "health",
+                "desc": "get health status",
+                "func": self.health
+            },
+            "inventory": {
+                "name": "inventory",
+                "desc": "get inventory status",
+                "func": self.inventory
             }
         }
 
@@ -357,13 +367,19 @@ class DM:
             entity = "player"
         if not equipment and nlu_entities:
             equipment = self._get_equipment(nlu_entities)
-
+        
         if not equipment:
+            item = self._get_item(nlu_entities)
+
+        if not equipment and not item:
             used = False
             OutputBuilder.append(NLG.no_equipment(stop=stop))
-        else:
+        elif equipment:
             logger.info("{e} is using {q}!".format(e=entity, q=equipment))
-            used = self.actions.use(equipment, entity, stop)
+            used = self.actions.use(equipment=equipment, entity=entity, stop=stop)
+        elif item:
+            logger.info("{e} is using {q}!".format(e=entity, q=item))
+            used = self.actions.use(item=item, entity=entity, stop=stop)
         return used
 
     def stop_using(
@@ -427,7 +443,7 @@ class DM:
 
     def affirm(self, **kwargs) -> bool:
         """Player has uttered an affirmation.
-        Appends the hint to output with the OutputBuilder.
+        Appends the text to output with the OutputBuilder.
         """
         if State.roleplaying and State.received_quest and not State.questing:
             npc = self.npcs.get_entity(State.current_conversation)
@@ -437,7 +453,7 @@ class DM:
 
     def deny(self, **kwargs) -> bool:
         """Player has uttered a denial.
-        Appends the hint to output with the OutputBuilder.
+        Appends the text to output with the OutputBuilder.
         """
         if State.roleplaying and State.received_quest and not State.questing:
             # this is a game end condition
@@ -502,3 +518,20 @@ class DM:
             logger.info("{e} is picking up {i}!".format(e=entity, i=item))
             picked_up = self.actions.pick_up(item, entity)
         return picked_up
+
+    def health(self, **kwargs) -> bool:
+        """Player wants a health update.
+        Appends the text to output with the OutputBuilder.
+        """
+        player = State.get_player()
+        hp = State.get_current_hp()
+        OutputBuilder.append(NLG.health_update(hp, hp_max=player.hp_max))
+        return True
+
+    def inventory(self, **kwargs) -> bool:
+        """Player wants a inventory update.
+        Appends the text to output with the OutputBuilder.
+        """
+        item_collection = State.get_player().character.items
+        OutputBuilder.append(item_collection.get_all_formatted())
+        return True
