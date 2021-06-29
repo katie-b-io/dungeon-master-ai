@@ -13,6 +13,7 @@ from dmai.game.state import State
 from dmai.utils.config import Config
 from dmai.nlg.nlg import NLG
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.exceptions import UnrecognisedRoomError
 
 
 class TestDM(unittest.TestCase):
@@ -115,16 +116,27 @@ class TestDM(unittest.TestCase):
         
     def test__get_target_npc(self) -> None:
         nlu_entities = [{"entity": "npc", "confidence": 1, "value": "corvus"}]
-        self.assertEqual("corvus", self.dm._get_target(nlu_entities))
+        self.assertEqual(("npc", "corvus"), self.dm._get_target(nlu_entities))
 
     def test__get_target_monster_wrong_location(self) -> None:
         nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
-        self.assertEqual(None, self.dm._get_target(nlu_entities))
+        self.assertEqual(("monster", None), self.dm._get_target(nlu_entities))
 
     def test__get_target_monster_right_location(self) -> None:
         State.set_current_room("player", "inns_cellar")
         nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
-        self.assertEqual("giant_rat_1", self.dm._get_target(nlu_entities))
+        self.assertEqual(("monster", "giant_rat_1"), self.dm._get_target(nlu_entities))
+    
+    def test__get_target_door(self) -> None:
+        nlu_entities = [{"entity": "door", "confidence": 1, "value": "door"}]
+        self.assertEqual(("door", None), self.dm._get_target(nlu_entities))
+    
+    def test__get_target_specific_door(self) -> None:
+        nlu_entities = [
+            {"entity": "door", "confidence": 1, "value": "door"},
+            {"entity": "location", "confidence": 1, "value": "southern_corridor"}
+        ]
+        self.assertEqual(("door", "southern_corridor"), self.dm._get_target(nlu_entities))
         
     def test__get_npc(self) -> None:
         self.assertEqual("corvus", self.dm._get_npc())
@@ -203,6 +215,33 @@ class TestDM(unittest.TestCase):
         nlu_entities2 = [{"entity": "monster", "confidence": 1, "value": "yoda"}]
         self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities1))
         self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities2))
+    
+    def test_attack_nlu_entities_door_good(self) -> None:
+        State.set_current_room("player", "antechamber")
+        nlu_entities1 = [
+            {"entity": "door", "confidence": 1, "value": "door"},
+            {"entity": "location", "confidence": 1, "value": "southern_corridor"},
+        ]
+        self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities1))
+    
+    def test_attack_nlu_entities_door_bad(self) -> None:
+        State.set_current_room("player", "antechamber")
+        nlu_entities1 = [
+            {"entity": "door", "confidence": 1, "value": "door"},
+            {"entity": "location", "confidence": 1, "value": "burial_chamber"},
+        ]
+        nlu_entities2 = [
+            {"entity": "door", "confidence": 1, "value": "gateway"},
+            {"entity": "location", "confidence": 1, "value": "southern_corridor"},
+        ]
+        nlu_entities3 = [
+            {"entity": "door", "confidence": 1, "value": "door"},
+            {"entity": "location", "confidence": 1, "value": "the_moon"},
+        ]
+        self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities1))
+        self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities2))
+        with self.assertRaises(UnrecognisedRoomError):
+            self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities3))
         
     def test_use_equipment_good(self) -> None:
         self.assertEqual(True, self.dm.use(equipment="torch"))

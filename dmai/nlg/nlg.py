@@ -480,7 +480,7 @@ class NLG(metaclass=NLGMeta):
             return "{a} cannot attack {t}".format(a=attacker, t=target)
         elif reason == "unknown target":
             return "{a} cannot attack unknown target: {t}!".format(a=attacker, t=target)
-        elif reason == "different loction":
+        elif reason == "different location":
             return "{a} cannot attack {t} as it's not in the same location as you!".format(a=attacker, t=target)
         elif reason == "no visibility":
             return "{a} cannot attack {t} because it's too dark to see them!".format(
@@ -567,6 +567,61 @@ class NLG(metaclass=NLGMeta):
         elif reason == "different location":
             return "You cannot investigate target {t}, you're not in the same location!".format(t=target)
 
+    ############################################################
+    # Dealing with doors utterances
+    @classmethod
+    def no_door_targets(cls) -> str:
+        """Return the utterance for no door targets"""
+        utters = [
+            "There are no doors here you need to attack!",
+            "There aren't any suitable door targets here.",
+            "Nope, there are no doors you need to attack here."
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def no_door_target(cls, verb: str, possible_targets: str = "") -> str:
+        """Return the utterance for no door target"""
+        utters = [
+            "Can you confirm your door target. {p}".format(p=possible_targets),
+            "What door do you want to {v}? {p}".format(v=verb, p=possible_targets),
+            "I'm not sure what door you want to {v}. {p}".format(v=verb, p=possible_targets),
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def cannot_attack_door(cls, attacker: str, target: str, reason: str = None, possible_targets: list = []) -> str:
+        """Return the utterance for not allowing door attack"""
+        if attacker == "player" or attacker == cls.game.player.name:
+            attacker = "You"
+        
+        if possible_targets:
+            p = "You could target the door to the {p}".format(p=possible_targets[0])
+            for poss in possible_targets[1:]:
+                if possible_targets[-1] == poss:
+                    p += " or the {p}".format(p=poss)
+                else:
+                    p += ", the {p}".format(p=poss)
+                    
+        if not reason:
+            return "{a} cannot attack {t}".format(a=attacker, t=target)
+        elif reason == "unknown target":
+            return "{a} cannot attack unknown target: {t}!".format(a=attacker, t=target)
+        elif reason == "different location":
+            return "{a} cannot attack {t} as it's not in the same location as you!".format(a=attacker, t=target)
+        elif reason == "no visibility":
+            return "{a} cannot attack {t} because it's too dark to see it!".format(
+                a=attacker, t=target) 
+        elif reason == "destroyed door":
+            return "{a} cannot attack {t} because it's already destroyed!".format(
+                a=attacker, t=target) 
+        elif reason == "travel allowed":
+            return "{a} cannot attack {t} because it's already open!".format(
+                a=attacker, t=target) 
+        elif reason == "no weapon":
+            return "{a} cannot attack {t} because you have no equipped weapons! Try equipping a weapon first.".format(
+                a=attacker, t=target) 
+    
     ############################################################
     # Gameover utterances
     @classmethod

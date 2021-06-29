@@ -5,6 +5,7 @@ from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.attack import Attack
+from dmai.domain.actions.attack_door import AttackDoor
 from dmai.domain.actions.roll import Roll
 from dmai.domain.actions.pick_up import PickUp
 import dmai
@@ -99,6 +100,12 @@ class Actions:
         attack = Attack(attacker, target)
         return attack.execute()
 
+    def attack_door(self, attacker: str, location: str) -> bool:
+        """Attempt to attack a door at specified location.
+        Returns a bool to indicate whether the action was successful"""
+        attack_door = AttackDoor(attacker, location)
+        return attack_door.execute()
+    
     def _can_use_equipment(self, entity, equipment: str) -> tuple:
         """Check if an entity can use specified equipment.
         Returns tuple (bool, str) to indicate whether use is possible

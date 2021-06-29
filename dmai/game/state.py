@@ -735,6 +735,23 @@ class State(metaclass=StateMeta):
             raise
 
     @classmethod
+    def get_possible_door_targets(cls, entity: str = "player") -> list:
+        """Method to get all doors in a room that specified entity is in"""
+        targets = []
+        for room in cls.get_current_room().get_connected_rooms():
+            if not State.travel_allowed(State.get_current_room_id(), room):
+                targets.append(room)
+        return targets
+    
+    @classmethod
+    def get_formatted_possible_door_targets(cls, entity: str = "player") -> str:
+        """Method to return a formatted string of possible door targets"""
+        rooms = cls.get_possible_door_targets(entity)
+        possible_targets = [State.get_room_name(room) for room in rooms]
+        formatted_str = "You could try to find a way to open the door to {a}.".format(a=Text.properly_format_list(possible_targets, delimiter=", the ", last_delimiter=" or the "))
+        return formatted_str
+    
+    @classmethod
     def get_possible_monster_targets(cls, entity: str = "player") -> list:
         """Method to get all monsters in a room that specified entity is in"""
         targets = []
