@@ -92,7 +92,10 @@ class Player(PlayerAgent):
     def initiative_roll(self) -> int:
         """Method to roll initiative"""
         die = "d20{m}".format(m=self.character.get_signed_initiative())
-        return DiceRoller.roll(die)
+        if State.god_mode:
+            return 30
+        else:
+            return DiceRoller.roll(die)
     
     def attack_roll(self, weapon_id: str = None) -> int:
         """Method to roll attack"""
@@ -101,7 +104,10 @@ class Player(PlayerAgent):
         else:
             weapon = self.character.weapons.get_equipped("any")
         die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon["id"]))
-        return DiceRoller.roll(die)
+        if State.god_mode:
+            return 30
+        else:
+            return DiceRoller.roll(die)
     
     def damage_roll(self, weapon_id: str = None) -> int:
         """Method to roll damage"""
@@ -111,7 +117,10 @@ class Player(PlayerAgent):
             weapon = self.character.weapons.get_equipped("any")
         dice_spec = self.character.weapons.get_damage_dice(weapon["id"])
         dice_spec["mod"] = self.character.get_damage_modifier(weapon["id"])
-        return DiceRoller.roll_dice(dice_spec)
+        if State.god_mode:
+            return 30
+        else:
+            return DiceRoller.roll_dice(dice_spec)
     
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""

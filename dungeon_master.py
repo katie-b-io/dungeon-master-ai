@@ -43,6 +43,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cleanup",
                         action="store_true",
                         help="On exit, remove any files produced during game")
+    parser.add_argument("--god-mode",
+                        action="store_true",
+                        help="Enable god mode, all player rolls return 30")
     return parser
 
 
@@ -81,12 +84,15 @@ def main() -> None:
         if args.name:
             game = dmai.start(char_class=char_class,
                               char_name=args.name,
-                              skip_intro=args.skip_intro)
+                              skip_intro=args.skip_intro,
+                              god_mode=args.god_mode)
         else:
             game = dmai.start(char_class=char_class,
-                              skip_intro=args.skip_intro)
+                              skip_intro=args.skip_intro,
+                              god_mode=args.god_mode)
     else:
-        game = dmai.start(skip_intro=args.skip_intro)
+        game = dmai.start(skip_intro=args.skip_intro,
+                              god_mode=args.god_mode)
 
     # start an interactive session on the command line
     if args.interactive:

@@ -55,6 +55,7 @@ class State(metaclass=StateMeta):
     player = None
 
     # class state variables
+    god_mode = False
     started = False
     paused = False
     talking = False
