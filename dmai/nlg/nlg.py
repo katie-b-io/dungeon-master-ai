@@ -147,7 +147,7 @@ class NLG(metaclass=NLGMeta):
         else:
             utters = [
                 "You feel like a new {c}! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp, c=c),
-                "That felt AMAZING! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
+                "That felt amazing! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
                 "You feel invincible! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
             ]
         return random.choice(utters)
@@ -487,6 +487,9 @@ class NLG(metaclass=NLGMeta):
                 a=attacker, t=target) 
         elif reason == "dead target":
             return "{a} cannot attack {t} because they're already dead!".format(
+                a=attacker, t=target) 
+        elif reason == "no weapon":
+            return "{a} cannot attack {t} because you have no equipped weapons! Try equipping a weapon first.".format(
                 a=attacker, t=target) 
     
     @classmethod

@@ -146,10 +146,12 @@ class Room:
                         State.get_player().character.items.get_name(item)
                         for item in self.treasure
                     ]
-                    desc_str += " After searching the barrels and boxes thoroughly you find a {t}. You should pick {i} up.".format(
+                    desc_str += " After searching the room thoroughly you find a {t}. You should pick {i} up.".format(
                         t=Text.properly_format_list(treasure),
                         i="it" if len(treasure) == 1 else "them"
                     )
+                else:
+                    desc_str += " You searched the room thoroughly but you don't find anything of value."
 
             # TODO add description of puzzles
 

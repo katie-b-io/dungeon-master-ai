@@ -283,6 +283,22 @@ nlu:
     - swing my [scimitar](weapon) at the [skeleton](monster)
     - bash the [zombie](monster) with my [warhammer](weapon)
     - swing the [war hammer](weapon) at the [second](id) [giant rat](monster)
+    - I attack the [door](door)
+    - I hit the [door](door)
+    - I use my [greataxe](weapon) against the [door](door)
+    - I strike at the [door](door) with my [greataxe](weapon)
+    - I attack the [portcullis](door)
+    - I hit the [portcullis](door)
+    - I use my [greataxe](weapon) against the [portcullis](door)
+    - I strike at the [portcullis](door) with my [greataxe](weapon)
+    - I attack the [door](door) to the [southern corridor](location)
+    - I hit the [door](door) to the [western corridor](location)
+    - strike the [burial chamber](location) [door](door)
+    - attack the [southern corridor](location) [door](door)
+    - I use my [greataxe](weapon) against the [portcullis](door) to the [burial chamber](location) open 
+    - attack the [portcullis](door) to the [western corridor](location) open
+    - I strike the [western corridor](location) [portcullis](door)
+    - hit open the [burial chamber](location) [portcullis](door)
 
 - intent: ranged_attack
   examples: |
@@ -520,6 +536,33 @@ nlu:
     - I want [ale](drink)
     - give me [ale](drink)
 
+- intent: force_door
+  examples: |
+    - I force open the [door](door)
+    - I slam the [door](door)
+    - force the [door](door)
+    - slam the [door](door)
+    - force the [door](door) open
+    - slam the [door](door) open
+    - I prise open the [door](door)
+    - force open the [door](door)
+    - I force open the [portcullis](door)
+    - I slam the [portcullis](door)
+    - force the [portcullis](door)
+    - slam the [portcullis](door)
+    - force the [portcullis](door) open
+    - slam the [portcullis](door) open
+    - I prise open the [portcullis](door)
+    - force open the [portcullis](door)
+    - I force open the [door](door) to the [southern corridor](location)
+    - I slam the [door](door) to the [western corridor](location)
+    - force the [burial chamber](location) [door](door)
+    - slam the [southern corridor](location) [door](door)
+    - force the [portcullis](door) to the [burial chamber](location) open 
+    - slam the [portcullis](door) to the [western corridor](location) open
+    - I prise open the [western corridor](location) [portcullis](door)
+    - force open the [burial chamber](location) [portcullis](door)
+
 - intent: ability_check
   examples: |
     - can I do a [charisma](ability) check?
@@ -638,10 +681,6 @@ nlu:
     - what items do I have?
     - what items are in my inventory?
 
-- intent: locate
-  examples: |
-    - where is the [door](entity)?
-
 - intent: sense
   examples: |
     - what do I [see](sense)?
@@ -727,6 +766,7 @@ nlu:
     - the hole
     - hole
     - tunnel
+    - the tunnel
 
 - synonym: burial_chamber
   examples: |
@@ -773,15 +813,18 @@ nlu:
 
 - synonym: goblin
   examples: |
+    - goblin
     - goblins
 
 - synonym: skeleton
   examples: |
+    - skeleton
     - skellington
     - skeletons
 
 - synonym: zombie
   examples: |
+    - zombie
     - zombies
 
 - synonym: "1"
@@ -848,6 +891,7 @@ nlu:
 
 - synonym: torch
   examples: |
+    - torch
     - light
 
 - synonym: masons_tools
@@ -933,34 +977,41 @@ nlu:
 
 - synonym: shortsword
   examples: |
+    - shortsword
     - short sword
     - sword
 
 - synonym: dagger
   examples: |
+    - dagger
     - daggers
 
 - synonym: greataxe
   examples: |
+    - greataxe
     - great axe
     - greatax
 
 - synonym: handaxe
   examples: |
+    - handaxe
     - hand axe
     - handax
 
 - synonym: javelin
   examples: |
+    - javelin
     - javellin
 
 - synonym: quarterstaff
   examples: |
+    - quarterstaff
     - quarter staff
     - quaterstaff
 
 - synonym: warhammer
   examples: |
+    - warhammer
     - war hammer
 
 - synonym: potion_of_healing
@@ -971,6 +1022,7 @@ nlu:
 
 - synonym: pouch
   examples: |
+    - pouch
     - coin pouch
     - purse
     - coin purse
@@ -987,3 +1039,8 @@ nlu:
   examples: |
     - dwarven thrower
     - thrower
+
+- synonym: door
+  examples: |
+    - door
+    - portcullis
