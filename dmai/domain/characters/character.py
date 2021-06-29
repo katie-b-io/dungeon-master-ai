@@ -129,7 +129,7 @@ class Character(ABC):
         """Method to check whether player can unequip specified weapon"""
         return self.weapons.can_unequip(weapon)
 
-    def is_equipped(self, weapon: str) -> bool:
+    def is_equipped(self, weapon: str = None) -> bool:
         """Method to check whether weapon is equipped"""
         return self.weapons.is_equipped(weapon)
 

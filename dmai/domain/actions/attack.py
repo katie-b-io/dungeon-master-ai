@@ -43,6 +43,10 @@ class Attack(Action):
                         or State.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
+            
+            # can't attack if no weapon equipped
+            if not State.get_player().is_equipped():
+                return (False, "no weapon")
 
             # none of the above situations were triggered so allow attack
             return (True, "")

@@ -85,7 +85,7 @@ class Player(PlayerAgent):
         """Method to unequip specified weapon"""
         self.character.unequip_weapon(weapon)
     
-    def is_equipped(self, weapon: str) -> bool:
+    def is_equipped(self, weapon: str = None) -> bool:
         """Method to check whether weapon is equipped"""
         return self.character.is_equipped(weapon)
     

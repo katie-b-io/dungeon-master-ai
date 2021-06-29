@@ -354,11 +354,12 @@ class State(metaclass=StateMeta):
     @classmethod
     def heal(cls, hp: int, hp_max: int = None, entity: str = "player") -> None:
         """Method to heal a number of hit points, up to a max"""
-        new_hp = cls.get_current_hp(entity) + hp
+        current_hp = cls.get_current_hp(entity)
+        new_hp = current_hp + hp
         if hp_max:
             if new_hp > hp_max:
-                hp = hp_max - new_hp
-            new_hp = min(hp_max, new_hp)
+                hp = hp_max - current_hp
+            new_hp = min(hp_max, new_hp) 
         cls.current_hp[entity] = new_hp
         OutputBuilder.append(NLG.heal(hp, new_hp))
 

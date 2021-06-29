@@ -165,12 +165,17 @@ class Weapons:
             elif self.left_hand:
                 return self.weapons_data[self.left_hand]
 
-    def is_equipped(self, weapon_id: str) -> bool:
+    def is_equipped(self, weapon_id: str = None) -> bool:
         """Method to determine if weapon is equipped.
         Returns bool"""
         right_weapon = self.get_equipped("right_hand")
         left_weapon = self.get_equipped("left_hand")
 
+        if not weapon_id:
+            if right_weapon or left_weapon:
+                return True
+            else:
+                return False
         if right_weapon and weapon_id == right_weapon["id"]:
             return True
         if left_weapon and weapon_id == left_weapon["id"]:

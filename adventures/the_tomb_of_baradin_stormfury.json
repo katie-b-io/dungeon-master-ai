@@ -128,7 +128,7 @@
             "visibility": false,
             "text": {
                 "enter": "You descend into the dark and damp cellar of the inn. The light from the ground floor above dimly illuminates the landing but the rest of the cellar is covered in complete darkness. The landing in front of you leads left into the main cellar where you can hear the squeaks of rats as they destroy Corvus' stock and the loud protesting meows of Anvil-Jumper, Corvus' cat.",
-                "visibility": "You see a terrible scene in front of you. Anvil-Jumper the cat is sitting on top of one of the barrels in the north-east corner of the room, meowing pathetically at the giant rats who are entirely indifferent to his plight. There are a total of four giant rats in the cellar tearing through the food supplies. The rats have burst through a 5 ft by 5 ft hole in the eastern wall of the cellar.",
+                "visibility": "You see a terrible scene in front of you. Anvil-Jumper the cat is sitting on top of one of the barrels in the north-east corner of the room, meowing pathetically at the giant rats who are entirely indifferent to his plight. There are two giant rats in the cellar tearing through the food supplies. The rats have burst through a 5 ft by 5 ft hole in the eastern wall of the cellar.",
                 "description": "Dark and damp cellar.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "You vanquished the giant rats! With a swish of his tail, Anvil-Jumper leaps from the barrel and dashes upstairs. Corvus will be pleased, if you choose you can return to him to receive your handsome reward. It may be worth investigating this room further to see if you find anything of value. You may also want to determine what caused the giant rats to come here, there may be something to investigate in the storage room accessible through the hole in the eastern wall."
@@ -240,9 +240,10 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. Two exits from this room, one to the east and one to the south are blocked by lowered portcullises. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a humanoid form hunched over the far corner of the room. Another smaller humanoid form appears to be lying motionless in front of the hunched one.",
+                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. Two exits from this room blocked by lowered portcullises, one which leads to the Burial Chamber and one which leads to the Western Corridor. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a humanoid form hunched over the far corner of the room. Another smaller humanoid form appears to be lying motionless in front of the hunched one.",
                 "description": "It's a storage room.",
-                "no_visibility_description": "The room is too dark to see anything."
+                "no_visibility_description": "The room is too dark to see anything.",
+                "fight_ends": "You slew the foul zombie! Although it looks like further progress is temporarily blocked by these portcullises. If you're strong enough you could probably force them open or you could look around the room for another solution."
             }
         },
         "burial_chamber": {
@@ -362,7 +363,8 @@
             "text": {
                 "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open. On the eastern wall there's a double metal door with a large grinning skull engraved on the centre. There are simple unadorned stone pedestals on either side of the door. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
                 "description": "You see six unmarked stone vault doors.",
-                "no_visibility_description": "The room is too dark to see anything."
+                "no_visibility_description": "The room is too dark to see anything.",
+                "fight_ends": "Phew, that was a close one! It might be worth having a look around the room if you haven't already, but be careful!"
             }
         },
         "western_corridor": {
@@ -386,8 +388,8 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "You make your way deeper into the darkness, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side. There are sconces with torches on the pillars but they are all unlit. You can see a light on the far side of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance. You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the next area, appear to be speaking in hushed voices and it's hard to distinguish what they are saying from here.",
-                "description": "It's a dusty corridor.",
+                "enter": "You make your way deeper into the darkness, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side. There are sconces with torches on the pillars but they are all unlit. You can see a light in the antechamber at the end of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance. You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the antechamber appear to be speaking in hushed voices and it's hard to distinguish what they are saying from here.",
+                "description": "It's a long dusty corridor.",
                 "no_visibility_description": "The room is too dark to see anything."
             }
         },
@@ -464,9 +466,10 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. An open door leads to another corridor to the north. On the south there is a wooden door reinforced with iron.",
+                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. There is a wooden door reinforced with iron which leads to the southern corridor.",
                 "description": "It's a circular room.",
-                "no_visibility_description": "The room is too dark to see anything."
+                "no_visibility_description": "The room is too dark to see anything.",
+                "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."
             }
         },
         "southern_corridor": {
@@ -584,7 +587,7 @@
             "visibility": false,
             "text": {
                 "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the wall to the south.",
-                "description": "It's a long corridor with an elaborate door at the end.",
+                "description": "It's a corridor with an elaborate dwarven engraving at the end.",
                 "no_visibility_description": "The room is too dark to see anything."
             }
         },
