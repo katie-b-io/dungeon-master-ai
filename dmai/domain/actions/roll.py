@@ -15,7 +15,7 @@ class Roll(Action):
         self.roll_type = roll_type
         self.die = die
         self.nlu_entities = nlu_entities
-        self.roll_map = {"attack": self._attack_roll}
+        self.roll_map = {"attack": self._attack_roll, "door_attack": self._door_attack_roll}
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -51,6 +51,48 @@ class Roll(Action):
         else:
             OutputBuilder.append("Can't roll!")
             return can_roll
+    
+    def _door_attack_roll(self) -> bool:
+        """Execute an attack roll against door.
+        Returns a bool to indicate whether the action was successful"""
+        if State.get_combat_status() == Combat.ATTACK_ROLL:
+            # process the last player input (damage roll)
+            if State.door_target:
+                target = State.door_target
+                player = State.get_entity()
+                damage = player.damage_roll()
+                hp = State.take_door_damage(damage, target)
+                OutputBuilder.append("You dealt {d} damage to {t} door (hp is now {h})".format(d=damage, t=State.get_room_name(target), h=hp))
+                # end the fight if we're not in combat any more
+                if not State.in_combat_with_door:
+                    return True
+        elif State.get_combat_status() == Combat.DAMAGE_ROLL:
+            # process the last player input (attack roll)
+            target = State.door_target
+            player = State.get_entity()
+            if player.attack_roll() >= State.get_door_armor_class(State.get_current_room_id(), target):
+                # can deal damage
+                OutputBuilder.append("Okay that hits, try and deal some damage!")
+            else:
+                # can't deal damage, clear target
+                State.door_target = None
+                OutputBuilder.append("That doesn't hit. Declare attack against door again if you want to try again.")
+                
+        # get attack roll from player
+        if State.get_combat_status() == Combat.ATTACK_ROLL:
+            # this is handled by AttackDoor._attack()
+            pass
+
+        # get attack roll from player
+        if State.get_combat_status() == Combat.DAMAGE_ROLL:
+            if State.door_target:
+                # now return the utterance for getting the next roll
+                OutputBuilder.append(NLG.perform_damage_roll())
+                State.set_combat_status(3)
+            else:
+                # didn't hit, skip damage roll
+                State.set_combat_status(2)
+        return True
 
     def _attack_roll(self) -> bool:
         """Execute an attack roll.

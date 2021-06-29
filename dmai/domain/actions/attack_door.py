@@ -27,7 +27,6 @@ class AttackDoor(Action):
         # check if attacker and door are within attack range
         try:
             current = State.get_current_room(self.attacker)
-            print(current.get_connected_rooms())
             if not self.target in current.get_connected_rooms():
                 return (False, "different location")
             
@@ -65,8 +64,7 @@ class AttackDoor(Action):
         # check if attack can happen
         (can_attack, reason) = self._can_attack_door()
         if can_attack:
-            # State.combat(self.attacker, self.target)
-            print("Updating State here")
+            State.combat_with_door(self.target)
             return can_attack
         else:
             door_name = "the door to the {t}".format(t=State.get_room_name(self.target))

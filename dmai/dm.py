@@ -516,11 +516,15 @@ class DM:
             if "nlu_entities" in State.stored_intent["params"]:
                 nlu_entities.extend(State.stored_intent["params"]["nlu_entities"])
             if State.stored_intent["intent"] == "attack":
-                return self.actions.roll("attack", nlu_entities, die)
+                if State.in_combat_with_door:
+                    return self.actions.roll("door_attack", nlu_entities, die)
+                else:
+                    return self.actions.roll("attack", nlu_entities, die)
 
+        if State.in_combat_with_door:
+            return self.actions.roll("door_attack", nlu_entities, die)
         if State.in_combat:
             return self.actions.roll("attack", nlu_entities, die)
-        
         return self.actions.roll("roll", nlu_entities, die)
 
     def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:
