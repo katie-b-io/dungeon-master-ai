@@ -62,6 +62,8 @@ class State(metaclass=StateMeta):
     questing = False
     complete = False
     in_combat = False
+    in_combat_with_door = False
+    door_target = None
     roleplaying = False
     torch_lit = False
     stationary = False
@@ -69,6 +71,7 @@ class State(metaclass=StateMeta):
     current_room = {}
     current_status = {}
     current_hp = {}
+    current_hp_door = {}
     current_game_mode = GameMode.EXPLORE
     current_intent = None
     stored_intent = {}
@@ -92,6 +95,7 @@ class State(metaclass=StateMeta):
             cls.set_current_game_mode("combat")
             cls.in_combat = True
             cls.roleplaying = False
+            cls.in_combat_with_door = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
             cls.set_expected_intents(["roll"])
@@ -101,6 +105,19 @@ class State(metaclass=StateMeta):
             State.set_expected_intents(["roll"])
             OutputBuilder.append(NLG.perform_attack_roll())
             cls.progress_combat_status()
+                
+    @classmethod
+    def combat_with_door(cls, target: str) -> None:
+        cls.door_target = target
+        if not cls.in_combat_with_door:
+            cls.in_combat_with_door = True
+            cls.in_combat = False
+            cls.roleplaying = False
+            cls.set_combat_status(3)
+            OutputBuilder.append(NLG.perform_attack_roll())
+        else:
+            cls.set_combat_status(3)
+            OutputBuilder.append(NLG.perform_attack_roll())
 
     @classmethod
     def explore(cls) -> None:
@@ -111,6 +128,7 @@ class State(metaclass=StateMeta):
         cls.clear_target()
         cls.clear_conversation()
         cls.clear_expected_intents()
+        cls.door_target = None
 
     @classmethod
     def roleplay(cls, target: str) -> None:
@@ -122,6 +140,7 @@ class State(metaclass=StateMeta):
             cls.clear_target()
             cls.set_conversation_target(target)
             cls.clear_expected_intents()
+            cls.door_target = None
 
     @classmethod
     def set_current_game_mode(cls, game_mode: str) -> None:
@@ -171,6 +190,11 @@ class State(metaclass=StateMeta):
         cls.dm = dm
         init_room = cls.dm.adventure.get_init_room()
         cls.current_room["player"] = init_room
+        for room in cls.dm.adventure.get_all_rooms():
+            for connected_room in room.get_connected_rooms():
+                if room.can_attack_door(connected_room):
+                    cls.current_hp_door[connected_room] = room.get_door_hp(connected_room)
+        
         # register room triggers
         for room in cls.dm.adventure.get_all_rooms():
              if hasattr(room, "trigger"):
@@ -734,6 +758,23 @@ class State(metaclass=StateMeta):
             raise
 
     @classmethod
+    def get_possible_door_targets(cls, entity: str = "player") -> list:
+        """Method to get all doors in a room that specified entity is in"""
+        targets = []
+        for room in cls.get_current_room().get_connected_rooms():
+            if not State.travel_allowed(State.get_current_room_id(), room):
+                targets.append(room)
+        return targets
+    
+    @classmethod
+    def get_formatted_possible_door_targets(cls, entity: str = "player") -> str:
+        """Method to return a formatted string of possible door targets"""
+        rooms = cls.get_possible_door_targets(entity)
+        possible_targets = [State.get_room_name(room) for room in rooms]
+        formatted_str = "You could try to find a way to open the door to {a}.".format(a=Text.properly_format_list(possible_targets, delimiter=", the ", last_delimiter=" or the "))
+        return formatted_str
+    
+    @classmethod
     def get_possible_monster_targets(cls, entity: str = "player") -> list:
         """Method to get all monsters in a room that specified entity is in"""
         targets = []
@@ -795,3 +836,33 @@ class State(metaclass=StateMeta):
 
         return summary
         
+    ############################################################
+    # METHODS RELATING TO COMBAT WITH DOORS
+    @classmethod
+    def take_door_damage(cls, damage: int, target: str, attacker: str = "player") -> int:
+        """Method to apply damage to specified door target.
+        Returns the updated hp value"""
+        try:
+            original_hp = cls.current_hp_door[target]
+            cls.current_hp_door[target] = cls.current_hp_door[target] - damage
+            if cls.current_hp_door[target] <= 0:
+                # this destroys the door and unlocks the way
+                cls.in_combat_with_door = False
+                cls.unlock_door(cls.get_current_room_id(), target)
+                OutputBuilder.append(NLG.broke_down_door(State.get_room_name(target)))
+            else:
+                OutputBuilder.append(NLG.deal_door_damage(damage, original_hp))
+            return cls.current_hp_door[target]
+        except KeyError:
+            msg = "Room not recognised: {e}".format(e=target)
+            raise UnrecognisedRoomError(msg)
+    
+    @classmethod
+    def get_door_armor_class(cls, room: str, door: str) -> int:
+        """Method to get a specified door's armor class"""
+        return cls.get_dm().adventure.get_room(room).get_door_armor_class(door)
+    
+    @classmethod
+    def get_door_hp(cls, door: str) -> int:
+        """Method to get a specified door's hp"""
+        return cls.current_hp_door[door]

@@ -1,6 +1,5 @@
 from dmai.domain.items.item import Item
 from dmai.game.world.puzzles.puzzle_collection import PuzzleCollection
-from dmai.game.world.puzzles.puzzle_collection import PuzzleCollection
 from dmai.utils.output_builder import OutputBuilder
 from dmai.nlg.nlg import NLG
 from dmai.utils.text import Text
@@ -96,7 +95,19 @@ class Room:
     def took_item(self, item: str) -> None:
         """Method to remove the item from the room"""
         self.treasure.remove(item)
-
+        
+    def can_attack_door(self, door: str) -> bool:
+        """Method to return whether a door of room can be attacked"""
+        return self.puzzles.can_attack_door(self.id, door)
+    
+    def get_door_armor_class(self, door: str) -> int:
+        """Method to return the armor class of specified door"""
+        return self.puzzles.get_door_armor_class(self.id, door)
+        
+    def get_door_hp(self, door: str) -> int:
+        """Method to return the armor class of specified door"""
+        return self.puzzles.get_door_hp(self.id, door)
+    
     def get_description(self) -> str:
         """Method to get the room description, including any treasure and puzzles"""
 

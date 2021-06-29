@@ -87,3 +87,13 @@ class Puzzle(ABC):
             if "spell" in s:
                 if spell == s["spell"]:
                     return True
+    
+    def get_armor_class(self) -> int:
+        """Method to return the armor class of puzzle"""
+        if "attack" in self.solutions:
+            return self.solutions["attack"]["ac"]
+    
+    def get_hp(self) -> int:
+        """Method to return the hp of puzzle"""
+        if "attack" in self.solutions:
+            return self.solutions["attack"]["hp"]

@@ -206,28 +206,19 @@ class DM:
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
                 return entity["value"]
-            if (
-                entity["entity"] == "monster"
-                and entity["confidence"] >= self.ENTITY_CONFIDENCE
-            ):
-                monster = self._get_target(nlu_entities)
-                if monster:
-                    return State.get_current_room_id(monster)
-            if (
-                entity["entity"] == "npc"
-                and entity["confidence"] >= self.ENTITY_CONFIDENCE
-            ):
-                npc = self._get_target(nlu_entities)
-                if npc:
-                    return State.get_current_room_id(npc)
+            
+            (target_type, target) = self._get_target(nlu_entities)
+            if target:
+                return State.get_current_room_id(target)
 
-    def _get_target(self, nlu_entities: dict) -> str:
+    def _get_target(self, nlu_entities: dict) -> tuple:
         """Extract a target from NLU entities dictionary.
-        Returns a string with target ID"""
-        # TODO support non-entity targets
+        Returns tuple with the type of target and a string with target ID"""
         monster = None
         i = None
         npc = None
+        door = False
+        location = None
         for entity in nlu_entities:
             if (
                 entity["entity"] == "monster"
@@ -244,6 +235,20 @@ class DM:
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
                 npc = entity["value"]
+            if (
+                entity["entity"] == "door"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                door = True
+            if (
+                entity["entity"] == "location"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                location = entity["value"]
+        
+        # return the door and location
+        if door:
+            return ("door", location)
 
         # monsters are indexed by a unique id, determine it if possible
         if monster:
@@ -252,15 +257,16 @@ class DM:
                 monster_id = "{m}_{i}".format(m=monster, i=i)
             else:
                 # player hasn't appeared to specify particular individual, pick first alive one
-                # TODO get player confirmation about which monster to target
                 monster_id = self.npcs.get_monster_id(
                     monster, status="alive", location=State.get_current_room_id()
                 )
-            return monster_id
+            return ("monster", monster_id)
 
         # NPCs have unique ids
         if npc:
-            return npc
+            return ("npc", npc)
+
+        return (None, None)
 
     def _get_npc(self) -> str:
         """Get an NPC.
@@ -339,19 +345,33 @@ class DM:
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
-            target = self._get_target(nlu_entities)
-
+            (target_type, target) = self._get_target(nlu_entities)
+        else:
+            target_type = None
+            
         if not target:
             attacked = False
-            if not State.get_possible_monster_targets():
-                OutputBuilder.append(NLG.no_monster_targets())
+            if target_type == "door":
+                if not State.get_possible_door_targets():
+                    OutputBuilder.append(NLG.no_door_targets())
+                else:
+                    OutputBuilder.append(
+                        NLG.no_door_target("attack", State.get_formatted_possible_door_targets())
+                    )
             else:
-                OutputBuilder.append(
-                    NLG.no_target("attack", State.get_formatted_possible_monster_targets())
-                )
+                if not State.get_possible_monster_targets():
+                    OutputBuilder.append(NLG.no_monster_targets())
+                else:
+                    OutputBuilder.append(
+                        NLG.no_target("attack", State.get_formatted_possible_monster_targets())
+                    )
         else:
-            logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
-            attacked = self.actions.attack(attacker, target)
+            if target_type == "door":
+                logger.info("{a} is attacking door {t}!".format(a=attacker, t=target))
+                attacked = self.actions.attack_door(attacker, target)
+            else:
+                logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
+                attacked = self.actions.attack(attacker, target)
         return attacked
 
     def use(
@@ -429,7 +449,7 @@ class DM:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the action was successful."""
         if not target and nlu_entities:
-            target = self._get_target(nlu_entities)
+            (target_type, target) = self._get_target(nlu_entities)
         elif not target and not nlu_entities:
             target = self._get_npc()
 
@@ -467,7 +487,7 @@ class DM:
         """Attempt to explore/investigate.
         Returns whether the action was successful."""
         if not target and nlu_entities:
-            target = self._get_target(nlu_entities)
+            (target_type, target) = self._get_target(nlu_entities)
         if not target:
             logger.info("player is exploring!")
             room = State.get_current_room()
@@ -496,11 +516,15 @@ class DM:
             if "nlu_entities" in State.stored_intent["params"]:
                 nlu_entities.extend(State.stored_intent["params"]["nlu_entities"])
             if State.stored_intent["intent"] == "attack":
-                return self.actions.roll("attack", nlu_entities, die)
+                if State.in_combat_with_door:
+                    return self.actions.roll("door_attack", nlu_entities, die)
+                else:
+                    return self.actions.roll("attack", nlu_entities, die)
 
+        if State.in_combat_with_door:
+            return self.actions.roll("door_attack", nlu_entities, die)
         if State.in_combat:
             return self.actions.roll("attack", nlu_entities, die)
-        
         return self.actions.roll("roll", nlu_entities, die)
 
     def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:

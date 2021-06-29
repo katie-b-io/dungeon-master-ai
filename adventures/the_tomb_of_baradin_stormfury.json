@@ -240,7 +240,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. Two exits from this room blocked by lowered portcullises, one which leads to the Burial Chamber and one which leads to the Western Corridor. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a humanoid form hunched over the far corner of the room. Another smaller humanoid form appears to be lying motionless in front of the hunched one.",
+                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. Two exits from this room blocked by lowered portcullises, one which leads to the Burial Chamber and one which leads to the Western Corridor. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
                 "description": "It's a storage room.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "You slew the foul zombie! Although it looks like further progress is temporarily blocked by these portcullises. If you're strong enough you could probably force them open or you could look around the room for another solution."
@@ -397,6 +397,7 @@
             "id": "antechamber",
             "name": "Antechamber",
             "init": false,
+            "visited": false,
             "connections": {
                 "western_corridor": {
                     "locked": false,
@@ -466,7 +467,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. There is a wooden door reinforced with iron which leads to the southern corridor.",
+                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron which leads to the southern corridor. There are two goblins here.",
                 "description": "It's a circular room.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."

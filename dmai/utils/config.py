@@ -90,6 +90,8 @@ class Config(metaclass=ConfigMeta):
     ################################################################
     # class variables
     cleanup = False
+    god_mode = False
+    no_monsters = False
     directory = Directories()
     agent = Agents()
     planner = Planners()
@@ -108,3 +110,13 @@ class Config(metaclass=ConfigMeta):
     def cleanup_on_exit(cls) -> None:
         """Method to set cleanup status"""
         cls.cleanup = True
+
+    @classmethod
+    def enable_god_mode(cls) -> None:
+        """Method to set god_mode status"""
+        cls.god_mode = True
+
+    @classmethod
+    def disable_monsters(cls) -> None:
+        """Method to set disable_monsters status"""
+        cls.no_monsters = True
