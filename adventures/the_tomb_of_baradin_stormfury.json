@@ -397,6 +397,7 @@
             "id": "antechamber",
             "name": "Antechamber",
             "init": false,
+            "visited": false,
             "connections": {
                 "western_corridor": {
                     "locked": false,
@@ -466,7 +467,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. There is a wooden door reinforced with iron which leads to the southern corridor.",
+                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron which leads to the southern corridor. There are two goblins here.",
                 "description": "It's a circular room.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."

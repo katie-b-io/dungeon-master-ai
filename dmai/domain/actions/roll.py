@@ -76,7 +76,9 @@ class Roll(Action):
             else:
                 # can't deal damage, clear target
                 State.door_target = None
+                State.in_combat_with_door = False
                 OutputBuilder.append("That doesn't hit. Declare attack against door again if you want to try again.")
+                return True
                 
         # get attack roll from player
         if State.get_combat_status() == Combat.ATTACK_ROLL:
@@ -88,9 +90,6 @@ class Roll(Action):
             if State.door_target:
                 # now return the utterance for getting the next roll
                 OutputBuilder.append(NLG.perform_damage_roll())
-                State.set_combat_status(3)
-            else:
-                # didn't hit, skip damage roll
                 State.set_combat_status(2)
         return True
 

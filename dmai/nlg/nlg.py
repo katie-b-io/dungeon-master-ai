@@ -590,6 +590,39 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
+    def broke_down_door(cls, target: str) -> str:
+        """Return the utterance for no door target"""
+        utters = [
+            "You destroyed the door to the {t}.".format(t=target),
+            "You broke down the {t} door.".format(t=target),
+            "The door to the {t} is now a mess of splinters on the floor.".format(t=target),
+        ]
+        return random.choice(utters)
+
+    @classmethod
+    def deal_door_damage(cls, damage: int, hp: int) -> str:
+        """Return the utterance for dealing damage to door"""
+        if damage <= 0.25*hp:
+            utters = [
+                "The hit barely registers, you're going to be here a while.",
+                "You've dealt some damage... not that much though.",
+                "You've damaged the door a little. There might be a better way to deal with this."
+            ]
+        elif damage <= 0.5*hp:
+            utters = [
+                "That was a decent hit.",
+                "You did a good amount of damage to the door.",
+                "The door won't withstand a lot of this."
+            ]
+        else:
+            utters = [
+                "That's a lot of damage!",
+                "The door has no chance when you're dealing damge like this!",
+                "Boom! That's how you do it!"
+            ]
+        return random.choice(utters)
+    
+    @classmethod
     def cannot_attack_door(cls, attacker: str, target: str, reason: str = None, possible_targets: list = []) -> str:
         """Return the utterance for not allowing door attack"""
         if attacker == "player" or attacker == cls.game.player.name:

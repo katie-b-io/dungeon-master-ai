@@ -55,7 +55,6 @@ class State(metaclass=StateMeta):
     player = None
 
     # class state variables
-    god_mode = False
     started = False
     paused = False
     talking = False
@@ -96,6 +95,7 @@ class State(metaclass=StateMeta):
             cls.set_current_game_mode("combat")
             cls.in_combat = True
             cls.roleplaying = False
+            cls.in_combat_with_door = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
             cls.set_expected_intents(["roll"])
@@ -111,12 +111,12 @@ class State(metaclass=StateMeta):
         cls.door_target = target
         if not cls.in_combat_with_door:
             cls.in_combat_with_door = True
+            cls.in_combat = False
             cls.roleplaying = False
-        if cls.get_combat_status() == Combat.ATTACK_ROLL:
             cls.set_combat_status(3)
-            OutputBuilder.append(NLG.perform_damage_roll())
+            OutputBuilder.append(NLG.perform_attack_roll())
         else:
-            cls.set_combat_status(2)
+            cls.set_combat_status(3)
             OutputBuilder.append(NLG.perform_attack_roll())
 
     @classmethod
@@ -842,21 +842,27 @@ class State(metaclass=StateMeta):
     def take_door_damage(cls, damage: int, target: str, attacker: str = "player") -> int:
         """Method to apply damage to specified door target.
         Returns the updated hp value"""
-        # TODO catch UnrecognisedRoomError
-        cls.current_hp_door[target] = cls.current_hp_door[target] - damage
-        if cls.current_hp_door[target] <= 0:
-            # this destroys the door and unlocks the way
-            cls.in_combat_with_door = False
-            cls.unlock_door(cls.get_current_room_id(), target)
-        # TODO add else condition with OutputBuilder command
-        return cls.current_hp_door[target]
+        try:
+            original_hp = cls.current_hp_door[target]
+            cls.current_hp_door[target] = cls.current_hp_door[target] - damage
+            if cls.current_hp_door[target] <= 0:
+                # this destroys the door and unlocks the way
+                cls.in_combat_with_door = False
+                cls.unlock_door(cls.get_current_room_id(), target)
+                OutputBuilder.append(NLG.broke_down_door(State.get_room_name(target)))
+            else:
+                OutputBuilder.append(NLG.deal_door_damage(damage, original_hp))
+            return cls.current_hp_door[target]
+        except KeyError:
+            msg = "Room not recognised: {e}".format(e=target)
+            raise UnrecognisedRoomError(msg)
     
     @classmethod
     def get_door_armor_class(cls, room: str, door: str) -> int:
         """Method to get a specified door's armor class"""
-        State.get_dm().adventure.get_room(room).get_door_armor_class(door)
+        return cls.get_dm().adventure.get_room(room).get_door_armor_class(door)
     
     @classmethod
-    def get_door_hp(cls, room: str, door: str) -> int:
-        """Method to get a specified door's armor class"""
-        State.get_dm().adventure.get_room(room).get_door_hp(door)
+    def get_door_hp(cls, door: str) -> int:
+        """Method to get a specified door's hp"""
+        return cls.current_hp_door[door]
