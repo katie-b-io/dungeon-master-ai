@@ -5,6 +5,7 @@ from dmai.domain.abilities import Abilities
 from dmai.game.state import State
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.logger import get_logger
+from dmai.utils.config import Config
 
 logger = get_logger(__name__)
 
@@ -92,8 +93,8 @@ class Player(PlayerAgent):
     def initiative_roll(self) -> int:
         """Method to roll initiative"""
         die = "d20{m}".format(m=self.character.get_signed_initiative())
-        if State.god_mode:
-            return 30
+        if Config.god_mode:
+            return 50
         else:
             return DiceRoller.roll(die)
     
@@ -104,8 +105,8 @@ class Player(PlayerAgent):
         else:
             weapon = self.character.weapons.get_equipped("any")
         die = "d20{m}".format(m=self.character.get_signed_attack_bonus(weapon["id"]))
-        if State.god_mode:
-            return 30
+        if Config.god_mode:
+            return 50
         else:
             return DiceRoller.roll(die)
     
@@ -117,8 +118,8 @@ class Player(PlayerAgent):
             weapon = self.character.weapons.get_equipped("any")
         dice_spec = self.character.weapons.get_damage_dice(weapon["id"])
         dice_spec["mod"] = self.character.get_damage_modifier(weapon["id"])
-        if State.god_mode:
-            return 30
+        if Config.god_mode:
+            return 50
         else:
             return DiceRoller.roll_dice(dice_spec)
     

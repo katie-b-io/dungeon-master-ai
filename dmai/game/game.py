@@ -16,17 +16,12 @@ class Game:
                  char_class: str = None,
                  char_name: str = None,
                  skip_intro: bool = False,
-                 god_mode: bool = False,
                  adventure: str = "the_tomb_of_baradin_stormfury") -> None:
         """Main class for the game"""
         self.char_class = char_class
         self.char_name = char_name
         self.skip_intro = skip_intro
         self.adventure = adventure
-        
-        # set god mode
-        if god_mode:
-            State.god_mode = True
 
     def load(self) -> None:
         logger.info("Initialising adventure: {a}".format(a=self.adventure))

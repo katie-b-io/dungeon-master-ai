@@ -46,6 +46,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--god-mode",
                         action="store_true",
                         help="Enable god mode, all player rolls return 30")
+    parser.add_argument("--no-monsters",
+                        action="store_true",
+                        help="Disable monsters")
     return parser
 
 
@@ -65,10 +68,14 @@ def main() -> None:
     # get the command line arguments
     args = build_arg_parser().parse_args()
 
-     # set cleanup state in Config
+     # game settings in Config
     if args.cleanup:
         Config.cleanup_on_exit()
-
+    if args.god_mode:
+        Config.enable_god_mode()
+    if args.no_monsters:
+        Config.disable_monsters()
+        
     # start the game
     char_class = None
     if args.cleric:
@@ -84,15 +91,12 @@ def main() -> None:
         if args.name:
             game = dmai.start(char_class=char_class,
                               char_name=args.name,
-                              skip_intro=args.skip_intro,
-                              god_mode=args.god_mode)
+                              skip_intro=args.skip_intro)
         else:
             game = dmai.start(char_class=char_class,
-                              skip_intro=args.skip_intro,
-                              god_mode=args.god_mode)
+                              skip_intro=args.skip_intro)
     else:
-        game = dmai.start(skip_intro=args.skip_intro,
-                              god_mode=args.god_mode)
+        game = dmai.start(skip_intro=args.skip_intro)
 
     # start an interactive session on the command line
     if args.interactive:

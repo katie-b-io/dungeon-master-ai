@@ -4,6 +4,7 @@ from dmai.game.adventure import Adventure
 from dmai.game.npcs.npc import NPC
 from dmai.domain.monsters.monster import Monster
 from dmai.game.state import State, Status
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -16,7 +17,10 @@ class NPCCollection:
 
     def load(self) -> None:
         self.npcs = self._create_npcs()
-        self.monsters = self._create_monsters()
+        if Config.no_monsters:
+            self.monsters = {}
+        else:
+            self.monsters = self._create_monsters()
 
     def __repr__(self) -> str:
         npc_list = self.npcs.keys()

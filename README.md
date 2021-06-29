@@ -29,3 +29,4 @@ To run the DMAI in interactive mode:
 |`--skip-intro`          |Skip the intro                                   |
 |`--cleanup`             |On exit, remove any files produced during game   |
 |`--god-mode`            |Enable god mode, all player rolls return 30      |
+|`--no-monsters`         |Disable monsters                                 |
