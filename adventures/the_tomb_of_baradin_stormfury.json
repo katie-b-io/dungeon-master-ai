@@ -276,7 +276,7 @@
                     "explore": {
                         "pick_up": {
                             "description": "pick up key",
-                            "result": "pick_up"
+                            "result": "say:You notice the glint of a silver key in the open vault."
                         }
                     }
                 },
@@ -285,7 +285,7 @@
                     "type": "altar",
                     "name": "Altar",
                     "solutions": {},
-                    "explore": {
+                    "investigate": {
                         "inspect_altar": {
                             "description": "inspect altar",
                             "skill": "religion",
@@ -296,59 +296,12 @@
                             "result": "say:The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol."
                         }
                     }
-                },
-                "false_door_trap": {
-                    "id": "false_door_trap",
-                    "type": "trap",
-                    "name": "False door trap",
-                    "spell": "glyph_of_warding_explosive_runes",
-                    "trigger": "touch",
-                    "effect": {
-                        "explosion": {
-                            "range": 20,
-                            "area": "sphere",
-                            "saving_throw": {
-                                "dex": {
-                                    "dc": 13,
-                                    "fail": 0.5
-                                }
-                            },
-                            "damage": {
-                                "die": "d8",
-                                "total": 5,
-                                "type": "lightning"
-                            }
-                        }
-                    },
-                    "solutions": {
-                        "dispel": {
-                            "description": "dispel magic",
-                            "spell": "dispel_magic"
-                        }
-                    },
-                    "explore": {
-                        "inspect_trap": {
-                            "description": "inspect trap",
-                            "skill": "investigation",
-                            "dc": 13,
-                            "result": "say:You've detected this metal door has a false door trap, it's very dangerous and can only be dispelled with the right spell!"
-                        },
-                        "detect_magic": {
-                            "description": "detect magic",
-                            "skill": "arcana",
-                            "dc": 18,
-                            "advantage": {
-                                "class": "wizard"
-                            },
-                            "result": "say:You've detected this metal door is enchanted with an Explosive Runes glyph, it's very dangerous and can only be dispelled with the right spell!"
-                        }
-                    }
                 }
             },
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open. On the eastern wall there's a double metal door with a large grinning skull engraved on the centre. There are simple unadorned stone pedestals on either side of the door. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
+                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open. On the eastern wall there's a large grinning skull engraved in the centre. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
                 "description": "You see six unmarked stone vault doors.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Phew, that was a close one! It might be worth having a look around the room if you haven't already, but be careful!"
@@ -483,7 +436,6 @@
                     "id": "southern_corridor---baradins_crypt",
                     "type": "door",
                     "name": "Magic stone face",
-                    "trigger": 5,
                     "solutions": {
                         "solve": {
                             "description": "solve riddle",
@@ -546,38 +498,9 @@
                         }
                     },
                     "explore": {}
-                },
-                "wand_of_magic_missiles_trap": {
-                    "id": "wand_of_magic_missiles_trap",
-                    "type": "trap",
-                    "name": "Wand of magic missiles trap",
-                    "trigger": "pressure",
-                    "solutions": {},
-                    "explore": {
-                        "detect_magic": {
-                            "description": "detect magic",
-                            "skill": "arcana",
-                            "dc": 10,
-                            "result": "pick_up"
-                        },
-                        "detect_trap": {
-                            "description": "detect trap",
-                            "skill": "perception",
-                            "dc": 15,
-                            "result": "pick_up"
-                        },
-                        "inspect_trap": {
-                            "description": "inspect trap",
-                            "skill": "investigation",
-                            "dc": 15,
-                            "result": "pick_up"
-                        }
-                    }
                 }
             },
-            "treasure": [
-                "wand_of_magic_missiles"
-            ],
+            "treasure": [],
             "visibility": false,
             "text": {
                 "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the wall to the south.",
