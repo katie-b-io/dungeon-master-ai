@@ -214,7 +214,8 @@
                             "dc": 10,
                             "result": "say:You see a switch left of the portcullis"
                         }
-                    }
+                    },
+                    "investigate": {}
                 }
             },
             "treasure": [],
@@ -266,7 +267,8 @@
                             "dc": 15
                         }
                     },
-                    "explore": {}
+                    "explore": {},
+                    "investigate": {}
                 },
                 "silver_key": {
                     "id": "silver_key",
@@ -278,13 +280,15 @@
                             "description": "pick up key",
                             "result": "say:You notice the glint of a silver key in the open vault."
                         }
-                    }
+                    },
+                    "investigate": {}
                 },
                 "altar": {
                     "id": "altar",
                     "type": "altar",
                     "name": "Altar",
                     "solutions": {},
+                    "explore": {},
                     "investigate": {
                         "inspect_altar": {
                             "description": "inspect altar",
@@ -402,7 +406,8 @@
                             "dc": 15
                         }
                     },
-                    "explore": {}
+                    "explore": {},
+                    "investigate": {}
                 }
             },
             "treasure": [],
@@ -497,7 +502,8 @@
                             ]
                         }
                     },
-                    "explore": {}
+                    "explore": {},
+                    "investigate": {}
                 }
             },
             "treasure": [],
