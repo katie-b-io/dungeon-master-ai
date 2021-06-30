@@ -26,13 +26,13 @@
             "must_kill": false,
             "will_attack_player": false,
             "dialogue": {
-                "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a nice cask of ale and a little coin in it for you of course! What do you say, do you accept the quest?\"",
-                "payment": "He says: \"1 silver piece per rat.\"",
-                "good_negotiation": "He lets out a gentle chuckle and says: \"Well go on then, seeing as we're old friends, 2 silver piece per rat!\"",
-                "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 1 silver piece per rat is more than fair.\"\"",
+                "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a little silver in it for you of course! What do you say, do you accept the quest?\"",
+                "payment": "He says: \"10 silver pieces per rat.\"",
+                "good_negotiation": "He lets out a gentle chuckle and says: \"Well go on then, seeing as we're old friends, 20 silver pieces per rat!\"",
+                "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 10 silver pieces per rat is more than fair.\"\"",
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
-                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats. You share a drink together and then take your leave, with a slightly heavier coin purse and a cask of fine ale. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
+                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats. You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
             },
             "triggers": {}
         },
@@ -145,7 +145,7 @@
                     "broken": false
                 },
                 "burial_chamber": {
-                    "locked": true,
+                    "locked": false,
                     "broken": false
                 },
                 "western_corridor": {
@@ -190,29 +190,6 @@
                 }
             },
             "puzzles": {
-                "storage_room---burial_chamber": {
-                    "id": "storage_room---burial_chamber",
-                    "type": "door",
-                    "name": "Portcullis",
-                    "solutions": {
-                        "attack": {
-                            "description": "attack door",
-                            "intent": "attack",
-                            "hp": 27,
-                            "ac": 19
-                        },
-                        "str": {
-                            "description": "force door",
-                            "ability": "str",
-                            "dc": 15
-                        },
-                        "perception": {
-                            "description": "use switch",
-                            "skill": "perception",
-                            "dc": 10
-                        }
-                    }
-                },
                 "storage_room---western_corridor": {
                     "id": "storage_room---western_corridor",
                     "type": "door",
@@ -228,11 +205,14 @@
                             "description": "force door",
                             "ability": "str",
                             "dc": 15
-                        },
-                        "perception": {
+                        }
+                    },
+                    "explore": {
+                        "use_switch": {
                             "description": "use switch",
                             "skill": "perception",
-                            "dc": 10
+                            "dc": 10,
+                            "result": "say:You see a switch left of the portcullis"
                         }
                     }
                 }
@@ -253,7 +233,7 @@
             "visited": false,
             "connections": {
                 "storage_room": {
-                    "locked": true,
+                    "locked": false,
                     "broken": false
                 }
             },
@@ -285,16 +265,18 @@
                             "ability": "str",
                             "dc": 15
                         }
-                    }
+                    },
+                    "explore": {}
                 },
                 "silver_key": {
                     "id": "silver_key",
                     "type": "item",
                     "name": "Silver key",
-                    "solutions": {
-                        "explore": {
-                            "description": "look around",
-                            "intent": "explore"
+                    "solutions": {},
+                    "explore": {
+                        "pick_up": {
+                            "description": "pick up key",
+                            "result": "pick_up"
                         }
                     }
                 },
@@ -302,15 +284,16 @@
                     "id": "altar",
                     "type": "altar",
                     "name": "Altar",
-                    "description": "The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol.",
-                    "solutions": {
-                        "inspect": {
+                    "solutions": {},
+                    "explore": {
+                        "inspect_altar": {
                             "description": "inspect altar",
                             "skill": "religion",
                             "dc": 10,
                             "advantage": {
                                 "race": "dwarf"
-                            }
+                            },
+                            "result": "say:The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol."
                         }
                     }
                 },
@@ -338,10 +321,17 @@
                         }
                     },
                     "solutions": {
-                        "inspect": {
+                        "dispel": {
+                            "description": "dispel magic",
+                            "spell": "dispel_magic"
+                        }
+                    },
+                    "explore": {
+                        "inspect_trap": {
                             "description": "inspect trap",
                             "skill": "investigation",
-                            "dc": 13
+                            "dc": 13,
+                            "result": "say:You've detected this metal door has a false door trap, it's very dangerous and can only be dispelled with the right spell!"
                         },
                         "detect_magic": {
                             "description": "detect magic",
@@ -349,11 +339,8 @@
                             "dc": 18,
                             "advantage": {
                                 "class": "wizard"
-                            }
-                        },
-                        "dispel": {
-                            "description": "dispel magic",
-                            "spell": "dispel_magic"
+                            },
+                            "result": "say:You've detected this metal door is enchanted with an Explosive Runes glyph, it's very dangerous and can only be dispelled with the right spell!"
                         }
                     }
                 }
@@ -461,7 +448,8 @@
                             "equipment": "thieves_tools",
                             "dc": 15
                         }
-                    }
+                    },
+                    "explore": {}
                 }
             },
             "treasure": [],
@@ -556,28 +544,33 @@
                                 }
                             ]
                         }
-                    }
+                    },
+                    "explore": {}
                 },
                 "wand_of_magic_missiles_trap": {
                     "id": "wand_of_magic_missiles_trap",
                     "type": "trap",
                     "name": "Wand of magic missiles trap",
                     "trigger": "pressure",
-                    "solutions": {
+                    "solutions": {},
+                    "explore": {
                         "detect_magic": {
                             "description": "detect magic",
                             "skill": "arcana",
-                            "dc": 10
+                            "dc": 10,
+                            "result": "pick_up"
                         },
-                        "detect": {
+                        "detect_trap": {
                             "description": "detect trap",
                             "skill": "perception",
-                            "dc": 15
+                            "dc": 15,
+                            "result": "pick_up"
                         },
-                        "inspect": {
+                        "inspect_trap": {
                             "description": "inspect trap",
                             "skill": "investigation",
-                            "dc": 15
+                            "dc": 15,
+                            "result": "pick_up"
                         }
                     }
                 }
