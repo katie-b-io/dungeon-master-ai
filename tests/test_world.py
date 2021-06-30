@@ -17,7 +17,7 @@ class TestPuzzle(unittest.TestCase):
 
     def setUp(self) -> None:
         puzzle_data = {
-            "id": "storage_room---burial_chamber",
+            "id": "storage_room---western_corridor",
             "type": "door",
             "name": "Portcullis",
             "solutions": {
@@ -25,15 +25,23 @@ class TestPuzzle(unittest.TestCase):
                     "description": "attack door",
                     "intent": "attack",
                     "hp": 27,
-                    "ac": 19,
+                    "ac": 19
                 },
-                "str": {"description": "force door", "ability": "str", "dc": 15},
-                "perception": {
+                "str": {
+                    "description": "force door",
+                    "ability": "str",
+                    "dc": 15
+                }
+            },
+            "explore": {
+                "use_switch": {
                     "description": "use switch",
                     "skill": "perception",
                     "dc": 10,
-                },
+                    "result": "say:You see a switch left of the portcullis"
+                }
             },
+            "investigate": {}
         }
         self.puzzle = Puzzle(puzzle_data)
 
@@ -49,7 +57,6 @@ class TestPuzzle(unittest.TestCase):
     def test_get_solution_id(self) -> None:
         self.assertEqual("attack", self.puzzle.get_solution_id("attack"))
         self.assertEqual("str", self.puzzle.get_solution_id("str"))
-        self.assertEqual("perception", self.puzzle.get_solution_id("perception"))
 
 
 class TestPuzzleCollection(unittest.TestCase):
@@ -57,57 +64,65 @@ class TestPuzzleCollection(unittest.TestCase):
 
     def setUp(self) -> None:
         puzzles_data = {
-            "storage_room---burial_chamber": {
-                "id": "storage_room---burial_chamber",
-                "type": "door",
-                "name": "Portcullis",
+            "vault": {
+                "id": "vault",
+                "type": "vault",
+                "name": "Vault",
                 "solutions": {
-                    "attack": {
-                        "description": "attack door",
-                        "intent": "attack",
-                        "hp": 27,
-                        "ac": 19,
-                    },
-                    "str": {"description": "force door", "ability": "str", "dc": 15},
-                    "perception": {
-                        "description": "use switch",
-                        "skill": "perception",
-                        "dc": 10,
-                    },
+                    "str": {
+                        "description": "force lid",
+                        "ability": "str",
+                        "dc": 15
+                    }
                 },
+                "explore": {},
+                "investigate": {}
             },
-            "storage_room---western_corridor": {
-                "id": "storage_room---western_corridor",
-                "type": "door",
-                "name": "Portcullis",
-                "solutions": {
-                    "attack": {
-                        "description": "attack door",
-                        "intent": "attack",
-                        "hp": 27,
-                        "ac": 19,
-                    },
-                    "str": {"description": "force door", "ability": "str", "dc": 15},
-                    "perception": {
-                        "description": "use switch",
-                        "skill": "perception",
-                        "dc": 10,
-                    },
+            "silver_key": {
+                "id": "silver_key",
+                "type": "item",
+                "name": "Silver key",
+                "solutions": {},
+                "explore": {
+                    "pick_up": {
+                        "description": "pick up key",
+                        "result": "say:You notice the glint of a silver key in the open vault."
+                    }
                 },
+                "investigate": {}
             },
+            "altar": {
+                "id": "altar",
+                "type": "altar",
+                "name": "Altar",
+                "solutions": {},
+                "explore": {},
+                "investigate": {
+                    "inspect_altar": {
+                        "description": "inspect altar",
+                        "skill": "religion",
+                        "dc": 10,
+                        "advantage": {
+                            "race": "dwarf"
+                        },
+                        "result": "say:The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol."
+                    }
+                }
+            }
         }
         self.puzzles = PuzzleCollection(puzzles_data)
 
     def tearDown(self) -> None:
         shutil.rmtree(Config.directory.planning)
 
-    def test_get_armor_class(self) -> None:
+    def test_get_puzzle(self) -> None:
         self.assertEqual(
-            19, self.puzzles.get_door_armor_class("storage_room", "burial_chamber")
+            "altar", self.puzzles.get_puzzle("altar").id
         )
 
-    def test_get_hp(self) -> None:
-        self.assertEqual(27, self.puzzles.get_door_hp("storage_room", "burial_chamber"))
+    def test_get_all_puzzles(self) -> None:
+        puzzles = self.puzzles.get_all_puzzles()
+        self.assertListEqual(["vault", "silver_key", "altar"], [puzzle.id for puzzle in puzzles])
 
 
 if __name__ == "__main__":
