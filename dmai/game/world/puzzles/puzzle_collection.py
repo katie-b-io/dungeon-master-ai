@@ -38,3 +38,8 @@ class PuzzleCollection:
         if self.can_attack_door(room, door):
             door_id = "{i}---{d}".format(i=room, d=door)
             return self.puzzles[door_id].get_hp()
+    
+    def explore_trigger(self) -> None:
+        """Method to print any new text if conditions met"""
+        for puzzle in self.get_all_puzzles():
+            puzzle.explore_trigger()

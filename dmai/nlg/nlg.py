@@ -198,7 +198,7 @@ class NLG(metaclass=NLGMeta):
             return "You cannot move to {room} because it's too dark for you to find the way!".format(
                 room=room, p=p)
         elif reason == "no quest":
-            return "You cannot move to {room} because you haven't accepted the quest!".format(
+            return "You cannot move to {room} because you haven't spoken to Corvus or accepted the quest!".format(
                 room=room, p=p)
         elif reason == "must kill":
             return "You cannot move to {room} because there are monsters in here you must deal with!".format(
@@ -668,14 +668,21 @@ class NLG(metaclass=NLGMeta):
     ############################################################
     # Ability and skill check utterances
     @classmethod
-    def ability_check(cls, ability: str) -> str:
+    def ability_check(cls, ability: str, dm_request: bool = False) -> str:
         """Return the utterance for performing ability check"""
         n = "an" if ability == "Intelligence" else "a"
-        utters = [
-            "Go ahead and do {n} {a} check.".format(a=ability, n=n),
-            "Okay, do {n} {a} roll.".format(a=ability, n=n),
-            "Sure, go ahead and do {n} {a} roll.".format(a=ability, n=n),
-        ]
+        if dm_request:
+            utters = [
+                "Actually, go ahead and do {n} {a} check.".format(a=ability, n=n),
+                "I'd like you to do {n} {a} roll.".format(a=ability, n=n),
+                "You know what, go ahead and do {n} {a} roll.".format(a=ability, n=n),
+            ]
+        else:
+            utters = [
+                "Okay, go ahead and do {n} {a} check.".format(a=ability, n=n),
+                "Okay, do {n} {a} roll.".format(a=ability, n=n),
+                "Sure, go ahead and do {n} {a} roll.".format(a=ability, n=n),
+            ]
         return random.choice(utters)
     
     @classmethod
@@ -696,7 +703,42 @@ class NLG(metaclass=NLGMeta):
             return "You cannot perform {a} check on unknown target {t}".format(a=ability, t=target)
 
     @classmethod
-    def succeed_ability_check(cls) -> str:
+    def skill_check(cls, skill: str, dm_request: bool = False) -> str:
+        """Return the utterance for performing skill check"""
+        n = "an" if skill in ["Acrobatics", "Animal Handling", "Arcana", "Athletics", "Insight", "Intimidation", "Investigation"] else "a"
+        if dm_request:
+            utters = [
+                "Actually, go ahead and do {n} {s} check.".format(s=skill, n=n),
+                "I'd like you to do {n} {s} roll.".format(s=skill, n=n),
+                "You know what, go ahead and do {n} {s} roll.".format(s=skill, n=n),
+            ]
+        else:
+            utters = [
+                "Okay, go ahead and do {n} {s} check.".format(s=skill, n=n),
+                "Okay, do {n} {s} roll.".format(s=skill, n=n),
+                "Sure, go ahead and do {n} {s} roll.".format(s=skill, n=n),
+            ]
+        return random.choice(utters)
+    
+    @classmethod
+    def cannot_skill_check(cls, skill: str, target: str, reason: str = None) -> str:
+        """Return the utterance for not allowing skill check"""
+        n = "an" if skill in ["Acrobatics", "Animal Handling", "Arcana", "Athletics", "Insight", "Intimidation", "Investigation"] else "a"
+        if not reason:
+            return "You cannot perform {s} check.".format(s=skill)
+        elif reason == "different location":
+            return "You cannot perform {s} check on {t} because it's not in this room!".format(s=skill, t=target)
+        elif reason == "no visibility":
+            return "You cannot perform {s} check because it's too dark to see anything!".format(s=skill)
+        elif reason == "unknown entity":
+            return "You cannot perform {s} check on unknown target {t}".format(s=skill, t=target)
+        elif reason == "not required":
+            return "You don't need to perform {n} {s} check in this situation.".format(s=skill, n=n)
+        elif reason == "unknown room":
+            return "You cannot perform {s} check on unknown target {t}".format(s=skill, t=target)
+
+    @classmethod
+    def succeed_check(cls) -> str:
         """Return the utterance for succeeding on an ability check"""
         utters = [
             "You did it!",
@@ -706,7 +748,7 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def fail_ability_check(cls) -> str:
+    def fail_check(cls) -> str:
         """Return the utterance for failing on an ability check"""
         utters = [
             "You didn't do it. You could try again or do something different.",
@@ -714,7 +756,7 @@ class NLG(metaclass=NLGMeta):
             "That fails. You could try again or do something different.",
         ]
         return random.choice(utters)
-
+    
     @classmethod
     def no_reason_roll(cls) -> str:
         """Return the utterance for rolling for no reason"""

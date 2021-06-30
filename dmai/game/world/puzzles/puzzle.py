@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from dmai.domain.actions.skill_check import SkillCheck
+from dmai.game.state import State
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -10,6 +12,7 @@ class Puzzle(ABC):
         """Puzzle abstract class"""
         self.solved = False
         self.triggered = False
+        self.explore_map = {}
         try:
             for key in puzzle_data:
                 self.__setattr__(key, puzzle_data[key])
@@ -17,6 +20,11 @@ class Puzzle(ABC):
             logger.error(
                 "Cannot create puzzle, incorrect attribute: {e}".format(e=e))
             raise
+        
+        for explore in self.explore:
+            self.explore_map[explore] = {
+                "can_trigger": True
+            }
 
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
@@ -125,3 +133,17 @@ class Puzzle(ABC):
         """Method to return the hp of puzzle"""
         if "attack" in self.solutions:
             return self.solutions["attack"]["hp"]
+    
+    def explore_trigger(self) -> None:
+        """Method to print any new text if conditions met"""
+        for explore in self.explore_map:
+            if self.explore_map[explore]["can_trigger"]:
+                if self.explore[explore]["skill"]:
+                    print(explore)
+                    State.set_expected_intents(["roll"])
+                    skill_check = SkillCheck(self.explore[explore]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id)
+                    skill_check.execute()
+                else:
+                    print("just triggers")
+                self.explore_map[explore]["can_trigger"] = False
+                break

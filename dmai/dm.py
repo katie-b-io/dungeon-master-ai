@@ -111,6 +111,16 @@ class DM:
                 "name": "force door",
                 "desc": "force door open",
                 "func": self.force_door
+            },
+            "ability_check": {
+                "name": "ability check",
+                "desc": "perform ability check",
+                "func": self.ability_check
+            },
+            "skill_check": {
+                "name": "skill check",
+                "desc": "perform skill check",
+                "func": self.skill_check
             }
         }
 
@@ -497,6 +507,8 @@ class DM:
             logger.info("player is exploring!")
             room = State.get_current_room()
             OutputBuilder.append(room.get_description())
+            # trigger the explore triggers in the room
+            room.explore_trigger()
             explore = True
         else:
             logger.info("player is investigating {t}!".format(t=target))
@@ -596,4 +608,17 @@ class DM:
             logger.info("{e} is forcing door {t}!".format(e=entity, t=target))
             forced = self.actions.ability_check("str", entity, target)
         return forced
-    
+
+    def ability_check(self, **kwargs) -> bool:
+        """Player wants to attempt to perform a ability check.
+        Appends the text to output with the OutputBuilder.
+        """
+        OutputBuilder.append("You can do an ability check when I ask you to.")
+        return True
+        
+    def skill_check(self, **kwargs) -> bool:
+        """Player wants to attempt to perform a skill check.
+        Appends the text to output with the OutputBuilder.
+        """
+        OutputBuilder.append("You can do a skill check when I ask you to.")
+        return True

@@ -84,6 +84,7 @@ class State(metaclass=StateMeta):
     expected_intents = []
     initiative_order = []
     stored_ability_check = None
+    stored_skill_check = None
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -882,3 +883,14 @@ class State(metaclass=StateMeta):
         """Method to clear the ability check target"""
         cls.stored_ability_check = None
     
+    @classmethod
+    def set_skill_check(cls, target: dict) -> None:
+        """Method to set the skill check target, where the target is a dict:
+        {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
+        cls.stored_skill_check = target
+    
+    @classmethod
+    def clear_skill_check(cls) -> None:
+        """Method to clear the skill check target"""
+        cls.stored_skill_check = None
+        

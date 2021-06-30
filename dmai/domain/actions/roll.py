@@ -177,10 +177,10 @@ class Roll(Action):
         puzzle = State.get_current_room().puzzles.get_puzzle(State.stored_ability_check["puzzle"])
         dc = puzzle.get_difficulty_class(State.stored_ability_check["solution"])
         if roll >= dc:
-            OutputBuilder.append(NLG.succeed_ability_check())
+            OutputBuilder.append(NLG.succeed_check())
             State.stored_ability_check["success_func"](*State.stored_ability_check["success_params"])
         else:
-            OutputBuilder.append(NLG.fail_ability_check())
+            OutputBuilder.append(NLG.fail_check())
         State.clear_expected_intents()
         State.clear_ability_check()
         return True
