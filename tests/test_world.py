@@ -27,8 +27,8 @@ class TestPuzzle(unittest.TestCase):
                     "hp": 27,
                     "ac": 19,
                 },
-                "force": {"description": "force door", "ability": "str", "dc": 15},
-                "switch": {
+                "str": {"description": "force door", "ability": "str", "dc": 15},
+                "perception": {
                     "description": "use switch",
                     "skill": "perception",
                     "dc": 10,
@@ -45,6 +45,11 @@ class TestPuzzle(unittest.TestCase):
 
     def test_get_hp(self) -> None:
         self.assertEqual(27, self.puzzle.get_hp())
+
+    def test_get_solution_id(self) -> None:
+        self.assertEqual("attack", self.puzzle.get_solution_id("attack"))
+        self.assertEqual("str", self.puzzle.get_solution_id("str"))
+        self.assertEqual("perception", self.puzzle.get_solution_id("perception"))
 
 
 class TestPuzzleCollection(unittest.TestCase):
@@ -63,8 +68,8 @@ class TestPuzzleCollection(unittest.TestCase):
                         "hp": 27,
                         "ac": 19,
                     },
-                    "force": {"description": "force door", "ability": "str", "dc": 15},
-                    "switch": {
+                    "str": {"description": "force door", "ability": "str", "dc": 15},
+                    "perception": {
                         "description": "use switch",
                         "skill": "perception",
                         "dc": 10,
@@ -82,8 +87,8 @@ class TestPuzzleCollection(unittest.TestCase):
                         "hp": 27,
                         "ac": 19,
                     },
-                    "force": {"description": "force door", "ability": "str", "dc": 15},
-                    "switch": {
+                    "str": {"description": "force door", "ability": "str", "dc": 15},
+                    "perception": {
                         "description": "use switch",
                         "skill": "perception",
                         "dc": 10,
@@ -97,7 +102,9 @@ class TestPuzzleCollection(unittest.TestCase):
         shutil.rmtree(Config.directory.planning)
 
     def test_get_armor_class(self) -> None:
-        self.assertEqual(19, self.puzzles.get_door_armor_class("storage_room", "burial_chamber"))
+        self.assertEqual(
+            19, self.puzzles.get_door_armor_class("storage_room", "burial_chamber")
+        )
 
     def test_get_hp(self) -> None:
         self.assertEqual(27, self.puzzles.get_door_hp("storage_room", "burial_chamber"))

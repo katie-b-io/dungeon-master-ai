@@ -1,6 +1,6 @@
 from dmai.domain.abilities import Abilities
 from dmai.utils.output_builder import OutputBuilder
-from dmai.utils.exceptions import UnrecognisedEntityError
+from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
@@ -14,6 +14,8 @@ class AbilityCheck(Action):
         self.ability = ability
         self.entity = entity
         self.target = target
+        self.puzzle = None
+        self.solution = None
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -34,6 +36,8 @@ class AbilityCheck(Action):
                 # if not current == State.get_current_room(self.target):
                 #     return (False, "different location")
                 return (False, "not required")
+            elif not State.check_room_exists(self.target):
+                return (False, "unknown room")
             elif not self.target in current.get_connected_rooms():
                 return (False, "different location")
 
@@ -45,18 +49,26 @@ class AbilityCheck(Action):
                         or State.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
+                    
+            # don't need to force open a door which is already open
+            if State.travel_allowed(State.get_current_room_id(), self.target):
+                return (False, "not required")
 
             # now check if an ability check is required for this situation
             for puzzle in current.puzzles.get_all_puzzles():
                 # TODO support non-door puzzles
                 if puzzle.id == "{c}---{t}".format(c=current.id, t=self.target):
                     if puzzle.check_solution_ability(self.ability):
+                        self.puzzle = puzzle.id
+                        self.solution = self.ability
                         return (True, "")
             
             # none of the above situations were triggered so by default don't allow ability check
             return (False, "not required")
         except UnrecognisedEntityError:
             return (False, "unknown entity")
+        except UnrecognisedRoomError:
+            return (False, "unknown room")
 
     def _ability_check(self) -> bool:
         """Attempt to perform ability check.
@@ -70,10 +82,25 @@ class AbilityCheck(Action):
                     NLG.ability_check(Abilities.get_name(self.ability))
                 )
                 State.set_expected_intents(["roll"])
+                current = State.get_current_room()
+                success_func = print
+                success_params = [""]
+                if current.puzzles.get_puzzle(self.puzzle).type == "door":
+                    success_func = State.unlock_door
+                    success_params = [current.id, self.target]
+                State.set_ability_check({
+                    "target": self.target,
+                    "puzzle": self.puzzle,
+                    "solution": self.solution,
+                    "success_func": success_func,
+                    "success_params": success_params
+                })
             return can_check
         else:
-            target_name = State.get_entity_name(self.target)
-            if not bool(target_name):
+            target_name = self.target
+            if State.get_entity_name(self.target):
+                target_name = State.get_entity_name(self.target)
+            elif reason != "unknown room":
                 target_name = State.get_room_name(self.target)
             OutputBuilder.append(NLG.cannot_ability_check(Abilities.get_name(self.ability), target_name, reason))
             return can_check

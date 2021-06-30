@@ -302,6 +302,10 @@ nlu:
     - attack the [portcullis](door) to the [western corridor](location) open
     - I strike the [western corridor](location) [portcullis](door)
     - hit open the [burial chamber](location) [portcullis](door)
+    - I attack the [south](location) [door](door)
+    - I attack the [west](location) [door](door)
+    - I strike the [southern](location) [door](door)
+    - I hit the [western](location) [door](door)
 
 - intent: ranged_attack
   examples: |
@@ -560,12 +564,14 @@ nlu:
     - I force open the [door](door) to the [southern corridor](location)
     - I slam the [door](door) to the [western corridor](location)
     - force the [burial chamber](location) [door](door)
-    - slam the [southern corridor](location) [door](door)
+    - slam the [southern](location) [door](door)
     - force the [portcullis](door) to the [burial chamber](location) open 
     - slam the [portcullis](door) to the [western corridor](location) open
-    - I prise open the [western corridor](location) [portcullis](door)
+    - I prise open the [western](location) [portcullis](door)
     - force open the [burial chamber](location) [portcullis](door)
     - use force to break the [southern corridor](location) [door](door)
+    - I force open the [south](location) [door](door)
+    - I force open the [west](location) [door](door)
 
 - intent: ability_check
   examples: |
@@ -781,11 +787,15 @@ nlu:
   examples: |
     - western corridor
     - west corridor
+    - western
+    - west
 
 - synonym: southern_corridor
   examples: |
     - southern corridor
     - south corridor
+    - southern
+    - south
 
 - synonym: baradins_crypt
   examples: |

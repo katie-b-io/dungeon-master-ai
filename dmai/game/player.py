@@ -123,6 +123,14 @@ class Player(PlayerAgent):
         else:
             return DiceRoller.roll_dice(dice_spec)
     
+    def ability_roll(self, ability: str) -> int:
+        """Method to perform ability roll"""
+        dice = "d20{m}".format(m=self.character.get_signed_ability_modifier(ability))
+        if Config.god_mode:
+            return 50
+        else:
+            return DiceRoller.roll(dice)
+        
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
         div = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"

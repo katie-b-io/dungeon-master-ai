@@ -670,7 +670,7 @@ class NLG(metaclass=NLGMeta):
     @classmethod
     def ability_check(cls, ability: str) -> str:
         """Return the utterance for performing ability check"""
-        n = "an" if ability == "intelligence" else "a"
+        n = "an" if ability == "Intelligence" else "a"
         utters = [
             "Go ahead and do {n} {a} check.".format(a=ability, n=n),
             "Okay, do {n} {a} roll.".format(a=ability, n=n),
@@ -681,7 +681,7 @@ class NLG(metaclass=NLGMeta):
     @classmethod
     def cannot_ability_check(cls, ability: str, target: str, reason: str = None) -> str:
         """Return the utterance for not allowing ability check"""
-        n = "an" if ability == "intelligence" else "a"
+        n = "an" if ability == "Intelligence" else "a"
         if not reason:
             return "You cannot perform {a} check.".format(a=ability)
         elif reason == "different location":
@@ -692,7 +692,39 @@ class NLG(metaclass=NLGMeta):
             return "You cannot perform {a} check on unknown target {t}".format(a=ability, t=target)
         elif reason == "not required":
             return "You don't need to perform {n} {a} check in this situation.".format(a=ability, n=n)
+        elif reason == "unknown room":
+            return "You cannot perform {a} check on unknown target {t}".format(a=ability, t=target)
 
+    @classmethod
+    def succeed_ability_check(cls) -> str:
+        """Return the utterance for succeeding on an ability check"""
+        utters = [
+            "You did it!",
+            "That works.",
+            "That succeeds.",
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def fail_ability_check(cls) -> str:
+        """Return the utterance for failing on an ability check"""
+        utters = [
+            "You didn't do it. You could try again or do something different.",
+            "That didn't work. You could try again or do something different.",
+            "That fails. You could try again or do something different.",
+        ]
+        return random.choice(utters)
+
+    @classmethod
+    def no_reason_roll(cls) -> str:
+        """Return the utterance for rolling for no reason"""
+        utters = [
+            "Rolling dice is fun!",
+            "I don't know what you're rolling for, but it's fun anyway!",
+            "Okay, you rolled your dice... now what??",
+        ]
+        return random.choice(utters)
+    
     ############################################################
     # Gameover utterances
     @classmethod

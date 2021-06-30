@@ -35,6 +35,30 @@ class Puzzle(ABC):
         """Method to return possible solutions to puzzle"""
         return self.solutions
 
+    def get_solution_id(self, query: str) -> str:
+        """Method to return the solution ID depending on the query"""
+        if self.check_solution(query):
+            return query
+        
+        solution_type = None
+        if self.check_solution_ability(query):
+            solution_type = "ability"
+        elif self.check_solution_skill(query):
+            solution_type = "skill"
+        elif self.check_solution_item(query):
+            solution_type = "item"
+        elif self.check_solution_equipment(query):
+            solution_type = "equipment"
+        elif self.check_solution_intent(query):
+            solution_type = "intent"
+        elif self.check_solution_spell(query):
+            solution_type = "spell"
+        
+        for solution in self.solutions:
+            if solution_type in self.solutions[solution]:
+                if self.solutions[solution] == query:
+                    return solution
+        
     def check_solution(self, solution: str) -> bool:
         """Method to determine if possible solution exists.
         Returns bool"""
@@ -87,6 +111,10 @@ class Puzzle(ABC):
             if "spell" in s:
                 if spell == s["spell"]:
                     return True
+    
+    def get_difficulty_class(self, solution: str) -> int:
+        """Method to return the difficulty class of specified solution"""
+        return self.solutions[solution]["dc"]
     
     def get_armor_class(self) -> int:
         """Method to return the armor class of puzzle"""

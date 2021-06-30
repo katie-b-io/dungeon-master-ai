@@ -83,6 +83,7 @@ class State(metaclass=StateMeta):
     current_combat_status = {}
     expected_intents = []
     initiative_order = []
+    stored_ability_check = None
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -615,9 +616,10 @@ class State(metaclass=StateMeta):
     def get_room_name(cls, room_id: str) -> str:
         """Method to return the name of a room."""
         try:
-            if cls._check_room_exists(room_id):
+            if cls.check_room_exists(room_id):
                 return cls.dm.adventure.get_room(room_id).name
         except UnrecognisedRoomError:
+            logger.info("Room not recognised: {r}".format(r=room_id))
             raise
 
     @classmethod
@@ -631,7 +633,7 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
 
     @classmethod
-    def _check_room_exists(cls, room_id: str) -> bool:
+    def check_room_exists(cls, room_id: str) -> bool:
         """Method to check room exists.
         Raises UnrecognisedRoomError exception if not"""
         try:
@@ -667,7 +669,7 @@ class State(metaclass=StateMeta):
         try:
             if cls._check_entity_exists(entity):
                 room_id = cls.get_current_room_id(entity)
-                if cls._check_room_exists(room_id):
+                if cls.check_room_exists(room_id):
                     return cls.dm.adventure.get_room(room_id)
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
@@ -676,7 +678,7 @@ class State(metaclass=StateMeta):
     def set_current_room(cls, entity: str, room_id: str) -> None:
         """Method to set the current room for specified entity."""
         try:
-            if cls._check_entity_exists(entity) and cls._check_room_exists(
+            if cls._check_entity_exists(entity) and cls.check_room_exists(
                     room_id):
                 logger.debug("Setting current room for {e}: {r}".format(
                     e=entity, r=room_id))
@@ -692,7 +694,7 @@ class State(metaclass=StateMeta):
     def travel_allowed(cls, current_id: str, destination_id: str) -> bool:
         """Method to determine if travel is allowed between specified rooms."""
         try:
-            if cls._check_room_exists(current_id) and cls._check_room_exists(
+            if cls.check_room_exists(current_id) and cls.check_room_exists(
                     destination_id) and cls._check_connection_exists(
                         current_id, destination_id):
                 current = cls.dm.adventure.get_room(current_id)
@@ -708,7 +710,7 @@ class State(metaclass=StateMeta):
     def connection_broken(cls, current_id: str, destination_id: str) -> bool:
         """Method to determine if connection between specified rooms is broken."""
         try:
-            if cls._check_room_exists(current_id) and cls._check_room_exists(
+            if cls.check_room_exists(current_id) and cls.check_room_exists(
                     destination_id) and cls._check_connection_exists(
                         current_id, destination_id):
                 current = cls.dm.adventure.rooms[current_id]
@@ -728,7 +730,7 @@ class State(metaclass=StateMeta):
     def lock_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to lock the connection between two given rooms."""
         try:
-            if cls._check_room_exists(room_id1) and cls._check_room_exists(
+            if cls.check_room_exists(room_id1) and cls.check_room_exists(
                     room_id2) and cls._check_connection_exists(
                         room_id1, room_id2):
                 cls._update_connection(room_id1, room_id2, "locked", True)
@@ -739,7 +741,7 @@ class State(metaclass=StateMeta):
     def unlock_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to unlock the connection between two given rooms."""
         try:
-            if cls._check_room_exists(room_id1) and cls._check_room_exists(
+            if cls.check_room_exists(room_id1) and cls.check_room_exists(
                     room_id2) and cls._check_connection_exists(
                         room_id1, room_id2):
                 cls._update_connection(room_id1, room_id2, "locked", False)
@@ -750,7 +752,7 @@ class State(metaclass=StateMeta):
     def break_door(cls, room_id1: str, room_id2: str) -> None:
         """Method to break the connection between two given rooms."""
         try:
-            if cls._check_room_exists(room_id1) and cls._check_room_exists(
+            if cls.check_room_exists(room_id1) and cls.check_room_exists(
                     room_id2) and cls._check_connection_exists(
                         room_id1, room_id2):
                 cls._update_connection(room_id1, room_id2, "broken", True)
@@ -866,3 +868,17 @@ class State(metaclass=StateMeta):
     def get_door_hp(cls, door: str) -> int:
         """Method to get a specified door's hp"""
         return cls.current_hp_door[door]
+
+    ############################################################
+    # METHODS RELATING TO ABILITY AND SKILL CHECKS
+    @classmethod
+    def set_ability_check(cls, target: dict) -> None:
+        """Method to set the ability check target, where the target is a dict:
+        {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
+        cls.stored_ability_check = target
+    
+    @classmethod
+    def clear_ability_check(cls) -> None:
+        """Method to clear the ability check target"""
+        cls.stored_ability_check = None
+    

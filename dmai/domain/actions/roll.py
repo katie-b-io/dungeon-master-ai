@@ -15,7 +15,7 @@ class Roll(Action):
         self.roll_type = roll_type
         self.die = die
         self.nlu_entities = nlu_entities
-        self.roll_map = {"attack": self._attack_roll, "door_attack": self._door_attack_roll}
+        self.roll_map = {"attack": self._attack_roll, "door_attack": self._door_attack_roll, "ability_check": self._ability_roll}
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -46,6 +46,7 @@ class Roll(Action):
                 can_roll = self.roll_map[self.roll_type]()
             else:
                 DiceRoller.roll(self.die)
+                OutputBuilder.append(NLG.no_reason_roll())
                 can_roll = True
             return can_roll
         else:
@@ -166,4 +167,20 @@ class Roll(Action):
             else:
                 # didn't hit, skip damage roll
                 State.progress_combat_status()
+        return True
+    
+    def _ability_roll(self) -> bool:
+        """Execute an ability roll.
+        Returns a bool to indicate whether the ability check was successful"""
+        player = State.get_entity()
+        roll = player.ability_roll(State.stored_ability_check["solution"])
+        puzzle = State.get_current_room().puzzles.get_puzzle(State.stored_ability_check["puzzle"])
+        dc = puzzle.get_difficulty_class(State.stored_ability_check["solution"])
+        if roll >= dc:
+            OutputBuilder.append(NLG.succeed_ability_check())
+            State.stored_ability_check["success_func"](*State.stored_ability_check["success_params"])
+        else:
+            OutputBuilder.append(NLG.fail_ability_check())
+        State.clear_expected_intents()
+        State.clear_ability_check()
         return True

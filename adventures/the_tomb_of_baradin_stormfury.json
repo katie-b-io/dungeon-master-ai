@@ -201,12 +201,12 @@
                             "hp": 27,
                             "ac": 19
                         },
-                        "force": {
+                        "str": {
                             "description": "force door",
                             "ability": "str",
                             "dc": 15
                         },
-                        "switch": {
+                        "perception": {
                             "description": "use switch",
                             "skill": "perception",
                             "dc": 10
@@ -224,12 +224,12 @@
                             "hp": 27,
                             "ac": 19
                         },
-                        "force": {
+                        "str": {
                             "description": "force door",
                             "ability": "str",
                             "dc": 15
                         },
-                        "switch": {
+                        "perception": {
                             "description": "use switch",
                             "skill": "perception",
                             "dc": 10
@@ -280,7 +280,7 @@
                     "type": "vault",
                     "name": "Vault",
                     "solutions": {
-                        "force": {
+                        "str": {
                             "description": "force lid",
                             "ability": "str",
                             "dc": 15
@@ -447,7 +447,7 @@
                             "hp": 39,
                             "ac": 19
                         },
-                        "force": {
+                        "str": {
                             "description": "force door",
                             "ability": "str",
                             "dc": 21
