@@ -26,13 +26,13 @@
             "must_kill": false,
             "will_attack_player": false,
             "dialogue": {
-                "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a nice cask of ale and a little coin in it for you of course! What do you say, do you accept the quest?\"",
-                "payment": "He says: \"1 silver piece per rat.\"",
-                "good_negotiation": "He lets out a gentle chuckle and says: \"Well go on then, seeing as we're old friends, 2 silver piece per rat!\"",
-                "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 1 silver piece per rat is more than fair.\"\"",
+                "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a little silver in it for you of course! What do you say, do you accept the quest?\"",
+                "payment": "He says: \"10 silver pieces per rat.\"",
+                "good_negotiation": "He lets out a gentle chuckle and says: \"Well go on then, seeing as we're old friends, 20 silver pieces per rat!\"",
+                "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 10 silver pieces per rat is more than fair.\"\"",
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
-                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats. You share a drink together and then take your leave, with a slightly heavier coin purse and a cask of fine ale. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
+                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats. You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
             },
             "triggers": {}
         },
@@ -145,7 +145,7 @@
                     "broken": false
                 },
                 "burial_chamber": {
-                    "locked": true,
+                    "locked": false,
                     "broken": false
                 },
                 "western_corridor": {
@@ -190,29 +190,6 @@
                 }
             },
             "puzzles": {
-                "storage_room---burial_chamber": {
-                    "id": "storage_room---burial_chamber",
-                    "type": "door",
-                    "name": "Portcullis",
-                    "solutions": {
-                        "attack": {
-                            "description": "attack door",
-                            "intent": "attack",
-                            "hp": 27,
-                            "ac": 19
-                        },
-                        "force": {
-                            "description": "force door",
-                            "ability": "str",
-                            "dc": 15
-                        },
-                        "switch": {
-                            "description": "use switch",
-                            "skill": "perception",
-                            "dc": 10
-                        }
-                    }
-                },
                 "storage_room---western_corridor": {
                     "id": "storage_room---western_corridor",
                     "type": "door",
@@ -224,17 +201,21 @@
                             "hp": 27,
                             "ac": 19
                         },
-                        "force": {
+                        "str": {
                             "description": "force door",
                             "ability": "str",
                             "dc": 15
-                        },
-                        "switch": {
+                        }
+                    },
+                    "explore": {
+                        "use_switch": {
                             "description": "use switch",
                             "skill": "perception",
-                            "dc": 10
+                            "dc": 10,
+                            "result": "say:You see a switch left of the portcullis"
                         }
-                    }
+                    },
+                    "investigate": {}
                 }
             },
             "treasure": [],
@@ -253,7 +234,7 @@
             "visited": false,
             "connections": {
                 "storage_room": {
-                    "locked": true,
+                    "locked": false,
                     "broken": false
                 }
             },
@@ -280,80 +261,43 @@
                     "type": "vault",
                     "name": "Vault",
                     "solutions": {
-                        "force": {
+                        "str": {
                             "description": "force lid",
                             "ability": "str",
                             "dc": 15
                         }
-                    }
+                    },
+                    "explore": {},
+                    "investigate": {}
                 },
                 "silver_key": {
                     "id": "silver_key",
                     "type": "item",
                     "name": "Silver key",
-                    "solutions": {
-                        "explore": {
-                            "description": "look around",
-                            "intent": "explore"
+                    "solutions": {},
+                    "explore": {
+                        "pick_up": {
+                            "description": "pick up key",
+                            "result": "say:You notice the glint of a silver key in the open vault."
                         }
-                    }
+                    },
+                    "investigate": {}
                 },
                 "altar": {
                     "id": "altar",
                     "type": "altar",
                     "name": "Altar",
-                    "description": "The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol.",
-                    "solutions": {
-                        "inspect": {
+                    "solutions": {},
+                    "explore": {},
+                    "investigate": {
+                        "inspect_altar": {
                             "description": "inspect altar",
                             "skill": "religion",
                             "dc": 10,
                             "advantage": {
                                 "race": "dwarf"
-                            }
-                        }
-                    }
-                },
-                "false_door_trap": {
-                    "id": "false_door_trap",
-                    "type": "trap",
-                    "name": "False door trap",
-                    "spell": "glyph_of_warding_explosive_runes",
-                    "trigger": "touch",
-                    "effect": {
-                        "explosion": {
-                            "range": 20,
-                            "area": "sphere",
-                            "saving_throw": {
-                                "dex": {
-                                    "dc": 13,
-                                    "fail": 0.5
-                                }
                             },
-                            "damage": {
-                                "die": "d8",
-                                "total": 5,
-                                "type": "lightning"
-                            }
-                        }
-                    },
-                    "solutions": {
-                        "inspect": {
-                            "description": "inspect trap",
-                            "skill": "investigation",
-                            "dc": 13
-                        },
-                        "detect_magic": {
-                            "description": "detect magic",
-                            "skill": "arcana",
-                            "dc": 18,
-                            "advantage": {
-                                "class": "wizard"
-                            }
-                        },
-                        "dispel": {
-                            "description": "dispel magic",
-                            "spell": "dispel_magic"
+                            "result": "say:The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol."
                         }
                     }
                 }
@@ -361,7 +305,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open. On the eastern wall there's a double metal door with a large grinning skull engraved on the centre. There are simple unadorned stone pedestals on either side of the door. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
+                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open. On the eastern wall there's a large grinning skull engraved in the centre. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
                 "description": "You see six unmarked stone vault doors.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Phew, that was a close one! It might be worth having a look around the room if you haven't already, but be careful!"
@@ -447,7 +391,7 @@
                             "hp": 39,
                             "ac": 19
                         },
-                        "force": {
+                        "str": {
                             "description": "force door",
                             "ability": "str",
                             "dc": 21
@@ -461,7 +405,9 @@
                             "equipment": "thieves_tools",
                             "dc": 15
                         }
-                    }
+                    },
+                    "explore": {},
+                    "investigate": {}
                 }
             },
             "treasure": [],
@@ -495,7 +441,6 @@
                     "id": "southern_corridor---baradins_crypt",
                     "type": "door",
                     "name": "Magic stone face",
-                    "trigger": 5,
                     "solutions": {
                         "solve": {
                             "description": "solve riddle",
@@ -556,35 +501,12 @@
                                 }
                             ]
                         }
-                    }
-                },
-                "wand_of_magic_missiles_trap": {
-                    "id": "wand_of_magic_missiles_trap",
-                    "type": "trap",
-                    "name": "Wand of magic missiles trap",
-                    "trigger": "pressure",
-                    "solutions": {
-                        "detect_magic": {
-                            "description": "detect magic",
-                            "skill": "arcana",
-                            "dc": 10
-                        },
-                        "detect": {
-                            "description": "detect trap",
-                            "skill": "perception",
-                            "dc": 15
-                        },
-                        "inspect": {
-                            "description": "inspect trap",
-                            "skill": "investigation",
-                            "dc": 15
-                        }
-                    }
+                    },
+                    "explore": {},
+                    "investigate": {}
                 }
             },
-            "treasure": [
-                "wand_of_magic_missiles"
-            ],
+            "treasure": [],
             "visibility": false,
             "text": {
                 "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the wall to the south.",

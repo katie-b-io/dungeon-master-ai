@@ -82,7 +82,7 @@ class TestActions(unittest.TestCase):
     def test__can_move_locked(self) -> None:
         entity = "player"
         destination = "storage_room"
-        State.set_current_room(entity, "burial_chamber")
+        State.set_current_room(entity, "western_corridor")
         State.light_torch()
         State.quest()
         (moved, reason) = self.actions._can_move(entity, destination)

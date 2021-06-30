@@ -34,15 +34,15 @@ class TestState(unittest.TestCase):
 
     def test__check_room_exists(self) -> None:
         room = "burial_chamber"
-        self.assertEqual(True, State._check_room_exists(room))
+        self.assertEqual(True, State.check_room_exists(room))
 
     def test__check_room_exists_malformed(self) -> None:
         room1 = "the bar"
         room2 = "moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State._check_room_exists(room1)
+            State.check_room_exists(room1)
         with self.assertRaises(UnrecognisedRoomError):
-            State._check_room_exists(room2)
+            State.check_room_exists(room2)
 
     def test_get_current_room_player(self) -> None:
         entity = "player"

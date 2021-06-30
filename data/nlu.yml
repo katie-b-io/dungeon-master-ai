@@ -58,6 +58,10 @@ nlu:
     - alright
     - alright, I'll have a look
     - accept quest
+    - I will have a look
+    - I'll have a look for you
+    - I'll have a look
+    - sure, why not
 
 - intent: deny
   examples: |
@@ -125,7 +129,6 @@ nlu:
     - I travel to the next room
     - I walk to the next room
     - cross to the [cellar](location)
-    - jump to the [inns cellar](location)
     - maneuver to the [inn's cellar](location)
     - go to [inn cellar](location)
     - go to the [cellar inn](location)
@@ -153,10 +156,8 @@ nlu:
     - move to the [chamber](location)
     - run to the [western corridor](location)
     - walk into the [west corridor](location)
-    - jump into the [southern corridor](location)
     - cross to the [south corridor](location)
     - cross to the [crypt](location)
-    - jump to [baradins crypt](location)
     - maneuver to [baradin's crypt](location)
     - go to [baradin crypt](location)
     - walk towards the [giant rats](monster)
@@ -299,6 +300,10 @@ nlu:
     - attack the [portcullis](door) to the [western corridor](location) open
     - I strike the [western corridor](location) [portcullis](door)
     - hit open the [burial chamber](location) [portcullis](door)
+    - I attack the [south](location) [door](door)
+    - I attack the [west](location) [door](door)
+    - I strike the [southern](location) [door](door)
+    - I hit the [western](location) [door](door)
 
 - intent: ranged_attack
   examples: |
@@ -318,6 +323,8 @@ nlu:
     - I shoot my [crossbow](weapon)
     - I shoot my [shortbow](weapon)
     - I shoot my [light crossbow](weapon)
+    - throw [torch](equipment) at [rats](monster)
+    - I throw my [torch](equipment) at [giant rat](monster)
 
 - intent: disengage
   examples: |
@@ -557,11 +564,14 @@ nlu:
     - I force open the [door](door) to the [southern corridor](location)
     - I slam the [door](door) to the [western corridor](location)
     - force the [burial chamber](location) [door](door)
-    - slam the [southern corridor](location) [door](door)
+    - slam the [southern](location) [door](door)
     - force the [portcullis](door) to the [burial chamber](location) open 
     - slam the [portcullis](door) to the [western corridor](location) open
-    - I prise open the [western corridor](location) [portcullis](door)
+    - I prise open the [western](location) [portcullis](door)
     - force open the [burial chamber](location) [portcullis](door)
+    - use force to break the [southern corridor](location) [door](door)
+    - I force open the [south](location) [door](door)
+    - I force open the [west](location) [door](door)
 
 - intent: ability_check
   examples: |
@@ -777,11 +787,15 @@ nlu:
   examples: |
     - western corridor
     - west corridor
+    - western
+    - west
 
 - synonym: southern_corridor
   examples: |
     - southern corridor
     - south corridor
+    - southern
+    - south
 
 - synonym: baradins_crypt
   examples: |

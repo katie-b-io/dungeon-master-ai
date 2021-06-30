@@ -57,3 +57,8 @@ class Skills:
     def get_modifier(self, skill: str) -> int:
         """Return the specified skill modifier"""
         return self.skills[skill]
+
+    @classmethod
+    def get_name(cls, skill: str) -> str:
+        """Return the full skill name"""
+        return cls.skill_data[skill]["name"]

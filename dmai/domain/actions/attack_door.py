@@ -70,7 +70,7 @@ class AttackDoor(Action):
             door_name = "the door to the {t}".format(t=State.get_room_name(self.target))
             OutputBuilder.append(
                 NLG.cannot_attack_door(
-                    State.get_name(self.attacker),
+                    State.get_entity_name(self.attacker),
                     door_name,
                     reason,
                     State.get_formatted_possible_door_targets(),

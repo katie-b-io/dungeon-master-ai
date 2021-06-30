@@ -106,6 +106,21 @@ class DM:
                 "name": "inventory",
                 "desc": "get inventory status",
                 "func": self.inventory
+            },
+            "force_door": {
+                "name": "force door",
+                "desc": "force door open",
+                "func": self.force_door
+            },
+            "ability_check": {
+                "name": "ability check",
+                "desc": "perform ability check",
+                "func": self.ability_check
+            },
+            "skill_check": {
+                "name": "skill check",
+                "desc": "perform skill check",
+                "func": self.skill_check
             }
         }
 
@@ -353,7 +368,7 @@ class DM:
             attacked = False
             if target_type == "door":
                 if not State.get_possible_door_targets():
-                    OutputBuilder.append(NLG.no_door_targets())
+                    OutputBuilder.append(NLG.no_door_targets("attack"))
                 else:
                     OutputBuilder.append(
                         NLG.no_door_target("attack", State.get_formatted_possible_door_targets())
@@ -492,6 +507,8 @@ class DM:
             logger.info("player is exploring!")
             room = State.get_current_room()
             OutputBuilder.append(room.get_description())
+            # trigger the explore triggers in the room
+            room.explore_trigger()
             explore = True
         else:
             logger.info("player is investigating {t}!".format(t=target))
@@ -520,11 +537,16 @@ class DM:
                     return self.actions.roll("door_attack", nlu_entities, die)
                 else:
                     return self.actions.roll("attack", nlu_entities, die)
+            elif State.stored_intent["intent"] == "force_door":
+                if State.stored_ability_check:
+                    return self.actions.roll("ability_check", nlu_entities, die)
 
         if State.in_combat_with_door:
             return self.actions.roll("door_attack", nlu_entities, die)
         if State.in_combat:
             return self.actions.roll("attack", nlu_entities, die)
+        if State.stored_ability_check:
+            return self.actions.roll("ability_check", nlu_entities, die)
         return self.actions.roll("roll", nlu_entities, die)
 
     def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:
@@ -558,4 +580,45 @@ class DM:
         """
         item_collection = State.get_player().character.items
         OutputBuilder.append(item_collection.get_all_formatted())
+        return True
+
+    def force_door(self, target: str = None, entity: str = None, nlu_entities: dict = {}) -> bool:
+        """Player wants to attempt to force open a door.
+        Appends the text to output with the OutputBuilder.
+        """
+        if not entity:
+            entity = "player"
+        if not target and nlu_entities:
+            (target_type, target) = self._get_target(nlu_entities)
+        else:
+            target_type = None
+        
+        if target_type != "door":
+            forced = False
+            OutputBuilder.append(NLG.not_door_target(target))
+        elif not target:
+            forced = False
+            if not State.get_possible_door_targets():
+                OutputBuilder.append(NLG.no_door_targets("force"))
+            else:
+                OutputBuilder.append(
+                    NLG.no_door_target("force", State.get_formatted_possible_door_targets())
+                )
+        else:
+            logger.info("{e} is forcing door {t}!".format(e=entity, t=target))
+            forced = self.actions.ability_check("str", entity, target)
+        return forced
+
+    def ability_check(self, **kwargs) -> bool:
+        """Player wants to attempt to perform a ability check.
+        Appends the text to output with the OutputBuilder.
+        """
+        OutputBuilder.append("You can do an ability check when I ask you to.")
+        return True
+        
+    def skill_check(self, **kwargs) -> bool:
+        """Player wants to attempt to perform a skill check.
+        Appends the text to output with the OutputBuilder.
+        """
+        OutputBuilder.append("You can do a skill check when I ask you to.")
         return True

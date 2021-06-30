@@ -76,6 +76,11 @@ class Room:
                     # execute function
                     if text_type in self.text:
                         self.text[text_type]["trigger"]()
+    
+    def explore_trigger(self) -> None:
+        """Method to print any new text if conditions met"""
+        if State.get_current_room_id() == self.id:
+            self.puzzles.explore_trigger()
 
     def get_connected_rooms(self) -> list:
         """Method to return the connected rooms"""

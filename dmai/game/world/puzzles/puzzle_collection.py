@@ -18,6 +18,10 @@ class PuzzleCollection:
         """Method to return a list of all puzzles"""
         return list(self.puzzles.values())
     
+    def get_puzzle(self, puzzle_id: str) -> Puzzle:
+        """Method to return a specified puzzle"""
+        return self.puzzles[puzzle_id]
+    
     def can_attack_door(self, room: str, door: str) -> bool:
         """Method to return whether a door of room can be attacked"""
         door_id = "{i}---{d}".format(i=room, d=door)
@@ -34,3 +38,8 @@ class PuzzleCollection:
         if self.can_attack_door(room, door):
             door_id = "{i}---{d}".format(i=room, d=door)
             return self.puzzles[door_id].get_hp()
+    
+    def explore_trigger(self) -> None:
+        """Method to print any new text if conditions met"""
+        for puzzle in self.get_all_puzzles():
+            puzzle.explore_trigger()
