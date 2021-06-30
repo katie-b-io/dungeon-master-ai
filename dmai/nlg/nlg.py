@@ -570,12 +570,12 @@ class NLG(metaclass=NLGMeta):
     ############################################################
     # Dealing with doors utterances
     @classmethod
-    def no_door_targets(cls) -> str:
+    def no_door_targets(cls, verb: str) -> str:
         """Return the utterance for no door targets"""
         utters = [
-            "There are no doors here you need to attack!",
+            "There are no doors here you need to {v}!".format(v=verb),
             "There aren't any suitable door targets here.",
-            "Nope, there are no doors you need to attack here."
+            "Nope, there are no doors you need to {v} here.".format(v=verb)
         ]
         return random.choice(utters)
     
@@ -655,6 +655,44 @@ class NLG(metaclass=NLGMeta):
             return "{a} cannot attack {t} because you have no equipped weapons! Try equipping a weapon first.".format(
                 a=attacker, t=target) 
     
+    @classmethod
+    def not_door_target(cls, target: str) -> str:
+        """Return the utterance for no abilty check targets"""
+        utters = [
+            "{t} is not a door target and cannot be forced.".format(t=target),
+            "You cannot force a non-door target.".format(t=target),
+            "Yeh, I'm not allowing you to force {t}, that's for doors only.".format(t=target),
+        ]
+        return random.choice(utters)
+    
+    ############################################################
+    # Ability and skill check utterances
+    @classmethod
+    def ability_check(cls, ability: str) -> str:
+        """Return the utterance for performing ability check"""
+        n = "an" if ability == "intelligence" else "a"
+        utters = [
+            "Go ahead and do {n} {a} check.".format(a=ability, n=n),
+            "Okay, do {n} {a} roll.".format(a=ability, n=n),
+            "Sure, go ahead and do {n} {a} roll.".format(a=ability, n=n),
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def cannot_ability_check(cls, ability: str, target: str, reason: str = None) -> str:
+        """Return the utterance for not allowing ability check"""
+        n = "an" if ability == "intelligence" else "a"
+        if not reason:
+            return "You cannot perform {a} check.".format(a=ability)
+        elif reason == "different location":
+            return "You cannot perform {a} check on {t} because it's not in this room!".format(a=ability, t=target)
+        elif reason == "no visibility":
+            return "You cannot perform {a} check because it's too dark to see anything!".format(a=ability)
+        elif reason == "unknown entity":
+            return "You cannot perform {a} check on unknown target {t}".format(a=ability, t=target)
+        elif reason == "not required":
+            return "You don't need to perform {n} {a} check in this situation.".format(a=ability, n=n)
+
     ############################################################
     # Gameover utterances
     @classmethod

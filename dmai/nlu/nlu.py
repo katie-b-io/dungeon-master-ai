@@ -192,6 +192,8 @@ class NLU(metaclass=NLUMeta):
             return ("health", {})
         if intent == "inventory":
             return ("inventory", {})
+        if intent == "force_door":
+            return ("force_door", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

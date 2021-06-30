@@ -72,8 +72,8 @@ class Attack(Action):
         else:
             OutputBuilder.append(
                 NLG.cannot_attack(
-                    State.get_name(self.attacker),
-                    State.get_name(self.target),
+                    State.get_entity_name(self.attacker),
+                    State.get_entity_name(self.target),
                     reason,
                     State.get_formatted_possible_monster_targets(),
                 )

@@ -6,6 +6,7 @@ from dmai.game.adventure import Adventure
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.attack import Attack
 from dmai.domain.actions.attack_door import AttackDoor
+from dmai.domain.actions.ability_check import AbilityCheck
 from dmai.domain.actions.roll import Roll
 from dmai.domain.actions.pick_up import PickUp
 import dmai
@@ -275,11 +276,11 @@ class Actions:
                     OutputBuilder.append(State.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover()
                 else:
-                    OutputBuilder.append(NLG.roleplay(State.get_name(target)))
+                    OutputBuilder.append(NLG.roleplay(State.get_entity_name(target)))
             return can_converse
         else:
-            if bool(State.get_name(target)):
-                target_name = State.get_name(target)
+            if bool(State.get_entity_name(target)):
+                target_name = State.get_entity_name(target)
             else:
                 target_name = target
             OutputBuilder.append(NLG.cannot_converse(target_name, reason))
@@ -324,11 +325,17 @@ class Actions:
         pick_up = PickUp(item, entity)
         return pick_up.execute()
 
+    def ability_check(self, ability: str, entity: str = "player", target: str = None) -> bool:
+        """Attempt to perform an ability check.
+        Returns a bool to indicate whether the action was successful"""
+        check = AbilityCheck(ability, entity, target)
+        return check.execute()
+    
     @staticmethod
     def declare_attack_against_player(attacker: str, target: str, *args) -> None:
         """Method to declare attack against player"""
         State.set_target(target, attacker)
-        attacker = State.get_name(attacker)
+        attacker = State.get_entity_name(attacker)
         OutputBuilder.append(NLG.attack(attacker, target))
     
     @staticmethod

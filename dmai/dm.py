@@ -106,6 +106,11 @@ class DM:
                 "name": "inventory",
                 "desc": "get inventory status",
                 "func": self.inventory
+            },
+            "force_door": {
+                "name": "force door",
+                "desc": "force door open",
+                "func": self.force_door
             }
         }
 
@@ -353,7 +358,7 @@ class DM:
             attacked = False
             if target_type == "door":
                 if not State.get_possible_door_targets():
-                    OutputBuilder.append(NLG.no_door_targets())
+                    OutputBuilder.append(NLG.no_door_targets("attack"))
                 else:
                     OutputBuilder.append(
                         NLG.no_door_target("attack", State.get_formatted_possible_door_targets())
@@ -559,3 +564,31 @@ class DM:
         item_collection = State.get_player().character.items
         OutputBuilder.append(item_collection.get_all_formatted())
         return True
+
+    def force_door(self, target: str = None, entity: str = None, nlu_entities: dict = {}) -> bool:
+        """Player wants to attempt to force open a door.
+        Appends the text to output with the OutputBuilder.
+        """
+        if not entity:
+            entity = "player"
+        if not target and nlu_entities:
+            (target_type, target) = self._get_target(nlu_entities)
+        else:
+            target_type = None
+        
+        if target_type != "door":
+            forced = False
+            OutputBuilder.append(NLG.not_door_target(target))
+        elif not target:
+            forced = False
+            if not State.get_possible_door_targets():
+                OutputBuilder.append(NLG.no_door_targets("force"))
+            else:
+                OutputBuilder.append(
+                    NLG.no_door_target("force", State.get_formatted_possible_door_targets())
+                )
+        else:
+            logger.info("{e} is forcing door {t}!".format(e=entity, t=target))
+            forced = self.actions.ability_check("str", entity, target)
+        return forced
+    

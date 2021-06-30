@@ -227,7 +227,7 @@ class State(metaclass=StateMeta):
         return cls.player
     
     @classmethod
-    def get_name(cls, entity: str = "player") -> str:
+    def get_entity_name(cls, entity: str = "player") -> str:
         """Method to return name of entity"""
         try:
             if entity == "player":
@@ -238,7 +238,7 @@ class State(metaclass=StateMeta):
                 else:
                     return cls.get_dm().npcs.get_entity(entity).name
         except UnrecognisedEntityError:
-            logger.error("Unrecognised entity: {e}".format(e=entity))
+            logger.debug("Unrecognised entity: {e}".format(e=entity))
             return ""
     
     @classmethod
@@ -250,7 +250,7 @@ class State(metaclass=StateMeta):
             else:
                 return cls.get_dm().npcs.get_entity(entity)
         except UnrecognisedEntityError:
-            logger.error("Unrecognised entity: {e}".format(e=entity))
+            logger.debug("Unrecognised entity: {e}".format(e=entity))
             return None
     
     ############################################################
@@ -591,7 +591,7 @@ class State(metaclass=StateMeta):
     @classmethod
     def kill_monster(cls, entity: str) -> None:
         # player has killed a monster
-        name = State.get_name(entity)
+        name = State.get_entity_name(entity)
         OutputBuilder.append("You killed {n}!".format(n=name))
         cls.set_current_status(entity, "dead")
         cls.clear_target()

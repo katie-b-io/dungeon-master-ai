@@ -101,7 +101,7 @@ class Roll(Action):
         if State.get_combat_status() == Combat.INITIATIVE:
             State.set_initiative_order()
             OutputBuilder.append(
-                NLG.entity_turn(State.get_name(State.get_currently_acting_entity()))
+                NLG.entity_turn(State.get_entity_name(State.get_currently_acting_entity()))
             )
         
         # make sure the player can enter input when not waiting

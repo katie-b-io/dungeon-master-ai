@@ -58,6 +58,9 @@ nlu:
     - alright
     - alright, I'll have a look
     - accept quest
+    - I will have a look
+    - I'll have a look for you
+    - I'll have a look
 
 - intent: deny
   examples: |
@@ -562,6 +565,7 @@ nlu:
     - slam the [portcullis](door) to the [western corridor](location) open
     - I prise open the [western corridor](location) [portcullis](door)
     - force open the [burial chamber](location) [portcullis](door)
+    - use force to break the [southern corridor](location) [door](door)
 
 - intent: ability_check
   examples: |
