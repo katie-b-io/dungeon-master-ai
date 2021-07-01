@@ -106,7 +106,8 @@ class ItemCollection:
                 (has_item, reason) = self.has_item(item_id)
                 if has_item:
                     used = self.items[item_id]["item"].use()
-                    self.remove_item(item_id)
+                    if used:
+                        self.remove_item(item_id)
                     return used
             return False
         except UnrecognisedItem:

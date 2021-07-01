@@ -199,12 +199,14 @@
                             "description": "attack door",
                             "intent": "attack",
                             "hp": 27,
-                            "ac": 19
+                            "ac": 19,
+                            "say": "You break the door into a pile of splinters!"
                         },
                         "str": {
                             "description": "force door",
                             "ability": "str",
-                            "dc": 15
+                            "dc": 15,
+                            "say": "The door gives way after a well placed shoulder barge."
                         }
                     },
                     "explore": {
@@ -212,7 +214,7 @@
                             "description": "use switch",
                             "skill": "perception",
                             "dc": 10,
-                            "say": "You take a closer look around the room and you notice a switch left of the portcullis. You press the switch and with a rusty screech the portcullis rises.",
+                            "say": "You take a closer look around the room and you notice a switch to the left of the portcullis. You press the switch and with a rusty screech the portcullis rises.",
                             "result": "open_door"
                         }
                     },
@@ -400,7 +402,8 @@
                         },
                         "unlock": {
                             "description": "unlock door",
-                            "item": "silver_key"
+                            "item": "silver_key",
+                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the wooden door. With a small push the door swings open."
                         },
                         "lockpick": {
                             "description": "lockpick door",

@@ -143,19 +143,33 @@ class Puzzle(ABC):
     
     def explore_trigger(self) -> None:
         """Method to print any new text if conditions met"""
-        for explore in self.explore_map:
-            if self.explore_map[explore]["can_trigger"]:
-                if "skill" in self.explore[explore]:
-                    State.set_expected_intents(["roll"])
-                    skill_check = SkillCheck(self.explore[explore]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id)
-                    skill_check.execute()
-                else:
-                    self.success_func(explore)
-                self.explore_map[explore]["can_trigger"] = False
-                break
+        if not self.solved:
+            for explore in self.explore_map:
+                if self.explore_map[explore]["can_trigger"]:
+                    if "skill" in self.explore[explore]:
+                        State.set_expected_intents(["roll"])
+                        skill_check = SkillCheck(self.explore[explore]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id)
+                        skill_check.execute()
+                    else:
+                        self.explore_success_func(explore)
+                    self.explore_map[explore]["can_trigger"] = False
+                    break
     
-    def success_func(self, roll: str) -> None:
-        """Method to construct success function"""
+    def solution_success_func(self) -> None:
+        """Method to construct solution success function"""
+        # TODO support non-door types
+        if self.type == "door":
+            room1 = self.id.split("---")[0]
+            room2 = self.id.split("---")[1]
+            State.unlock_door(room1, room2)
+        self.solve()
+        
+    def get_solution_success_func(self) -> object:
+        """Method to return the function on successful roll following explore intent"""
+        return self.solution_success_func
+    
+    def explore_success_func(self, roll: str) -> None:
+        """Method to construct explore success function"""
         if self.explore[roll]["say"]:
             OutputBuilder.append(self.explore[roll]["say"])
         if self.explore[roll]["result"]:
@@ -167,10 +181,11 @@ class Puzzle(ABC):
             if result == "add_to_inventory":
                 item_data = self.__dict__
                 State.get_player().character.items.add_item(self.id, item_data=item_data)
+        self.solve()
         
     def get_explore_success_func(self) -> object:
         """Method to return the function on successful roll following explore intent"""
-        return self.success_func
+        return self.explore_success_func
     
     def get_explore_success_params(self, roll: str) -> list:
         """Method to return the function params on successful roll following explore intent"""
