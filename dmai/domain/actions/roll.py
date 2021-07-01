@@ -153,7 +153,8 @@ class Roll(Action):
 
         # get target declaration from player if no target,
         if State.get_combat_status() == Combat.DECLARE:
-            State.set_expected_intents(["attack"])
+            State.set_expected_entities(["monster"])
+            State.set_expected_intent(["attack"])
             OutputBuilder.append(NLG.declare_attack())
             State.progress_combat_status()
             return True
@@ -186,7 +187,7 @@ class Roll(Action):
             State.stored_ability_check["success_func"](*State.stored_ability_check["success_params"])
         else:
             OutputBuilder.append(NLG.fail_check())
-        State.clear_expected_intents()
+        State.clear_expected_intent()
         State.clear_ability_check()
         return True
     
@@ -203,5 +204,5 @@ class Roll(Action):
             State.clear_skill_check()
         else:
             OutputBuilder.append(NLG.fail_check())
-        State.clear_expected_intents()
+        State.clear_expected_intent()
         return True

@@ -81,7 +81,7 @@ class State(metaclass=StateMeta):
     current_attitude = {}
     attacked_by_player = []
     current_combat_status = {}
-    expected_intents = []
+    expected_intent = []
     expected_entities = []
     initiative_order = []
     stored_ability_check = None
@@ -102,12 +102,13 @@ class State(metaclass=StateMeta):
             cls.in_combat_with_door = False
             cls.set_target(target, attacker)
             cls.clear_conversation()
-            cls.set_expected_intents(["roll"])
+            cls.set_expected_entities(["monster"])
+            cls.set_expected_intent(["roll"])
             cls.clear_expected_entities()
             OutputBuilder.append(NLG.transition_to_combat())
         else:
             cls.set_target(target, attacker)
-            State.set_expected_intents(["roll"])
+            State.set_expected_intent(["roll"])
             OutputBuilder.append(NLG.perform_attack_roll())
             cls.progress_combat_status()
                 
@@ -134,7 +135,7 @@ class State(metaclass=StateMeta):
             cls.initiative_order = []
             cls.clear_target()
             cls.clear_conversation()
-            cls.clear_expected_intents()
+            cls.clear_expected_intent()
             cls.clear_expected_entities()
             cls.door_target = None
 
@@ -147,7 +148,7 @@ class State(metaclass=StateMeta):
             cls.initiative_order = []
             cls.clear_target()
             cls.set_conversation_target(target)
-            cls.clear_expected_intents()
+            cls.clear_expected_intent()
             cls.clear_expected_entities()
             cls.door_target = None
 
@@ -347,14 +348,14 @@ class State(metaclass=StateMeta):
             raise UnrecognisedEntityError(msg)
     
     @classmethod
-    def set_expected_intents(cls, intents: list) -> None:
-        """Method to set the expected intents"""
-        cls.expected_intents = intents
+    def set_expected_intent(cls, intent: str) -> None:
+        """Method to set the expected intent"""
+        cls.expected_intent = intent
 
     @classmethod
-    def clear_expected_intents(cls) -> None:
-        """Method to clear the expected intents"""
-        cls.expected_intents = []
+    def clear_expected_intent(cls) -> None:
+        """Method to clear the expected intent"""
+        cls.expected_intent = []
     
     @classmethod
     def set_expected_entities(cls, entities: list) -> None:
@@ -504,7 +505,7 @@ class State(metaclass=StateMeta):
         if cls.initiative_order.index("player") == 0:
             # get the target from the player
             cls.set_combat_status(1)
-            cls.set_expected_intents(["attack"])
+            cls.set_expected_intent(["attack"])
         else:
             # player doesn't go first - wait til their turn
             cls.set_combat_status(4)

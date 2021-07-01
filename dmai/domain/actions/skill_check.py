@@ -86,7 +86,7 @@ class SkillCheck(Action):
                 OutputBuilder.append(
                     NLG.skill_check(Skills.get_name(self.skill), dm_request=self.dm_request)
                 )
-                State.set_expected_intents(["roll"])
+                State.set_expected_intent(["roll"])
                 current = State.get_current_room()
                 if State.current_intent == "explore":
                     success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()

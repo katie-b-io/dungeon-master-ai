@@ -143,23 +143,26 @@ class NLU(metaclass=NLUMeta):
         if entities:
             print(entities)
             
+        # check if there's expected entities
+        if State.expected_entities:
+            hits = [entity for entity in entities if entity["entity"] in State.expected_entities]
+            if hits:
+                # if we have a hit for expected entities, use the primary expected intent
+                if State.expected_intent:
+                    intent = State.expected_intent[0]
+                elif State.stored_intent:
+                    intent = State.stored_intent["intent"]
+                    State.clear_expected_entities()
+                
         # check if there's an expected intent
-        if State.expected_intents:
-            if intent not in State.expected_intents:
+        elif State.expected_intent:
+            if intent not in State.expected_intent:
                 # TODO make exception for hints or questions
                 # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
                 intents = [State.get_dm().player_intent_map[intent]["desc"] for intent in State.expected_intents]
                 intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
                 OutputBuilder.append("I was expecting you to {i}".format(i=intent_str))
                 return (None, {"nlu_entities": entities})
-        
-        # check if there's expected entities
-        if State.expected_entities:
-            hits = [entity for entity in entities if entity["entity"] in State.expected_entities]
-            if hits:
-                # if we have a hit for expected entities, use the stored intent
-                intent = "stored_intent"
-                State.clear_expected_entities()
 
         # check if in combat before allowing any player utterance
         if State.in_combat:
@@ -170,7 +173,7 @@ class NLU(metaclass=NLUMeta):
         
         if intent == "move":
             return ("move", {"nlu_entities": entities})
-        if intent == "attack":
+        if intent == "attack" or intent == "ranged_attack":
             return ("attack", {"nlu_entities": entities})
         if intent == "use":
             return ("use", {"nlu_entities": entities})
