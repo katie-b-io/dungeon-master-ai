@@ -20,7 +20,8 @@ class PuzzleCollection:
     
     def get_puzzle(self, puzzle_id: str) -> Puzzle:
         """Method to return a specified puzzle"""
-        return self.puzzles[puzzle_id]
+        if puzzle_id in self.puzzles:
+            return self.puzzles[puzzle_id]
     
     def can_attack_door(self, room: str, door: str) -> bool:
         """Method to return whether a door of room can be attacked"""

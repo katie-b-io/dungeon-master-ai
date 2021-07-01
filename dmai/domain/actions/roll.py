@@ -15,7 +15,12 @@ class Roll(Action):
         self.roll_type = roll_type
         self.die = die
         self.nlu_entities = nlu_entities
-        self.roll_map = {"attack": self._attack_roll, "door_attack": self._door_attack_roll, "ability_check": self._ability_roll}
+        self.roll_map = {
+            "attack": self._attack_roll,
+            "door_attack": self._door_attack_roll,
+            "ability_check": self._ability_roll,
+            "skill_check": self._skill_roll
+        }
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -183,4 +188,20 @@ class Roll(Action):
             OutputBuilder.append(NLG.fail_check())
         State.clear_expected_intents()
         State.clear_ability_check()
+        return True
+    
+    def _skill_roll(self) -> bool:
+        """Execute an skill roll.
+        Returns a bool to indicate whether the skill check was successful"""
+        player = State.get_entity()
+        roll = player.skill_roll(State.stored_skill_check["solution"])
+        puzzle = State.get_current_room().puzzles.get_puzzle(State.stored_skill_check["puzzle"])
+        dc = puzzle.get_difficulty_class(State.stored_skill_check["solution"])
+        if roll >= dc:
+            OutputBuilder.append(NLG.succeed_check())
+            State.stored_skill_check["success_func"](*State.stored_skill_check["success_params"])
+            State.clear_skill_check()
+        else:
+            OutputBuilder.append(NLG.fail_check())
+        State.clear_expected_intents()
         return True

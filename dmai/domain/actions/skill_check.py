@@ -78,6 +78,7 @@ class SkillCheck(Action):
         # check if skill check can happen
         if self.dm_request:
             (can_check, reason) = (True, "")
+            self.solution = self.skill
         else:
             (can_check, reason) = self._can_skill_check()
         if can_check:
@@ -87,11 +88,17 @@ class SkillCheck(Action):
                 )
                 State.set_expected_intents(["roll"])
                 current = State.get_current_room()
-                success_func = print
-                success_params = [""]
-                if current.puzzles.get_puzzle(self.puzzle).type == "door":
+                if State.current_intent == "explore":
+                    success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
+                    success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
+                elif current.puzzles.get_puzzle(self.puzzle).type == "door":
+                    self.target = self.puzzle.split("---")[1]
                     success_func = State.unlock_door
                     success_params = [current.id, self.target]
+                else:
+                    # TODO better fallback
+                    success_func = print
+                    success_params=["Implement something!"]
                 State.set_skill_check({
                     "target": self.target,
                     "puzzle": self.puzzle,

@@ -123,14 +123,15 @@ class State(metaclass=StateMeta):
 
     @classmethod
     def explore(cls) -> None:
-        cls.set_current_game_mode("explore")
-        cls.in_combat = False
-        cls.roleplaying = False
-        cls.initiative_order = []
-        cls.clear_target()
-        cls.clear_conversation()
-        cls.clear_expected_intents()
-        cls.door_target = None
+        if cls.current_game_mode != GameMode.EXPLORE:
+            cls.set_current_game_mode("explore")
+            cls.in_combat = False
+            cls.roleplaying = False
+            cls.initiative_order = []
+            cls.clear_target()
+            cls.clear_conversation()
+            cls.clear_expected_intents()
+            cls.door_target = None
 
     @classmethod
     def roleplay(cls, target: str) -> None:

@@ -431,6 +431,13 @@ nlu:
     - Use [potion of healing](item)
     - Use [healing potion](item)
     - Use [potion](item)
+    - use the [silver key](item)
+    - I want to use the [silver key](item)
+    - unlock the door with the [silver key](item)
+    - use the [key](item)
+    - I want to use the [key](item)
+    - unlock the door with the [key](item)
+    - use the [key](item) on the [door](door)
 
 - intent: stop_using
   examples: |
@@ -575,6 +582,7 @@ nlu:
 
 - intent: ability_check
   examples: |
+    - can I do an ability check?
     - can I do a [charisma](ability) check?
     - [charisma](ability) check?
     - can I use my [charisma](ability)?
@@ -596,6 +604,7 @@ nlu:
 
 - intent: skill_check
   examples: |
+    - can I do a skill check?
     - is that a [acrobatics](skill) check?
     - can I do a [acrobatics](skill) check?
     - [acrobatics](skill) check?
@@ -728,6 +737,9 @@ nlu:
   examples: |
     - pick up [potion](item)
     - pick up [healing potion](item)
+    - pick up [potion of healing](item)
+    - pick up the [potion](item)
+    - pick up the [healing potion](item)
     - pick up the [potion of healing](item)
     - gather [potion of healing](item)
     - take up [healing potion](item)
@@ -1058,3 +1070,8 @@ nlu:
   examples: |
     - door
     - portcullis
+
+- synonym: silver_key
+  examples: |
+    - silver key
+    - key

@@ -547,6 +547,8 @@ class DM:
             return self.actions.roll("attack", nlu_entities, die)
         if State.stored_ability_check:
             return self.actions.roll("ability_check", nlu_entities, die)
+        if State.stored_skill_check:
+            return self.actions.roll("skill_check", nlu_entities, die)
         return self.actions.roll("roll", nlu_entities, die)
 
     def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:

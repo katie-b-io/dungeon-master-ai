@@ -208,11 +208,12 @@
                         }
                     },
                     "explore": {
-                        "use_switch": {
+                        "perception": {
                             "description": "use switch",
                             "skill": "perception",
                             "dc": 10,
-                            "result": "say:You see a switch left of the portcullis"
+                            "say": "You take a closer look around the room and you notice a switch left of the portcullis. You press the switch and with a rusty screech the portcullis rises.",
+                            "result": "open_door"
                         }
                     },
                     "investigate": {}
@@ -273,12 +274,13 @@
                 "silver_key": {
                     "id": "silver_key",
                     "type": "item",
-                    "name": "Silver key",
+                    "name": "Silver Key",
                     "solutions": {},
                     "explore": {
                         "pick_up": {
                             "description": "pick up key",
-                            "result": "say:You notice the glint of a silver key in the open vault."
+                            "say": "You take a closer look around the room and you notice the glint of a silver key in the open vault. You add the key to your inventory.",
+                            "result": "add_to_inventory"
                         }
                     },
                     "investigate": {}
@@ -290,14 +292,14 @@
                     "solutions": {},
                     "explore": {},
                     "investigate": {
-                        "inspect_altar": {
+                        "religion": {
                             "description": "inspect altar",
                             "skill": "religion",
                             "dc": 10,
                             "advantage": {
                                 "race": "dwarf"
                             },
-                            "result": "say:The dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol."
+                            "say": "Your religion knowledge allows you to determine the dust covered altar is dedicated to Thorogrin, the patron deity of dwarves, the hammer and anvil being his holy symbol."
                         }
                     }
                 }
