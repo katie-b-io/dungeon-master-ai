@@ -543,6 +543,16 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
 
+    @classmethod
+    def drink_ale(cls, ales: int) -> str:
+        """Return the utterance for drinking an ale"""
+        utters = [
+            "The barkeep pours you a frothy golden ale, which you finish in a few big gulps.",
+            "You are served a beautiful dark ale, which you savour over the course of half an hour. Delightful!",
+            "The barkeep presents you with a cloudy pale ale. You take an experimental sip and you're in ale heaven! You down the whole glass."
+        ]
+        return utters[ales]
+
     ############################################################
     # Query utterances
     @classmethod
@@ -790,5 +800,13 @@ class NLG(metaclass=NLGMeta):
             "You were attacked and fatally wounded by {e}. {d}".format(e=entity, d=death_text),
             "{e} killed you! {d}".format(e=entity, d=death_text),
             "Nooo, you tried your hardest but it wasn't to be. {d}".format(e=entity, d=death_text),
+        ]
+        return random.choice(utters)
+    
+    @classmethod
+    def drunk_end_game(cls) -> str:
+        """Return the utterance for ending the game by drinking too much"""
+        utters = [
+            "Onto your fourth drink and you completely forgot the reason you came here. You while away the day drinking good ale with fine company. It was a good day!",
         ]
         return random.choice(utters)
