@@ -121,6 +121,11 @@ class DM:
                 "name": "skill check",
                 "desc": "perform skill check",
                 "func": self.skill_check
+            },
+            "ale": {
+                "name": "ale",
+                "desc": "drink ale",
+                "func": self.ale
             }
         }
 
@@ -326,6 +331,16 @@ class DM:
         for entity in nlu_entities:
             if (
                 entity["entity"] == "item"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return entity["value"]
+            
+    def _get_drink(self, nlu_entities: dict) -> str:
+        """Extract a drink from NLU entities dictionary.
+        Returns a string with item"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "drink"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
                 return entity["value"]
@@ -652,3 +667,21 @@ class DM:
         """
         OutputBuilder.append("You can do a skill check when I ask you to.")
         return True
+
+    def ale(self, nlu_entities: dict = {}) -> bool:
+        """Player wants to attempt to drink some ale.
+        Appends the text to output with the OutputBuilder.
+        """
+        if nlu_entities:
+            drink = self._get_drink(nlu_entities)
+            if drink != "ale":
+                OutputBuilder.append("We only serve ale here!")
+        if State.get_current_room().ale:
+            if State.ales > 2:
+                # this is a gameover state
+                OutputBuilder.append(NLG.drunk_end_game())
+                dmai.dmai_helpers.gameover()
+            OutputBuilder.append(NLG.drink_ale(State.ales))
+            State.drink_ale()
+        else:
+            OutputBuilder.append("You wish you could get an ale here!")

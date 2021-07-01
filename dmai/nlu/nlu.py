@@ -206,6 +206,8 @@ class NLU(metaclass=NLUMeta):
             return ("ability_check", {"nlu_entities": entities})
         if intent == "skill_check":
             return ("skill_check", {"nlu_entities": entities})
+        if intent == "ale":
+            return ("ale", {"nlu_entities": entities})
         else:
             # check for stored intent in State
             if State.stored_intent:

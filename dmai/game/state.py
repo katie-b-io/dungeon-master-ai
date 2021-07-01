@@ -86,6 +86,7 @@ class State(metaclass=StateMeta):
     initiative_order = []
     stored_ability_check = None
     stored_skill_check = None
+    ales = 0
 
     def __init__(self) -> None:
         """Main class for the game state"""
@@ -404,6 +405,11 @@ class State(metaclass=StateMeta):
             new_hp = min(hp_max, new_hp) 
         cls.current_hp[entity] = new_hp
         OutputBuilder.append(NLG.heal(hp, new_hp))
+    
+    @classmethod
+    def drink_ale(cls) -> None:
+        """Method to drink ale"""
+        cls.ales += 1
 
     ############################################################
     # METHODS RELATING TO INTENTS

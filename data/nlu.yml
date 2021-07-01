@@ -550,6 +550,20 @@ nlu:
     - tankard of [ale](drink)
     - I want [ale](drink)
     - give me [ale](drink)
+    - I want a [beer](drink)
+    - give me [alcohol](drink)
+    - I want a [stout](drink)
+    - I want a drink
+    - more [booze](drink)
+    - I want a glass of [wine](drink)
+    - I'd like a [vodka](drink)
+    - Give me your best [whisky](drink)
+    - glass of [rum](drink)
+    - ask for a [beer](drink)
+    - ask for an [ale](drink)
+    - ask corvus for a [beer](drink)
+    - ask corvus for an [ale](drink)
+    - order an [ale](drink)
 
 - intent: force_door
   examples: |
@@ -1077,3 +1091,11 @@ nlu:
   examples: |
     - silver key
     - key
+
+- synonym: ale
+  examples: |
+    - ale
+    - beer
+    - alcohol
+    - stout
+    - booze
