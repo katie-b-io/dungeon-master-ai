@@ -82,6 +82,7 @@ class State(metaclass=StateMeta):
     attacked_by_player = []
     current_combat_status = {}
     expected_intents = []
+    expected_entities = []
     initiative_order = []
     stored_ability_check = None
     stored_skill_check = None
@@ -101,6 +102,7 @@ class State(metaclass=StateMeta):
             cls.set_target(target, attacker)
             cls.clear_conversation()
             cls.set_expected_intents(["roll"])
+            cls.clear_expected_entities()
             OutputBuilder.append(NLG.transition_to_combat())
         else:
             cls.set_target(target, attacker)
@@ -115,6 +117,7 @@ class State(metaclass=StateMeta):
             cls.in_combat_with_door = True
             cls.in_combat = False
             cls.roleplaying = False
+            cls.clear_expected_entities()
             cls.set_combat_status(3)
             OutputBuilder.append(NLG.perform_attack_roll())
         else:
@@ -131,6 +134,7 @@ class State(metaclass=StateMeta):
             cls.clear_target()
             cls.clear_conversation()
             cls.clear_expected_intents()
+            cls.clear_expected_entities()
             cls.door_target = None
 
     @classmethod
@@ -143,6 +147,7 @@ class State(metaclass=StateMeta):
             cls.clear_target()
             cls.set_conversation_target(target)
             cls.clear_expected_intents()
+            cls.clear_expected_entities()
             cls.door_target = None
 
     @classmethod
@@ -342,13 +347,23 @@ class State(metaclass=StateMeta):
     
     @classmethod
     def set_expected_intents(cls, intents: list) -> None:
-        """Method to set the expected intent"""
+        """Method to set the expected intents"""
         cls.expected_intents = intents
 
     @classmethod
     def clear_expected_intents(cls) -> None:
-        """Method to clear the expected intent"""
+        """Method to clear the expected intents"""
         cls.expected_intents = []
+    
+    @classmethod
+    def set_expected_entities(cls, entities: list) -> None:
+        """Method to set the expected entities"""
+        cls.expected_entities = entities
+
+    @classmethod
+    def clear_expected_entities(cls) -> None:
+        """Method to clear the expected entities"""
+        cls.expected_entities = []
         
     ############################################################
     # METHODS RELATING TO CONVERSATION
@@ -761,6 +776,16 @@ class State(metaclass=StateMeta):
         except (UnrecognisedRoomError, RoomConnectionError):
             raise
 
+    @classmethod
+    def get_possible_npc_targets(cls, entity: str = "player") -> list:
+        """Method to get all npcs in a room that specified entity is in"""
+        targets = []
+        for npc in cls.get_dm().npcs.get_all_npcs():
+            if cls.get_current_room_id(npc.id) == cls.get_current_room_id(entity):
+                if cls.is_alive(npc.id):
+                    targets.append(npc)
+        return targets
+    
     @classmethod
     def get_possible_door_targets(cls, entity: str = "player") -> list:
         """Method to get all doors in a room that specified entity is in"""

@@ -342,6 +342,7 @@ class DM:
 
         if not destination:
             moved = False
+            State.set_expected_entities(["location"])
             connected_rooms = State.get_current_room().get_connected_rooms()
             possible_destinations = [
                 State.get_room_name(room) for room in connected_rooms
@@ -363,13 +364,24 @@ class DM:
             (target_type, target) = self._get_target(nlu_entities)
         else:
             target_type = None
-            
+        
+        # check if there's only one possible target
+        if not target and target_type == "door":
+            targets = State.get_possible_door_targets()
+            if len(targets) == 1:
+                target = targets[0]
+        elif not target:
+            targets = State.get_possible_monster_targets()
+            if len(targets) == 1:
+                target = targets[0].unique_id
+                
         if not target:
             attacked = False
             if target_type == "door":
                 if not State.get_possible_door_targets():
                     OutputBuilder.append(NLG.no_door_targets("attack"))
                 else:
+                    State.set_expected_entities(["door", "location"])
                     OutputBuilder.append(
                         NLG.no_door_target("attack", State.get_formatted_possible_door_targets())
                     )
@@ -377,6 +389,7 @@ class DM:
                 if not State.get_possible_monster_targets():
                     OutputBuilder.append(NLG.no_monster_targets())
                 else:
+                    State.set_expected_entities(["monster", "npc"])
                     OutputBuilder.append(
                         NLG.no_target("attack", State.get_formatted_possible_monster_targets())
                     )
@@ -468,6 +481,12 @@ class DM:
         elif not target and not nlu_entities:
             target = self._get_npc()
 
+        # check if there's only one possible target
+        if not target:
+            targets = State.get_possible_npc_targets()
+            if len(targets) == 1:
+                target = targets[0].id
+                
         if not target:
             conversation = False
             OutputBuilder.append(NLG.no_target("talk to"))
@@ -595,14 +614,23 @@ class DM:
         else:
             target_type = None
         
-        if target_type != "door":
+        if target_type != "door" and target:
             forced = False
             OutputBuilder.append(NLG.not_door_target(target))
-        elif not target:
+            return forced
+        
+        # check if there's only one possible target
+        if not target:
+            targets = State.get_possible_door_targets()
+            if len(targets) == 1:
+                target = targets[0]
+            
+        if not target:
             forced = False
             if not State.get_possible_door_targets():
                 OutputBuilder.append(NLG.no_door_targets("force"))
             else:
+                State.set_expected_entities(["door", "location"])
                 OutputBuilder.append(
                     NLG.no_door_target("force", State.get_formatted_possible_door_targets())
                 )
