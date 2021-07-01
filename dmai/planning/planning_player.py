@@ -364,7 +364,8 @@ class PlanningPlayer(PlanningAgent):
             for room in State.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
                     if not puzzle.type == "door":
-                        objects.append([puzzle.id, "puzzle"])
+                        if not State.get_player().character.items.has_item(puzzle.id)[0]:
+                            objects.append([puzzle.id, "puzzle"])
 
             # Construct the string
             writer.write(self._construct_objects(objects))

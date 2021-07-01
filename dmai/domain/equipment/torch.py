@@ -1,5 +1,6 @@
 from dmai.domain.equipment.equipment import Equipment
 from dmai.game.state import State
+from dmai.utils.output_builder import OutputBuilder
 
 from dmai.utils.logger import get_logger
 
@@ -18,6 +19,8 @@ class Torch(Equipment):
         if not State.torch_lit:
             State.light_torch()
             return True
+        else:
+            OutputBuilder.append("You already have a lit torch.")
         return False
 
     def stop(self) -> bool:

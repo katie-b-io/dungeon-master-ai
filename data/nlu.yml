@@ -132,6 +132,7 @@ nlu:
     - maneuver to the [inn's cellar](location)
     - go to [inn cellar](location)
     - go to the [cellar inn](location)
+    - go to [the cellar](location)
     - go [downstairs](location)
     - go [behind the bar](location)
     - go to [the bar](location)
@@ -768,6 +769,7 @@ nlu:
 - synonym: inns_cellar
   examples: |
     - cellar
+    - the cellar
     - inn's cellar
     - inns cellar
     - inn cellar

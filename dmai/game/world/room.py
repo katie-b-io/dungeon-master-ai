@@ -166,8 +166,6 @@ class Room:
                         t=Text.properly_format_list(treasure),
                         i="it" if len(treasure) == 1 else "them"
                     )
-                else:
-                    desc_str += " You searched the room thoroughly but you don't find anything of value."
 
             # TODO add description of puzzles
 

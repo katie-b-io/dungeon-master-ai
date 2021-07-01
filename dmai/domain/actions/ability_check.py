@@ -87,11 +87,8 @@ class AbilityCheck(Action):
                 )
                 State.set_expected_intents(["roll"])
                 current = State.get_current_room()
-                success_func = print
-                success_params = [""]
-                if current.puzzles.get_puzzle(self.puzzle).type == "door":
-                    success_func = State.unlock_door
-                    success_params = [current.id, self.target]
+                success_func = current.puzzles.get_puzzle(self.puzzle).get_solution_success_func()
+                success_params = []
                 State.set_ability_check({
                     "target": self.target,
                     "puzzle": self.puzzle,

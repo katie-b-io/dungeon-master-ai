@@ -152,6 +152,14 @@ class NLU(metaclass=NLUMeta):
                 intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
                 OutputBuilder.append("I was expecting you to {i}".format(i=intent_str))
                 return (None, {"nlu_entities": entities})
+        
+        # check if there's expected entities
+        if State.expected_entities:
+            hits = [entity for entity in entities if entity["entity"] in State.expected_entities]
+            if hits:
+                # if we have a hit for expected entities, use the stored intent
+                intent = "stored_intent"
+                State.clear_expected_entities()
 
         # check if in combat before allowing any player utterance
         if State.in_combat:

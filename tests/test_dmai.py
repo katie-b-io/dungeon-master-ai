@@ -352,7 +352,7 @@ class TestDM(unittest.TestCase):
     def test_converse_nlu_entities_bad(self) -> None:
         State.set_current_room("player", "stout_meal_inn")
         nlu_entities1 = [{"entity": "npc", "confidence": 1, "value": "anvil"}]
-        nlu_entities2 = [{"entity": "unknown", "confidence": 1, "value": "yoda"}]
+        nlu_entities2 = [{"entity": "npc", "confidence": 1, "value": "yoda"}]
         self.assertEqual(False, self.dm.converse(nlu_entities=nlu_entities1))
         self.assertEqual(False, self.dm.converse(nlu_entities=nlu_entities2))
 

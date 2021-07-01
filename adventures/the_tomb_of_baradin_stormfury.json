@@ -199,12 +199,14 @@
                             "description": "attack door",
                             "intent": "attack",
                             "hp": 27,
-                            "ac": 19
+                            "ac": 19,
+                            "say": "You break the door into a pile of splinters!"
                         },
                         "str": {
                             "description": "force door",
                             "ability": "str",
-                            "dc": 15
+                            "dc": 15,
+                            "say": "The door gives way after a well placed shoulder barge."
                         }
                     },
                     "explore": {
@@ -212,7 +214,7 @@
                             "description": "use switch",
                             "skill": "perception",
                             "dc": 10,
-                            "say": "You take a closer look around the room and you notice a switch left of the portcullis. You press the switch and with a rusty screech the portcullis rises.",
+                            "say": "You take a closer look around the room and you notice a switch to the left of the portcullis. You press the switch and with a rusty screech the portcullis rises.",
                             "result": "open_door"
                         }
                     },
@@ -222,10 +224,10 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. Two exits from this room blocked by lowered portcullises, one which leads to the Burial Chamber and one which leads to the Western Corridor. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
+                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. One exit leads to the Burial Chamber and another exit leads to the Western Chamber, but it's blocked by a lowered portcullis. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
                 "description": "It's a storage room.",
                 "no_visibility_description": "The room is too dark to see anything.",
-                "fight_ends": "You slew the foul zombie! Although it looks like further progress is temporarily blocked by these portcullises. If you're strong enough you could probably force them open or you could look around the room for another solution."
+                "fight_ends": "You slew the foul zombie! Although it looks like further progress is temporarily blocked by this portcullis. If you're strong enough you could probably force it open or you could look around the room for another solution."
             }
         },
         "burial_chamber": {
@@ -400,7 +402,8 @@
                         },
                         "unlock": {
                             "description": "unlock door",
-                            "item": "silver_key"
+                            "item": "silver_key",
+                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the wooden door. With a small push the door swings open."
                         },
                         "lockpick": {
                             "description": "lockpick door",
