@@ -145,13 +145,12 @@ class Puzzle(ABC):
         """Method to print any new text if conditions met"""
         for explore in self.explore_map:
             if self.explore_map[explore]["can_trigger"]:
-                if self.explore[explore]["skill"]:
-                    print(explore)
+                if "skill" in self.explore[explore]:
                     State.set_expected_intents(["roll"])
                     skill_check = SkillCheck(self.explore[explore]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id)
                     skill_check.execute()
                 else:
-                    print("just triggers")
+                    self.success_func(explore)
                 self.explore_map[explore]["can_trigger"] = False
                 break
     
@@ -166,7 +165,8 @@ class Puzzle(ABC):
                 room2 = self.id.split("---")[1]
                 State.unlock_door(room1, room2)
             if result == "add_to_inventory":
-                State.get_player().character.items.add_item(self.id)
+                item_data = self.__dict__
+                State.get_player().character.items.add_item(self.id, item_data=item_data)
         
     def get_explore_success_func(self) -> object:
         """Method to return the function on successful roll following explore intent"""

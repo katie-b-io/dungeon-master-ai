@@ -1,6 +1,7 @@
 from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedItem
 from dmai.domain.items.potion_of_healing import PotionOfHealing
+from dmai.domain.items.silver_key import SilverKey
 from dmai.domain.items.item import Item
 from dmai.utils.text import Text
 
@@ -25,7 +26,10 @@ class ItemCollection:
     def _item_factory(self, item: str) -> Item:
         """Construct an item of specified type"""
         if item in self.item_data.keys():
-            item_map = {"potion_of_healing": PotionOfHealing}
+            item_map = {
+                "potion_of_healing": PotionOfHealing,
+                "silver_key": SilverKey
+            }
             if item in item_map:
                 item_obj = item_map[item]
             else:
@@ -40,11 +44,10 @@ class ItemCollection:
         """Method to return whether specified item exists.
         Returns a boolean."""
         if item_id not in self.item_data:
-            msg = "Item {e} does not exist!".format(e=item_id)
-            raise UnrecognisedItem(msg)
+            return False
         return True
 
-    def add_item(self, item_id: str, quantity: int = 1) -> bool:
+    def add_item(self, item_id: str, quantity: int = 1, item_data: dict = None) -> bool:
         """Method to add specified item to inventory."""
         if self._check_item(item_id):
             if item_id in self.items:
@@ -56,6 +59,14 @@ class ItemCollection:
                     "quantity": quantity
                 }
             return True
+        elif item_data:
+            # new item to add to the inventory
+            self.item_data[item_id] = item_data
+            self.items[item_id] = {
+                "item": self._item_factory(item_id),
+                "quantity": quantity
+            }
+            
         return False
         
     def remove_item(self, item_id: str, quantity: int = 1) -> None:

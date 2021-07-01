@@ -274,12 +274,12 @@
                 "silver_key": {
                     "id": "silver_key",
                     "type": "item",
-                    "name": "Silver key",
+                    "name": "Silver Key",
                     "solutions": {},
                     "explore": {
                         "pick_up": {
                             "description": "pick up key",
-                            "say": "You take a closer look around the room and you notice the glint of a silver key in the open vault.",
+                            "say": "You take a closer look around the room and you notice the glint of a silver key in the open vault. You add the key to your inventory.",
                             "result": "add_to_inventory"
                         }
                     },
