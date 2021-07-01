@@ -147,7 +147,7 @@ class Puzzle(ABC):
             for explore in self.explore_map:
                 if self.explore_map[explore]["can_trigger"]:
                     if "skill" in self.explore[explore]:
-                        State.set_expected_intents(["roll"])
+                        State.set_expected_intent(["roll"])
                         skill_check = SkillCheck(self.explore[explore]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id)
                         skill_check.execute()
                     else:

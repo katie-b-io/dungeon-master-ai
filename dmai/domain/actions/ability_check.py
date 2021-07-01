@@ -85,7 +85,7 @@ class AbilityCheck(Action):
                 OutputBuilder.append(
                     NLG.ability_check(Abilities.get_name(self.ability), dm_request=self.dm_request)
                 )
-                State.set_expected_intents(["roll"])
+                State.set_expected_intent(["roll"])
                 current = State.get_current_room()
                 success_func = current.puzzles.get_puzzle(self.puzzle).get_solution_success_func()
                 success_params = []

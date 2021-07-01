@@ -675,7 +675,7 @@ class DM:
         if nlu_entities:
             drink = self._get_drink(nlu_entities)
             if drink != "ale":
-                OutputBuilder.append("We only serve ale here!")
+                OutputBuilder.append("They only serve ale here!")
         if State.get_current_room().ale:
             if State.ales > 2:
                 # this is a gameover state
