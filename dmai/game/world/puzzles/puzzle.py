@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dmai.utils.output_builder import OutputBuilder
 
 from dmai.domain.actions.skill_check import SkillCheck
 from dmai.game.state import State
@@ -122,7 +123,13 @@ class Puzzle(ABC):
     
     def get_difficulty_class(self, solution: str) -> int:
         """Method to return the difficulty class of specified solution"""
-        return self.solutions[solution]["dc"]
+        if solution in self.solutions:
+            return self.solutions[solution]["dc"]
+        elif solution in self.explore:
+            return self.explore[solution]["dc"]
+        else:
+            logger.debug("Solution {s} not in puzzle {p}".format(s=solution, p=self.id))
+            return
     
     def get_armor_class(self) -> int:
         """Method to return the armor class of puzzle"""
@@ -147,3 +154,24 @@ class Puzzle(ABC):
                     print("just triggers")
                 self.explore_map[explore]["can_trigger"] = False
                 break
+    
+    def success_func(self, roll: str) -> None:
+        """Method to construct success function"""
+        if self.explore[roll]["say"]:
+            OutputBuilder.append(self.explore[roll]["say"])
+        if self.explore[roll]["result"]:
+            result = self.explore[roll]["result"]
+            if result == "open_door":
+                room1 = self.id.split("---")[0]
+                room2 = self.id.split("---")[1]
+                State.unlock_door(room1, room2)
+            if result == "add_to_inventory":
+                State.get_player().character.items.add_item(self.id)
+        
+    def get_explore_success_func(self) -> object:
+        """Method to return the function on successful roll following explore intent"""
+        return self.success_func
+    
+    def get_explore_success_params(self, roll: str) -> list:
+        """Method to return the function params on successful roll following explore intent"""
+        return [roll]

@@ -575,6 +575,7 @@ nlu:
 
 - intent: ability_check
   examples: |
+    - can I do an ability check?
     - can I do a [charisma](ability) check?
     - [charisma](ability) check?
     - can I use my [charisma](ability)?
@@ -596,6 +597,7 @@ nlu:
 
 - intent: skill_check
   examples: |
+    - can I do a skill check?
     - is that a [acrobatics](skill) check?
     - can I do a [acrobatics](skill) check?
     - [acrobatics](skill) check?

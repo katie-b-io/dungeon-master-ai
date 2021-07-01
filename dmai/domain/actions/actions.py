@@ -81,6 +81,8 @@ class Actions:
         # check if entity can move
         (can_move, reason) = self._can_move(entity, destination)
         if can_move:
+            State.explore()
+            State.clear_skill_check()
             State.set_current_room(entity, destination)
         else:
             try:
@@ -152,11 +154,15 @@ class Actions:
             entity = self.npcs.get_entity(entity)
 
         if stop:
+            State.explore()
+            State.clear_skill_check()
             can_use = entity.stop_using_equipment(equipment)
         elif equipment:
             # check if equipment can be used
             (can_use, reason) = self._can_use_equipment(entity, equipment)
             if can_use:
+                State.explore()
+                State.clear_skill_check()
                 return entity.use_equipment(equipment)
             else:
                 OutputBuilder.append(NLG.cannot_use(equipment, reason))
@@ -164,6 +170,8 @@ class Actions:
             # check if item can be used
             (can_use, reason) = self._can_use_item(entity, item)
             if can_use:
+                State.explore()
+                State.clear_skill_check()
                 return entity.use_item(item)
             else:
                 OutputBuilder.append(NLG.cannot_use(State.get_player().character.items.get_name(item), reason))
@@ -307,6 +315,8 @@ class Actions:
         # check if entity can investigate
         (can_investigate, reason) = self._can_investigate(target)
         if can_investigate:
+            State.explore()
+            State.clear_skill_check()
             # TODO add investigation descriptions to entities in adventure
             OutputBuilder.append("You investigate {t}...".format(t=target))
         else:
@@ -322,6 +332,8 @@ class Actions:
     def pick_up(self, item: str, entity: str = "player") -> bool:
         """Attempt to pick up specified item.
         Returns a bool to indicate whether the action was successful"""
+        State.explore()
+        State.clear_skill_check()
         pick_up = PickUp(item, entity)
         return pick_up.execute()
 
