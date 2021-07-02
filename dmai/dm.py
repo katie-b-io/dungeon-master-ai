@@ -232,7 +232,7 @@ class DM:
                 return ("location", State.get_current_room_id(target))
         return (None, None)
 
-    def _get_target(self, nlu_entities: dict) -> tuple:
+    def _get_target(self, nlu_entities: dict, monster_status: str = "alive") -> tuple:
         """Extract a target from NLU entities dictionary.
         Returns tuple with the type of target and a string with target ID"""
         monster = None
@@ -306,7 +306,7 @@ class DM:
             else:
                 # player hasn't appeared to specify particular individual, pick first alive one
                 monster_id = self.npcs.get_monster_id(
-                    monster, status="alive", location=State.get_current_room_id()
+                    monster, status=monster_status, location=State.get_current_room_id()
                 )
             return ("monster", monster_id)
 
@@ -576,7 +576,10 @@ class DM:
                     self._get_item,
                     self._get_drink
                 ]:
-                (target_type, target) = func(nlu_entities)
+                if func == self._get_target:
+                    (target_type, target) = func(nlu_entities, monster_status=None)
+                else:
+                    (target_type, target) = func(nlu_entities)
                 if target:
                     break
         # TODO if not target, get the nouns as targets

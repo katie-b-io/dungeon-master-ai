@@ -180,10 +180,7 @@
                     ],
                     "treasure": [
                         [
-                            "potion_of_healing",
-                            {
-                                "pouch": 7
-                            }
+                            "potion_of_healing"
                         ]
                     ],
                     "must_kill": [
@@ -375,11 +372,7 @@
                         [
                             "potion_of_healing"
                         ],
-                        [
-                            {
-                                "pouch": 39
-                            }
-                        ]
+                        []
                     ],
                     "must_kill": [
                         true,

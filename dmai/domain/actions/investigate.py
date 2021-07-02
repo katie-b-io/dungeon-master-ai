@@ -1,5 +1,6 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
+from dmai.utils.text import Text
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
@@ -18,7 +19,7 @@ class Investigate(Action):
 
     def execute(self, **kwargs) -> bool:
         return self._investigate()
-    
+
     def _can_investigate(self) -> tuple:
         """Check if player can investigate target.
         Returns tuple (bool, str) to indicate whether investigation is possible
@@ -32,12 +33,14 @@ class Investigate(Action):
                     and not State.get_player().character.has_darkvision()
                 ):
                     return (False, "no visibility")
-                
+
             # check if target is in same location as player
-            if not State.get_current_room_id(
-                    self.target) == State.get_current_room_id():
+            if (
+                not State.get_current_room_id(self.target)
+                == State.get_current_room_id()
+            ):
                 return (False, "different location")
-            
+
             return (True, "")
         except UnrecognisedEntityError:
             return (False, "unknown entity")
@@ -55,18 +58,26 @@ class Investigate(Action):
                 target = self.target
             OutputBuilder.append(NLG.cannot_investigate(target, reason))
             return can_investigate
-        
+
         # if the entity is scenery, return a failsafe utterance
         if self.target_type == "scenery":
             # check the description of the room to see if it's here first
             room_desc = State.get_current_room().text["enter"]["text"]
             room_desc = room_desc.lower().replace(".", "").replace(",", "").split(" ")
             if self.target in room_desc:
-                OutputBuilder.append("You examine the {t}, but it's nothing special.".format(t=self.target))
+                OutputBuilder.append(
+                    "You examine the {t}, but you see nothing special.".format(
+                        t=self.target
+                    )
+                )
             else:
-                OutputBuilder.append("I don't think I mentioned anything about {t}. Maybe you could {h}".format(t=self.target, h=State.get_player().agent.get_next_move()))
+                OutputBuilder.append(
+                    "I don't think I mentioned anything about {t}. Maybe you could {h}".format(
+                        t=self.target, h=State.get_player().agent.get_next_move()
+                    )
+                )
             return True
-        
+
         if self.target_type == "drink":
             if State.get_current_room().ale:
                 OutputBuilder.append("You see a wonderful selection of ales.")
@@ -74,11 +85,11 @@ class Investigate(Action):
             else:
                 OutputBuilder.append("Unfortunately, there are no ales here.")
                 return True
-            
+
         if self.target_type == "puzzle":
             OutputBuilder.append("Trigger the puzzle checks")
             return True
-            
+
         if self.target_type == "door":
             try:
                 target = State.get_room_name(self.target)
@@ -93,11 +104,33 @@ class Investigate(Action):
         if can_investigate:
             State.explore()
             State.clear_skill_check()
-            # TODO add investigation descriptions to entities in adventure
-            if self.target_type == "npc" or self.target_type == "monster":
-                OutputBuilder.append(State.get_entity(self.target).description)
+            if self.target_type == "npc":
+                description = State.get_entity(self.target).description
+                OutputBuilder.append(description)
+            elif self.target_type == "monster":
+                monster = State.get_entity(self.target)
+                if not State.is_alive(self.target):
+                    if monster.treasure:
+                        t = []
+                        for treasure in monster.treasure:
+                            State.get_player().character.items.add_item(treasure)
+                            t.append(
+                                State.get_player().character.items.get_name(treasure)
+                            )
+                        description = "{d} It's dead. You find {t} on them, which you add to your inventory.".format(
+                            d=monster.description, t=Text.properly_format_list(t)
+                        )
+                    else:
+                        description = "{d} It's dead.".format(d=monster.description)
+                else:
+                    description = "{d} It's alive.".format(d=monster.description)
+                OutputBuilder.append(description)
             else:
-                OutputBuilder.append("You investigate {t} but see nothing significant.".format(t=self.target))
+                OutputBuilder.append(
+                    "You investigate {t} but see nothing significant.".format(
+                        t=self.target
+                    )
+                )
         else:
             OutputBuilder.append(NLG.cannot_investigate(self.target, reason))
         return can_investigate

@@ -853,6 +853,8 @@ nlu:
     - pick up the [potion of healing](item)
     - gather [potion of healing](item)
     - take up [healing potion](item)
+    - take the [potion](item)
+    - take the [potion of healing](item)
     - grab [pouch](item)
     - grasp [coin pouch](item)
     - hold up [purse](item)
