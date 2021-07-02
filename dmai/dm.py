@@ -228,7 +228,7 @@ class DM:
                 return ("location", entity["value"])
             
             (target_type, target) = self._get_target(nlu_entities)
-            if target:
+            if target and (target_type == "npc" or target_type == "monster"):
                 return ("location", State.get_current_room_id(target))
         return (None, None)
 

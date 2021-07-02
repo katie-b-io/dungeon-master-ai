@@ -88,6 +88,7 @@ class Investigate(Action):
 
         if self.target_type == "puzzle":
             OutputBuilder.append("Trigger the puzzle checks")
+            State.get_current_room().puzzles.get_puzzle(self.puzzle).investigate_trigger()
             return True
 
         if self.target_type == "door":

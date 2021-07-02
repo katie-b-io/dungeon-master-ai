@@ -89,6 +89,7 @@ class SkillCheck(Action):
                 State.set_expected_intent(["roll"])
                 current = State.get_current_room()
                 if State.current_intent == "explore":
+                    # TODO differentiate between explore and investigate
                     success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
                     success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":
