@@ -225,11 +225,12 @@ class DM:
                 entity["entity"] == "location"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
-                return entity["value"]
+                return ("location", entity["value"])
             
             (target_type, target) = self._get_target(nlu_entities)
             if target:
-                return State.get_current_room_id(target)
+                return ("location", State.get_current_room_id(target))
+        return (None, None)
 
     def _get_target(self, nlu_entities: dict) -> tuple:
         """Extract a target from NLU entities dictionary.
@@ -239,6 +240,8 @@ class DM:
         npc = None
         door = False
         location = None
+        puzzle = None
+        scenery = None
         for entity in nlu_entities:
             if (
                 entity["entity"] == "monster"
@@ -265,10 +268,32 @@ class DM:
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
                 location = entity["value"]
+            if (
+                entity["entity"] == "puzzle"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                puzzle = entity["value"]
+            if (
+                entity["entity"] == "scenery"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                scenery = entity["value"]
         
         # return the door and location
         if door:
             return ("door", location)
+        
+        # return the puzzle
+        if puzzle:
+            return ("puzzle", puzzle)
+        
+        # return the scenery
+        if scenery:
+            return ("scenery", scenery)
+        
+        # return the location
+        if location:
+            return ("location", location)
 
         # monsters are indexed by a unique id, determine it if possible
         if monster:
@@ -293,7 +318,8 @@ class DM:
         Returns a string with NPC ID"""
         for npc in self.npcs.get_all_npc_ids():
             if State.get_current_room_id() == State.get_current_room_id(npc):
-                return npc
+                return ("npc", npc)
+        return (None, None)
 
     def _get_equipment(self, nlu_entities: dict) -> str:
         """Extract a equipment from NLU entities dictionary.
@@ -303,7 +329,8 @@ class DM:
                 entity["entity"] == "equipment"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
-                return entity["value"]
+                return ("equipment", entity["value"])
+        return (None, None)
 
     def _get_weapon(self, nlu_entities: dict) -> str:
         """Extract a weapon from NLU entities dictionary.
@@ -313,7 +340,8 @@ class DM:
                 entity["entity"] == "weapon"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
-                return entity["value"]
+                return ("weapon", entity["value"])
+        return (None, None)
 
     def _get_die(self, nlu_entities: dict) -> str:
         """Extract a die from NLU entities dictionary.
@@ -323,7 +351,8 @@ class DM:
                 entity["entity"] == "die"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
-                return entity["value"]
+                return ("die", entity["value"])
+        return (None, None)
     
     def _get_item(self, nlu_entities: dict) -> str:
         """Extract an item from NLU entities dictionary.
@@ -333,7 +362,8 @@ class DM:
                 entity["entity"] == "item"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
-                return entity["value"]
+                return ("item", entity["value"])
+        return (None, None)
             
     def _get_drink(self, nlu_entities: dict) -> str:
         """Extract a drink from NLU entities dictionary.
@@ -343,7 +373,8 @@ class DM:
                 entity["entity"] == "drink"
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
-                return entity["value"]
+                return ("drink", entity["value"])
+        return (None, None)
 
     def move(
         self, destination: str = None, entity: str = None, nlu_entities: dict = None
@@ -353,7 +384,7 @@ class DM:
         if not entity:
             entity = "player"
         if not destination and nlu_entities:
-            destination = self._get_destination(nlu_entities)
+            destination = self._get_destination(nlu_entities)[1]
 
         if not destination:
             moved = False
@@ -429,11 +460,10 @@ class DM:
         if not entity:
             entity = "player"
         if not equipment and nlu_entities:
-            equipment = self._get_equipment(nlu_entities)
+            equipment = self._get_equipment(nlu_entities)[1]
         
         if not equipment:
-            item = self._get_item(nlu_entities)
-
+            item = self._get_item(nlu_entities)[1]
         if not equipment and not item:
             used = False
             OutputBuilder.append(NLG.no_equipment(stop=stop))
@@ -460,7 +490,7 @@ class DM:
         if not entity:
             entity = "player"
         if not weapon and nlu_entities:
-            weapon = self._get_weapon(nlu_entities)
+            weapon = self._get_weapon(nlu_entities)[1]
 
         if not weapon:
             equipped = False
@@ -478,7 +508,7 @@ class DM:
         if not entity:
             entity = "player"
         if not weapon and nlu_entities:
-            weapon = self._get_weapon(nlu_entities)
+            weapon = self._get_weapon(nlu_entities)[1]
 
         if not weapon:
             logger.info("{e} is unequipping all!".format(e=entity))
@@ -494,7 +524,7 @@ class DM:
         if not target and nlu_entities:
             (target_type, target) = self._get_target(nlu_entities)
         elif not target and not nlu_entities:
-            target = self._get_npc()
+            target = self._get_npc()[1]
 
         # check if there's only one possible target
         if not target:
@@ -532,12 +562,22 @@ class DM:
             dmai.dmai_helpers.gameover()
         return True
 
-    def explore(self, target: str = None, nlu_entities: dict = None) -> bool:
+    def explore(self, target: str = None, target_type: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to explore/investigate.
         Returns whether the action was successful."""
         if not target and nlu_entities:
-            (target_type, target) = self._get_target(nlu_entities)
-        if not target:
+            for func in [
+                    self._get_target,
+                    self._get_equipment,
+                    self._get_weapon,
+                    self._get_item,
+                    self._get_drink
+                ]:
+                (target_type, target) = func(nlu_entities)
+                if target:
+                    break
+        # TODO if not target, get the nouns as targets
+        if not target or (target_type == "location" and State.get_current_room_id() == target):
             logger.info("player is exploring!")
             room = State.get_current_room()
             OutputBuilder.append(room.get_description())
@@ -546,7 +586,7 @@ class DM:
             explore = True
         else:
             logger.info("player is investigating {t}!".format(t=target))
-            explore = self.actions.investigate(target)
+            explore = self.actions.investigate(target, target_type=target_type)
         if explore:
             State.explore()
         return explore
@@ -557,7 +597,7 @@ class DM:
         """Attempt to roll die.
         Returns whether the action was successful."""
         if not die and nlu_entities:
-            die = self._get_die(nlu_entities)
+            die = self._get_die(nlu_entities)[1]
         elif not die:
             # TODO to something smarter here - default to the die that makes sense
             # or ask for clarification
@@ -591,7 +631,7 @@ class DM:
         if not entity:
             entity = "player"
         if not item and nlu_entities:
-            item = self._get_item(nlu_entities)
+            item = self._get_item(nlu_entities)[1]
 
         if not item:
             picked_up = False
@@ -673,7 +713,7 @@ class DM:
         Appends the text to output with the OutputBuilder.
         """
         if nlu_entities:
-            drink = self._get_drink(nlu_entities)
+            drink = self._get_drink(nlu_entities)[1]
             if drink != "ale":
                 OutputBuilder.append("They only serve ale here!")
         if State.get_current_room().ale:

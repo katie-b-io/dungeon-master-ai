@@ -36,7 +36,7 @@ class AttackDoor(Action):
                 if self.attacker == "player":
                     if (
                         not State.torch_lit
-                        or State.get_player().character.has_darkvision()
+                        and not State.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
                     

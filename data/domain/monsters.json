@@ -2,6 +2,7 @@
     "cat": {
         "id": "cat",
         "name": "Cat",
+        "description": "A tiny-sized neutral beast.",
         "type": "beast",
         "size": "tiny",
         "alignment": "unaligned",
@@ -71,6 +72,7 @@
     "giant_rat": {
         "id": "giant_rat",
         "name": "Giant Rat",
+        "description": "A small-sized neutral beast.",
         "type": "beast",
         "size": "small",
         "alignment": "unaligned",
@@ -200,6 +202,7 @@
     "goblin": {
         "id": "goblin",
         "name": "Goblin",
+        "description": "A small-sized neutral evil goblinoid monster.",
         "type": "goblinoid",
         "size": "small",
         "alignment": "neutral_evil",
@@ -300,6 +303,7 @@
     "skeleton": {
         "id": "skeleton",
         "name": "Skeleton",
+        "description": "A medium-sized lawful evil undead monster.",
         "type": "undead",
         "size": "medium",
         "alignment": "lawful_evil",
@@ -399,6 +403,7 @@
     "zombie": {
         "id": "zombie",
         "name": "Zombie",
+        "description": "A medium-sized neutral evil undead monster.",
         "type": "undead",
         "size": "medium",
         "alignment": "neutral_evil",

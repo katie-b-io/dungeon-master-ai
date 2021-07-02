@@ -19,6 +19,7 @@
                 "hill"
             ],
             "attitude": "friendly",
+            "description": "The wrinkly whitebearded dwarf proprietor of the Stout Meal Inn.",
             "attack_ends_game": true,
             "gives_quest": true,
             "status": "alive",
@@ -43,6 +44,7 @@
             "short_name": "Anvil-Jumper",
             "monster": "cat",
             "attitude": "indifferent",
+            "description": "A disgruntled tabby cat.",
             "attack_ends_game": false,
             "gives_quest": false,
             "status": "alive",

@@ -576,6 +576,8 @@ class NLG(metaclass=NLGMeta):
             return "You cannot investigate unknown target: {t}!".format(t=target)
         elif reason == "different location":
             return "You cannot investigate target {t}, you're not in the same location!".format(t=target)
+        elif reason == "no visibility":
+            return "You cannot investigate {t} because it's too dark to see anything!".format(t=target)
 
     ############################################################
     # Dealing with doors utterances

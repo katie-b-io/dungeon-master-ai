@@ -634,6 +634,8 @@ nlu:
 
 - intent: ale
   examples: |
+    - have a drink
+    - have an ale
     - I would like a cask of [ale](drink)
     - I'll need your largest bowl of [ale](drink)
     - cask of [ale](drink)
@@ -1181,6 +1183,7 @@ nlu:
     - alcohol
     - stout
     - booze
+    - ales
 
 - synonym: vault
   examples: |

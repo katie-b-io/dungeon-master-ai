@@ -93,26 +93,26 @@ class TestDM(unittest.TestCase):
 
     def test__get_destination_location(self) -> None:
         nlu_entities = [{"entity": "location", "confidence": 1, "value": "inns_cellar"}]
-        self.assertEqual("inns_cellar", self.dm._get_destination(nlu_entities))
+        self.assertEqual(("location", "inns_cellar"), self.dm._get_destination(nlu_entities))
 
     def test__get_destination_npc(self) -> None:
         nlu_entities = [{"entity": "npc", "confidence": 1, "value": "corvus"}]
-        self.assertEqual("stout_meal_inn", self.dm._get_destination(nlu_entities))
+        self.assertEqual(("location", "stout_meal_inn"), self.dm._get_destination(nlu_entities))
 
     def test__get_destination_npc_diff(self) -> None:
         State.set_current_room("player", "inns_cellar")
         nlu_entities = [{"entity": "npc", "confidence": 1, "value": "corvus"}]
-        self.assertEqual("stout_meal_inn", self.dm._get_destination(nlu_entities))
+        self.assertEqual(("location", "stout_meal_inn"), self.dm._get_destination(nlu_entities))
         
     def test__get_destination_monster(self) -> None:
         State.set_current_room("player", "inns_cellar")
         nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
-        self.assertEqual("inns_cellar", self.dm._get_destination(nlu_entities))
+        self.assertEqual(("location", "inns_cellar"), self.dm._get_destination(nlu_entities))
     
     def test__get_destination_monster_diff(self) -> None:
         State.set_current_room("player", "stout_meal_inn")
         nlu_entities = [{"entity": "monster", "confidence": 1, "value": "giant_rat"}]
-        self.assertEqual(None, self.dm._get_destination(nlu_entities))
+        self.assertEqual((None, None), self.dm._get_destination(nlu_entities))
         
     def test__get_target_npc(self) -> None:
         nlu_entities = [{"entity": "npc", "confidence": 1, "value": "corvus"}]
@@ -139,20 +139,19 @@ class TestDM(unittest.TestCase):
         self.assertEqual(("door", "southern_corridor"), self.dm._get_target(nlu_entities))
         
     def test__get_npc(self) -> None:
-        self.assertEqual("corvus", self.dm._get_npc())
-        nlu_entities = [{"entity": "equipment", "confidence": 1, "value": "torch"}]
+        self.assertEqual(("npc", "corvus"), self.dm._get_npc())
 
     def test__get_weapon(self) -> None:
         nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "greataxe"}]
-        self.assertEqual("greataxe", self.dm._get_weapon(nlu_entities))
+        self.assertEqual(("weapon", "greataxe"), self.dm._get_weapon(nlu_entities))
 
     def test__get_die(self) -> None:
         nlu_entities = [{"entity": "die", "confidence": 1, "value": "d12"}]
-        self.assertEqual("d12", self.dm._get_die(nlu_entities))
+        self.assertEqual(("die", "d12"), self.dm._get_die(nlu_entities))
         
     def test__get_item(self) -> None:
         nlu_entities = [{"entity": "item", "confidence": 1, "value": "wand_of_magic_missiles"}]
-        self.assertEqual("wand_of_magic_missiles", self.dm._get_item(nlu_entities))
+        self.assertEqual(("item", "wand_of_magic_missiles"), self.dm._get_item(nlu_entities))
         
     def test_move_destination_good(self) -> None:
         State.quest()
@@ -371,12 +370,12 @@ class TestDM(unittest.TestCase):
 
     def test_explore_target_good(self) -> None:
         State.set_current_room("player", "stout_meal_inn")
-        self.assertEqual(True, self.dm.explore(target="corvus"))
+        self.assertEqual(True, self.dm.explore(target="corvus", target_type="npc"))
 
     def test_explore_target_bad(self) -> None:
         State.set_current_room("player", "stout_meal_inn")
-        self.assertEqual(False, self.dm.explore(target="anvil"))
-        self.assertEqual(False, self.dm.explore(target="yoda"))
+        self.assertEqual(False, self.dm.explore(target="anvil", target_type="npc"))
+        self.assertEqual(False, self.dm.explore(target="yoda", target_type="npc"))
     
     def test_explore_nlu_entities_good(self) -> None:
         State.set_current_room("player", "stout_meal_inn")
