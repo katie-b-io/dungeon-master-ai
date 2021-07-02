@@ -1,5 +1,5 @@
 from dmai.utils.output_builder import OutputBuilder
-from dmai.utils.exceptions import UnrecognisedEntityError
+from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
@@ -24,19 +24,20 @@ class Investigate(Action):
         Returns tuple (bool, str) to indicate whether investigation is possible
         and reason why not if not."""
         try:
-            # check if target is in same location as player
-            current = State.get_current_room()
-            if not State.get_current_room_id(
-                    self.target) == State.get_current_room_id():
-                return (False, "different location")
-            
             # check for visibility
+            current = State.get_current_room()
             if not current.visibility:
                 if (
                     not State.torch_lit
                     and not State.get_player().character.has_darkvision()
                 ):
                     return (False, "no visibility")
+                
+            # check if target is in same location as player
+            if not State.get_current_room_id(
+                    self.target) == State.get_current_room_id():
+                return (False, "different location")
+            
             return (True, "")
         except UnrecognisedEntityError:
             return (False, "unknown entity")
@@ -44,9 +45,7 @@ class Investigate(Action):
     def _investigate(self) -> bool:
         """Attempt to investigate current location.
         Returns a bool to indicate whether the action was successful"""
-        print("INVESTIGATING: " + self.target)
-        print("TARGET TYPE: " + self.target_type)
-        
+
         # check if entity can investigate target
         (can_investigate, reason) = self._can_investigate()
         if reason == "no visibility":
@@ -72,12 +71,24 @@ class Investigate(Action):
             if State.get_current_room().ale:
                 OutputBuilder.append("You see a wonderful selection of ales.")
                 return True
+            else:
+                OutputBuilder.append("Unfortunately, there are no ales here.")
+                return True
             
         if self.target_type == "puzzle":
             OutputBuilder.append("Trigger the puzzle checks")
+            return True
             
         if self.target_type == "door":
-            OutputBuilder.append("This door goes to {t}".format(t=self.target))
+            try:
+                target = State.get_room_name(self.target)
+            except UnrecognisedRoomError:
+                target = self.target
+            if target == "door":
+                OutputBuilder.append("It's just a door.")
+            else:
+                OutputBuilder.append("This door goes to the {t}.".format(t=target))
+            return True
 
         if can_investigate:
             State.explore()

@@ -129,7 +129,7 @@ class TestDM(unittest.TestCase):
     
     def test__get_target_door(self) -> None:
         nlu_entities = [{"entity": "door", "confidence": 1, "value": "door"}]
-        self.assertEqual(("door", None), self.dm._get_target(nlu_entities))
+        self.assertEqual(("door", "door"), self.dm._get_target(nlu_entities))
     
     def test__get_target_specific_door(self) -> None:
         nlu_entities = [

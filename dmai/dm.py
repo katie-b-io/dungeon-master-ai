@@ -281,7 +281,10 @@ class DM:
         
         # return the door and location
         if door:
-            return ("door", location)
+            if location:
+                return ("door", location)
+            else:
+                return ("door", "door")
         
         # return the puzzle
         if puzzle:
@@ -577,6 +580,16 @@ class DM:
                 if target:
                     break
         # TODO if not target, get the nouns as targets
+        
+        # check if there's only one possible door target - if so, use it
+        if target_type == "door" and target == "door":
+            if len(State.get_current_room().get_connected_rooms()) == 1:
+                target = State.get_current_room().get_connected_rooms()[0]
+            else:
+                targets = State.get_possible_door_targets()
+                if len(targets) == 1:
+                    target = targets[0]
+                
         if not target or (target_type == "location" and State.get_current_room_id() == target):
             logger.info("player is exploring!")
             room = State.get_current_room()
