@@ -216,6 +216,7 @@ nlu:
     - look around
     - look
     - explore the room
+    - is there anything here?
     - examine the [storage room](location)
     - investigate [antechamber](location)
     - look around the [cellar](location)
@@ -227,6 +228,95 @@ nlu:
     - examine [corvus](npc)
     - look at [corvus stouthammer](npc)
     - examine [the dwarf](npc)
+    - examine [anvil](npc)
+    - look at the [giant rat](monster)
+    - look at [rat](monster)
+    - examine the [zombie](monster)
+    - get a closer look at the [skeleton](monster)
+    - investigate [goblin](monster)
+    - look at dead [goblin](monster)
+    - investigate [humanoid](monster)
+    - look in [barrel](scenery)
+    - examine [walls](scenery)
+    - examine [wall](scenery)
+    - examine the [ceiling](scenery)
+    - look at the [floor](scenery)
+    - investigate the [stairs](scenery)
+    - admire the [pillar](scenery)
+    - look at the [pillars](scenery)
+    - examine [portcullis](door)
+    - look at the [door](door)
+    - look at the [switch](scenery)
+    - examine the [pile of splinters](scenery)
+    - investigate [stone slabs](scenery)
+    - admire [slabs](scenery)
+    - inspect [altar](puzzle)
+    - admire [altar](puzzle)
+    - look at the [altar](puzzle)
+    - investigate the [ceremonial altar](puzzle)
+    - examine [altar](puzzle)
+    - investigate the [vault](puzzle)
+    - look at the [vaults](puzzle)
+    - examine the [vault](puzzle)
+    - look inside [vault](puzzle)
+    - examine [vaults](puzzle)
+    - examine the [skull](scenery)
+    - admire the [large grinning skull](scenery)
+    - investigate the [grinning skull](scenery)
+    - look at the [large skull](scenery)
+    - look at the [sconces](scenery)
+    - examine [sconce](scenery)
+    - look at [table](scenery)
+    - investigate [bar](scenery)
+    - admire [bench](scenery)
+    - look in the [barrel](scenery)
+    - admire the [mural](scenery)
+    - look at the [painted mural](scenery)
+    - examine the [painting](scenery)
+    - investigate the [picture](scenery)
+    - examine the [candles](scenery)
+    - look at the [candle](scenery)
+    - investigate the [face](puzzle)
+    - look at the [magic stone face](puzzle)
+    - examine [stone face](puzzle)
+    - admire [large stone face](puzzle)
+    - examine [face](puzzle)
+    - investigate [stone face](puzzle)
+    - look at [magic stone face](puzzle)
+    - admire [dwarven face](puzzle)
+    - examine [dwarven stone face](puzzle)
+    - investigate [large stone face](puzzle)
+    - look at [large face](puzzle)
+    - examine the [sarcophagus](puzzle)
+    - look at the [warhammer](puzzle)
+    - investigate the [dwarven warrior](puzzle)
+
+- intent: roleplay
+  examples: |
+    - i laugh
+    - i grin
+    - i smile
+    - i dance
+    - i sing
+    - i juggle
+    - i jump on the [barrel](scenery)
+    - i stand on the [barrel](scenery)
+    - i get on the [barrel](scenery)
+    - i jump on the [bar](scenery)
+    - i stand on the [bar](scenery)
+    - i get on the [bar](scenery)
+    - i jump on the [table](scenery)
+    - i stand on the [table](scenery)
+    - i get on the [table](scenery)
+    - i jump on the [bench](scenery)
+    - i stand on the [bench](scenery)
+    - i get on the [bench](scenery)
+    - i grab some [herbs](scenery)
+    - i warm myself by the [hearth](scenery)
+    - i grab the [mural](scenary)
+    - talk to the [large stone face](puzzle)
+    - poke the [face](puzzle)
+    - poke the [face](puzzle) in the eye
 
 - intent: attack
   examples: |
@@ -283,7 +373,6 @@ nlu:
     - use the [quarter staff](weapon) on the [giant rat](monster)
     - attack with the [quaterstaff](weapon)
     - swing my [scimitar](weapon) at the [skeleton](monster)
-    - bash the [zombie](monster) with my [warhammer](weapon)
     - swing the [war hammer](weapon) at the [second](id) [giant rat](monster)
     - I attack the [door](door)
     - I hit the [door](door)
@@ -305,6 +394,11 @@ nlu:
     - I attack the [west](location) [door](door)
     - I strike the [southern](location) [door](door)
     - I hit the [western](location) [door](door)
+    - I destroy the [mural](scenery)
+    - I bash the [barrel](scenery)
+    - I attack the [skull](scenery)
+    - wreck the [painting](scenery)
+    - kick the [table](scenery) over
 
 - intent: ranged_attack
   examples: |
@@ -326,6 +420,7 @@ nlu:
     - I shoot my [light crossbow](weapon)
     - throw [torch](equipment) at [rats](monster)
     - I throw my [torch](equipment) at [giant rat](monster)
+    - I throw a [barrel](scenery)
 
 - intent: disengage
   examples: |
@@ -397,7 +492,6 @@ nlu:
     - I equip the [scimitar](weapon)
     - equip the [shortbow](weapon)
     - I equip my [shortsword](weapon)
-    - I equip [warhammer](weapon)
 
 - intent: unequip
   examples: |
@@ -410,7 +504,6 @@ nlu:
     - I unequip the [scimitar](weapon)
     - unequip the [shortbow](weapon)
     - I unequip my [shortsword](weapon)
-    - I unequip [warhammer](weapon)
 
 - intent: use
   examples: |
@@ -769,7 +862,6 @@ nlu:
     - gain [wand of missiles](item)
     - raise up [dwarven thrower](item)
     - get [thrower](item)
-    - take [warhammer](weapon)
 
 - synonym: stout_meal_inn
   examples: |
@@ -1051,11 +1143,6 @@ nlu:
     - quarter staff
     - quaterstaff
 
-- synonym: warhammer
-  examples: |
-    - warhammer
-    - war hammer
-
 - synonym: potion_of_healing
   examples: |
     - potion of healing
@@ -1077,11 +1164,6 @@ nlu:
     - magic wand
     - wand of missiles
 
-- synonym: dwarven_thrower
-  examples: |
-    - dwarven thrower
-    - thrower
-
 - synonym: door
   examples: |
     - door
@@ -1099,3 +1181,34 @@ nlu:
     - alcohol
     - stout
     - booze
+
+- synonym: vault
+  examples: |
+    - vault
+    - vaults
+    - ceremonial altar
+
+- synonym: mural
+  examples: |
+    - mural
+    - painting
+    - picture
+    - painted mural
+
+- synonym: southern_corridor---baradins_crypt
+  examples: |
+    - face
+    - stone face
+    - magic stone face
+    - dwarven face
+    - dwarven stone face
+    - large stone face
+    - large face
+
+- synonym: dwarven_thrower
+  examples: |
+    - dwarven thrower
+    - dwarven warrior
+    - warhammer
+    - war hammer
+    - sarcophagus
