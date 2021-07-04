@@ -7,7 +7,26 @@ from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.config import Config
+from dmai.utils.logger import get_logger
 
+logger = get_logger(__name__)
+
+
+def init() -> None:
+    logger.debug("Starting game")
+    Config.set_uuid()
+    Config.set_root(os.path.dirname(os.path.abspath(__file__)))
+
+    OutputBuilder.append(
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    )
+    OutputBuilder.append(
+        "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
+    )
+    game = start()
+    ui = UserInterface(game)
+    return ui
+    
 
 def start(char_class: str = None,
           char_name: str = None,
