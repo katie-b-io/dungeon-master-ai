@@ -107,10 +107,10 @@ class DM:
                 "desc": "get inventory status",
                 "func": self.inventory
             },
-            "force_door": {
-                "name": "force door",
-                "desc": "force door open",
-                "func": self.force_door
+            "force": {
+                "name": "force",
+                "desc": "force open",
+                "func": self.force
             },
             "ability_check": {
                 "name": "ability check",
@@ -627,7 +627,7 @@ class DM:
                     return self.actions.roll("door_attack", nlu_entities, die)
                 else:
                     return self.actions.roll("attack", nlu_entities, die)
-            elif State.stored_intent["intent"] == "force_door":
+            elif State.stored_intent["intent"] == "force":
                 if State.stored_ability_check:
                     return self.actions.roll("ability_check", nlu_entities, die)
 
@@ -674,8 +674,8 @@ class DM:
         OutputBuilder.append(item_collection.get_all_formatted())
         return True
 
-    def force_door(self, target: str = None, entity: str = None, nlu_entities: dict = {}) -> bool:
-        """Player wants to attempt to force open a door.
+    def force(self, target: str = None, entity: str = None, nlu_entities: dict = {}) -> bool:
+        """Player wants to attempt to force a target.
         Appends the text to output with the OutputBuilder.
         """
         if not entity:
@@ -685,16 +685,18 @@ class DM:
         else:
             target_type = None
         
-        if target_type != "door" and target:
+        if target and (target_type != "door" and target_type != "puzzle"):
             forced = False
             OutputBuilder.append(NLG.not_door_target(target))
             return forced
         
         # check if there's only one possible target
-        if not target:
+        if not target and target_type == "door":
             targets = State.get_possible_door_targets()
             if len(targets) == 1:
                 target = targets[0]
+                
+        # TODO add additional code for puzzle target
             
         if not target:
             forced = False

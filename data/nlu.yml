@@ -317,6 +317,10 @@ nlu:
     - talk to the [large stone face](puzzle)
     - poke the [face](puzzle)
     - poke the [face](puzzle) in the eye
+    - i save the [cat](npc)
+    - rescue [anvil](npc)
+    - i attempt to rescue [anvil-jumper](npc)
+    - i save [anvil](npc) from the [rats](monster)
 
 - intent: attack
   examples: |
@@ -660,7 +664,7 @@ nlu:
     - ask corvus for an [ale](drink)
     - order an [ale](drink)
 
-- intent: force_door
+- intent: force
   examples: |
     - I force open the [door](door)
     - I slam the [door](door)
@@ -689,6 +693,9 @@ nlu:
     - use force to break the [southern corridor](location) [door](door)
     - I force open the [south](location) [door](door)
     - I force open the [west](location) [door](door)
+    - I use strength to open the [door](door)
+    - force open the [vault lid](puzzle)
+    - force the [vault](puzzle) open
 
 - intent: ability_check
   examples: |
@@ -1191,6 +1198,11 @@ nlu:
   examples: |
     - vault
     - vaults
+    - vault lid
+
+- synonym: altar
+  examples: |
+    - altar
     - ceremonial altar
 
 - synonym: mural
