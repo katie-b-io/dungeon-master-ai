@@ -687,7 +687,7 @@ class DM:
         
         if target and (target_type != "door" and target_type != "puzzle"):
             forced = False
-            OutputBuilder.append(NLG.not_door_target(target))
+            OutputBuilder.append(NLG.not_force_target(target))
             return forced
         
         # check if there's only one possible target
@@ -695,6 +695,8 @@ class DM:
             targets = State.get_possible_door_targets()
             if len(targets) == 1:
                 target = targets[0]
+            elif len(State.get_current_room().get_connected_rooms()) == 1:
+                target = State.get_current_room().get_connected_rooms()[0]
         
         # TODO add additional code for puzzle target
             

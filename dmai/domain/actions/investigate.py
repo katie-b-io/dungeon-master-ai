@@ -1,3 +1,6 @@
+import inflect
+engine = inflect.engine()
+
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 from dmai.utils.text import Text
@@ -62,9 +65,9 @@ class Investigate(Action):
         # if the entity is scenery, return a failsafe utterance
         if self.target_type == "scenery":
             # check the description of the room to see if it's here first
-            room_desc = State.get_current_room().text["enter"]["text"]
-            room_desc = room_desc.lower().replace(".", "").replace(",", "").split(" ")
-            if self.target in room_desc:
+            room_desc = State.get_current_room().get_all_text_array()
+            plural_target = engine.plural(self.target)
+            if self.target in room_desc or plural_target in room_desc:
                 OutputBuilder.append(
                     "You examine the {t}, but you see nothing special.".format(
                         t=self.target
@@ -118,6 +121,7 @@ class Investigate(Action):
                         t = []
                         for treasure in monster.treasure:
                             State.get_player().character.items.add_item(treasure)
+                            monster.took_item(treasure)
                             t.append(
                                 State.get_player().character.items.get_name(treasure)
                             )

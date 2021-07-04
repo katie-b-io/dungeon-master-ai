@@ -38,7 +38,7 @@ class AbilityCheck(Action):
                 # if not current == State.get_current_room(self.target):
                 #     return (False, "different location")
                 return (False, "not required")
-            if self.target_type == "location" or self.target_type == "door":
+            if self.target_type == "location":
                 if not State.check_room_exists(self.target):
                     return (False, "unknown room")
                 elif not self.target in current.get_connected_rooms():
@@ -60,12 +60,8 @@ class AbilityCheck(Action):
 
             # now check if an ability check is required for this situation
             for puzzle in current.puzzles.get_all_puzzles():
-                if puzzle.id == "{c}---{t}".format(c=current.id, t=self.target):
-                    if puzzle.check_solution_ability(self.ability):
-                        self.puzzle = puzzle.id
-                        return (True, "")
-                else:
-                    # TODO support non-door puzzles
+                if puzzle.check_solution_ability(self.ability):
+                    self.puzzle = puzzle.id
                     return (True, "")
             
             # none of the above situations were triggered so by default don't allow ability check
@@ -122,7 +118,10 @@ class AbilityCheck(Action):
             target_name = self.target
             if State.get_entity_name(self.target):
                 target_name = State.get_entity_name(self.target)
-            elif reason != "unknown room":
-                target_name = State.get_room_name(self.target)
+            try:
+                if State.get_room_name(self.target):
+                    target_name = State.get_room_name(self.target)
+            except UnrecognisedRoomError:
+                target_name = self.target
             OutputBuilder.append(NLG.cannot_ability_check(Abilities.get_name(self.ability), target_name, reason))
             return can_check

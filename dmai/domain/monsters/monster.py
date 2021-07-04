@@ -151,6 +151,10 @@ class Monster(NPC, MonsterAgent):
         """Method to get all attack IDs of monster"""
         return self.attacks.get_all_attack_ids()
 
+    def took_item(self, item: str) -> None:
+        """Method to remove the item from the monster treasure"""
+        self.treasure.remove(item)
+        
     # =============================================
     # TRIGGERS
     def attack_of_opportunity(self) -> None:

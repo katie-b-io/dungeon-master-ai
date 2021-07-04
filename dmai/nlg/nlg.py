@@ -668,12 +668,12 @@ class NLG(metaclass=NLGMeta):
                 a=attacker, t=target) 
     
     @classmethod
-    def not_door_target(cls, target: str) -> str:
-        """Return the utterance for no abilty check targets"""
+    def not_force_target(cls, target: str) -> str:
+        """Return the utterance for not a force target"""
         utters = [
-            "{t} is not a door target and cannot be forced.".format(t=target),
-            "You cannot force a non-door target.".format(t=target),
-            "Yeh, I'm not allowing you to force {t}, that's for doors only.".format(t=target),
+            "{t} is not a target that can be forced.".format(t=target),
+            "You cannot force a this target.".format(t=target),
+            "Yeh, I'm not allowing you to force {t}.".format(t=target),
         ]
         return random.choice(utters)
     
