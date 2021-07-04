@@ -130,6 +130,12 @@ nlu:
     - I walk to the next room
     - cross to the [cellar](location)
     - maneuver to the [inn's cellar](location)
+    - go to [the inn](location)
+    - move to [the cellar](location)
+    - go to [the storage room](location)
+    - move to [the burial chamber](location)
+    - go to [the western corridor](location)
+    - move to [the southern corridor](location)
     - go to [inn cellar](location)
     - go to the [cellar inn](location)
     - go to [the cellar](location)
@@ -696,6 +702,7 @@ nlu:
     - I use strength to open the [door](door)
     - force open the [vault lid](puzzle)
     - force the [vault](puzzle) open
+    - force [lid](puzzle)
 
 - intent: ability_check
   examples: |
@@ -877,6 +884,7 @@ nlu:
 - synonym: stout_meal_inn
   examples: |
     - inn
+    - the inn
     - stout meal inn
     - upstairs
     - upstair
@@ -901,6 +909,7 @@ nlu:
 - synonym: storage_room
   examples: |
     - storage room
+    - the storage room
     - storage
     - store room
     - store
@@ -912,11 +921,13 @@ nlu:
 - synonym: burial_chamber
   examples: |
     - burial chamber
+    - the burial chamber
     - chamber
 
 - synonym: western_corridor
   examples: |
     - western corridor
+    - the western corridor
     - west corridor
     - western
     - west
@@ -924,6 +935,7 @@ nlu:
 - synonym: southern_corridor
   examples: |
     - southern corridor
+    - the southern corridor
     - south corridor
     - southern
     - south
@@ -1199,6 +1211,7 @@ nlu:
     - vault
     - vaults
     - vault lid
+    - lid
 
 - synonym: altar
   examples: |

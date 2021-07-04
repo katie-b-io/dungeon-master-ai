@@ -8,15 +8,16 @@ import dmai
 
 
 class AbilityCheck(Action):
-    def __init__(self, ability: str, entity: str, target: str, dm_request: bool = False) -> None:
+    def __init__(self, ability: str, entity: str, target: str, target_type: str, dm_request: bool = False, investigate: bool = False) -> None:
         """AbilityCheck class"""
         Action.__init__(self)
         self.ability = ability
         self.entity = entity
         self.target = target
+        self.target_type = target_type
         self.dm_request = dm_request
-        self.puzzle = None
-        self.solution = None
+        self.investigate = investigate
+        self.puzzle = target if target_type == "puzzle" else None
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -37,10 +38,11 @@ class AbilityCheck(Action):
                 # if not current == State.get_current_room(self.target):
                 #     return (False, "different location")
                 return (False, "not required")
-            elif not State.check_room_exists(self.target):
-                return (False, "unknown room")
-            elif not self.target in current.get_connected_rooms():
-                return (False, "different location")
+            if self.target_type == "location":
+                if not State.check_room_exists(self.target):
+                    return (False, "unknown room")
+                elif not self.target in current.get_connected_rooms():
+                    return (False, "different location")
 
             # can't ability check if can't see
             if not current.visibility:
@@ -52,17 +54,15 @@ class AbilityCheck(Action):
                         return (False, "no visibility")
                     
             # don't need to force open a door which is already open
-            if State.travel_allowed(State.get_current_room_id(), self.target):
-                return (False, "not required")
+            if self.target_type == "location" or self.target_type == "door":
+                if State.travel_allowed(State.get_current_room_id(), self.target):
+                    return (False, "not required")
 
             # now check if an ability check is required for this situation
             for puzzle in current.puzzles.get_all_puzzles():
-                # TODO support non-door puzzles
-                if puzzle.id == "{c}---{t}".format(c=current.id, t=self.target):
-                    if puzzle.check_solution_ability(self.ability):
-                        self.puzzle = puzzle.id
-                        self.solution = self.ability
-                        return (True, "")
+                if puzzle.check_solution_ability(self.ability):
+                    self.puzzle = puzzle.id
+                    return (True, "")
             
             # none of the above situations were triggered so by default don't allow ability check
             return (False, "not required")
@@ -74,7 +74,7 @@ class AbilityCheck(Action):
     def _ability_check(self) -> bool:
         """Attempt to perform ability check.
         Returns a bool to indicate whether the action was successful"""
-
+        
         # check if ability check can happen
         if self.dm_request:
             (can_check, reason) = (True, "")
@@ -87,12 +87,29 @@ class AbilityCheck(Action):
                 )
                 State.set_expected_intent(["roll"])
                 current = State.get_current_room()
-                success_func = current.puzzles.get_puzzle(self.puzzle).get_solution_success_func()
-                success_params = []
+                if State.current_intent == "explore":
+                    if self.investigate:
+                        success_func = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_func()
+                        success_params = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_params(self.ability)
+                    else:
+                        success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
+                        success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.ability)
+                elif current.puzzles.get_puzzle(self.puzzle).type == "door":
+                    self.target = self.puzzle.split("---")[1]
+                    success_func = State.unlock_door
+                    success_params = [current.id, self.target]
+                elif current.puzzles.get_puzzle(self.puzzle).type == "trap":
+                    print("IT'S A TRAP")
+                    success_func = current.puzzles.get_puzzle(self.puzzle).get_solution_success_func()
+                    success_params = current.puzzles.get_puzzle(self.puzzle).get_solution_success_params(self.ability)
+                else:
+                    # TODO better fallback
+                    success_func = print
+                    success_params=["Implement something!"]
                 State.set_ability_check({
                     "target": self.target,
                     "puzzle": self.puzzle,
-                    "solution": self.solution,
+                    "solution": self.ability,
                     "success_func": success_func,
                     "success_params": success_params
                 })
@@ -101,7 +118,10 @@ class AbilityCheck(Action):
             target_name = self.target
             if State.get_entity_name(self.target):
                 target_name = State.get_entity_name(self.target)
-            elif reason != "unknown room":
-                target_name = State.get_room_name(self.target)
+            try:
+                if State.get_room_name(self.target):
+                    target_name = State.get_room_name(self.target)
+            except UnrecognisedRoomError:
+                target_name = self.target
             OutputBuilder.append(NLG.cannot_ability_check(Abilities.get_name(self.ability), target_name, reason))
             return can_check

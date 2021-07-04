@@ -248,7 +248,7 @@
             "monsters": {
                 "skeleton": {
                     "status": [
-                        "alive"
+                        "hidden"
                     ],
                     "treasure": [
                         []
@@ -257,27 +257,29 @@
                         false
                     ],
                     "will_attack_player": [
-                        false
+                        true
                     ]
                 }
             },
             "puzzles": {
                 "vault": {
                     "id": "vault",
-                    "type": "vault",
+                    "type": "trap",
                     "name": "Vault",
                     "solutions": {
                         "str": {
                             "description": "force lid",
                             "ability": "str",
-                            "dc": 15
+                            "dc": 15,
+                            "say": "You manage to heave the vault lid off and as you do, a skeleton lunges and out and attacks you!",
+                            "result": "skeleton_1"
                         }
                     },
                     "explore": {},
                     "investigate": {
                         "pick_up": {
                             "id": "silver_key",
-                            "description": "pick up key",
+                            "description": "A simple silver key.",
                             "say": "You examine the closed vault next to this one and think it might be able to be forced open.",
                             "result": "explore",
                             "explore_id": "pick_up"
@@ -302,6 +304,7 @@
                     "id": "altar",
                     "type": "altar",
                     "name": "Altar",
+                    "description": "It's a ceremonial stone altar decorated with a hammer in front of an anvil.",
                     "solutions": {},
                     "explore": {},
                     "investigate": {
@@ -428,7 +431,7 @@
             "visibility": false,
             "text": {
                 "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron which leads to the southern corridor. There are two goblins here.",
-                "description": "It's a circular room with an intricate mural of the silver dragon, Rizoarithra.",
+                "description": "It's a circular room with intricate murals of the silver dragon, Rizoarithra.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."
             }

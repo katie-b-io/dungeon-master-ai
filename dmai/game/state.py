@@ -21,6 +21,7 @@ class GameMode(Enum):
 class Status(Enum):
     ALIVE = "alive"
     DEAD = "dead"
+    HIDDEN = "hidden"
 
 
 class Attitude(Enum):
@@ -328,6 +329,28 @@ class State(metaclass=StateMeta):
     def is_alive(cls, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is alive"""
         return cls.get_current_status(entity) == Status("alive")
+    
+    @classmethod
+    def is_dead(cls, entity: str = "player") -> bool:
+        """Method to determine whether the specified entity is dead"""
+        return cls.get_current_status(entity) == Status("dead")
+    
+    @classmethod
+    def is_hidden(cls, entity: str = "player") -> bool:
+        """Method to determine whether the specified entity is hidden"""
+        return cls.get_current_status(entity) == Status("hidden")
+
+    @classmethod
+    def all_dead(cls, entity: str = "player") -> bool:
+        """Method to determine whether all the monsters are dead"""
+        count = 0
+        dead = 0
+        for monster in cls.get_dm().npcs.get_all_monster_ids():
+            if cls.get_current_room_id() == cls.get_current_room_id(monster):
+                count += 1
+                if cls.is_dead(monster):
+                    dead += 1
+        return count == dead
     
     @classmethod
     def set_current_attitude(cls, entity: str = "player", attitude: str = "indifferent") -> str:
@@ -836,7 +859,7 @@ class State(metaclass=StateMeta):
             if cls.get_current_room_id(monster.unique_id) == location:
                 if cls.is_alive(monster.unique_id):
                     monster_status["alive"].append(monster.name)
-                else:
+                elif cls.is_dead(monster.unique_id):
                     monster_status["dead"].append(monster.name)
         status_count = {}
         for status in monster_status:
@@ -865,7 +888,7 @@ class State(metaclass=StateMeta):
             summary = "We've got {a} alive.".format(
                 a=Text.properly_format_list(formatted_monsters["alive"]))
         elif monster_status["dead"]:
-            summary = "We've got {d} that are dead.".format(
+            summary = "We've got {d} that's dead.".format(
                 d=Text.properly_format_list(formatted_monsters["dead"]))
         else:
             summary = ""

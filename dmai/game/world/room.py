@@ -64,7 +64,7 @@ class Room:
     def trigger_fight_ends(self) -> str:
         """Method when triggering fight ends text"""
         logger.debug("Triggering fight ending in room: {r}".format(r=self.id))
-        if not State.get_possible_monster_targets():
+        if State.all_dead():
             OutputBuilder.append(self.text["fight_ends"]["text"])
             self.text["fight_ends"]["can_trigger"] = False
 
@@ -112,6 +112,14 @@ class Room:
     def get_door_hp(self, door: str) -> int:
         """Method to return the armor class of specified door"""
         return self.puzzles.get_door_hp(self.id, door)
+    
+    def get_all_text_array(self) -> str:
+        """Method to return all text prepared in array"""
+        all_text = []
+        for text in self.text:
+            prepared_text = self.text[text]["text"].lower().replace(".", "").replace(",", "").split(" ")
+            all_text.extend(prepared_text)
+        return all_text
     
     def get_description(self) -> str:
         """Method to get the room description, including any treasure and puzzles"""
