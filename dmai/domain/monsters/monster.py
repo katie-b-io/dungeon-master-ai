@@ -58,7 +58,7 @@ class Monster(NPC, MonsterAgent):
 
         # Initialise additional variables
         self.unique_id = unique_id
-        self.treasure = None
+        self.treasure = []
         self.must_kill = False
         self.will_attack_player = False
 
@@ -135,7 +135,7 @@ class Monster(NPC, MonsterAgent):
         dice_spec = self.get_damage_dice(weapon)
         return DiceRoller.roll_dice(dice_spec, silent=True)
 
-    def set_treasure(self, treasure: str) -> None:
+    def set_treasure(self, treasure: list) -> None:
         """Method to set treasure."""
         self.treasure = treasure
 

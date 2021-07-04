@@ -19,6 +19,7 @@
                 "hill"
             ],
             "attitude": "friendly",
+            "description": "The wrinkly whitebearded dwarf proprietor of the Stout Meal Inn.",
             "attack_ends_game": true,
             "gives_quest": true,
             "status": "alive",
@@ -43,6 +44,7 @@
             "short_name": "Anvil-Jumper",
             "monster": "cat",
             "attitude": "indifferent",
+            "description": "A disgruntled tabby cat.",
             "attack_ends_game": false,
             "gives_quest": false,
             "status": "alive",
@@ -178,10 +180,7 @@
                     ],
                     "treasure": [
                         [
-                            "potion_of_healing",
-                            {
-                                "pouch": 7
-                            }
+                            "potion_of_healing"
                         ]
                     ],
                     "must_kill": [
@@ -275,7 +274,15 @@
                         }
                     },
                     "explore": {},
-                    "investigate": {}
+                    "investigate": {
+                        "pick_up": {
+                            "id": "silver_key",
+                            "description": "pick up key",
+                            "say": "You examine the closed vault next to this one and think it might be able to be forced open.",
+                            "result": "explore",
+                            "explore_id": "pick_up"
+                        }
+                    }
                 },
                 "silver_key": {
                     "id": "silver_key",
@@ -285,7 +292,7 @@
                     "explore": {
                         "pick_up": {
                             "description": "pick up key",
-                            "say": "You take a closer look around the room and you notice the glint of a silver key in the open vault. You add the key to your inventory.",
+                            "say": "You take a look in the open vault and you notice the glint of a silver key in the open vault. You add the key to your inventory.",
                             "result": "add_to_inventory"
                         }
                     },
@@ -373,11 +380,7 @@
                         [
                             "potion_of_healing"
                         ],
-                        [
-                            {
-                                "pouch": 39
-                            }
-                        ]
+                        []
                     ],
                     "must_kill": [
                         true,

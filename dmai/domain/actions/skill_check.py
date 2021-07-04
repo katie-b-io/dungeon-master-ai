@@ -47,7 +47,7 @@ class SkillCheck(Action):
                 if self.entity == "player":
                     if (
                         not State.torch_lit
-                        or State.get_player().character.has_darkvision()
+                        and not State.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
                     
@@ -89,6 +89,7 @@ class SkillCheck(Action):
                 State.set_expected_intent(["roll"])
                 current = State.get_current_room()
                 if State.current_intent == "explore":
+                    # TODO differentiate between explore and investigate
                     success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
                     success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":

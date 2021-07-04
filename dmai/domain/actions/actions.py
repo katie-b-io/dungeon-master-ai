@@ -1,3 +1,4 @@
+from dmai.domain.actions.investigate import Investigate
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon, UnrecognisedEntityError, UnrecognisedItem
@@ -294,34 +295,11 @@ class Actions:
             OutputBuilder.append(NLG.cannot_converse(target_name, reason))
             return can_converse
 
-    def _can_investigate(self, target: str) -> tuple:
-        """Check if player can investigate target.
-        Returns tuple (bool, str) to indicate whether investigation is possible
-        and reason why not if not."""
-        try:
-            # check if target is in same location as player
-            if not State.get_current_room_id(
-                    target) == State.get_current_room_id():
-                return (False, "different location")
-            else:
-                return (True, "")
-        except UnrecognisedEntityError:
-            return (False, "unknown entity")
-
-    def investigate(self, target: str) -> bool:
-        """Attempt to investigate current location.
+    def investigate(self, target: str, target_type: str = "") -> bool:
+        """Attempt to explore/investigate.
         Returns a bool to indicate whether the action was successful"""
-
-        # check if entity can investigate
-        (can_investigate, reason) = self._can_investigate(target)
-        if can_investigate:
-            State.explore()
-            State.clear_skill_check()
-            # TODO add investigation descriptions to entities in adventure
-            OutputBuilder.append("You investigate {t}...".format(t=target))
-        else:
-            OutputBuilder.append(NLG.cannot_investigate(target, reason))
-        return can_investigate
+        investigate = Investigate(target, target_type=target_type)
+        return investigate.execute()
 
     def roll(self, roll_type: str, nlu_entities: dict, die: str = "d20") -> bool:
         """Attempt to roll a specified type.

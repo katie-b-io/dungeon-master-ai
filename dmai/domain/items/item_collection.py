@@ -66,7 +66,7 @@ class ItemCollection:
                 "item": self._item_factory(item_id),
                 "quantity": quantity
             }
-            
+            return True
         return False
         
     def remove_item(self, item_id: str, quantity: int = 1) -> None:
