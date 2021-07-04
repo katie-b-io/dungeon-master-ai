@@ -8,7 +8,7 @@ import dmai
 
 
 class SkillCheck(Action):
-    def __init__(self, skill: str, entity: str, target: str, dm_request: bool = False, puzzle: str = None) -> None:
+    def __init__(self, skill: str, entity: str, target: str, dm_request: bool = False, puzzle: str = None, investigate: bool = False) -> None:
         """SkillCheck class"""
         Action.__init__(self)
         self.skill = skill
@@ -16,6 +16,7 @@ class SkillCheck(Action):
         self.target = target
         self.dm_request = dm_request
         self.puzzle = puzzle
+        self.investigate = investigate
         self.solution = None
 
     def __repr__(self) -> str:
@@ -89,9 +90,12 @@ class SkillCheck(Action):
                 State.set_expected_intent(["roll"])
                 current = State.get_current_room()
                 if State.current_intent == "explore":
-                    # TODO differentiate between explore and investigate
-                    success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
-                    success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
+                    if self.investigate:
+                        success_func = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_func()
+                        success_params = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_params(self.skill)
+                    else:
+                        success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
+                        success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":
                     self.target = self.puzzle.split("---")[1]
                     success_func = State.unlock_door

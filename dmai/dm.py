@@ -691,11 +691,11 @@ class DM:
             return forced
         
         # check if there's only one possible target
-        if not target and target_type == "door":
+        if target_type == "door" and (not target or target == "door"):
             targets = State.get_possible_door_targets()
             if len(targets) == 1:
                 target = targets[0]
-                
+        
         # TODO add additional code for puzzle target
             
         if not target:
@@ -709,7 +709,7 @@ class DM:
                 )
         else:
             logger.info("{e} is forcing door {t}!".format(e=entity, t=target))
-            forced = self.actions.ability_check("str", entity, target)
+            forced = self.actions.ability_check("str", entity, target, target_type)
         return forced
 
     def ability_check(self, **kwargs) -> bool:

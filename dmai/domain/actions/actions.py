@@ -315,10 +315,14 @@ class Actions:
         pick_up = PickUp(item, entity)
         return pick_up.execute()
 
-    def ability_check(self, ability: str, entity: str = "player", target: str = None) -> bool:
+    def ability_check(self,
+                      ability: str,
+                      entity: str = "player",
+                      target: str = None,
+                      target_type: str = "") -> bool:
         """Attempt to perform an ability check.
         Returns a bool to indicate whether the action was successful"""
-        check = AbilityCheck(ability, entity, target)
+        check = AbilityCheck(ability, entity, target, target_type)
         return check.execute()
     
     @staticmethod

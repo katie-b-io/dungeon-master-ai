@@ -165,25 +165,29 @@ class Puzzle(ABC):
     
     def investigate_trigger(self) -> None:
         """Method to print any new text if conditions met"""
+        
         if not self.solved:
             for investigate in self.investigate_map:
                 if self.investigate_map[investigate]["can_trigger"]:
                     if "skill" in self.investigate[investigate]:
                         State.set_expected_intent(["roll"])
-                        skill_check = SkillCheck(self.investigate[investigate]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id)
+                        skill_check = SkillCheck(self.investigate[investigate]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id, investigate=True)
                         skill_check.execute()
                     else:
                         self.investigate_success_func(investigate)
                     self.investigate_map[investigate]["can_trigger"] = False
                     break
 
-    def solution_success_func(self) -> None:
+    def solution_success_func(self, option: str = None) -> None:
         """Method to construct solution success function"""
         # TODO support non-door types
         if self.type == "door":
             room1 = self.id.split("---")[0]
             room2 = self.id.split("---")[1]
             State.unlock_door(room1, room2)
+        elif self.type == "trap":
+            result = self.solutions[option]["result"]
+            print(result)
         self.solve()
         
     def explore_success_func(self, option: str) -> None:
@@ -203,7 +207,8 @@ class Puzzle(ABC):
     
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
-        if self.investigate[option]["result"]:
+        
+        if "result" in self.investigate[option] and self.investigate[option]["result"]:
             result = self.investigate[option]["result"]
             if result == "open_door":
                 room1 = self.id.split("---")[0]
@@ -214,15 +219,21 @@ class Puzzle(ABC):
                 State.get_player().character.items.add_item(self.id, item_data=item_data)
             if result == "explore":
                 if self.investigate[option]["id"]:
+                    explore_id = self.investigate[option]["explore_id"]
                     puzzle = State.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
-                    puzzle.explore_success_func(self.investigate[option]["explore_id"])
+                    if puzzle.explore_map[explore_id]["can_trigger"]:
+                        puzzle.explore_success_func(explore_id)
         if self.investigate[option]["say"]:
             OutputBuilder.append(self.investigate[option]["say"])
         self.solve()
         
     def get_solution_success_func(self) -> object:
-        """Method to return the function on successful roll following explore intent"""
+        """Method to return the function on successful roll"""
         return self.solution_success_func
+    
+    def get_solution_success_params(self, roll: str) -> list:
+        """Method to return the function params on successful roll"""
+        return [roll]
     
     def get_explore_success_func(self) -> object:
         """Method to return the function on successful roll following explore intent"""
@@ -233,5 +244,9 @@ class Puzzle(ABC):
         return [roll]
     
     def get_investigate_success_func(self) -> object:
-        """Method to return the function on successful roll following investigation intent"""
+        """Method to return the function on successful roll following investigate intent"""
         return self.investigate_success_func
+    
+    def get_investigate_success_params(self, roll: str) -> list:
+        """Method to return the function params on successful roll following investigate intent"""
+        return [roll]

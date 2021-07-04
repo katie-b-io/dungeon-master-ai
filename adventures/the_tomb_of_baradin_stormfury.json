@@ -257,27 +257,29 @@
                         false
                     ],
                     "will_attack_player": [
-                        false
+                        true
                     ]
                 }
             },
             "puzzles": {
                 "vault": {
                     "id": "vault",
-                    "type": "vault",
+                    "type": "trap",
                     "name": "Vault",
                     "solutions": {
                         "str": {
                             "description": "force lid",
                             "ability": "str",
-                            "dc": 15
+                            "dc": 15,
+                            "say": "You manage to heave the vault lid off and as you do, a skeleton launches and out and attacks you!",
+                            "result": "skeleton"
                         }
                     },
                     "explore": {},
                     "investigate": {
                         "pick_up": {
                             "id": "silver_key",
-                            "description": "pick up key",
+                            "description": "A simple silver key.",
                             "say": "You examine the closed vault next to this one and think it might be able to be forced open.",
                             "result": "explore",
                             "explore_id": "pick_up"
@@ -302,6 +304,7 @@
                     "id": "altar",
                     "type": "altar",
                     "name": "Altar",
+                    "description": "It's a ceremonial stone altar decorated with a hammer in front of an anvil.",
                     "solutions": {},
                     "explore": {},
                     "investigate": {
