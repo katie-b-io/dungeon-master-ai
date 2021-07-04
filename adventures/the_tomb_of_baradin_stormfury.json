@@ -279,7 +279,8 @@
                             "id": "silver_key",
                             "description": "pick up key",
                             "say": "You examine the closed vault next to this one and think it might be able to be forced open.",
-                            "result": "explore"
+                            "result": "explore",
+                            "explore_id": "pick_up"
                         }
                     }
                 },

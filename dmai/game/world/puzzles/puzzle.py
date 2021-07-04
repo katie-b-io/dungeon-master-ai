@@ -14,6 +14,7 @@ class Puzzle(ABC):
         self.solved = False
         self.triggered = False
         self.explore_map = {}
+        self.investigate_map = {}
         try:
             for key in puzzle_data:
                 self.__setattr__(key, puzzle_data[key])
@@ -185,12 +186,12 @@ class Puzzle(ABC):
             State.unlock_door(room1, room2)
         self.solve()
         
-    def explore_success_func(self, roll: str) -> None:
+    def explore_success_func(self, option: str) -> None:
         """Method to construct explore success function"""
-        if self.explore[roll]["say"]:
-            OutputBuilder.append(self.explore[roll]["say"])
-        if self.explore[roll]["result"]:
-            result = self.explore[roll]["result"]
+        if self.explore[option]["say"]:
+            OutputBuilder.append(self.explore[option]["say"])
+        if self.explore[option]["result"]:
+            result = self.explore[option]["result"]
             if result == "open_door":
                 room1 = self.id.split("---")[0]
                 room2 = self.id.split("---")[1]
@@ -200,10 +201,10 @@ class Puzzle(ABC):
                 State.get_player().character.items.add_item(self.id, item_data=item_data)
         self.solve()
     
-    def investigate_success_func(self, roll: str) -> None:
+    def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
-        if self.investigate[roll]["result"]:
-            result = self.investigate[roll]["result"]
+        if self.investigate[option]["result"]:
+            result = self.investigate[option]["result"]
             if result == "open_door":
                 room1 = self.id.split("---")[0]
                 room2 = self.id.split("---")[1]
@@ -212,11 +213,11 @@ class Puzzle(ABC):
                 item_data = self.__dict__
                 State.get_player().character.items.add_item(self.id, item_data=item_data)
             if result == "explore":
-                if self.investigate[roll]["id"]:
-                    puzzle = State.get_player().character.puzzles.get_puzzle(self.investigate[roll]["id"])
-                    puzzle.explore_success_func()
-        if self.investigate[roll]["say"]:
-            OutputBuilder.append(self.investigate[roll]["say"])
+                if self.investigate[option]["id"]:
+                    puzzle = State.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
+                    puzzle.explore_success_func(self.investigate[option]["explore_id"])
+        if self.investigate[option]["say"]:
+            OutputBuilder.append(self.investigate[option]["say"])
         self.solve()
         
     def get_solution_success_func(self) -> object:
