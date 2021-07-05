@@ -2,7 +2,7 @@
 
 if [ -z ${BUILD_ENV} ]; then
     # Deploy build - run tests
-    python3 -m pytest --cov=dmai dungeon-master-ai/tests/ --cov-report=xml
+    python3 -m pytest --cov=dmai /app/dungeon-master-ai/tests/ --cov-report=xml
     bash <(curl -s https://codecov.io/bash) -t $1
 
 elif [ ${BUILD_ENV} = "DEV" ]; then
