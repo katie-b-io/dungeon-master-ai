@@ -2,7 +2,7 @@
 FROM ubuntu:20.04 AS base
 
 WORKDIR /app
-COPY . /app
+COPY . /app/dungeon-master-ai
 
 RUN apt-get update && \
   apt-get install -y software-properties-common && \
@@ -29,23 +29,6 @@ ENV PATH="${PATH}:/root/.poetry/bin"
 # install rasa
 RUN pip install rasa
 
-# ------------------------------- Fast-Forward ------------------------------- #
-FROM base AS ff
-
-# dependencies
-RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
-  build-essential \
-  flex \
-  bison \
-  && apt-get autoremove -y \
-  && apt-get clean -y
-
-# download the FF source tar and install
-RUN curl https://fai.cs.uni-saarland.de/hoffmann/ff/Metric-FF-v2.1.tgz --output Metric-FF-v2.1.tgz
-RUN tar -zxf Metric-FF-v2.1.tgz
-RUN cd Metric-FF-v2.1 && make
-
 # ------------------------------- FastDownward ------------------------------- #
 FROM base AS fd
 
@@ -68,23 +51,23 @@ RUN cd downward && \
 FROM base as final
 
 # copy directories
-COPY --from=ff /app/Metric-FF-v2.1 /app/planners/Metric-FF-v2.1
 COPY --from=fd /app/downward /app/planners/downward
 
 # update paths
-ENV PATH="${PATH}:/usr/local/bin:/app:/app/planners/Metric-FF-v2.1:/app/planners/downward"
-ENV PYTHONPATH="${PYTHONPATH}:/app"
+ENV PATH="${PATH}:/usr/local/bin:/app/dungeon-master-ai:/app/planners/downward"
+ENV PYTHONPATH="${PYTHONPATH}:/app/dungeon-master-ai"
 
 # install dungeon master requirements
-RUN cd /app && \
+RUN cd /app/dungeon-master-ai && \
   poetry config virtualenvs.create false && \
   poetry install && \
   rm -rf dist *.egg-info
 
-# download the Rasa NLU model
-RUN cd /app && \
-  mkdir models && \
-  wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1cLnC9KPyplNSQePya1_t6Bn4VyVpwqcy' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1cLnC9KPyplNSQePya1_t6Bn4VyVpwqcy" -O models/dmai_nlu.tar.gz && rm -rf /tmp/cookies.txt
+# train the Rasa NLU model
+RUN cd /app/dungeon-master-ai && \
+  python3 -m rasa train nlu --fixed-model-name dmai_nlu
 
 # add entrypoint
-ENTRYPOINT ["./entrypoint.sh"]
+ARG BUILD_ENV
+ENV BUILD_ENV=${BUILD_ENV}
+ENTRYPOINT ["/app/dungeon-master-ai/entrypoint.sh"]
