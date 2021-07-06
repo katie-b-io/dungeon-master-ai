@@ -1,5 +1,6 @@
 import requests
 
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -10,7 +11,11 @@ class RasaAdapterMeta(type):
 
     def __new__(cls, name, bases, dict):
         instance = super().__new__(cls, name, bases, dict)
-        instance.endpoint = "http://localhost:5005/model/parse"
+        instance.endpoint = "http://{h}:{p}/model/parse".format(
+            h=Config.hosts.rasa_host,
+            p=Config.hosts.rasa_port
+        )
+        logger.debug("Rasa instance endpoint: {i}".format(i=instance.endpoint))
         return instance
 
     def __call__(cls, *args, **kwargs) -> None:

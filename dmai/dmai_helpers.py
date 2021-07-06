@@ -16,7 +16,8 @@ def init(root_path) -> None:
     logger.debug("Initialising game")
     Config.set_uuid()
     Config.set_root(root_path)
-
+    Config.hosts.set_rasa_host("rasa")
+    Config.hosts.set_rasa_port(5005)
     OutputBuilder.append(
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     )

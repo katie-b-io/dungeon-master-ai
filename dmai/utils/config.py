@@ -20,6 +20,20 @@ class Config(metaclass=ConfigMeta):
         pass
 
     ################################################################
+    class Hosts(object):
+        rasa_host = "localhost"
+        rasa_port = 5005
+
+        @classmethod
+        def set_rasa_host(cls, rasa_host: str) -> None:
+            cls.rasa_host = rasa_host
+
+        @classmethod
+        def set_rasa_port(cls, rasa_port: int) -> None:
+            cls.rasa_port = rasa_port
+
+
+    ################################################################
     class Directories(object):
         root = os.path.abspath("")
 
@@ -92,6 +106,7 @@ class Config(metaclass=ConfigMeta):
     cleanup = False
     god_mode = False
     no_monsters = False
+    hosts = Hosts()
     directory = Directories()
     agent = Agents()
     planner = Planners()
