@@ -12,12 +12,12 @@ from dmai.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-def init(root_path) -> None:
+def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005) -> None:
     logger.debug("Initialising game")
     Config.set_uuid()
     Config.set_root(root_path)
-    Config.hosts.set_rasa_host("rasa")
-    Config.hosts.set_rasa_port(5005)
+    Config.hosts.set_rasa_host(rasa_host)
+    Config.hosts.set_rasa_port(rasa_port)
     OutputBuilder.append(
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     )
