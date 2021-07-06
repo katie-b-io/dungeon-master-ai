@@ -12,18 +12,19 @@ from dmai.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-def init() -> None:
-    logger.debug("Starting game")
+def init(root_path) -> None:
+    logger.debug("Initialising game")
     Config.set_uuid()
-    Config.set_root(os.path.dirname(os.path.abspath(__file__)))
-
+    Config.set_root(root_path)
+    Config.hosts.set_rasa_host("rasa")
+    Config.hosts.set_rasa_port(5005)
     OutputBuilder.append(
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     )
     OutputBuilder.append(
         "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
     )
-    game = start()
+    game = start(char_class="fighter")
     ui = UserInterface(game)
     return ui
     

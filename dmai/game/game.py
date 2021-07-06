@@ -2,6 +2,7 @@ from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.characters.character_collection import CharacterCollection
 from dmai.domain.monsters.monster_collection import MonsterCollection
 from dmai.game.player import Player
+from dmai.nlu.rasa_adapter import RasaAdapter
 from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.dm import DM
@@ -27,6 +28,9 @@ class Game:
         logger.info("Initialising adventure: {a}".format(a=self.adventure))
         self.player = None
 
+        # Configure endpoints
+        RasaAdapter.configure_endpoint()
+        
         # load data in static classes
         CharacterCollection.load()
         MonsterCollection.load()

@@ -1,5 +1,6 @@
 import requests
 
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -10,7 +11,7 @@ class RasaAdapterMeta(type):
 
     def __new__(cls, name, bases, dict):
         instance = super().__new__(cls, name, bases, dict)
-        instance.endpoint = "http://localhost:5005/model/parse"
+        instance.endpoint = ""
         return instance
 
     def __call__(cls, *args, **kwargs) -> None:
@@ -26,6 +27,15 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
         """Class which is used for processing inputs and outputs to the 
         Rasa NLU server"""
         pass
+
+    @classmethod
+    def configure_endpoint(cls) -> None:
+        """Method to configure the endpoint"""
+        cls.endpoint = "http://{h}:{p}/model/parse".format(
+            h=Config.hosts.rasa_host,
+            p=Config.hosts.rasa_port
+        )
+        logger.debug("Rasa endpoint: {i}".format(i=cls.endpoint))
 
     @classmethod
     def get_intent(cls, player_utter: str) -> tuple:
