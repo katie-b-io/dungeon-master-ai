@@ -68,18 +68,6 @@ class Game:
         if State.talking:
             State.stop_talking()
 
-        # first check for commands, if we have a command - pause the story telling if necessary
-        if player_utter:
-            (pause, player_utter) = NLU.process_player_command(player_utter)
-            if pause:
-                State.pause()
-                return
-            else:
-                State.play()
-        else:
-            if State.paused:
-                State.play()
-
         # the game has started, the introduction is being read, ignore utterances
         if self.intro:
             return
@@ -98,11 +86,8 @@ class Game:
         elif not self.player.name:
             # player is entering a name
             self.player.set_name(player_utter)
+            State.start()
             succeed = self.dm.input(player_utter, utter_type="name")
-
-        elif not State.started:
-            # start the game by relaying description of starting room
-            succeed = self.dm.input(player_utter, utter_type="start")
 
         elif player_utter:
             # attempt to determine the player's intent
@@ -124,6 +109,10 @@ class Game:
     def output(self) -> str:
         """Return an output for the player"""
 
+        # print welcome text
+        if OutputBuilder.has_response():
+                return OutputBuilder.format()
+        
         # the game starts
         if self.intro:
             try:

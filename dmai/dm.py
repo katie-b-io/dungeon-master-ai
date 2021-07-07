@@ -141,9 +141,7 @@ class DM:
         succeed = False
         self._player_utter = player_utter
         if utter_type:
-            if utter_type == "start":
-                State.start()
-            elif utter_type == "name":
+            if utter_type == "name":
                 OutputBuilder.append(NLG.acknowledge_name())
             else:
                 OutputBuilder.append(NLG.get_action())

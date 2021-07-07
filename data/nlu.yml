@@ -130,18 +130,18 @@ nlu:
     - I walk to the next room
     - cross to the [cellar](location)
     - maneuver to the [inn's cellar](location)
-    - go to [the inn](location)
-    - move to [the cellar](location)
-    - go to [the storage room](location)
-    - move to [the burial chamber](location)
-    - go to [the western corridor](location)
-    - move to [the southern corridor](location)
+    - go to the [inn](location)
+    - move to the [cellar](location)
+    - go to the [storage room](location)
+    - move to the [burial chamber](location)
+    - go to the [western corridor](location)
+    - move to the [southern corridor](location)
     - go to [inn cellar](location)
     - go to the [cellar inn](location)
-    - go to [the cellar](location)
+    - go to the [cellar](location)
     - go [downstairs](location)
     - go [behind the bar](location)
-    - go to [the bar](location)
+    - go to the [bar](location)
     - move [down stairs](location)
     - travel [down the stairs](location)
     - go [up stairs](location)
@@ -151,8 +151,8 @@ nlu:
     - proceed to the [stout meal inn](location)
     - go [upstairs](location)
     - go to the [storage room](location)
-    - go through [the hole](location)
-    - head through [the hole](location) in the wall
+    - go through the [hole](location)
+    - head through the [hole](location) in the wall
     - go through the [tunnel](location)
     - go through the [tunnel](location) in the eastern wall
     - walk into [hole](location)
@@ -233,7 +233,7 @@ nlu:
     - investigate [stout meal inn](location)
     - examine [corvus](npc)
     - look at [corvus stouthammer](npc)
-    - examine [the dwarf](npc)
+    - examine the [dwarf](npc)
     - examine [anvil](npc)
     - look at the [giant rat](monster)
     - look at [rat](monster)
@@ -331,7 +331,7 @@ nlu:
 - intent: attack
   examples: |
     - attack [corvus](npc)
-    - I ambush [the dwarf](npc)
+    - I ambush the [dwarf](npc)
     - assail [corvus stouthammer](npc)
     - assault [stouthammer](npc)
     - beat [anvil-jumper](npc)
@@ -610,7 +610,7 @@ nlu:
     - talk to [corvus stouthammer](npc)
     - talk to [stouthammer](npc)
     - question [corvus stouthammer](npc)
-    - chat with [the dwarf](npc)
+    - chat with the [dwarf](npc)
     - converse with [stouthammer](npc)
     - say to [corvus](npc)
     - say to [anvil](npc)
@@ -646,6 +646,9 @@ nlu:
   examples: |
     - have a drink
     - have an ale
+    - and another
+    - and another please
+    - can I have a drink please
     - I would like a cask of [ale](drink)
     - I'll need your largest bowl of [ale](drink)
     - cask of [ale](drink)
@@ -884,7 +887,6 @@ nlu:
 - synonym: stout_meal_inn
   examples: |
     - inn
-    - the inn
     - stout meal inn
     - upstairs
     - upstair
@@ -894,7 +896,6 @@ nlu:
 - synonym: inns_cellar
   examples: |
     - cellar
-    - the cellar
     - inn's cellar
     - inns cellar
     - inn cellar
@@ -904,30 +905,25 @@ nlu:
     - down the stairs
     - cellar inn
     - behind the bar
-    - the bar
+    - bar
 
 - synonym: storage_room
   examples: |
     - storage room
-    - the storage room
     - storage
     - store room
     - store
-    - the hole
     - hole
     - tunnel
-    - the tunnel
 
 - synonym: burial_chamber
   examples: |
     - burial chamber
-    - the burial chamber
     - chamber
 
 - synonym: western_corridor
   examples: |
     - western corridor
-    - the western corridor
     - west corridor
     - western
     - west
@@ -935,7 +931,6 @@ nlu:
 - synonym: southern_corridor
   examples: |
     - southern corridor
-    - the southern corridor
     - south corridor
     - southern
     - south
@@ -952,7 +947,7 @@ nlu:
     - corvus
     - corvus stouthammer
     - stouthammer
-    - the dwarf
+    - dwarf
 
 - synonym: anvil
   examples: |
