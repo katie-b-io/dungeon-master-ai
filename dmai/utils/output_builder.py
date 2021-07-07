@@ -34,7 +34,7 @@ class OutputBuilder(metaclass=OutputBuilderMeta):
         cls.output_utterances = []
 
     @classmethod
-    def append(cls, utterance: str, wrap: bool = True, newline: bool = False) -> None:
+    def append(cls, utterance: str, wrap: bool = False, newline: bool = False) -> None:
         """Append an utterance to the output"""
         if utterance:
             if wrap:
