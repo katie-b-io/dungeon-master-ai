@@ -44,10 +44,6 @@ def start(char_class: str = None,
 
     # print some info for the user
     OutputBuilder.append(
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nThis interface is designed for you to communicate with the DMAI using natural language but you also have the following commands at your disposal:"
-    )
-    OutputBuilder.append(NLU.show_commands(), wrap=False)
-    OutputBuilder.append(
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title()))
     
     # return the game instance
