@@ -4,10 +4,10 @@ from dmai.game.state import State
 from dmai.planning.planner_adapter import PlannerAdapter
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
 from dmai.planning.planning_actions import planning_actions
-
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class PlanningAgent(ABC):

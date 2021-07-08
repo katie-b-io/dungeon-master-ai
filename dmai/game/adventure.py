@@ -4,9 +4,10 @@ from dmai.utils.loader import Loader
 from dmai.utils.text import Text
 from dmai.game.world.room import Room
 from dmai.utils.exceptions import UnrecognisedRoomError
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class Adventure:

@@ -18,9 +18,10 @@ from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
 from dmai.utils.money import Money
 from dmai.domain.items.item_collection import ItemCollection
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class Character(ABC):
