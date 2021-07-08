@@ -1,4 +1,5 @@
 from dmai.utils.loader import Loader
+from dmai.utils.config import Config
 from dmai.domain.characters.character import Character
 from dmai.domain.characters.fighter import Fighter
 from dmai.domain.characters.wizard import Wizard
@@ -6,7 +7,7 @@ from dmai.domain.characters.rogue import Rogue
 from dmai.domain.characters.cleric import Cleric
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class CharacterCollectionMeta(type):

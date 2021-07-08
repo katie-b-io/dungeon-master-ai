@@ -1,8 +1,9 @@
 from dmai.game.game import Game
 from dmai.game.state import State
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class UserInterface:

@@ -1,11 +1,14 @@
 import logging
 
 
-def get_logger(module_name: str) -> logging.Logger:
+def get_logger(module_name: str, session_id: str = None) -> logging.Logger:
     """Method to return the logger"""
+    log_name = "dmai.log"
+    if session_id:
+        log_name = "dmai_{s}.log".format(s=session_id)
     logger = logging.getLogger(module_name)
     stream_handler = logging.StreamHandler()
-    file_handler = logging.FileHandler("dmai.log")
+    file_handler = logging.FileHandler(log_name)
 
     formatter = logging.Formatter(
         "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s",

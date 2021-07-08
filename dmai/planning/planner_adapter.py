@@ -3,9 +3,10 @@ from abc import ABC, abstractmethod
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 from dmai.planning.planning_actions import planning_actions
+from dmai.utils.config import Config
 from dmai.game.state import State
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class PlannerAdapter(ABC):

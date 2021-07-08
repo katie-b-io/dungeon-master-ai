@@ -7,9 +7,10 @@ from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.dm import DM
 from dmai.game.state import State
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class Game:

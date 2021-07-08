@@ -1,10 +1,10 @@
 from dmai.domain.items.item import Item
 from dmai.game.state import State
 from dmai.utils.dice_roller import DiceRoller
-
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class PotionOfHealing(Item):

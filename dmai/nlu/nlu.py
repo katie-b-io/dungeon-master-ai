@@ -8,9 +8,10 @@ from dmai.utils.text import Text
 from dmai.nlu.rasa_adapter import RasaAdapter
 from dmai.game.state import State
 from dmai.game.state import Combat
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class NLUMeta(type):

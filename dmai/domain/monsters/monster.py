@@ -15,9 +15,10 @@ from dmai.nlg.nlg import NLG
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class Monster(NPC, MonsterAgent):

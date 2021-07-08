@@ -5,9 +5,10 @@ from dmai.domain.actions.actions import Actions
 from dmai.nlg.nlg import NLG
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, Config.session.session_id)
 
 
 class DM:
