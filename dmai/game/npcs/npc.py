@@ -1,7 +1,7 @@
 from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__, Config.session.session_id)
+logger = get_logger(__name__)
 
 
 class NPC():

@@ -6,7 +6,7 @@ from dmai.utils.config import Config
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__, Config.session.session_id)
+logger = get_logger(__name__)
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -54,7 +54,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     """Main entry point to the DMAI"""
-    logger.debug("Starting game")
+    logger.debug("(SESSION: {s}) Starting game".format(s=Config.session.session_id))
     Config.set_uuid()
     Config.set_root(os.path.dirname(os.path.abspath(__file__)))
 

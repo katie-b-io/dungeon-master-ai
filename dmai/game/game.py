@@ -10,7 +10,7 @@ from dmai.game.state import State
 from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__, Config.session.session_id)
+logger = get_logger(__name__)
 
 
 class Game:
@@ -26,7 +26,7 @@ class Game:
         self.adventure = adventure
 
     def load(self) -> None:
-        logger.info("Initialising adventure: {a}".format(a=self.adventure))
+        logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=Config.session.session_id, a=self.adventure))
         self.player = None
 
         # Configure endpoints
