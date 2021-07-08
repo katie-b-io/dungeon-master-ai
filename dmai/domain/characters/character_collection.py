@@ -7,7 +7,7 @@ from dmai.domain.characters.rogue import Rogue
 from dmai.domain.characters.cleric import Cleric
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__, Config.session.session_id)
+logger = get_logger(__name__)
 
 
 class CharacterCollectionMeta(type):

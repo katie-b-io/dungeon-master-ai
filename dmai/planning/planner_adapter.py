@@ -6,7 +6,7 @@ from dmai.planning.planning_actions import planning_actions
 from dmai.utils.config import Config
 from dmai.game.state import State
 
-logger = get_logger(__name__, Config.session.session_id)
+logger = get_logger(__name__)
 
 
 class PlannerAdapter(ABC):

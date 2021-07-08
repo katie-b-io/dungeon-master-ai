@@ -11,11 +11,12 @@ from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
-logger = get_logger(__name__, Config.session.session_id)
-
+logger = get_logger(__name__)
 
 def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005) -> None:
-    logger.debug("Initialising game")
+    session_id = create_session_id()
+    Config.session.set_session_id(session_id)
+    logger.debug("(SESSION: {s}) Initialising game".format(s=Config.session.session_id))
     Config.set_uuid()
     Config.set_root(root_path)
     Config.hosts.set_rasa_host(rasa_host)
@@ -28,9 +29,7 @@ def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005) ->
     )
     game = start(char_class="fighter")
     ui = UserInterface(game)
-    
-    session_id = create_session_id()
-    Config.session.set_session_id(session_id)
+
     
     return (ui, session_id)
 

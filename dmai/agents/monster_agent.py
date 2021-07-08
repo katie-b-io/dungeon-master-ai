@@ -3,7 +3,7 @@ from dmai.utils.config import Config
 from dmai.agents.agent import Agent
 from dmai.planning.planning_monster import PlanningMonster
 
-logger = get_logger(__name__, Config.session.session_id)
+logger = get_logger(__name__)
 
 
 class MonsterAgent(Agent):

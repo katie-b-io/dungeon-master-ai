@@ -7,7 +7,7 @@ from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.logger import get_logger
 from dmai.utils.config import Config
 
-logger = get_logger(__name__, Config.session.session_id)
+logger = get_logger(__name__)
 
 
 class Player(PlayerAgent):
