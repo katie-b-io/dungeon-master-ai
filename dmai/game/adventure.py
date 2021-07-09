@@ -1,10 +1,10 @@
 from typing import Generator
 
+from dmai.game.state import State
 from dmai.utils.loader import Loader
 from dmai.utils.text import Text
 from dmai.game.world.room import Room
 from dmai.utils.exceptions import UnrecognisedRoomError
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -15,9 +15,10 @@ class Adventure:
     # class variables
     adventure_data = dict()
 
-    def __init__(self, adventure: str) -> None:
+    def __init__(self, adventure: str, state: State) -> None:
         """Main class for the adventure"""
         self.adventure = adventure
+        self.state = state
         self._load_adventure_data(self.adventure)
 
         try:
@@ -45,7 +46,7 @@ class Adventure:
 
         for room_name in self.adventure_data["rooms"]:
             room_data = self.adventure_data["rooms"][room_name]
-            room = Room(room_data)
+            room = Room(room_data, self.state)
             self.rooms[room_name] = room
 
     @property

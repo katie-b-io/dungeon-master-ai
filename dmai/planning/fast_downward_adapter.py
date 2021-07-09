@@ -1,6 +1,7 @@
 from subprocess import run, PIPE
 import os
 
+from dmai.game.state import State
 from dmai.planning.planner_adapter import PlannerAdapter
 from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
@@ -9,9 +10,9 @@ logger = get_logger(__name__)
 
 
 class FastDownwardAdapter(PlannerAdapter):
-    def __init__(self, domain: str, problem: str) -> None:
+    def __init__(self, domain: str, problem: str, state: State) -> None:
         """FastDownwardAdapter class"""
-        PlannerAdapter.__init__(self, domain, problem)
+        PlannerAdapter.__init__(self, domain, problem, state)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)

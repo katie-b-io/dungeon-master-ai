@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 
 
 class PlanningAgent(ABC):
-    def __init__(self, planner: str, domain: str, problem: str, state: State) -> None:
+    def __init__(self, planner: str, domain: str, state: State, problem: str) -> None:
         """PlanningAgent abstract class"""
         self.domain = domain
         self.problem = problem
@@ -41,7 +41,7 @@ class PlanningAgent(ABC):
         try:
             planner_map = {"fd": FastDownwardAdapter}
             planner = planner_map[planner]
-            return planner(self.domain, self.problem)
+            return planner(self.domain, self.problem, self.state)
         except (ValueError, KeyError) as e:
             msg = "Cannot create planner {p} - it does not exist!".format(
                 p=planner)

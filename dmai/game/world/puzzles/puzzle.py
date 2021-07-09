@@ -3,7 +3,6 @@ from dmai.utils.output_builder import OutputBuilder
 
 from dmai.domain.actions.skill_check import SkillCheck
 from dmai.game.state import State
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)

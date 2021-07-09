@@ -54,7 +54,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     """Main entry point to the DMAI"""
-    logger.debug("(SESSION: {s}) Starting game".format(s=Config.session.session_id))
+    logger.debug("Starting game")
     Config.set_uuid()
     Config.set_root(os.path.dirname(os.path.abspath(__file__)))
 

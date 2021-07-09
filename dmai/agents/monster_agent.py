@@ -10,8 +10,7 @@ logger = get_logger(__name__)
 class MonsterAgent(Agent):
     def __init__(self, state: State, **kwargs) -> None:
         """MonsterAgent class"""
-        Agent.__init__(self, **kwargs)
-        self.state = state
+        Agent.__init__(self, state, **kwargs)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)

@@ -42,7 +42,7 @@ def start(char_class: str = None,
           char_name: str = None,
           skip_intro: bool = False,
           adventure: str = "the_tomb_of_baradin_stormfury",
-          session_id: str = None) -> Game:
+          session_id: str = "") -> Game:
     """Initialise the game"""
     game = Game(char_class=char_class,
                 char_name=char_name,

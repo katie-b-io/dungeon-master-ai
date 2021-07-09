@@ -1,14 +1,16 @@
 from dmai.game.world.puzzles.puzzle import Puzzle
+from dmai.game.state import State
 
 
 class PuzzleCollection:
-    def __init__(self, puzzles_dict: dict) -> None:
+    def __init__(self, puzzles_dict: dict, state: State) -> None:
         """PuzzleCollection class"""
         self.puzzles = {}
+        self.state = state
 
         # prepare the puzzles
         for puzzle_id in puzzles_dict:
-            puzzle = Puzzle(puzzles_dict[puzzle_id])
+            puzzle = Puzzle(puzzles_dict[puzzle_id], self.state)
             self.puzzles[puzzle_id] = puzzle
 
     def __repr__(self) -> str:

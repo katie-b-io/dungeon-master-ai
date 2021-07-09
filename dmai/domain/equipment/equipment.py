@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
 
-from dmai.utils.config import Config
+from dmai.game.state import State
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 class Equipment(ABC):
-    def __init__(self, equipment_data: dict) -> None:
+    def __init__(self, equipment_data: dict, state: State) -> None:
         """Equipment abstract class"""
+        self.state = state
         try:
             for key in equipment_data:
                 self.__setattr__(key, equipment_data[key])

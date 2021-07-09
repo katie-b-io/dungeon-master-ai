@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from dmai.game.state import State
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
@@ -7,8 +8,9 @@ logger = get_logger(__name__)
 
 
 class Agent(ABC):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, state: State, **kwargs) -> None:
         """Agent abstract class"""
+        self.state = state
         self.agent = self.get_agent(**kwargs)
 
     def __repr__(self) -> str:

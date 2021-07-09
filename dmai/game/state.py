@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 
 class Session(object):
-    session_id = "SESSION"
+    session_id = ""
     def set_session_id(self, session_id: str) -> None:
         self.session_id = session_id
 
@@ -87,7 +87,7 @@ class State():
     stored_skill_check = None
     ales = 0
 
-    def __init__(self, session_id: str = None) -> None:
+    def __init__(self, session_id: str = "") -> None:
         """Main class for the game state"""
         self.session.set_session_id(session_id)
     

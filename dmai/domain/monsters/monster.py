@@ -15,7 +15,6 @@ from dmai.nlg.nlg import NLG
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -32,9 +31,9 @@ class Monster(NPC, MonsterAgent):
     ) -> None:
         """Monster abstract class"""
         if unique_id:
-            MonsterAgent.__init__(self, problem=unique_id)
+            MonsterAgent.__init__(self, state, problem=unique_id)
         else:
-            MonsterAgent.__init__(self, problem=monster_data["id"])
+            MonsterAgent.__init__(self, state, problem=monster_data["id"])
         if npc_data:
             NPC.__init__(self, npc_data)
 
@@ -48,7 +47,7 @@ class Monster(NPC, MonsterAgent):
             self.armor = Armor(self.armor)
             self.attacks = Attacks(self.attacks)
             self.conditions = Conditions()
-            self.equipment = EquipmentCollection(self.equipment)
+            self.equipment = EquipmentCollection(self.equipment, self.state)
             self.features = Features(features=self.features)
             self.languages = Languages(self.languages)
             self.skills = Skills(abilities=self.abilities, skills=self.skills)
@@ -59,7 +58,6 @@ class Monster(NPC, MonsterAgent):
             raise
 
         # Initialise additional variables
-        self.state = state
         self.unique_id = unique_id
         self.treasure = []
         self.must_kill = False

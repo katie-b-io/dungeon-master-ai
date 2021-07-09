@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 class PlanningPlayer(PlanningAgent):
     def __init__(self, state: State, **kwargs) -> None:
         """PlanningPlayer class"""
-        PlanningAgent.__init__(self, Config.planner.player, "player", **kwargs)
+        PlanningAgent.__init__(self, Config.planner.player, "player", state, **kwargs)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)

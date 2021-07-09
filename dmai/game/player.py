@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 class Player(PlayerAgent):
     def __init__(self, character: Character, state: State) -> None:
         """Main class for the player"""
-        PlayerAgent.__init__(self, problem=character.id)
+        PlayerAgent.__init__(self, state, problem=character.id)
         logger.info("Initialising character: {c}".format(c=str(character)))
         self.name = None
         self.character = character

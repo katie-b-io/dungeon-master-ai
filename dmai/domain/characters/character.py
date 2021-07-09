@@ -1,6 +1,7 @@
 from abc import ABC
 import textwrap
 
+from dmai.game.state import State
 from dmai.domain.abilities import Abilities
 from dmai.domain.alignment import Alignment
 from dmai.domain.armor import Armor
@@ -18,15 +19,15 @@ from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
 from dmai.utils.money import Money
 from dmai.domain.items.item_collection import ItemCollection
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 class Character(ABC):
-    def __init__(self, character_data: dict) -> None:
+    def __init__(self, character_data: dict, state: State) -> None:
         """Character abstract class"""
+        self.state = state
         self.name = None
         self.cp = 0
 
@@ -41,7 +42,7 @@ class Character(ABC):
             self.char_class = CharacterClass(self.char_class)
             self.conditions = Conditions()
             self.equipment = EquipmentCollection(
-                equipment=self.equipment, proficiencies=self.proficiencies["tools"]
+                equipment=self.equipment, state=self.state, proficiencies=self.proficiencies["tools"]
             )
             self.items = ItemCollection()
             self.languages = Languages(self.languages)
@@ -53,7 +54,7 @@ class Character(ABC):
             )
             self.spells = Spells(self.spells)
             self.weapons = Weapons(
-                self.weapons, proficiencies=self.get_proficiencies("weapons")
+                self.weapons, self.state, proficiencies=self.get_proficiencies("weapons")
             )
             self.armor = Armor(
                 self.armor, proficiencies=self.get_proficiencies("armor")

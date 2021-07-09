@@ -19,7 +19,7 @@ class Game:
                  char_name: str = None,
                  skip_intro: bool = False,
                  adventure: str = "the_tomb_of_baradin_stormfury",
-                 session_id: str = None) -> None:
+                 session_id: str = "") -> None:
         """Main class for the game"""
         self.char_class = char_class
         self.char_name = char_name
@@ -28,7 +28,7 @@ class Game:
         self.session_id = session_id
 
     def load(self) -> None:
-        logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=Config.session.session_id, a=self.adventure))
+        logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=self.session_id, a=self.adventure))
         self.player = None
 
         # Configure endpoints
@@ -42,13 +42,13 @@ class Game:
         self.state = State(self.session_id)
 
         # Initialise DM
-        self.dm = DM(self.adventure)
+        self.dm = DM(self.adventure, self.state)
         self.dm.load()
         self.state.set_dm(self.dm)
 
         # set character class and name if possible
         if self.char_class:
-            character = CharacterCollection.get_character(self.char_class)
+            character = CharacterCollection.get_character(self.char_class, self.state)
             self.player = Player(character)
             self.state.set_player(self.player)
 
@@ -84,9 +84,9 @@ class Game:
             if not player_utter:
                 return
             player_utter = player_utter.lower()
-            character = CharacterCollection.get_character(player_utter)
+            character = CharacterCollection.get_character(player_utter, self.state)
             if character:
-                self.player = Player(character)
+                self.player = Player(character, self.state)
                 self.state.set_player(self.player)
 
         elif not self.player.name:

@@ -1,6 +1,5 @@
 from dmai.domain.equipment.equipment import Equipment
 from dmai.game.state import State
-from dmai.utils.config import Config
 from dmai.utils.output_builder import OutputBuilder
 
 from dmai.utils.logger import get_logger
@@ -10,8 +9,7 @@ logger = get_logger(__name__)
 
 class Torch(Equipment):
     def __init__(self, equipment_data: dict, state: State) -> None:
-        Equipment.__init__(self, equipment_data)
-        self.state = state
+        Equipment.__init__(self, equipment_data, state)
 
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)

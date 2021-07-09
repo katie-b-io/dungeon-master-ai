@@ -20,7 +20,7 @@ class Room:
                 self.__setattr__(key, room_data[key])
 
             # replace the attributes values with objects where appropriate
-            self.puzzles = PuzzleCollection(self.puzzles)
+            self.puzzles = PuzzleCollection(self.puzzles, self.state)
 
         except AttributeError as e:
             logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))

@@ -40,7 +40,7 @@ class NPCCollection:
             if "monster" not in npc_data:
                 npc = NPC(npc_data)
             else:
-                npc = MonsterCollection.get_monster_npc(npc_data)
+                npc = MonsterCollection.get_monster_npc(npc_data, self.state)
             self.state.set_init_npc(npc_data)
             npcs[npc_id] = npc
             # update state with npc location
@@ -65,7 +65,7 @@ class NPCCollection:
                     i = 1 + sum(
                         1 for m in monsters.values() if m.id == monster_id)
                     unique_id = "{m}_{i}".format(i=i, m=monster_id)
-                    monster = MonsterCollection.get_monster(monster_id, unique_id=unique_id)
+                    monster = MonsterCollection.get_monster(monster_id, self.state, unique_id=unique_id)
                     monster.set_treasure(treasure)
                     monster.set_must_kill(must_kill)
                     monster.set_will_attack_player(will_attack_player)
