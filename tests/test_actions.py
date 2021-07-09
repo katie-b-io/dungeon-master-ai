@@ -8,7 +8,7 @@ sys.path.insert(0, p + "/../")
 from dmai.domain.actions.attack import Attack
 from dmai.game.game import Game
 from dmai.nlg.nlg import NLG
-from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.self.output_builder import self.output_builder
 
 
 class TestActions(unittest.TestCase):
@@ -36,12 +36,12 @@ class TestActions(unittest.TestCase):
         self.assertEqual(moved, False)
 
     def test_move_locked(self) -> None:
-        OutputBuilder.clear()
+        self.output_builder.clear()
         entity = "player"
         self.game.state.set_current_room(entity, "western_corridor")
         moved  = self.actions.move(entity, "storage_room")
         self.assertEqual(moved, False)
-        self.assertEqual("You cannot move to Storage Room because the way is locked! You should figure out a way to get through or you could go to the Antechamber.\n", OutputBuilder.format())
+        self.assertEqual("You cannot move to Storage Room because the way is locked! You should figure out a way to get through or you could go to the Antechamber.\n", self.output_builder.format())
         
     def test__can_move_must_kill_monsters(self) -> None:
         entity = "player"

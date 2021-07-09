@@ -1,8 +1,7 @@
 import traceback
 
 import dmai
-from dmai.utils.exceptions import DiceFormatError, UnrecognisedCommandError
-from dmai.utils.dice_roller import DiceRoller
+from dmai.utils.exceptions import UnrecognisedCommandError
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.text import Text
 from dmai.nlu.rasa_adapter import RasaAdapter
@@ -15,14 +14,15 @@ logger = get_logger(__name__)
 
 class NLU():
 
-    def __init__(self, state: State) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder) -> None:
         self.state = state
+        self.output_builder = output_builder
         param = ""
         commands = {
             "help": {
                 "text": "/help",
                 "help": "Show these commands",
-                "cmd": "OutputBuilder.append(self.show_commands(), wrap=False)"
+                "cmd": "self.output_builder.append(self.show_commands(), wrap=False)"
             },
             "exit": {
                 "text": "/exit",
@@ -35,7 +35,7 @@ class NLU():
                 "help":
                 "Show your character stats in a character sheet",
                 "cmd":
-                "OutputBuilder.append(self.game.player.get_character_sheet(), wrap=False)"
+                "self.output_builder.append(self.game.player.get_character_sheet(), wrap=False)"
             }
         }
 
@@ -79,13 +79,6 @@ class NLU():
             msg = "Command not recognised: {c}\nUse /help to get list of available commands".format(
                 c=player_cmd)
             raise UnrecognisedCommandError(msg)
-
-        # define a local function for wrapping the DiceRoller
-        def roll(die: str) -> None:
-            try:
-                DiceRoller.roll(die)
-            except DiceFormatError as e:
-                logger.error(e)
 
         try:
             exec(command)
@@ -137,7 +130,7 @@ class NLU():
                 # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
                 intents = [self.state.get_dm().player_intent_map[intent]["desc"] for intent in self.state.expected_intent]
                 intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
-                OutputBuilder.append("I was expecting you to {i}".format(i=intent_str))
+                self.output_builder.append("I was expecting you to {i}".format(i=intent_str))
                 return (None, {"nlu_entities": entities})
 
         # check if in combat before allowing any player utterance

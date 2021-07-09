@@ -87,9 +87,10 @@ class State():
     stored_skill_check = None
     ales = 0
 
-    def __init__(self, session_id: str = "") -> None:
+    def __init__(self, output_builder: OutputBuilder, session_id: str = "") -> None:
         """Main class for the game state"""
         self.session.set_session_id(session_id)
+        self.output_builder = output_builder
     
     def combat(self, attacker: str, target: str) -> None:
         if not self.in_combat:
@@ -103,11 +104,11 @@ class State():
             self.set_expected_entities(["monster"])
             self.set_expected_intent(["roll"])
             self.clear_expected_entities()
-            OutputBuilder.append(NLG.transition_to_combat())
+            self.output_builder.append(NLG.transition_to_combat())
         else:
             self.set_target(target, attacker)
             self.state.set_expected_intent(["roll"])
-            OutputBuilder.append(NLG.perform_attack_roll())
+            self.output_builder.append(NLG.perform_attack_roll())
             self.progress_combat_status()
                 
     
@@ -119,10 +120,10 @@ class State():
             self.roleplaying = False
             self.clear_expected_entities()
             self.set_combat_status(3)
-            OutputBuilder.append(NLG.perform_attack_roll())
+            self.output_builder.append(NLG.perform_attack_roll())
         else:
             self.set_combat_status(3)
-            OutputBuilder.append(NLG.perform_attack_roll())
+            self.output_builder.append(NLG.perform_attack_roll())
 
     
     def explore(self) -> None:
@@ -407,13 +408,13 @@ class State():
     def light_torch(self) -> None:
         """Method to light a torch"""
         self.torch_lit = True
-        OutputBuilder.append(NLG.light_torch())
+        self.output_builder.append(NLG.light_torch())
 
     
     def extinguish_torch(self) -> None:
         """Method to extinguish a torch"""
         self.torch_lit = False
-        OutputBuilder.append(NLG.extinguish_torch())
+        self.output_builder.append(NLG.extinguish_torch())
     
     
     def heal(self, hp: int, hp_max: int = None, entity: str = "player") -> None:
@@ -425,7 +426,7 @@ class State():
                 hp = hp_max - current_hp
             new_hp = min(hp_max, new_hp) 
         self.current_hp[entity] = new_hp
-        OutputBuilder.append(NLG.heal(hp, new_hp))
+        self.output_builder.append(NLG.heal(hp, new_hp))
     
     
     def drink_ale(self) -> None:
@@ -509,7 +510,7 @@ class State():
 
         # get player initiative
         player_result = self.state.get_player().initiative_roll()
-        OutputBuilder.append(NLG.roll_reaction(player_result))
+        self.output_builder.append(NLG.roll_reaction(player_result))
         rolls["player"] = player_result
         
         # initiative rolls for monsters in the room
@@ -530,7 +531,7 @@ class State():
             # player doesn't go first - wait til their turn
             self.set_combat_status(4)
             self.clear_target()
-            OutputBuilder.append("You'll have to wait your turn.")
+            self.output_builder.append("You'll have to wait your turn.")
             # don't allow player input
             self.pause()
     
@@ -620,8 +621,8 @@ class State():
                     # if the entity is player, this is a gameover state
                     attacker = self.state.get_entity(attacker)
                     death_text = attacker.text["killed_player"]
-                    OutputBuilder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
-                    OutputBuilder.append(self.get_dm().get_bad_ending())
+                    self.output_builder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
+                    self.output_builder.append(self.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover()
                 else:
                     self.kill_monster(entity)
@@ -637,7 +638,7 @@ class State():
     def kill_monster(self, entity: str) -> None:
         # player has killed a monster
         name = self.state.get_entity_name(entity)
-        OutputBuilder.append("You killed {n}!".format(n=name))
+        self.output_builder.append("You killed {n}!".format(n=name))
         self.set_current_status(entity, "dead")
         self.clear_target()
         self.initiative_order.remove(entity)
@@ -646,7 +647,7 @@ class State():
 
     
     def end_fight(self) -> None:
-        OutputBuilder.append(NLG.won_fight())
+        self.output_builder.append(NLG.won_fight())
         self.explore()
         
     ############################################################
@@ -905,9 +906,9 @@ class State():
                 # this destroys the door and unlocks the way
                 self.in_combat_with_door = False
                 self.unlock_door(self.get_current_room_id(), target)
-                OutputBuilder.append(NLG.broke_down_door(self.state.get_room_name(target)))
+                self.output_builder.append(NLG.broke_down_door(self.state.get_room_name(target)))
             else:
-                OutputBuilder.append(NLG.deal_door_damage(damage, original_hp))
+                self.output_builder.append(NLG.deal_door_damage(damage, original_hp))
             return self.current_hp_door[target]
         except KeyError:
             msg = "Room not recognised: {e}".format(e=target)

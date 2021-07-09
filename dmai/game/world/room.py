@@ -1,6 +1,6 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.items.item import Item
 from dmai.game.world.puzzles.puzzle_collection import PuzzleCollection
-from dmai.utils.output_builder import OutputBuilder
 from dmai.nlg.nlg import NLG
 from dmai.utils.text import Text
 from dmai.game.state import State
@@ -11,16 +11,17 @@ logger = get_logger(__name__)
 
 
 class Room:
-    def __init__(self, room_data: dict, state: State) -> None:
+    def __init__(self, room_data: dict, state: State, output_builder: OutputBuilder) -> None:
         """Main class for a room"""
         self.state = state
+        self.output_builder = output_builder
 
         try:
             for key in room_data:
                 self.__setattr__(key, room_data[key])
 
             # replace the attributes values with objects where appropriate
-            self.puzzles = PuzzleCollection(self.puzzles, self.state)
+            self.puzzles = PuzzleCollection(self.puzzles, self.state, self.output_builder)
 
         except AttributeError as e:
             logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
@@ -51,9 +52,9 @@ class Room:
         if not self.state.stationary:
             if not self.visited:
                 self.visited = True
-                OutputBuilder.append(self.text["enter"]["text"])
+                self.output_builder.append(self.text["enter"]["text"])
             else:
-                OutputBuilder.append(NLG.enter_room(self.name))
+                self.output_builder.append(NLG.enter_room(self.name))
             self.state.halt()
 
     def trigger_visibility(self) -> str:
@@ -61,14 +62,14 @@ class Room:
         logger.debug("Triggering visibility in room: {r}".format(r=self.id))
         if not self.visibility:
             if self.state.torch_lit or self.state.get_player().character.has_darkvision():
-                OutputBuilder.append(self.text["visibility"]["text"])
+                self.output_builder.append(self.text["visibility"]["text"])
                 self.text["visibility"]["can_trigger"] = False
 
     def trigger_fight_ends(self) -> str:
         """Method when triggering fight ends text"""
         logger.debug("Triggering fight ending in room: {r}".format(r=self.id))
         if self.state.all_dead():
-            OutputBuilder.append(self.text["fight_ends"]["text"])
+            self.output_builder.append(self.text["fight_ends"]["text"])
             self.text["fight_ends"]["can_trigger"] = False
 
     def trigger(self) -> None:

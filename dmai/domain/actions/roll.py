@@ -1,5 +1,5 @@
-from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.exceptions import DiceFormatError
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
@@ -9,13 +9,14 @@ import dmai
 
 
 class Roll(Action):
-    def __init__(self, roll_type: str, die: str, nlu_entities: dict, state: State) -> None:
+    def __init__(self, roll_type: str, die: str, nlu_entities: dict, state: State, output_builder: OutputBuilder) -> None:
         """Roll class"""
         Action.__init__(self)
         self.roll_type = roll_type
         self.die = die
         self.nlu_entities = nlu_entities
         self.state = state
+        self.output_builder = output_builder
         self.roll_map = {
             "attack": self._attack_roll,
             "door_attack": self._door_attack_roll,
@@ -51,12 +52,13 @@ class Roll(Action):
             if self.roll_type in self.roll_map:
                 can_roll = self.roll_map[self.roll_type]()
             else:
-                DiceRoller.roll(self.die)
-                OutputBuilder.append(NLG.no_reason_roll())
+                (roll_str, dice_val) = DiceRoller.roll(self.die)
+                self.output_builder.append(roll_str)
+                self.output_builder.append(NLG.no_reason_roll())
                 can_roll = True
             return can_roll
         else:
-            OutputBuilder.append("Can't roll!")
+            self.output_builder.append("Can't roll!")
             return can_roll
     
     def _door_attack_roll(self) -> bool:
@@ -69,7 +71,7 @@ class Roll(Action):
                 player = self.state.get_entity()
                 damage = player.damage_roll()
                 hp = self.state.take_door_damage(damage, target)
-                OutputBuilder.append("You dealt {d} damage to {t} door (hp is now {h})".format(d=damage, t=self.state.get_room_name(target), h=hp))
+                self.output_builder.append("You dealt {d} damage to {t} door (hp is now {h})".format(d=damage, t=self.state.get_room_name(target), h=hp))
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat_with_door:
                     return True
@@ -79,12 +81,12 @@ class Roll(Action):
             player = self.state.get_entity()
             if player.attack_roll() >= self.state.get_door_armor_class(self.state.get_current_room_id(), target):
                 # can deal damage
-                OutputBuilder.append("Okay that hits, try and deal some damage!")
+                self.output_builder.append("Okay that hits, try and deal some damage!")
             else:
                 # can't deal damage, clear target
                 self.state.door_target = None
                 self.state.in_combat_with_door = False
-                OutputBuilder.append("That doesn't hit. Declare attack against door again if you want to try again.")
+                self.output_builder.append("That doesn't hit. Declare attack against door again if you want to try again.")
                 return True
                 
         # get attack roll from player
@@ -96,7 +98,7 @@ class Roll(Action):
         if self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             if self.state.door_target:
                 # now return the utterance for getting the next roll
-                OutputBuilder.append(NLG.perform_damage_roll())
+                self.output_builder.append(NLG.perform_damage_roll())
                 self.state.set_combat_status(2)
         return True
 
@@ -107,7 +109,7 @@ class Roll(Action):
         # set initiative order
         if self.state.get_combat_status() == Combat.INITIATIVE:
             self.state.set_initiative_order()
-            OutputBuilder.append(
+            self.output_builder.append(
                 NLG.entity_turn(self.state.get_entity_name(self.state.get_currently_acting_entity()))
             )
         
@@ -122,11 +124,11 @@ class Roll(Action):
                 player = self.state.get_entity()
                 damage = player.damage_roll()
                 hp = self.state.take_damage(damage, "player", entity=target.unique_id)
-                OutputBuilder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
+                self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:
                     return True
-            OutputBuilder.append("Okay, now the monsters get to have their turn!")
+            self.output_builder.append("Okay, now the monsters get to have their turn!")
             self.state.pause()
         elif self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)
@@ -134,11 +136,11 @@ class Roll(Action):
             player = self.state.get_entity()
             if player.attack_roll() >= target.armor_class:
                 # can deal damage
-                OutputBuilder.append("Okay that hits, time to deal some damage!")
+                self.output_builder.append("Okay that hits, time to deal some damage!")
             else:
                 # can't deal damage, clear target
                 self.state.clear_target()
-                OutputBuilder.append("That doesn't hit. Monster's turn now.")
+                self.output_builder.append("That doesn't hit. Monster's turn now.")
                 self.state.pause()
 
         # see if monster(s) have their go now
@@ -156,7 +158,7 @@ class Roll(Action):
         if self.state.get_combat_status() == Combat.DECLARE:
             self.state.set_expected_entities(["monster"])
             self.state.set_expected_intent(["attack"])
-            OutputBuilder.append(NLG.declare_attack())
+            self.output_builder.append(NLG.declare_attack())
             self.state.progress_combat_status()
             return True
         
@@ -169,7 +171,7 @@ class Roll(Action):
         if self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             if self.state.get_current_target():
                 # now return the utterance for getting the next roll
-                OutputBuilder.append(NLG.perform_damage_roll())
+                self.output_builder.append(NLG.perform_damage_roll())
                 self.state.progress_combat_status()
             else:
                 # didn't hit, skip damage roll
@@ -184,10 +186,10 @@ class Roll(Action):
         puzzle = self.state.get_current_room().puzzles.get_puzzle(self.state.stored_ability_check["puzzle"])
         dc = puzzle.get_difficulty_class(self.state.stored_ability_check["solution"])
         if roll >= dc:
-            OutputBuilder.append(NLG.succeed_check())
+            self.output_builder.append(NLG.succeed_check())
             self.state.stored_ability_check["success_func"](*self.state.stored_ability_check["success_params"])
         else:
-            OutputBuilder.append(NLG.fail_check())
+            self.output_builder.append(NLG.fail_check())
         self.state.clear_expected_intent()
         self.state.clear_ability_check()
         return True
@@ -200,10 +202,10 @@ class Roll(Action):
         puzzle = self.state.get_current_room().puzzles.get_puzzle(self.state.stored_skill_check["puzzle"])
         dc = puzzle.get_difficulty_class(self.state.stored_skill_check["solution"])
         if roll >= dc:
-            OutputBuilder.append(NLG.succeed_check())
+            self.output_builder.append(NLG.succeed_check())
             self.state.stored_skill_check["success_func"](*self.state.stored_skill_check["success_params"])
             self.state.clear_skill_check()
         else:
-            OutputBuilder.append(NLG.fail_check())
+            self.output_builder.append(NLG.fail_check())
         self.state.clear_expected_intent()
         return True

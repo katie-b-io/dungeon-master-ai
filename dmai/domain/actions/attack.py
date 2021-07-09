@@ -7,12 +7,13 @@ import dmai
 
 
 class Attack(Action):
-    def __init__(self, attacker: str, target: str, state: State) -> None:
+    def __init__(self, attacker: str, target: str, state: State, output_builder: OutputBuilder) -> None:
         """Attack class"""
         Action.__init__(self)
         self.attacker = attacker
         self.target = target
         self.state = state
+        self.output_builder = output_builder
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -65,13 +66,13 @@ class Attack(Action):
             if self.state.get_dm().npcs.get_type(self.target) == "npc":
                 if self.state.get_dm().npcs.get_npc(self.target).attack_ends_game:
                     # this is a game end condition
-                    OutputBuilder.append(NLG.attack_npc_end_game(self.target))
-                    OutputBuilder.append(self.state.get_dm().get_bad_ending())
+                    self.output_builder.append(NLG.attack_npc_end_game(self.target))
+                    self.output_builder.append(self.state.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover()
             self.state.combat(self.attacker, self.target)
             return can_attack
         else:
-            OutputBuilder.append(
+            self.output_builder.append(
                 NLG.cannot_attack(
                     self.state.get_entity_name(self.attacker),
                     self.state.get_entity_name(self.target),

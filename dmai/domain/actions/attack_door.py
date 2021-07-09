@@ -7,12 +7,13 @@ import dmai
 
 
 class AttackDoor(Action):
-    def __init__(self, attacker: str, target: str, state: State) -> None:
+    def __init__(self, attacker: str, target: str, state: State, output_builder: OutputBuilder) -> None:
         """AttackDoor class"""
         Action.__init__(self)
         self.attacker = attacker
         self.target = target
         self.state = state
+        self.output_builder = output_builder
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -69,7 +70,7 @@ class AttackDoor(Action):
             return can_attack
         else:
             door_name = "the door to the {t}".format(t=self.state.get_room_name(self.target))
-            OutputBuilder.append(
+            self.output_builder.append(
                 NLG.cannot_attack_door(
                     self.state.get_entity_name(self.attacker),
                     door_name,

@@ -11,11 +11,12 @@ import dmai
 
 
 class Investigate(Action):
-    def __init__(self, target: str, state: State, target_type: str = "") -> None:
+    def __init__(self, target: str, state: State, output_builder: OutputBuilder, target_type: str = "") -> None:
         """Investigate class"""
         Action.__init__(self)
         self.target = target
         self.state = state
+        self.output_builder = output_builder
         self.target_type = target_type
 
     def __repr__(self) -> str:
@@ -60,7 +61,7 @@ class Investigate(Action):
                 target = self.state.get_entity_name(self.target)
             else:
                 target = self.target
-            OutputBuilder.append(NLG.cannot_investigate(target, reason))
+            self.output_builder.append(NLG.cannot_investigate(target, reason))
             return can_investigate
 
         # if the entity is scenery, return a failsafe utterance
@@ -69,13 +70,13 @@ class Investigate(Action):
             room_desc = self.state.get_current_room().get_all_text_array()
             plural_target = engine.plural(self.target)
             if self.target in room_desc or plural_target in room_desc:
-                OutputBuilder.append(
+                self.output_builder.append(
                     "You examine the {t}, but you see nothing special.".format(
                         t=self.target
                     )
                 )
             else:
-                OutputBuilder.append(
+                self.output_builder.append(
                     "I don't think I mentioned anything about {t}. Maybe you could {h}".format(
                         t=self.target, h=self.state.get_player().agent.get_next_move()
                     )
@@ -84,17 +85,17 @@ class Investigate(Action):
 
         if self.target_type == "drink":
             if self.state.get_current_room().ale:
-                OutputBuilder.append("You see a wonderful selection of ales.")
+                self.output_builder.append("You see a wonderful selection of ales.")
                 return True
             else:
-                OutputBuilder.append("Unfortunately, there are no ales here.")
+                self.output_builder.append("Unfortunately, there are no ales here.")
                 return True
 
         if self.target_type == "puzzle":
             puzzle = self.state.get_current_room().puzzles.get_puzzle(self.target)
             if hasattr(puzzle, "description"):
-                OutputBuilder.append(puzzle.description)
-            OutputBuilder.append("Trigger the puzzle checks")
+                self.output_builder.append(puzzle.description)
+            self.output_builder.append("Trigger the puzzle checks")
             puzzle.investigate_trigger()
             return True
 
@@ -104,9 +105,9 @@ class Investigate(Action):
             except UnrecognisedRoomError:
                 target = self.target
             if target == "door":
-                OutputBuilder.append("It's just a door.")
+                self.output_builder.append("It's just a door.")
             else:
-                OutputBuilder.append("This door goes to the {t}.".format(t=target))
+                self.output_builder.append("This door goes to the {t}.".format(t=target))
             return True
 
         if can_investigate:
@@ -114,7 +115,7 @@ class Investigate(Action):
             self.state.clear_skill_check()
             if self.target_type == "npc":
                 description = self.state.get_entity(self.target).description
-                OutputBuilder.append(description)
+                self.output_builder.append(description)
             elif self.target_type == "monster":
                 monster = self.state.get_entity(self.target)
                 if not self.state.is_alive(self.target):
@@ -133,13 +134,13 @@ class Investigate(Action):
                         description = "{d} It's dead.".format(d=monster.description)
                 else:
                     description = "{d} It's alive.".format(d=monster.description)
-                OutputBuilder.append(description)
+                self.output_builder.append(description)
             else:
-                OutputBuilder.append(
+                self.output_builder.append(
                     "You investigate {t} but see nothing significant.".format(
                         t=self.target
                     )
                 )
         else:
-            OutputBuilder.append(NLG.cannot_investigate(self.target, reason))
+            self.output_builder.append(NLG.cannot_investigate(self.target, reason))
         return can_investigate

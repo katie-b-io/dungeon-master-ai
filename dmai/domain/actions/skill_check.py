@@ -8,13 +8,14 @@ import dmai
 
 
 class SkillCheck(Action):
-    def __init__(self, skill: str, entity: str, target: str, state: State, dm_request: bool = False, puzzle: str = None, investigate: bool = False) -> None:
+    def __init__(self, skill: str, entity: str, target: str, state: State, output_builder: OutputBuilder, dm_request: bool = False, puzzle: str = None, investigate: bool = False) -> None:
         """SkillCheck class"""
         Action.__init__(self)
         self.skill = skill
         self.entity = entity
         self.target = target
         self.state = state
+        self.output_builder = output_builder
         self.dm_request = dm_request
         self.puzzle = puzzle
         self.investigate = investigate
@@ -85,7 +86,7 @@ class SkillCheck(Action):
             (can_check, reason) = self._can_skill_check()
         if can_check:
             if can_check:
-                OutputBuilder.append(
+                self.output_builder.append(
                     NLG.skill_check(Skills.get_name(self.skill), dm_request=self.dm_request)
                 )
                 self.state.set_expected_intent(["roll"])
@@ -119,5 +120,5 @@ class SkillCheck(Action):
                 target_name = self.state.get_entity_name(self.target)
             elif reason != "unknown room":
                 target_name = self.state.get_room_name(self.target)
-            OutputBuilder.append(NLG.cannot_skill_check(Skills.get_name(self.skill), target_name, reason))
+            self.output_builder.append(NLG.cannot_skill_check(Skills.get_name(self.skill), target_name, reason))
             return can_check

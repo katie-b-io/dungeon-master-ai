@@ -1,5 +1,5 @@
-from dmai.domain.actions.investigate import Investigate
 from dmai.utils.output_builder import OutputBuilder
+from dmai.domain.actions.investigate import Investigate
 from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedRoomError, UnrecognisedEquipment, UnrecognisedWeapon, UnrecognisedEntityError, UnrecognisedItem
 from dmai.game.state import State
@@ -18,11 +18,12 @@ class Actions:
     # class variables
     action_data = dict()
 
-    def __init__(self, adventure: Adventure, npcs, state: State) -> None:
+    def __init__(self, adventure: Adventure, npcs, state: State, output_builder: OutputBuilder) -> None:
         """Actions class"""
         self.adventure = adventure
         self.npcs = npcs
         self.state = state
+        self.output_builder = output_builder
         self.actions = dict()
         self._load_action_data()
 
@@ -96,7 +97,7 @@ class Actions:
                 possible_destinations = [self.state.get_room_name(room) for room in connected_rooms if self.state.travel_allowed(self.state.get_current_room_id(), room)]
             else:
                 possible_destinations = [self.state.get_room_name(room) for room in connected_rooms]
-            OutputBuilder.append(NLG.cannot_move(destination, reason, possible_destinations))
+            self.output_builder.append(NLG.cannot_move(destination, reason, possible_destinations))
         return can_move
 
     def attack(self, attacker: str, target: str) -> bool:
@@ -167,7 +168,7 @@ class Actions:
                 self.state.clear_skill_check()
                 return entity.use_equipment(equipment)
             else:
-                OutputBuilder.append(NLG.cannot_use(equipment, reason))
+                self.output_builder.append(NLG.cannot_use(equipment, reason))
         elif item:
             # check if item can be used
             (can_use, reason) = self._can_use_item(entity, item)
@@ -176,7 +177,7 @@ class Actions:
                 self.state.clear_skill_check()
                 return entity.use_item(item)
             else:
-                OutputBuilder.append(NLG.cannot_use(self.state.get_player().character.items.get_name(item), reason))
+                self.output_builder.append(NLG.cannot_use(self.state.get_player().character.items.get_name(item), reason))
         return can_use
 
     def _can_equip(self, entity, weapon: str) -> tuple:
@@ -208,9 +209,9 @@ class Actions:
         (can_equip, reason) = self._can_equip(entity, weapon)
         if can_equip:
             entity.equip_weapon(weapon)
-            OutputBuilder.append(NLG.equip_weapon(weapon))
+            self.output_builder.append(NLG.equip_weapon(weapon))
         else:
-            OutputBuilder.append(NLG.cannot_equip(weapon, reason))
+            self.output_builder.append(NLG.cannot_equip(weapon, reason))
         return can_equip
 
     def _can_unequip(self, entity, weapon: str) -> tuple:
@@ -242,9 +243,9 @@ class Actions:
         (can_unequip, reason) = self._can_unequip(entity, weapon)
         if can_unequip:
             entity.unequip_weapon(weapon)
-            OutputBuilder.append(NLG.unequip_weapon(weapon))
+            self.output_builder.append(NLG.unequip_weapon(weapon))
         else:
-            OutputBuilder.append(NLG.cannot_unequip(weapon, reason))
+            self.output_builder.append(NLG.cannot_unequip(weapon, reason))
         return can_unequip
 
     def _can_converse(self, target: str) -> tuple:
@@ -276,24 +277,24 @@ class Actions:
                 if not self.state.quest_received:
                     self.state.set_conversation_target(target)
                     self.state.received_quest()
-                    OutputBuilder.append(
+                    self.output_builder.append(
                         self.npcs.get_entity(target).dialogue["gives_quest"])
                 elif not self.state.get_dm().npcs.get_monster_id("giant_rat", status="alive", location="inns_cellar"):
                     # TODO this condition is hardcoded for the baradin tomb quest - don't hardcode it
                     self.state.set_conversation_target(target)
-                    OutputBuilder.append(
+                    self.output_builder.append(
                         self.npcs.get_entity(target).dialogue["turn_in_quest"])
-                    OutputBuilder.append(self.state.get_dm().get_bad_ending())
+                    self.output_builder.append(self.state.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover()
                 else:
-                    OutputBuilder.append(NLG.roleplay(self.state.get_entity_name(target)))
+                    self.output_builder.append(NLG.roleplay(self.state.get_entity_name(target)))
             return can_converse
         else:
             if bool(self.state.get_entity_name(target)):
                 target_name = self.state.get_entity_name(target)
             else:
                 target_name = target
-            OutputBuilder.append(NLG.cannot_converse(target_name, reason))
+            self.output_builder.append(NLG.cannot_converse(target_name, reason))
             return can_converse
 
     def investigate(self, target: str, target_type: str = "") -> bool:
@@ -331,7 +332,7 @@ class Actions:
         """Method to declare attack against player"""
         self.state.set_target(target, attacker)
         attacker = self.state.get_entity_name(attacker)
-        OutputBuilder.append(NLG.attack(attacker, target))
+        self.output_builder.append(NLG.attack(attacker, target))
     
     @staticmethod
     def attack_roll(attacker: str, weapon: str, target: str, *args) -> None:
@@ -340,9 +341,9 @@ class Actions:
         attacker = self.state.get_entity(attacker)
         target = self.state.get_entity(target)
         if attacker.attack_roll(weapon) >= target.armor_class:
-            OutputBuilder.append("{a} hits!".format(a=attacker.unique_name))
+            self.output_builder.append("{a} hits!".format(a=attacker.unique_name))
         else:
-            OutputBuilder.append("{a} misses!".format(a=attacker.unique_name))
+            self.output_builder.append("{a} misses!".format(a=attacker.unique_name))
             self.state.update_initiative_order()
         return
     
@@ -354,5 +355,5 @@ class Actions:
         damage = attacker.damage_roll(weapon)
         hp = self.state.take_damage(damage, attacker.unique_id)
         if target == self.state.get_player():
-            OutputBuilder.append(NLG.health_update(hp, hp_max=target.hp_max))
+            self.output_builder.append(NLG.health_update(hp, hp_max=target.hp_max))
         return

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from dmai.utils.output_builder import OutputBuilder
 
+from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.actions.skill_check import SkillCheck
 from dmai.game.state import State
 from dmai.utils.logger import get_logger
@@ -9,9 +9,10 @@ logger = get_logger(__name__)
 
 
 class Puzzle(ABC):
-    def __init__(self, puzzle_data: dict, state: State) -> None:
+    def __init__(self, puzzle_data: dict, state: State, output_builder: OutputBuilder) -> None:
         """Puzzle abstract class"""
         self.state = state
+        self.output_builder = output_builder
         self.solved = False
         self.triggered = False
         self.solution_map = {}
@@ -189,7 +190,7 @@ class Puzzle(ABC):
         """Method to construct solution success function"""
         # TODO support non-door types
         if self.solutions[option]["say"]:
-            OutputBuilder.append(self.solutions[option]["say"])
+            self.output_builder.append(self.solutions[option]["say"])
         if self.type == "door":
             room1 = self.id.split("---")[0]
             room2 = self.id.split("---")[1]
@@ -215,7 +216,7 @@ class Puzzle(ABC):
                 item_data = self.__dict__
                 self.state.get_player().character.items.add_item(self.id, item_data=item_data)
         if self.explore[option]["say"]:
-            OutputBuilder.append(self.explore[option]["say"])
+            self.output_builder.append(self.explore[option]["say"])
         self.solve()
     
     def investigate_success_func(self, option: str) -> None:
@@ -237,7 +238,7 @@ class Puzzle(ABC):
                     if puzzle.explore_map[explore_id]["can_trigger"]:
                         puzzle.explore_success_func(explore_id)
         if self.investigate[option]["say"]:
-            OutputBuilder.append(self.investigate[option]["say"])
+            self.output_builder.append(self.investigate[option]["say"])
         self.solve()
         
     def get_solution_success_func(self) -> object:

@@ -7,7 +7,6 @@ from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.dm import DM
 from dmai.game.state import State
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -26,6 +25,7 @@ class Game:
         self.skip_intro = skip_intro
         self.adventure = adventure
         self.session_id = session_id
+        self.output_builder = OutputBuilder()
 
     def load(self) -> None:
         logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=self.session_id, a=self.adventure))
@@ -45,14 +45,14 @@ class Game:
         self.nlu = NLU(self.state)
 
         # Initialise DM
-        self.dm = DM(self.adventure, self.state)
+        self.dm = DM(self.adventure, self.state, self.output_builder)
         self.dm.load()
         self.state.set_dm(self.dm)
 
         # set character class and name if possible
         if self.char_class:
             character = CharacterCollection.get_character(self.char_class, self.state)
-            self.player = Player(character)
+            self.player = Player(character, self.state, self.output_builder)
             self.state.set_player(self.player)
 
             if self.char_name:
@@ -71,7 +71,7 @@ class Game:
         """Receive a player input"""
 
         # clear the output
-        OutputBuilder.clear()
+        self.output_builder.clear()
 
         # reset the talking state
         if self.state.talking:
@@ -89,7 +89,7 @@ class Game:
             player_utter = player_utter.lower()
             character = CharacterCollection.get_character(player_utter, self.state)
             if character:
-                self.player = Player(character, self.state)
+                self.player = Player(character, self.state, self.output_builder)
                 self.state.set_player(self.player)
 
         elif not self.player.name:
@@ -119,8 +119,8 @@ class Game:
         """Return an output for the player"""
 
         # print welcome text
-        if OutputBuilder.has_response():
-                return OutputBuilder.format()
+        if self.output_builder.has_response():
+                return self.output_builder.format()
         
         # the game starts
         if self.intro:
@@ -132,8 +132,8 @@ class Game:
                 self.intro = False
 
         if self.state.paused:
-            if OutputBuilder.has_response():
-                return OutputBuilder.format()
+            if self.output_builder.has_response():
+                return self.output_builder.format()
             else:
                 return ""
 

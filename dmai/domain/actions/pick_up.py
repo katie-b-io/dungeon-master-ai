@@ -7,12 +7,13 @@ import dmai
 
 
 class PickUp(Action):
-    def __init__(self, item: str, entity: str, state: State) -> None:
+    def __init__(self, item: str, entity: str, state: State, output_builder: OutputBuilder) -> None:
         """PickUp class"""
         Action.__init__(self)
         self.item = item
         self.entity = entity
         self.state = state
+        self.output_builder = output_builder
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -53,17 +54,17 @@ class PickUp(Action):
         (picked_up, reason) = self._can_pick_up()
         if picked_up:
             # TODO check if picking up item will end game
-            # OutputBuilder.append(self.state.get_dm().get_bad_ending())
+            # self.output_builder.append(self.state.get_dm().get_bad_ending())
             # dmai.dmai_helpers.gameover()
             picked_up = self.state.get_player().character.items.add_item(self.item)
             if picked_up:
                 self.state.get_current_room(self.entity).took_item(self.item)
-                OutputBuilder.append(
+                self.output_builder.append(
                     NLG.pick_up(self.state.get_player().character.items.get_name(self.item))
                 )
             return picked_up
         else:
-            OutputBuilder.append(
+            self.output_builder.append(
                 NLG.cannot_pick_up(
                     self.state.get_player().character.items.get_name(self.item), reason
                 )

@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc import NPC
 from dmai.agents.monster_agent import MonsterAgent
 from dmai.domain.abilities import Abilities
@@ -12,7 +13,6 @@ from dmai.domain.skills import Skills
 from dmai.domain.spells import Spells
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
-from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
 from dmai.utils.logger import get_logger
@@ -25,15 +25,16 @@ class Monster(NPC, MonsterAgent):
         self,
         monster_data: dict,
         state: State,
+        output_builder: OutputBuilder,
         npc_data: dict = None,
         unique_id: str = None,
         unique_name: str = None,
     ) -> None:
         """Monster abstract class"""
         if unique_id:
-            MonsterAgent.__init__(self, state, problem=unique_id)
+            MonsterAgent.__init__(self, state, output_builder, problem=unique_id)
         else:
-            MonsterAgent.__init__(self, state, problem=monster_data["id"])
+            MonsterAgent.__init__(self, state, output_builder, problem=monster_data["id"])
         if npc_data:
             NPC.__init__(self, npc_data)
 
@@ -124,17 +125,21 @@ class Monster(NPC, MonsterAgent):
     def initiative_roll(self) -> int:
         """Method to roll initiative"""
         die = "d20{m}".format(m=self.get_signed_initiative())
-        return DiceRoller.roll(die, silent=True)
+        (roll_str, roll) = DiceRoller.roll(die, silent=True)
+        return roll
 
     def attack_roll(self, weapon: str) -> int:
         """Method to roll attack"""
         die = "d20{m}".format(m=self.get_signed_attack_bonus(weapon))
-        return DiceRoller.roll(die, silent=True)
+        (roll_str, roll) = DiceRoller.roll(die, silent=True)
+        return roll
 
     def damage_roll(self, weapon: str) -> int:
         """Method to roll damage"""
         dice_spec = self.get_damage_dice(weapon)
-        return DiceRoller.roll_dice(dice_spec, silent=True)
+        (roll_str, roll) = DiceRoller.roll_dice(dice_spec, silent=True)
+        self.output_builder.append(roll_str)
+        return roll
 
     def set_treasure(self, treasure: list) -> None:
         """Method to set treasure."""
@@ -164,7 +169,7 @@ class Monster(NPC, MonsterAgent):
             "Triggering attack of opportunity in monster: {m}".format(m=self.id)
         )
         if not self.state.stationary and self.state.in_combat and self.state.is_alive(self.id):
-            OutputBuilder.append(NLG.attack_of_opportunity(attacker=self.name))
+            self.output_builder.append(NLG.attack_of_opportunity(attacker=self.name))
 
     def move(self, destination: str, conditions: dict) -> None:
         """Method to move as a reaction to some situation"""

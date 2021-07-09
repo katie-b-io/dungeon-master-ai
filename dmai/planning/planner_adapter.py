@@ -9,11 +9,12 @@ logger = get_logger(__name__)
 
 
 class PlannerAdapter(ABC):
-    def __init__(self, domain: str, problem: str, state: State) -> None:
+    def __init__(self, domain: str, problem: str, state: State, output_builder: OutputBuilder) -> None:
         """PlannerAdapter abstract class"""
         self.domain = domain
         self.problem = problem
         self.state = state
+        self.output_builder = output_builder
         self.plan = None
         self.planning_actions = PlanningActions(state)
 
@@ -47,9 +48,9 @@ class PlannerAdapter(ABC):
         
         if action in self.planning_actions.actions:
             func = self.planning_actions.actions[action]["func"]
-            # if the function is NLG, it needs to be wrapped in the OutputBuilder
+            # if the function is NLG, it needs to be wrapped in the self.output_builder
             if hasattr(func, ".__self__") and func.__self__.__name__ == "NLG":
-                OutputBuilder.append(func(*params))
+                self.output_builder.append(func(*params))
             else:
                 func(*params)
         

@@ -11,7 +11,7 @@ from dmai.dm import DM
 from dmai.game.game import Game
 from dmai.utils.config import Config
 from dmai.nlg.nlg import NLG
-from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.self.output_builder import self.output_builder
 from dmai.utils.exceptions import UnrecognisedRoomError
 
 
@@ -59,7 +59,7 @@ class TestDM(unittest.TestCase):
 
     def test_output(self) -> None:
         self.dm.input("", utter_type="test")
-        OutputBuilder.clear()
+        self.output_builder.clear()
         self.dm.input("", utter_type="test")
         utter = "Xena, what do you do?\n"
         self.assertEqual(utter, self.dm.output)

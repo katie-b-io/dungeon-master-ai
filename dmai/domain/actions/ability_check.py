@@ -8,7 +8,7 @@ import dmai
 
 
 class AbilityCheck(Action):
-    def __init__(self, ability: str, entity: str, target: str, target_type: str, state: State, dm_request: bool = False, investigate: bool = False) -> None:
+    def __init__(self, ability: str, entity: str, target: str, target_type: str, state: State, output_builder: OutputBuilder, dm_request: bool = False, investigate: bool = False) -> None:
         """AbilityCheck class"""
         Action.__init__(self)
         self.ability = ability
@@ -16,6 +16,7 @@ class AbilityCheck(Action):
         self.target = target
         self.target_type = target_type
         self.state = state
+        self.output_builder = output_builder
         self.dm_request = dm_request
         self.investigate = investigate
         self.puzzle = target if target_type == "puzzle" else None
@@ -83,7 +84,7 @@ class AbilityCheck(Action):
             (can_check, reason) = self._can_ability_check()
         if can_check:
             if can_check:
-                OutputBuilder.append(
+                self.output_builder.append(
                     NLG.ability_check(Abilities.get_name(self.ability), dm_request=self.dm_request)
                 )
                 self.state.set_expected_intent(["roll"])
@@ -124,5 +125,5 @@ class AbilityCheck(Action):
                     target_name = self.state.get_room_name(self.target)
             except UnrecognisedRoomError:
                 target_name = self.target
-            OutputBuilder.append(NLG.cannot_ability_check(Abilities.get_name(self.ability), target_name, reason))
+            self.output_builder.append(NLG.cannot_ability_check(Abilities.get_name(self.ability), target_name, reason))
             return can_check

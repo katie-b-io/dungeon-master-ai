@@ -7,26 +7,26 @@ sys.path.insert(0, p + "/../")
 
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
-from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.self.output_builder import self.output_builder
 from dmai.utils.loader import Loader
 
 
 
 class TestOutputBuilder(unittest.TestCase):
-    """Test the OutputBuilder class"""
+    """Test the self.output_builder class"""
 
     def setUp(self) -> None:
         pass
 
     def test_format(self) -> None:
-        OutputBuilder.clear()
+        self.output_builder.clear()
         statement1 = "This is a statement"
         statement2 = "Also this is a statement"
         statement3 = "And this one"
-        OutputBuilder.append(statement1)
-        OutputBuilder.append(statement2)
-        OutputBuilder.append(statement3)
-        self.assertEqual(OutputBuilder.format(), "This is a statement\n\nAlso this is a statement\n\nAnd this one\n")
+        self.output_builder.append(statement1)
+        self.output_builder.append(statement2)
+        self.output_builder.append(statement3)
+        self.assertEqual(self.output_builder.format(), "This is a statement\n\nAlso this is a statement\n\nAnd this one\n")
         
     
 class TestText(unittest.TestCase):

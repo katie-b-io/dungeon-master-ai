@@ -3,7 +3,6 @@ import os
 
 import dmai
 from dmai.utils.config import Config
-from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -58,13 +57,6 @@ def main() -> None:
     Config.set_uuid()
     Config.set_root(os.path.dirname(os.path.abspath(__file__)))
 
-    OutputBuilder.append(
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    )
-    OutputBuilder.append(
-        "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
-    )
-
     # get the command line arguments
     args = build_arg_parser().parse_args()
 
@@ -98,10 +90,17 @@ def main() -> None:
     else:
         game = dmai.start(skip_intro=args.skip_intro)
 
+    game.output_builder.append(
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    )
+    game.output_builder.append(
+        "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
+    )
+
     # start an interactive session on the command line
     if args.interactive:
-        OutputBuilder.print()
-        OutputBuilder.clear()
+        game.output_builder.print()
+        game.output_builder.clear()
         dmai.run(game)
 
 

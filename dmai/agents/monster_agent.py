@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 from dmai.utils.config import Config
 from dmai.agents.agent import Agent
@@ -8,9 +9,9 @@ logger = get_logger(__name__)
 
 
 class MonsterAgent(Agent):
-    def __init__(self, state: State, **kwargs) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder, **kwargs) -> None:
         """MonsterAgent class"""
-        Agent.__init__(self, state, **kwargs)
+        Agent.__init__(self, state, output_builder, **kwargs)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
