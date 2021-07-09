@@ -27,7 +27,7 @@ class TestPlayerAgent(unittest.TestCase):
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         self.problem = "fighter"
-        self.agent = PlayerAgent(problem=self.problem)
+        self.agent = PlayerAgent(self.game.state, self.game.output_builder, problem=self.problem)
 
     def tearDown(self) -> None:
         shutil.rmtree(Config.directory.planning)
@@ -62,7 +62,7 @@ class TestMonsterAgent(unittest.TestCase):
         Config.agent.set_monster("planning")
         Config.planner.set_monster("fd")
         self.problem = "giant_rat_1"
-        self.agent = MonsterAgent(problem=self.problem)
+        self.agent = MonsterAgent(self.game.state, self.game.output_builder,problem=self.problem)
 
     def tearDown(self) -> None:
         shutil.rmtree(Config.directory.planning)
