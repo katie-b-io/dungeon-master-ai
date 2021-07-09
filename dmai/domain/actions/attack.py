@@ -66,7 +66,7 @@ class Attack(Action):
             if self.state.get_dm().npcs.get_type(self.target) == "npc":
                 if self.state.get_dm().npcs.get_npc(self.target).attack_ends_game:
                     # this is a game end condition
-                    self.output_builder.append(NLG.attack_npc_end_game(self.target))
+                    self.output_builder.append(NLG.attack_npc_end_game(self.state.get_entity(self.target).short_name))
                     self.output_builder.append(self.state.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover(self.output_builder)
             self.state.combat(self.attacker, self.target)
@@ -76,6 +76,7 @@ class Attack(Action):
                 NLG.cannot_attack(
                     self.state.get_entity_name(self.attacker),
                     self.state.get_entity_name(self.target),
+                    self.state.get_player().name,
                     reason,
                     self.state.get_formatted_possible_monster_targets(),
                 )

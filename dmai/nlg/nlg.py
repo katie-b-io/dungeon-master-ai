@@ -23,10 +23,6 @@ class NLG(metaclass=NLGMeta):
         """NLG static class"""
         pass
 
-    @classmethod
-    def set_game(cls, game) -> None:
-        cls.game = game
-
     ############################################################
     # Player interaction utterances
     @classmethod
@@ -64,47 +60,43 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def get_player_name(cls) -> str:
+    def get_player_name(cls, character_class: str) -> str:
         """Return the utterance for getting player's name"""
-        c = cls.game.player.character_class
         utters = [
-            "What is your character's name, this great {c}?".format(c=c),
+            "What is your character's name, this great {c}?".format(c=character_class),
             "Ahh, a {c}. Excellent choice! And what is your character's name?".
-            format(c=c),
+            format(c=character_class),
             "A {c}, marvelous! And what do they call your character?".format(
-                c=c),
+                c=character_class),
         ]
         return random.choice(utters)
 
     @classmethod
-    def get_action(cls) -> str:
+    def get_action(cls, name: str) -> str:
         """Return the utterance for getting a player action"""
-        n = cls.game.player.name
-        utters = ["{n}, what do you do?".format(n=n)]
+        utters = ["{n}, what do you do?".format(n=name)]
         return random.choice(utters)
 
     @classmethod
-    def get_title(cls) -> str:
+    def get_title(cls, title: str) -> str:
         """Return the utterance for introducing the adventure title"""
-        t = cls.game.dm.adventure.title
         utters = [
             "Welcome adventurer, today we're going to play {t}! Let me set the scene..."
-            .format(t=t),
+            .format(t=title),
             "Today we'll play {t}, an exciting tale of adventure! Let me set the scene..."
-            .format(t=t),
+            .format(t=title),
             "The title of the adventure we're about to play is: {t}. Let me set the scene..."
-            .format(t=t),
+            .format(t=title),
         ]
         return random.choice(utters)
 
     @classmethod
-    def acknowledge_name(cls) -> str:
+    def acknowledge_name(cls, name: str) -> str:
         """Return the utterance for acknowledging player's name"""
-        n = cls.game.player.name
         utters = [
-            "{n}, simply majestic!".format(n=n),
-            "{n}, the finest name in all the lands!".format(n=n),
-            "{n}, that's a good one!".format(n=n),
+            "{n}, simply majestic!".format(n=name),
+            "{n}, the finest name in all the lands!".format(n=name),
+            "{n}, that's a good one!".format(n=name),
         ]
         return random.choice(utters)
 
@@ -123,9 +115,8 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def heal(cls, hp, new_hp) -> str:
+    def heal(cls, hp, new_hp, character_class: str) -> str:
         """Return the utterance for healing by a given amount"""
-        c = cls.game.player.character_class
         if hp <= 0:
             utters = [
                 "Is this thing on? You didn't heal any hp! You've got {n} hp in total.".format(n=new_hp),
@@ -140,13 +131,13 @@ class NLG(metaclass=NLGMeta):
             ]
         elif (hp/new_hp) < 0.5:
             utters = [
-                "Ahh, that was refreshing! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp, c=c),
+                "Ahh, that was refreshing! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp, c=character_class),
                 "The healing rush hits you with {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
                 "You feel reinvigorated! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
             ]
         else:
             utters = [
-                "You feel like a new {c}! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp, c=c),
+                "You feel like a new {c}! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp, c=character_class),
                 "That felt amazing! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
                 "You feel invincible! You healed {h} hp and you've got {n} hp in total.".format(n=new_hp, h=hp),
             ]
@@ -463,9 +454,9 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
-    def cannot_attack(cls, attacker: str, target: str, reason: str = None, possible_targets: list = []) -> str:
+    def cannot_attack(cls, attacker: str, target: str, name: str, reason: str = None, possible_targets: list = []) -> str:
         """Return the utterance for not allowing attack"""
-        if attacker == "player" or attacker == cls.game.player.name:
+        if attacker == "player" or attacker == name:
             attacker = "You"
         
         if possible_targets:
@@ -535,11 +526,10 @@ class NLG(metaclass=NLGMeta):
     ############################################################
     # Roleplay utterances
     @classmethod
-    def roleplay(cls, target: str) -> str:
+    def roleplay(cls, name: str, target: str) -> str:
         """Return the utterance for getting roleplay prompt"""
-        n = cls.game.player.name
         utters = [
-            "{n}, what do you say to {t}?".format(n=n, t=target)
+            "{n}, what do you say to {t}?".format(n=name, t=target)
         ]
         return random.choice(utters)
 
@@ -635,9 +625,9 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def cannot_attack_door(cls, attacker: str, target: str, reason: str = None, possible_targets: list = []) -> str:
+    def cannot_attack_door(cls, attacker: str, target: str, name: str, reason: str = None, possible_targets: list = []) -> str:
         """Return the utterance for not allowing door attack"""
-        if attacker == "player" or attacker == cls.game.player.name:
+        if attacker == "player" or attacker == name:
             attacker = "You"
         
         if possible_targets:
@@ -782,16 +772,15 @@ class NLG(metaclass=NLGMeta):
     ############################################################
     # Gameover utterances
     @classmethod
-    def attack_npc_end_game(cls, npc_id: str) -> str:
+    def attack_npc_end_game(cls, name: str) -> str:
         """Return the utterance for ending the game by attacking npc"""
-        n = cls.game.dm.npcs.get_npc(npc_id).short_name
         utters = [
             "You attacked and fatally wounded {n}. He was a much loved member of the community and retribution was swift. You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=n),
+            .format(n=name),
             "Your unprovoked attack took your good friend {n} completely unawares. As the light left his eyes, he managed to utter a quiet \"why?\" with his dying breath. Why indeed? You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=n),
+            .format(n=name),
             "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=n),
+            .format(n=name),
         ]
         return random.choice(utters)
     

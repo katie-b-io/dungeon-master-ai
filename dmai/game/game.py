@@ -95,6 +95,7 @@ class Game:
         elif not self.player.name:
             # player is entering a name
             self.player.set_name(player_utter)
+            self.dm.set_player_name(player_utter)
             self.state.start()
             succeed = self.dm.input(player_utter, utter_type="name")
 
@@ -144,7 +145,7 @@ class Game:
 
         elif not self.player.name:
             # get the player's name
-            return NLG.get_player_name()
+            return NLG.get_player_name(self.player.character_class)
 
         # get the DM's utterance
         return self.dm.output

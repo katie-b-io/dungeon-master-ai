@@ -48,11 +48,10 @@ def start(char_class: str = None,
                 adventure=adventure,
                 session_id=session_id)
     game.load()
-    NLG.set_game(game)
 
     # print some info for the user
     game.output_builder.append(
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title()))
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title(game.dm.adventure.title)))
     
     # return the game instance
     return game

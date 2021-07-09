@@ -288,7 +288,7 @@ class Actions:
                     self.output_builder.append(self.state.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover(self.output_builder)
                 else:
-                    self.output_builder.append(NLG.roleplay(self.state.get_entity_name(target)))
+                    self.output_builder.append(NLG.roleplay(self.state.get_player().name, self.state.get_entity_name(target)))
             return can_converse
         else:
             if bool(self.state.get_entity_name(target)):

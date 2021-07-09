@@ -426,7 +426,7 @@ class State():
                 hp = hp_max - current_hp
             new_hp = min(hp_max, new_hp) 
         self.current_hp[entity] = new_hp
-        self.output_builder.append(NLG.heal(hp, new_hp))
+        self.output_builder.append(NLG.heal(hp, new_hp, self.player.character_class))
     
     
     def drink_ale(self) -> None:
