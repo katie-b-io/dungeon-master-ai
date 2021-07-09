@@ -1,5 +1,4 @@
 from dmai.game.state import State
-from dmai.domain.actions.actions import Actions
 
 class PlanningActions():
 
@@ -137,7 +136,7 @@ class PlanningActions():
         )"""},
 
             "attack_roll": {
-                "func": Actions.attack_roll,
+                "func": self.state.attack_roll,
                 "pddl": """
         ; Entity succeeds on an attack roll
         (:action attack_roll
@@ -212,7 +211,7 @@ class PlanningActions():
         )"""},
 
             "damage_roll": {
-                "func": Actions.damage_roll,
+                "func": self.state.damage_roll,
                 "pddl": """
         ; Entity damages a target
         (:action damage_roll
@@ -792,7 +791,7 @@ class PlanningActions():
         )"""},
 
             "declare_attack_against_player": {
-                "func": Actions.declare_attack_against_player,
+                "func": self.state.declare_attack_against_player,
                 "pddl": """
         ; Monster wants to attack player
         (:action declare_attack_against_player

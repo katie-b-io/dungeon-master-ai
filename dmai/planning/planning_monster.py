@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dmai.utils.output_builder import OutputBuilder
 import os
 
 from dmai.planning.planning_agent import PlanningAgent
@@ -12,9 +13,9 @@ logger = get_logger(__name__)
 
 
 class PlanningMonster(PlanningAgent):
-    def __init__(self, state: State, **kwargs) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder, **kwargs) -> None:
         """PlanningMonster class"""
-        PlanningAgent.__init__(self, Config.planner.monster, "monster", state, **kwargs)
+        PlanningAgent.__init__(self, Config.planner.monster, "monster", state, output_builder, **kwargs)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)

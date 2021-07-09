@@ -1,4 +1,5 @@
 from abc import ABC
+from dmai.utils.output_builder import OutputBuilder
 import textwrap
 
 from dmai.game.state import State
@@ -25,9 +26,10 @@ logger = get_logger(__name__)
 
 
 class Character(ABC):
-    def __init__(self, character_data: dict, state: State) -> None:
+    def __init__(self, character_data: dict, state: State, output_builder: OutputBuilder) -> None:
         """Character abstract class"""
         self.state = state
+        self.output_builder = output_builder
         self.name = None
         self.cp = 0
 
@@ -42,7 +44,7 @@ class Character(ABC):
             self.char_class = CharacterClass(self.char_class)
             self.conditions = Conditions()
             self.equipment = EquipmentCollection(
-                equipment=self.equipment, state=self.state, proficiencies=self.proficiencies["tools"]
+                equipment=self.equipment, state=self.state, output_builder=self.output_builder, proficiencies=self.proficiencies["tools"]
             )
             self.items = ItemCollection()
             self.languages = Languages(self.languages)

@@ -48,7 +48,7 @@ class Monster(NPC, MonsterAgent):
             self.armor = Armor(self.armor)
             self.attacks = Attacks(self.attacks)
             self.conditions = Conditions()
-            self.equipment = EquipmentCollection(self.equipment, self.state)
+            self.equipment = EquipmentCollection(self.equipment, self.state, self.output_builder)
             self.features = Features(features=self.features)
             self.languages = Languages(self.languages)
             self.skills = Skills(abilities=self.abilities, skills=self.skills)

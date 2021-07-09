@@ -39,10 +39,10 @@ class Game:
         MonsterCollection.load()
 
         # Initialise state
-        self.state = State(self.session_id)
+        self.state = State(self.output_builder, self.session_id)
 
         # Initialise NLU
-        self.nlu = NLU(self.state)
+        self.nlu = NLU(self.state, self.output_builder)
 
         # Initialise DM
         self.dm = DM(self.adventure, self.state, self.output_builder)
@@ -51,7 +51,7 @@ class Game:
 
         # set character class and name if possible
         if self.char_class:
-            character = CharacterCollection.get_character(self.char_class, self.state)
+            character = CharacterCollection.get_character(self.char_class, self.state, self.output_builder)
             self.player = Player(character, self.state, self.output_builder)
             self.state.set_player(self.player)
 
@@ -87,7 +87,7 @@ class Game:
             if not player_utter:
                 return
             player_utter = player_utter.lower()
-            character = CharacterCollection.get_character(player_utter, self.state)
+            character = CharacterCollection.get_character(player_utter, self.state, self.output_builder)
             if character:
                 self.player = Player(character, self.state, self.output_builder)
                 self.state.set_player(self.player)

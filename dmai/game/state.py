@@ -107,7 +107,7 @@ class State():
             self.output_builder.append(NLG.transition_to_combat())
         else:
             self.set_target(target, attacker)
-            self.state.set_expected_intent(["roll"])
+            self.set_expected_intent(["roll"])
             self.output_builder.append(NLG.perform_attack_roll())
             self.progress_combat_status()
                 
@@ -509,7 +509,7 @@ class State():
         rolls = {}
 
         # get player initiative
-        player_result = self.state.get_player().initiative_roll()
+        player_result = self.get_player().initiative_roll()
         self.output_builder.append(NLG.roll_reaction(player_result))
         rolls["player"] = player_result
         
@@ -619,7 +619,7 @@ class State():
             if self.current_hp[entity] <= 0:
                 if entity == "player":
                     # if the entity is player, this is a gameover state
-                    attacker = self.state.get_entity(attacker)
+                    attacker = self.get_entity(attacker)
                     death_text = attacker.text["killed_player"]
                     self.output_builder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
                     self.output_builder.append(self.get_dm().get_bad_ending())
@@ -627,8 +627,8 @@ class State():
                 else:
                     self.kill_monster(entity)
                     # deregister triggers
-                    if hasattr(self.state.get_entity(entity), "trigger"):
-                        self.dm.register_trigger(self.state.get_entity(entity))
+                    if hasattr(self.get_entity(entity), "trigger"):
+                        self.dm.register_trigger(self.get_entity(entity))
             return self.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
@@ -637,7 +637,7 @@ class State():
     
     def kill_monster(self, entity: str) -> None:
         # player has killed a monster
-        name = self.state.get_entity_name(entity)
+        name = self.get_entity_name(entity)
         self.output_builder.append("You killed {n}!".format(n=name))
         self.set_current_status(entity, "dead")
         self.clear_target()
@@ -649,6 +649,34 @@ class State():
     def end_fight(self) -> None:
         self.output_builder.append(NLG.won_fight())
         self.explore()
+    
+    def declare_attack_against_player(self, attacker: str, target: str, *args) -> None:
+        """Method to declare attack against player"""
+        self.set_target(target, attacker)
+        attacker = self.get_entity_name(attacker)
+        self.output_builder.append(NLG.attack(attacker, target))
+    
+    def attack_roll(self, attacker: str, weapon: str, target: str, *args) -> None:
+        """Method to perform an attack roll"""
+        # TODO implement advantage/disadvantage
+        attacker = self.get_entity(attacker)
+        target = self.get_entity(target)
+        if attacker.attack_roll(weapon) >= target.armor_class:
+            self.output_builder.append("{a} hits!".format(a=attacker.unique_name))
+        else:
+            self.output_builder.append("{a} misses!".format(a=attacker.unique_name))
+            self.update_initiative_order()
+        return
+    
+    def damage_roll(self, attacker: str, weapon: str, target: str, *args) -> None:
+        """Method to perform a damage roll"""
+        attacker = self.get_entity(attacker)
+        target = self.get_entity(target)
+        damage = attacker.damage_roll(weapon)
+        hp = self.take_damage(damage, attacker.unique_id)
+        if target == self.get_player():
+            self.output_builder.append(NLG.health_update(hp, hp_max=target.hp_max))
+        return
         
     ############################################################
     # METHODS RELATING TO LOCATION
@@ -819,7 +847,7 @@ class State():
         """Method to get all doors in a room that specified entity is in"""
         targets = []
         for room in self.get_current_room().get_connected_rooms():
-            if not self.state.travel_allowed(self.state.get_current_room_id(), room):
+            if not self.travel_allowed(self.get_current_room_id(), room):
                 targets.append(room)
         return targets
     
@@ -827,7 +855,7 @@ class State():
     def get_formatted_possible_door_targets(self, entity: str = "player") -> str:
         """Method to return a formatted string of possible door targets"""
         rooms = self.get_possible_door_targets(entity)
-        possible_targets = [self.state.get_room_name(room) for room in rooms]
+        possible_targets = [self.get_room_name(room) for room in rooms]
         formatted_str = "You could try to find a way to open the door to {a}.".format(a=Text.properly_format_list(possible_targets, delimiter=", the ", last_delimiter=" or the "))
         return formatted_str
     
@@ -906,7 +934,7 @@ class State():
                 # this destroys the door and unlocks the way
                 self.in_combat_with_door = False
                 self.unlock_door(self.get_current_room_id(), target)
-                self.output_builder.append(NLG.broke_down_door(self.state.get_room_name(target)))
+                self.output_builder.append(NLG.broke_down_door(self.get_room_name(target)))
             else:
                 self.output_builder.append(NLG.deal_door_damage(damage, original_hp))
             return self.current_hp_door[target]

@@ -23,15 +23,15 @@ class DM:
         self.triggers = []
         self.state = state
         self.output_builder = output_builder
-        self.adventure = Adventure(adventure, self.state)
+        self.adventure = Adventure(adventure, self.state, self.output_builder)
 
     def load(self) -> None:
         # Initialise the NPC Collection with the adventure data
-        self.npcs = NPCCollection(self.adventure, self.state)
+        self.npcs = NPCCollection(self.adventure, self.state, self.output_builder)
         self.npcs.load()
 
         # Initialise the actions with the adventure and npc data
-        self.actions = Actions(self.adventure, self.npcs, self.state)
+        self.actions = Actions(self.adventure, self.npcs, self.state, self.output_builder)
 
         # Initialise the player intent map
         self.player_intent_map = {

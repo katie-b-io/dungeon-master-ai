@@ -17,6 +17,7 @@ class Actions:
 
     # class variables
     action_data = dict()
+    state = None
 
     def __init__(self, adventure: Adventure, npcs, state: State, output_builder: OutputBuilder) -> None:
         """Actions class"""
@@ -103,13 +104,13 @@ class Actions:
     def attack(self, attacker: str, target: str) -> bool:
         """Attempt to attack a specified target.
         Returns a bool to indicate whether the action was successful"""
-        attack = Attack(attacker, target)
+        attack = Attack(attacker, target, self.state, self.output_builder)
         return attack.execute()
 
     def attack_door(self, attacker: str, location: str) -> bool:
         """Attempt to attack a door at specified location.
         Returns a bool to indicate whether the action was successful"""
-        attack_door = AttackDoor(attacker, location)
+        attack_door = AttackDoor(attacker, location, self.state, self.output_builder)
         return attack_door.execute()
     
     def _can_use_equipment(self, entity, equipment: str) -> tuple:
@@ -300,13 +301,13 @@ class Actions:
     def investigate(self, target: str, target_type: str = "") -> bool:
         """Attempt to explore/investigate.
         Returns a bool to indicate whether the action was successful"""
-        investigate = Investigate(target, target_type=target_type)
+        investigate = Investigate(target, self.state, self.output_builder, target_type=target_type)
         return investigate.execute()
 
     def roll(self, roll_type: str, nlu_entities: dict, die: str = "d20") -> bool:
         """Attempt to roll a specified type.
         Returns a bool to indicate whether the action was successful"""
-        roll = Roll(roll_type, die, nlu_entities)
+        roll = Roll(roll_type, die, nlu_entities, self.state, self.output_builder)
         return roll.execute()
 
     def pick_up(self, item: str, entity: str = "player") -> bool:
@@ -314,7 +315,7 @@ class Actions:
         Returns a bool to indicate whether the action was successful"""
         self.state.explore()
         self.state.clear_skill_check()
-        pick_up = PickUp(item, entity)
+        pick_up = PickUp(item, entity, self.state, self.output_builder)
         return pick_up.execute()
 
     def ability_check(self,
@@ -324,36 +325,5 @@ class Actions:
                       target_type: str = "") -> bool:
         """Attempt to perform an ability check.
         Returns a bool to indicate whether the action was successful"""
-        check = AbilityCheck(ability, entity, target, target_type)
+        check = AbilityCheck(ability, entity, target, target_type, self.state, self.output_builder)
         return check.execute()
-    
-    @staticmethod
-    def declare_attack_against_player(attacker: str, target: str, *args) -> None:
-        """Method to declare attack against player"""
-        self.state.set_target(target, attacker)
-        attacker = self.state.get_entity_name(attacker)
-        self.output_builder.append(NLG.attack(attacker, target))
-    
-    @staticmethod
-    def attack_roll(attacker: str, weapon: str, target: str, *args) -> None:
-        """Method to perform an attack roll"""
-        # TODO implement advantage/disadvantage
-        attacker = self.state.get_entity(attacker)
-        target = self.state.get_entity(target)
-        if attacker.attack_roll(weapon) >= target.armor_class:
-            self.output_builder.append("{a} hits!".format(a=attacker.unique_name))
-        else:
-            self.output_builder.append("{a} misses!".format(a=attacker.unique_name))
-            self.state.update_initiative_order()
-        return
-    
-    @staticmethod
-    def damage_roll(attacker: str, weapon: str, target: str, *args) -> None:
-        """Method to perform a damage roll"""
-        attacker = self.state.get_entity(attacker)
-        target = self.state.get_entity(target)
-        damage = attacker.damage_roll(weapon)
-        hp = self.state.take_damage(damage, attacker.unique_id)
-        if target == self.state.get_player():
-            self.output_builder.append(NLG.health_update(hp, hp_max=target.hp_max))
-        return

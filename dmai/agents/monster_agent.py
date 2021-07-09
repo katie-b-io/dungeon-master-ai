@@ -28,7 +28,7 @@ class MonsterAgent(Agent):
         try:
             agent_map = {"planning": PlanningMonster}
             agent = agent_map[agent]
-            return agent(self.state, **kwargs)
+            return agent(self.state, self.output_builder, **kwargs)
         except (ValueError, KeyError) as e:
             msg = "Cannot create agent {a} - it does not exist!".format(
                 a=agent)
