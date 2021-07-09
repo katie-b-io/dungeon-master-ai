@@ -9,7 +9,6 @@ sys.path.insert(0, p + "/../")
 from dmai.game.game import Game
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
 from dmai.utils.config import Config
-from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 
 
@@ -86,10 +85,10 @@ class TestPlanningMonster(unittest.TestCase):
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         monster_id = "giant_rat_1"
-        State.set_current_room("player", "inns_cellar")
-        State.light_torch()
-        State.set_target(monster_id)
-        self.monster = State.get_entity(monster_id)
+        self.game.state.set_current_room("player", "inns_cellar")
+        self.game.state.light_torch()
+        self.game.state.set_target(monster_id)
+        self.monster = self.game.state.get_entity(monster_id)
         self.monster.agent.prepare_next_move()
     
     def tearDown(self) -> None:
@@ -127,11 +126,11 @@ class TestPlanningPlayer(unittest.TestCase):
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         monster_id = "giant_rat_1"
-        State.set_current_room("player", "inns_cellar")
-        State.quest()
-        State.light_torch()
-        State.set_target(monster_id)
-        self.player = State.get_player()
+        self.game.state.set_current_room("player", "inns_cellar")
+        self.game.state.quest()
+        self.game.state.light_torch()
+        self.game.state.set_target(monster_id)
+        self.player = self.game.state.get_player()
         self.player.agent.prepare_next_move()
     
     def tearDown(self) -> None:

@@ -15,8 +15,7 @@ logger = get_logger(__name__)
 
 def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005) -> None:
     session_id = create_session_id()
-    Config.session.set_session_id(session_id)
-    logger.debug("(SESSION: {s}) Initialising game".format(s=Config.session.session_id))
+    logger.debug("(SESSION: {s}) Initialising game".format(s=session_id))
     Config.set_uuid()
     Config.set_root(root_path)
     Config.hosts.set_rasa_host(rasa_host)
@@ -27,7 +26,7 @@ def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005) ->
     OutputBuilder.append(
         "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
     )
-    game = start(char_class="fighter")
+    game = start(char_class="fighter", session_id=session_id)
     ui = UserInterface(game)
 
     
@@ -42,12 +41,14 @@ def  create_session_id(chars = string.ascii_uppercase, n=10):
 def start(char_class: str = None,
           char_name: str = None,
           skip_intro: bool = False,
-          adventure: str = "the_tomb_of_baradin_stormfury") -> Game:
+          adventure: str = "the_tomb_of_baradin_stormfury",
+          session_id: str = None) -> Game:
     """Initialise the game"""
     game = Game(char_class=char_class,
                 char_name=char_name,
                 skip_intro=skip_intro,
-                adventure=adventure)
+                adventure=adventure,
+                session_id=session_id)
     game.load()
     NLG.set_game(game)
     NLU.set_game(game)

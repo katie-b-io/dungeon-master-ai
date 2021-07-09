@@ -8,9 +8,7 @@ sys.path.insert(0, p + "/../")
 from dmai.game.npcs.npc import NPC
 from dmai.domain.monsters.monster_collection import MonsterCollection
 from dmai.domain.monsters.skeleton import Skeleton
-from dmai.domain.monsters.giant_rat import GiantRat
 from dmai.game.adventure import Adventure
-from dmai.game.state import State
 from dmai.game.game import Game
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
@@ -25,136 +23,136 @@ class TestState(unittest.TestCase):
 
     def test_get_room_name(self) -> None:
         room = "burial_chamber"
-        self.assertEqual("Burial Chamber", State.get_room_name(room))
+        self.assertEqual("Burial Chamber", self.game.state.get_room_name(room))
     
     def test_get_room_name_malformed(self) -> None:
         room = "the bar"
         with self.assertRaises(UnrecognisedRoomError):
-            State.get_room_name(room)
+            self.game.state.get_room_name(room)
 
     def test__check_room_exists(self) -> None:
         room = "burial_chamber"
-        self.assertEqual(True, State.check_room_exists(room))
+        self.assertEqual(True, self.game.state.check_room_exists(room))
 
     def test__check_room_exists_malformed(self) -> None:
         room1 = "the bar"
         room2 = "moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State.check_room_exists(room1)
+            self.game.state.check_room_exists(room1)
         with self.assertRaises(UnrecognisedRoomError):
-            State.check_room_exists(room2)
+            self.game.state.check_room_exists(room2)
 
     def test_get_current_room_player(self) -> None:
         entity = "player"
         room = self.adventure.get_room("stout_meal_inn")
-        self.assertEqual(room, State.get_current_room(entity))
+        self.assertEqual(room, self.game.state.get_current_room(entity))
 
     def test_get_current_room_malformed(self) -> None:
         entity = "yoda"
         with self.assertRaises(UnrecognisedEntityError):
-            State.get_current_room(entity)
+            self.game.state.get_current_room(entity)
 
     def test_set_current_room_player(self) -> None:
         entity = "player"
         room_id = "inns_cellar"
         room = self.adventure.get_room(room_id)
-        State.set_current_room(entity, room_id)
-        self.assertEqual(room, State.get_current_room(entity))
+        self.game.state.set_current_room(entity, room_id)
+        self.assertEqual(room, self.game.state.get_current_room(entity))
 
     def test_set_current_room_malformed_room(self) -> None:
         entity = "player"
         room_id = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State.set_current_room(entity, room_id)
+            self.game.state.set_current_room(entity, room_id)
 
     def test_set_current_room_malformed_room(self) -> None:
         entity = "yoda"
         room_id = "inns_cellar"
         with self.assertRaises(UnrecognisedEntityError):
-            State.set_current_room(entity, room_id)
+            self.game.state.set_current_room(entity, room_id)
 
     def test_get_current_room_id_player(self) -> None:
         entity = "player"
         room = "stout_meal_inn"
-        self.assertEqual(room, State.get_current_room_id(entity))
+        self.assertEqual(room, self.game.state.get_current_room_id(entity))
 
     def test_get_current_room_id_malformed(self) -> None:
         entity = "yoda"
         with self.assertRaises(UnrecognisedEntityError):
-            State.get_current_room_id(entity)
+            self.game.state.get_current_room_id(entity)
 
     def test_travel_allowed(self) -> None:
         current = "stout_meal_inn"
         destination = "inns_cellar"
-        self.assertEqual(True, State.travel_allowed(current, destination))
+        self.assertEqual(True, self.game.state.travel_allowed(current, destination))
 
     def test_travel_allowed_broken_door(self) -> None:
         current = "storage_room"
         destination = "burial_chamber"
-        State.break_door(current, destination)
-        self.assertEqual(True, State.travel_allowed(current, destination))
+        self.game.state.break_door(current, destination)
+        self.assertEqual(True, self.game.state.travel_allowed(current, destination))
 
     def test_travel_allowed_not_connected(self) -> None:
         current = "stout_meal_inn"
         destination = "antechamber"
-        self.assertEqual(False, State.travel_allowed(current, destination))
+        self.assertEqual(False, self.game.state.travel_allowed(current, destination))
 
     def test_travel_allowed_malformed_destination(self) -> None:
         current = "stout_meal_inn"
         destination1 = "the_moon"
         destination2 = "the"
         with self.assertRaises(UnrecognisedRoomError):
-            State.travel_allowed(current, destination1)
+            self.game.state.travel_allowed(current, destination1)
         with self.assertRaises(UnrecognisedRoomError):
-            State.travel_allowed(current, destination2)
+            self.game.state.travel_allowed(current, destination2)
 
     def test_travel_allowed_malformed_current(self) -> None:
         current = "the_moon"
         destination = "inns_cellar"
         with self.assertRaises(UnrecognisedRoomError):
-            State.travel_allowed(current, destination)
+            self.game.state.travel_allowed(current, destination)
 
     def test_lock_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
         with self.assertRaises(RoomConnectionError):
-            State.lock_door(room1, room2)
+            self.game.state.lock_door(room1, room2)
 
     def test_unlock_door_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
         with self.assertRaises(RoomConnectionError):
-            State.unlock_door(room1, room2)
+            self.game.state.unlock_door(room1, room2)
 
     def test_break_door_no_connection(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "antechamber"
         with self.assertRaises(RoomConnectionError):
-            State.break_door(room1, room2)
+            self.game.state.break_door(room1, room2)
 
     def test_lock_door_malformed(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State.lock_door(room1, room2)
+            self.game.state.lock_door(room1, room2)
 
     def test_unlock_door_malformed(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State.unlock_door(room1, room2)
+            self.game.state.unlock_door(room1, room2)
 
     def test_break_door_malformed(self) -> None:
         room1 = "stout_meal_inn"
         room2 = "the_moon"
         with self.assertRaises(UnrecognisedRoomError):
-            State.break_door(room1, room2)
+            self.game.state.break_door(room1, room2)
     
     def test_get_formatted_possible_monster_targets(self) -> None:
         entity = "player"
-        State.set_current_room(entity, "inns_cellar")
-        State.light_torch()
-        self.assertEqual(State.get_formatted_possible_monster_targets(entity), "You could attack Giant Rat 1 or Giant Rat 2.")
+        self.game.state.set_current_room(entity, "inns_cellar")
+        self.game.state.light_torch()
+        self.assertEqual(self.game.state.get_formatted_possible_monster_targets(entity), "You could attack Giant Rat 1 or Giant Rat 2.")
 
 
 class TestAdventure(unittest.TestCase):

@@ -8,7 +8,6 @@ from dmai.utils.text import Text
 from dmai.nlu.rasa_adapter import RasaAdapter
 from dmai.game.state import State
 from dmai.game.state import Combat
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -51,9 +50,8 @@ class NLU(metaclass=NLUMeta):
         }
     }
 
-    def __init__(self) -> None:
-        """NLU static class"""
-        pass
+    def __init__(self, state: State) -> None:
+        self.state = state
 
     @classmethod
     def set_game(cls, game) -> None:
@@ -138,36 +136,36 @@ class NLU(metaclass=NLUMeta):
         """Method to determine the player intent"""
         player_utter = player_utter.lower()
         (intent, entities) = RasaAdapter.get_intent(player_utter)
-        State.set_intent(intent)
+        self.state.set_intent(intent)
         if intent:
             print("intent: " + intent)
         if entities:
             print(entities)
             
         # check if there's expected entities
-        if State.expected_entities:
-            hits = [entity for entity in entities if entity["entity"] in State.expected_entities]
+        if self.state.expected_entities:
+            hits = [entity for entity in entities if entity["entity"] in self.state.expected_entities]
             if hits:
                 # if we have a hit for expected entities, use the primary expected intent
-                if State.expected_intent:
-                    intent = State.expected_intent[0]
-                elif State.stored_intent:
-                    intent = State.stored_intent["intent"]
-                    State.clear_expected_entities()
+                if self.state.expected_intent:
+                    intent = self.state.expected_intent[0]
+                elif self.state.stored_intent:
+                    intent = self.state.stored_intent["intent"]
+                    self.state.clear_expected_entities()
                 
         # check if there's an expected intent
-        elif State.expected_intent:
-            if intent not in State.expected_intent:
+        elif self.state.expected_intent:
+            if intent not in self.state.expected_intent:
                 # TODO make exception for hints or questions
                 # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
-                intents = [State.get_dm().player_intent_map[intent]["desc"] for intent in State.expected_intent]
+                intents = [self.state.get_dm().player_intent_map[intent]["desc"] for intent in self.state.expected_intent]
                 intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
                 OutputBuilder.append("I was expecting you to {i}".format(i=intent_str))
                 return (None, {"nlu_entities": entities})
 
         # check if in combat before allowing any player utterance
-        if State.in_combat:
-            if State.get_combat_status() == Combat.ATTACK_ROLL:
+        if self.state.in_combat:
+            if self.state.get_combat_status() == Combat.ATTACK_ROLL:
                 return ("attack", {"nlu_entities": entities})
             else:
                 return ("roll", {"nlu_entities": entities})
@@ -213,13 +211,13 @@ class NLU(metaclass=NLUMeta):
         if intent == "ale":
             return ("ale", {"nlu_entities": entities})
         else:
-            # check for stored intent in State
-            if State.stored_intent:
+            # check for stored intent in self.state
+            if self.state.stored_intent:
                 # combine the stored entities with new entities
-                if "nlu_entities" in State.stored_intent["params"]:
+                if "nlu_entities" in self.state.stored_intent["params"]:
                     entities.extend(
-                        State.stored_intent["params"]["nlu_entities"])
-                return (State.stored_intent["intent"], {
+                        self.state.stored_intent["params"]["nlu_entities"])
+                return (self.state.stored_intent["intent"], {
                     "nlu_entities": entities
                 })
 

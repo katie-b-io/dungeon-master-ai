@@ -11,10 +11,11 @@ import dmai
 
 
 class Investigate(Action):
-    def __init__(self, target: str, target_type: str = "") -> None:
+    def __init__(self, target: str, state: State, target_type: str = "") -> None:
         """Investigate class"""
         Action.__init__(self)
         self.target = target
+        self.state = state
         self.target_type = target_type
 
     def __repr__(self) -> str:
@@ -29,18 +30,18 @@ class Investigate(Action):
         and reason why not if not."""
         try:
             # check for visibility
-            current = State.get_current_room()
+            current = self.state.get_current_room()
             if not current.visibility:
                 if (
-                    not State.torch_lit
-                    and not State.get_player().character.has_darkvision()
+                    not self.state.torch_lit
+                    and not self.state.get_player().character.has_darkvision()
                 ):
                     return (False, "no visibility")
 
             # check if target is in same location as player
             if (
-                not State.get_current_room_id(self.target)
-                == State.get_current_room_id()
+                not self.state.get_current_room_id(self.target)
+                == self.state.get_current_room_id()
             ):
                 return (False, "different location")
 
@@ -55,8 +56,8 @@ class Investigate(Action):
         # check if entity can investigate target
         (can_investigate, reason) = self._can_investigate()
         if reason == "no visibility":
-            if State.get_entity_name(self.target):
-                target = State.get_entity_name(self.target)
+            if self.state.get_entity_name(self.target):
+                target = self.state.get_entity_name(self.target)
             else:
                 target = self.target
             OutputBuilder.append(NLG.cannot_investigate(target, reason))
@@ -65,7 +66,7 @@ class Investigate(Action):
         # if the entity is scenery, return a failsafe utterance
         if self.target_type == "scenery":
             # check the description of the room to see if it's here first
-            room_desc = State.get_current_room().get_all_text_array()
+            room_desc = self.state.get_current_room().get_all_text_array()
             plural_target = engine.plural(self.target)
             if self.target in room_desc or plural_target in room_desc:
                 OutputBuilder.append(
@@ -76,13 +77,13 @@ class Investigate(Action):
             else:
                 OutputBuilder.append(
                     "I don't think I mentioned anything about {t}. Maybe you could {h}".format(
-                        t=self.target, h=State.get_player().agent.get_next_move()
+                        t=self.target, h=self.state.get_player().agent.get_next_move()
                     )
                 )
             return True
 
         if self.target_type == "drink":
-            if State.get_current_room().ale:
+            if self.state.get_current_room().ale:
                 OutputBuilder.append("You see a wonderful selection of ales.")
                 return True
             else:
@@ -90,7 +91,7 @@ class Investigate(Action):
                 return True
 
         if self.target_type == "puzzle":
-            puzzle = State.get_current_room().puzzles.get_puzzle(self.target)
+            puzzle = self.state.get_current_room().puzzles.get_puzzle(self.target)
             if hasattr(puzzle, "description"):
                 OutputBuilder.append(puzzle.description)
             OutputBuilder.append("Trigger the puzzle checks")
@@ -99,7 +100,7 @@ class Investigate(Action):
 
         if self.target_type == "door":
             try:
-                target = State.get_room_name(self.target)
+                target = self.state.get_room_name(self.target)
             except UnrecognisedRoomError:
                 target = self.target
             if target == "door":
@@ -109,21 +110,21 @@ class Investigate(Action):
             return True
 
         if can_investigate:
-            State.explore()
-            State.clear_skill_check()
+            self.state.explore()
+            self.state.clear_skill_check()
             if self.target_type == "npc":
-                description = State.get_entity(self.target).description
+                description = self.state.get_entity(self.target).description
                 OutputBuilder.append(description)
             elif self.target_type == "monster":
-                monster = State.get_entity(self.target)
-                if not State.is_alive(self.target):
+                monster = self.state.get_entity(self.target)
+                if not self.state.is_alive(self.target):
                     if monster.treasure:
                         t = []
                         for treasure in monster.treasure:
-                            State.get_player().character.items.add_item(treasure)
+                            self.state.get_player().character.items.add_item(treasure)
                             monster.took_item(treasure)
                             t.append(
-                                State.get_player().character.items.get_name(treasure)
+                                self.state.get_player().character.items.get_name(treasure)
                             )
                         description = "{d} It's dead. You find {t} on them, which you add to your inventory.".format(
                             d=monster.description, t=Text.properly_format_list(t)

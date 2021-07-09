@@ -11,7 +11,6 @@ from dmai.domain.characters.cleric import Cleric
 from dmai.domain.characters.fighter import Fighter
 from dmai.domain.characters.rogue import Rogue
 from dmai.domain.characters.wizard import Wizard
-from dmai.game.state import State
 
 
 class TestCharacterCollection(unittest.TestCase):

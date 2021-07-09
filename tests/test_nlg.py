@@ -7,7 +7,6 @@ sys.path.insert(0, p + "/../")
 
 from dmai.nlg.nlg import NLG
 from dmai.game.game import Game
-from dmai.game.state import State
 
 
 class TestNLG(unittest.TestCase):

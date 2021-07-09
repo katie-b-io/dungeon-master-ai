@@ -11,8 +11,10 @@ logger = get_logger(__name__)
 
 
 class Room:
-    def __init__(self, room_data: dict) -> None:
+    def __init__(self, room_data: dict, state: State) -> None:
         """Main class for a room"""
+        self.state = state
+
         try:
             for key in room_data:
                 self.__setattr__(key, room_data[key])
@@ -46,32 +48,32 @@ class Room:
     def enter(self) -> None:
         """Method when entering a room"""
         logger.debug("Triggering enter in room: {r}".format(r=self.id))
-        if not State.stationary:
+        if not self.state.stationary:
             if not self.visited:
                 self.visited = True
                 OutputBuilder.append(self.text["enter"]["text"])
             else:
                 OutputBuilder.append(NLG.enter_room(self.name))
-            State.halt()
+            self.state.halt()
 
     def trigger_visibility(self) -> str:
         """Method when triggering visibility text"""
         logger.debug("Triggering visibility in room: {r}".format(r=self.id))
         if not self.visibility:
-            if State.torch_lit or State.get_player().character.has_darkvision():
+            if self.state.torch_lit or self.state.get_player().character.has_darkvision():
                 OutputBuilder.append(self.text["visibility"]["text"])
                 self.text["visibility"]["can_trigger"] = False
 
     def trigger_fight_ends(self) -> str:
         """Method when triggering fight ends text"""
         logger.debug("Triggering fight ending in room: {r}".format(r=self.id))
-        if State.all_dead():
+        if self.state.all_dead():
             OutputBuilder.append(self.text["fight_ends"]["text"])
             self.text["fight_ends"]["can_trigger"] = False
 
     def trigger(self) -> None:
         """Method to print any new text if conditions met"""
-        if State.get_current_room_id() == self.id:
+        if self.state.get_current_room_id() == self.id:
             for text_type in self.text:
                 if self.text[text_type]["can_trigger"]:
                     # execute function
@@ -80,7 +82,7 @@ class Room:
     
     def explore_trigger(self) -> None:
         """Method to print any new text if conditions met"""
-        if State.get_current_room_id() == self.id:
+        if self.state.get_current_room_id() == self.id:
             self.puzzles.explore_trigger()
 
     def get_connected_rooms(self) -> list:
@@ -128,8 +130,8 @@ class Room:
         # if there's no visibility, return only the most basic description
         if (
             not self.visibility
-            and not State.torch_lit
-            and not State.get_player().character.has_darkvision()
+            and not self.state.torch_lit
+            and not self.state.get_player().character.has_darkvision()
         ):
             return self.text["no_visibility_description"]["text"]
 
@@ -141,7 +143,7 @@ class Room:
                 desc_str += " There is an exit to the {d} from here.".format(
                     d=Text.properly_format_list(
                         [
-                            State.get_room_name(room)
+                            self.state.get_room_name(room)
                             for room in self.get_connected_rooms()
                         ],
                         delimiter=", the ",
@@ -152,7 +154,7 @@ class Room:
                 desc_str += " There are exits to the {d} from here.".format(
                     d=Text.properly_format_list(
                         [
-                            State.get_room_name(room)
+                            self.state.get_room_name(room)
                             for room in self.get_connected_rooms()
                         ],
                         delimiter=", the ",
@@ -161,14 +163,14 @@ class Room:
                 )
 
             # add descriptions of monsters
-            desc_str += " " + State.get_formatted_monster_status_summary(self.id)
+            desc_str += " " + self.state.get_formatted_monster_status_summary(self.id)
 
             # add description of treasure if there are no living monsters
-            if not State.get_possible_monster_targets():
+            if not self.state.get_possible_monster_targets():
                 # TODO replace with properly formatted names
                 if self.treasure:
                     treasure = [
-                        State.get_player().character.items.get_name(item)
+                        self.state.get_player().character.items.get_name(item)
                         for item in self.treasure
                     ]
                     desc_str += " After searching the room thoroughly you find a {t}. You should pick {i} up.".format(

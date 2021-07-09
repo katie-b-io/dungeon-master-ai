@@ -11,10 +11,11 @@ logger = get_logger(__name__)
 
 
 class PlanningAgent(ABC):
-    def __init__(self, planner: str, domain: str, problem: str) -> None:
+    def __init__(self, planner: str, domain: str, problem: str, state: State) -> None:
         """PlanningAgent abstract class"""
         self.domain = domain
         self.problem = problem
+        self.state = state
         self.planner = self.get_planner(planner)
 
     def __repr__(self) -> str:

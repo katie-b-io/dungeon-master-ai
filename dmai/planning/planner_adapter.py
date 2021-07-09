@@ -3,17 +3,17 @@ from abc import ABC, abstractmethod
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 from dmai.planning.planning_actions import planning_actions
-from dmai.utils.config import Config
-from dmai.game.state import State
+from dmai.game.state import State, State
 
 logger = get_logger(__name__)
 
 
 class PlannerAdapter(ABC):
-    def __init__(self, domain: str, problem: str) -> None:
+    def __init__(self, domain: str, problem: str, state: State) -> None:
         """PlannerAdapter abstract class"""
         self.domain = domain
         self.problem = problem
+        self.state = state
         self.plan = None
 
     def __repr__(self) -> str:

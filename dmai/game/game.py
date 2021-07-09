@@ -18,12 +18,14 @@ class Game:
                  char_class: str = None,
                  char_name: str = None,
                  skip_intro: bool = False,
-                 adventure: str = "the_tomb_of_baradin_stormfury") -> None:
+                 adventure: str = "the_tomb_of_baradin_stormfury",
+                 session_id: str = None) -> None:
         """Main class for the game"""
         self.char_class = char_class
         self.char_name = char_name
         self.skip_intro = skip_intro
         self.adventure = adventure
+        self.session_id = session_id
 
     def load(self) -> None:
         logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=Config.session.session_id, a=self.adventure))
@@ -36,23 +38,26 @@ class Game:
         CharacterCollection.load()
         MonsterCollection.load()
 
+        # Initialise state
+        self.state = State(self.session_id)
+
         # Initialise DM
         self.dm = DM(self.adventure)
         self.dm.load()
-        State.set_dm(self.dm)
+        self.state.set_dm(self.dm)
 
         # set character class and name if possible
         if self.char_class:
             character = CharacterCollection.get_character(self.char_class)
             self.player = Player(character)
-            State.set_player(self.player)
+            self.state.set_player(self.player)
 
             if self.char_name:
                 self.player.set_name(self.char_name)
 
         # intro text generator
         if self.skip_intro:
-            State.pause()
+            self.state.pause()
             self.intro = False
             self.intro_text = iter(())
         else:
@@ -66,8 +71,8 @@ class Game:
         OutputBuilder.clear()
 
         # reset the talking state
-        if State.talking:
-            State.stop_talking()
+        if self.state.talking:
+            self.state.stop_talking()
 
         # the game has started, the introduction is being read, ignore utterances
         if self.intro:
@@ -82,12 +87,12 @@ class Game:
             character = CharacterCollection.get_character(player_utter)
             if character:
                 self.player = Player(character)
-                State.set_player(self.player)
+                self.state.set_player(self.player)
 
         elif not self.player.name:
             # player is entering a name
             self.player.set_name(player_utter)
-            State.start()
+            self.state.start()
             succeed = self.dm.input(player_utter, utter_type="name")
 
         elif player_utter:
@@ -99,9 +104,9 @@ class Game:
             succeed = self.dm.input(player_utter, intent=intent, kwargs=params)
 
             # store intent for next turn
-            State.store_intent(intent, params)
+            self.state.store_intent(intent, params)
         
-        elif State.in_combat or State.in_combat_with_door:
+        elif self.state.in_combat or self.state.in_combat_with_door:
             # proceed with combat
             succeed = self.dm.input(player_utter, intent="roll", kwargs={"nlu_entities":[]})
 
@@ -117,13 +122,13 @@ class Game:
         # the game starts
         if self.intro:
             try:
-                State.pause()
+                self.state.pause()
                 return next(self.intro_text)
             except StopIteration:
-                State.play()
+                self.state.play()
                 self.intro = False
 
-        if State.paused:
+        if self.state.paused:
             if OutputBuilder.has_response():
                 return OutputBuilder.format()
             else:

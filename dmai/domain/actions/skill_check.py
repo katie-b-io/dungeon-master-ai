@@ -8,12 +8,13 @@ import dmai
 
 
 class SkillCheck(Action):
-    def __init__(self, skill: str, entity: str, target: str, dm_request: bool = False, puzzle: str = None, investigate: bool = False) -> None:
+    def __init__(self, skill: str, entity: str, target: str, state: State, dm_request: bool = False, puzzle: str = None, investigate: bool = False) -> None:
         """SkillCheck class"""
         Action.__init__(self)
         self.skill = skill
         self.entity = entity
         self.target = target
+        self.state = state
         self.dm_request = dm_request
         self.puzzle = puzzle
         self.investigate = investigate
@@ -32,13 +33,13 @@ class SkillCheck(Action):
 
         # check if entity and target are within pick up range
         try:
-            current = State.get_current_room(self.entity)
-            if State.get_entity(self.target):
+            current = self.state.get_current_room(self.entity)
+            if self.state.get_entity(self.target):
                 # TODO support non-room skill checks
-                # if not current == State.get_current_room(self.target):
+                # if not current == self.state.get_current_room(self.target):
                 #     return (False, "different location")
                 return (False, "not required")
-            elif not State.check_room_exists(self.target):
+            elif not self.state.check_room_exists(self.target):
                 return (False, "unknown room")
             elif not self.target in current.get_connected_rooms():
                 return (False, "different location")
@@ -47,13 +48,13 @@ class SkillCheck(Action):
             if not current.visibility:
                 if self.entity == "player":
                     if (
-                        not State.torch_lit
-                        and not State.get_player().character.has_darkvision()
+                        not self.state.torch_lit
+                        and not self.state.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
                     
             # don't need to skill check a door which is already open
-            if State.travel_allowed(State.get_current_room_id(), self.target):
+            if self.state.travel_allowed(self.state.get_current_room_id(), self.target):
                 return (False, "not required")
 
             # now check if an skill check is required for this situation
@@ -87,9 +88,9 @@ class SkillCheck(Action):
                 OutputBuilder.append(
                     NLG.skill_check(Skills.get_name(self.skill), dm_request=self.dm_request)
                 )
-                State.set_expected_intent(["roll"])
-                current = State.get_current_room()
-                if State.current_intent == "explore":
+                self.state.set_expected_intent(["roll"])
+                current = self.state.get_current_room()
+                if self.state.current_intent == "explore":
                     if self.investigate:
                         success_func = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_func()
                         success_params = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_params(self.skill)
@@ -98,13 +99,13 @@ class SkillCheck(Action):
                         success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":
                     self.target = self.puzzle.split("---")[1]
-                    success_func = State.unlock_door
+                    success_func = self.state.unlock_door
                     success_params = [current.id, self.target]
                 else:
                     # TODO better fallback
                     success_func = print
                     success_params=["Implement something!"]
-                State.set_skill_check({
+                self.state.set_skill_check({
                     "target": self.target,
                     "puzzle": self.puzzle,
                     "solution": self.solution,
@@ -114,9 +115,9 @@ class SkillCheck(Action):
             return can_check
         else:
             target_name = self.target
-            if State.get_entity_name(self.target):
-                target_name = State.get_entity_name(self.target)
+            if self.state.get_entity_name(self.target):
+                target_name = self.state.get_entity_name(self.target)
             elif reason != "unknown room":
-                target_name = State.get_room_name(self.target)
+                target_name = self.state.get_room_name(self.target)
             OutputBuilder.append(NLG.cannot_skill_check(Skills.get_name(self.skill), target_name, reason))
             return can_check

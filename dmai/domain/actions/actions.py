@@ -18,10 +18,11 @@ class Actions:
     # class variables
     action_data = dict()
 
-    def __init__(self, adventure: Adventure, npcs) -> None:
+    def __init__(self, adventure: Adventure, npcs, state: State) -> None:
         """Actions class"""
         self.adventure = adventure
         self.npcs = npcs
+        self.state = state
         self.actions = dict()
         self._load_action_data()
 
@@ -39,34 +40,34 @@ class Actions:
         and reason why not if not."""
         try:
             # check if destination is accessible
-            current = State.get_current_room(entity)
+            current = self.state.get_current_room(entity)
             if current.id == destination:
                 return (False, "same")
             
             # check if travel is allowed
-            if State.travel_allowed(current.id, destination):
+            if self.state.travel_allowed(current.id, destination):
 
                 # can't move if can't see
                 if not current.visibility:
-                    if not State.torch_lit or State.get_player(
+                    if not self.state.torch_lit or self.state.get_player(
                     ).character.has_darkvision():
                         return (False, "no visibility")
                 
                 # can't move if in a room with monsters that must be killed
-                for monster in State.get_dm().npcs.get_all_monsters():
-                    if monster.must_kill and State.is_alive(monster.unique_id):
-                        if State.get_current_room_id() == State.get_current_room_id(monster.unique_id):
+                for monster in self.state.get_dm().npcs.get_all_monsters():
+                    if monster.must_kill and self.state.is_alive(monster.unique_id):
+                        if self.state.get_current_room_id() == self.state.get_current_room_id(monster.unique_id):
                             return (False, "must kill")
                 
                 # can't move without quest
-                if not State.questing:
+                if not self.state.questing:
                     return (False, "no quest")
 
                 # none of the above situations were triggered so allow travel
                 return (True, "")
             
             else:
-                if destination in State.get_current_room().get_connected_rooms():
+                if destination in self.state.get_current_room().get_connected_rooms():
                     return (False, "locked")
                 else:
                     return (False, "not connected")
@@ -82,19 +83,19 @@ class Actions:
         # check if entity can move
         (can_move, reason) = self._can_move(entity, destination)
         if can_move:
-            State.explore()
-            State.clear_skill_check()
-            State.set_current_room(entity, destination)
+            self.state.explore()
+            self.state.clear_skill_check()
+            self.state.set_current_room(entity, destination)
         else:
             try:
-                destination = State.get_room_name(destination)
+                destination = self.state.get_room_name(destination)
             except UnrecognisedRoomError:
                 pass
-            connected_rooms = State.get_current_room().get_connected_rooms()
+            connected_rooms = self.state.get_current_room().get_connected_rooms()
             if reason == "locked":
-                possible_destinations = [State.get_room_name(room) for room in connected_rooms if State.travel_allowed(State.get_current_room_id(), room)]
+                possible_destinations = [self.state.get_room_name(room) for room in connected_rooms if self.state.travel_allowed(self.state.get_current_room_id(), room)]
             else:
-                possible_destinations = [State.get_room_name(room) for room in connected_rooms]
+                possible_destinations = [self.state.get_room_name(room) for room in connected_rooms]
             OutputBuilder.append(NLG.cannot_move(destination, reason, possible_destinations))
         return can_move
 
@@ -150,20 +151,20 @@ class Actions:
 
         # get entity object
         if entity == "player":
-            entity = State.get_player()
+            entity = self.state.get_player()
         else:
             entity = self.npcs.get_entity(entity)
 
         if stop:
-            State.explore()
-            State.clear_skill_check()
+            self.state.explore()
+            self.state.clear_skill_check()
             can_use = entity.stop_using_equipment(equipment)
         elif equipment:
             # check if equipment can be used
             (can_use, reason) = self._can_use_equipment(entity, equipment)
             if can_use:
-                State.explore()
-                State.clear_skill_check()
+                self.state.explore()
+                self.state.clear_skill_check()
                 return entity.use_equipment(equipment)
             else:
                 OutputBuilder.append(NLG.cannot_use(equipment, reason))
@@ -171,11 +172,11 @@ class Actions:
             # check if item can be used
             (can_use, reason) = self._can_use_item(entity, item)
             if can_use:
-                State.explore()
-                State.clear_skill_check()
+                self.state.explore()
+                self.state.clear_skill_check()
                 return entity.use_item(item)
             else:
-                OutputBuilder.append(NLG.cannot_use(State.get_player().character.items.get_name(item), reason))
+                OutputBuilder.append(NLG.cannot_use(self.state.get_player().character.items.get_name(item), reason))
         return can_use
 
     def _can_equip(self, entity, weapon: str) -> tuple:
@@ -199,7 +200,7 @@ class Actions:
 
         # get entity object
         if entity == "player":
-            entity = State.get_player()
+            entity = self.state.get_player()
         else:
             entity = self.npcs.get_entity(entity)
 
@@ -233,7 +234,7 @@ class Actions:
 
         # get entity object
         if entity == "player":
-            entity = State.get_player()
+            entity = self.state.get_player()
         else:
             entity = self.npcs.get_entity(entity)
 
@@ -253,7 +254,7 @@ class Actions:
 
         # check if player and target are within converse range
         try:
-            if not State.get_current_room() == State.get_current_room(target):
+            if not self.state.get_current_room() == self.state.get_current_room(target):
                 return (False, "different location")
             # check if target is a monster
             if self.npcs.get_type(target) == "monster":
@@ -270,26 +271,26 @@ class Actions:
         (can_converse, reason) = self._can_converse(target)
         if can_converse:
             if self.npcs.get_entity(target).dialogue:
-                State.roleplay(target)
+                self.state.roleplay(target)
                 # TODO make the dialogue options flexible
-                if not State.quest_received:
-                    State.set_conversation_target(target)
-                    State.received_quest()
+                if not self.state.quest_received:
+                    self.state.set_conversation_target(target)
+                    self.state.received_quest()
                     OutputBuilder.append(
                         self.npcs.get_entity(target).dialogue["gives_quest"])
-                elif not State.get_dm().npcs.get_monster_id("giant_rat", status="alive", location="inns_cellar"):
+                elif not self.state.get_dm().npcs.get_monster_id("giant_rat", status="alive", location="inns_cellar"):
                     # TODO this condition is hardcoded for the baradin tomb quest - don't hardcode it
-                    State.set_conversation_target(target)
+                    self.state.set_conversation_target(target)
                     OutputBuilder.append(
                         self.npcs.get_entity(target).dialogue["turn_in_quest"])
-                    OutputBuilder.append(State.get_dm().get_bad_ending())
+                    OutputBuilder.append(self.state.get_dm().get_bad_ending())
                     dmai.dmai_helpers.gameover()
                 else:
-                    OutputBuilder.append(NLG.roleplay(State.get_entity_name(target)))
+                    OutputBuilder.append(NLG.roleplay(self.state.get_entity_name(target)))
             return can_converse
         else:
-            if bool(State.get_entity_name(target)):
-                target_name = State.get_entity_name(target)
+            if bool(self.state.get_entity_name(target)):
+                target_name = self.state.get_entity_name(target)
             else:
                 target_name = target
             OutputBuilder.append(NLG.cannot_converse(target_name, reason))
@@ -310,8 +311,8 @@ class Actions:
     def pick_up(self, item: str, entity: str = "player") -> bool:
         """Attempt to pick up specified item.
         Returns a bool to indicate whether the action was successful"""
-        State.explore()
-        State.clear_skill_check()
+        self.state.explore()
+        self.state.clear_skill_check()
         pick_up = PickUp(item, entity)
         return pick_up.execute()
 
@@ -328,30 +329,30 @@ class Actions:
     @staticmethod
     def declare_attack_against_player(attacker: str, target: str, *args) -> None:
         """Method to declare attack against player"""
-        State.set_target(target, attacker)
-        attacker = State.get_entity_name(attacker)
+        self.state.set_target(target, attacker)
+        attacker = self.state.get_entity_name(attacker)
         OutputBuilder.append(NLG.attack(attacker, target))
     
     @staticmethod
     def attack_roll(attacker: str, weapon: str, target: str, *args) -> None:
         """Method to perform an attack roll"""
         # TODO implement advantage/disadvantage
-        attacker = State.get_entity(attacker)
-        target = State.get_entity(target)
+        attacker = self.state.get_entity(attacker)
+        target = self.state.get_entity(target)
         if attacker.attack_roll(weapon) >= target.armor_class:
             OutputBuilder.append("{a} hits!".format(a=attacker.unique_name))
         else:
             OutputBuilder.append("{a} misses!".format(a=attacker.unique_name))
-            State.update_initiative_order()
+            self.state.update_initiative_order()
         return
     
     @staticmethod
     def damage_roll(attacker: str, weapon: str, target: str, *args) -> None:
         """Method to perform a damage roll"""
-        attacker = State.get_entity(attacker)
-        target = State.get_entity(target)
+        attacker = self.state.get_entity(attacker)
+        target = self.state.get_entity(target)
         damage = attacker.damage_roll(weapon)
-        hp = State.take_damage(damage, attacker.unique_id)
-        if target == State.get_player():
+        hp = self.state.take_damage(damage, attacker.unique_id)
+        if target == self.state.get_player():
             OutputBuilder.append(NLG.health_update(hp, hp_max=target.hp_max))
         return

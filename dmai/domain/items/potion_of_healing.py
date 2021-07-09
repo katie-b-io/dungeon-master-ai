@@ -8,8 +8,9 @@ logger = get_logger(__name__)
 
 
 class PotionOfHealing(Item):
-    def __init__(self, item_data: dict) -> None:
+    def __init__(self, item_data: dict, state: State) -> None:
         Item.__init__(self, item_data)
+        self.state = state
 
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
@@ -18,6 +19,6 @@ class PotionOfHealing(Item):
         logger.debug("Drinking a potion of healing")
         dice_spec = self.effects["hit_point"]["delta"]
         hp = DiceRoller.roll_dice(dice_spec)
-        State.heal(hp, State.get_player().hp_max)
+        self.state.heal(hp, self.state.get_player().hp_max)
         return True
     

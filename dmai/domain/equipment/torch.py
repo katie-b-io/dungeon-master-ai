@@ -9,16 +9,17 @@ logger = get_logger(__name__)
 
 
 class Torch(Equipment):
-    def __init__(self, equipment_data: dict) -> None:
+    def __init__(self, equipment_data: dict, state: State) -> None:
         Equipment.__init__(self, equipment_data)
+        self.state = state
 
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
     def use(self) -> bool:
         logger.debug("Lighting a torch")
-        if not State.torch_lit:
-            State.light_torch()
+        if not self.state.torch_lit:
+            self.state.light_torch()
             return True
         else:
             OutputBuilder.append("You already have a lit torch.")
@@ -26,7 +27,7 @@ class Torch(Equipment):
 
     def stop(self) -> bool:
         logger.debug("Extinguishing a torch")
-        if State.torch_lit:
-            State.extinguish_torch()
+        if self.state.torch_lit:
+            self.state.extinguish_torch()
             return True
         return False

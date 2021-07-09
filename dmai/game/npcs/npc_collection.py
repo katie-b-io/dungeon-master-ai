@@ -11,9 +11,10 @@ logger = get_logger(__name__)
 
 
 class NPCCollection:
-    def __init__(self, adventure: Adventure) -> None:
+    def __init__(self, adventure: Adventure, state: State) -> None:
         """NPCCollection class"""
         self.adventure = adventure
+        self.state = state
 
     def load(self) -> None:
         self.npcs = self._create_npcs()
@@ -40,12 +41,12 @@ class NPCCollection:
                 npc = NPC(npc_data)
             else:
                 npc = MonsterCollection.get_monster_npc(npc_data)
-            State.set_init_npc(npc_data)
+            self.state.set_init_npc(npc_data)
             npcs[npc_id] = npc
             # update state with npc location
             for room in self.adventure.rooms:
                 if npc_id in self.adventure.rooms[room].npcs:
-                    State.set_init_room(npc_id, room)
+                    self.state.set_init_room(npc_id, room)
                     break
         return npcs
 
@@ -69,8 +70,8 @@ class NPCCollection:
                     monster.set_must_kill(must_kill)
                     monster.set_will_attack_player(will_attack_player)
                     monsters[unique_id] = monster
-                    # initialise State
-                    State.set_init_monster(unique_id, room, status, monster.hp_max)
+                    # initialise self.state
+                    self.state.set_init_monster(unique_id, room, status, monster.hp_max)
         return monsters
 
     def get_type(self, npc_id: str) -> bool:
@@ -124,11 +125,11 @@ class NPCCollection:
                 try:
                     select = True
                     if status:
-                        if Status(status) != State.get_current_status(
+                        if Status(status) != self.state.get_current_status(
                                 monster_id):
                             select = False
                     if location:
-                        if location != State.get_current_room_id(monster_id):
+                        if location != self.state.get_current_room_id(monster_id):
                             select = False
                     if select:
                         return monster_id

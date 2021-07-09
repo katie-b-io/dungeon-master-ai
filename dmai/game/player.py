@@ -11,12 +11,13 @@ logger = get_logger(__name__)
 
 
 class Player(PlayerAgent):
-    def __init__(self, character: Character) -> None:
+    def __init__(self, character: Character, state: State) -> None:
         """Main class for the player"""
         PlayerAgent.__init__(self, problem=character.id)
         logger.info("Initialising character: {c}".format(c=str(character)))
         self.name = None
         self.character = character
+        self.state = state
 
     def set_name(self, name: str) -> None:
         logger.info("Setting player name: {n}".format(n=name))
@@ -170,7 +171,7 @@ class Player(PlayerAgent):
         char_str += "{l:<20} {v:<30}\n".format(l="Hit point maximum:",
                                                v=self.character.hp_max)
         char_str += "{l:<20} {v:<30}\n".format(l="Current hit points:",
-                                               v=State.get_current_hp())
+                                               v=self.state.get_current_hp())
 
         # Abilities
         char_str += div

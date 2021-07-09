@@ -1,5 +1,5 @@
 from dmai.nlg.nlg import NLG
-from dmai.game.state import State
+from dmai.game.state import self.state
 from dmai.domain.actions.actions import Actions
 
 planning_actions = {
@@ -813,7 +813,7 @@ planning_actions = {
 )"""},
     
     "kill_player": {
-        "func": State.update_initiative_order,
+        "func": self.state.update_initiative_order,
         "pddl": """
 ; Monster kills a player
 (:action kill_player

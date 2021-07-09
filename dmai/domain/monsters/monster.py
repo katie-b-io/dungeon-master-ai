@@ -25,6 +25,7 @@ class Monster(NPC, MonsterAgent):
     def __init__(
         self,
         monster_data: dict,
+        state: State,
         npc_data: dict = None,
         unique_id: str = None,
         unique_name: str = None,
@@ -58,6 +59,7 @@ class Monster(NPC, MonsterAgent):
             raise
 
         # Initialise additional variables
+        self.state = state
         self.unique_id = unique_id
         self.treasure = []
         self.must_kill = False
@@ -163,18 +165,18 @@ class Monster(NPC, MonsterAgent):
         logger.debug(
             "Triggering attack of opportunity in monster: {m}".format(m=self.id)
         )
-        if not State.stationary and State.in_combat and State.is_alive(self.id):
+        if not self.state.stationary and self.state.in_combat and self.state.is_alive(self.id):
             OutputBuilder.append(NLG.attack_of_opportunity(attacker=self.name))
 
     def move(self, destination: str, conditions: dict) -> None:
         """Method to move as a reaction to some situation"""
         logger.debug("Triggering movement of monster: {m}".format(m=self.id))
-        if State.is_alive(self.id):
+        if self.state.is_alive(self.id):
             if "monsters" in conditions:
                 if conditions["monsters"] == "dead":
-                    location = State.get_current_room_id(self.unique_id)
-                    if not State.get_dm().npcs.get_monster_id(monster_type="giant_rat", status="alive", location=location):
-                        State.set_current_room(self.unique_id, destination)
+                    location = self.state.get_current_room_id(self.unique_id)
+                    if not self.state.get_dm().npcs.get_monster_id(monster_type="giant_rat", status="alive", location=location):
+                        self.state.set_current_room(self.unique_id, destination)
 
     def trigger(self) -> None:
         """Method to perform any actions or print any new text if conditions met"""
