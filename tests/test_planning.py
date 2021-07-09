@@ -6,16 +6,19 @@ import shutil
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
+from dmai.game.state import State
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.game import Game
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
 from dmai.utils.config import Config
-from dmai.nlg.nlg import NLG
 
 
 class TestFastDownwardAdapter(unittest.TestCase):
     """Test the FastDownwardAdapter class"""
     def _prepare_adapter(self, domain: str,
                          problem: str) -> FastDownwardAdapter:
+        output_builder = OutputBuilder()
+        state = State(output_builder)
         shutil.copy(
             os.path.join(Config.directory.planning_test,
                          "{d}.pddl".format(d=domain)),
@@ -28,7 +31,7 @@ class TestFastDownwardAdapter(unittest.TestCase):
             os.path.join(
                 Config.directory.planning,
                 "{u}.{p}.problem.pddl".format(p=problem, u=Config.uuid)))
-        return FastDownwardAdapter(domain, problem)
+        return FastDownwardAdapter(domain, problem, state, output_builder)
 
     def _cleanup(self, domain, problem) -> None:
             os.remove(
@@ -80,7 +83,6 @@ class TestPlanningMonster(unittest.TestCase):
             adventure="the_tomb_of_baradin_stormfury",
         )
         self.game.load()
-        NLG.set_game(self.game)
         Config.set_uuid()
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
@@ -121,7 +123,6 @@ class TestPlanningPlayer(unittest.TestCase):
             adventure="the_tomb_of_baradin_stormfury",
         )
         self.game.load()
-        NLG.set_game(self.game)
         Config.set_uuid()
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
