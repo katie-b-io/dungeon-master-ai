@@ -13,7 +13,6 @@ class TestNLG(unittest.TestCase):
     """Test the NLG class"""
     def setUp(self) -> None:
         self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
-        NLG.set_game(self.game)
 
     def test_enter_room(self) -> None:
         room = "room"

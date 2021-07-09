@@ -17,8 +17,8 @@ class NLU():
     def __init__(self, state: State, output_builder: OutputBuilder) -> None:
         self.state = state
         self.output_builder = output_builder
-        param = ""
-        commands = {
+        self.param = ""
+        self.commands = {
             "help": {
                 "text": "/help",
                 "help": "Show these commands",
