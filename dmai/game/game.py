@@ -41,6 +41,9 @@ class Game:
         # Initialise state
         self.state = State(self.session_id)
 
+        # Initialise NLU
+        self.nlu = NLU(self.state)
+
         # Initialise DM
         self.dm = DM(self.adventure, self.state)
         self.dm.load()
@@ -98,7 +101,7 @@ class Game:
         elif player_utter:
             # attempt to determine the player's intent
             player_utter = player_utter.replace("\"", "'")
-            (intent, params) = NLU.process_player_utterance(player_utter)
+            (intent, params) = self.nlu.process_player_utterance(player_utter)
 
             # relay the player utterance to the dm
             succeed = self.dm.input(player_utter, intent=intent, kwargs=params)

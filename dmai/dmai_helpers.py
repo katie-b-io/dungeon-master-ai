@@ -6,7 +6,6 @@ import string
 from dmai.game.game import Game
 from dmai.ui.ui import UserInterface
 from dmai.nlg.nlg import NLG
-from dmai.nlu.nlu import NLU
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
@@ -51,7 +50,6 @@ def start(char_class: str = None,
                 session_id=session_id)
     game.load()
     NLG.set_game(game)
-    NLU.set_game(game)
 
     # print some info for the user
     OutputBuilder.append(
