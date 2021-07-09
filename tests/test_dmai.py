@@ -7,11 +7,8 @@ import shutil
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
-from dmai.dm import DM
 from dmai.game.game import Game
 from dmai.utils.config import Config
-from dmai.nlg.nlg import NLG
-from dmai.utils.self.output_builder import self.output_builder
 from dmai.utils.exceptions import UnrecognisedRoomError
 
 
@@ -25,11 +22,11 @@ class TestDM(unittest.TestCase):
             adventure="the_tomb_of_baradin_stormfury",
         )
         self.game.load()
-        NLG.set_game(self.game)
         Config.set_uuid()
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         self.dm = self.game.dm
+        self.dm.set_player_name("Xena")
 
     def tearDown(self) -> None:
         self.game.state.extinguish_torch()
@@ -59,7 +56,7 @@ class TestDM(unittest.TestCase):
 
     def test_output(self) -> None:
         self.dm.input("", utter_type="test")
-        self.output_builder.clear()
+        self.dm.output_builder.clear()
         self.dm.input("", utter_type="test")
         utter = "Xena, what do you do?\n"
         self.assertEqual(utter, self.dm.output)
