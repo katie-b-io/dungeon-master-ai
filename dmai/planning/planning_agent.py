@@ -3,8 +3,7 @@ from abc import ABC, abstractmethod
 from dmai.game.state import State
 from dmai.planning.planner_adapter import PlannerAdapter
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
-from dmai.planning.planning_actions import planning_actions
-from dmai.utils.config import Config
+from dmai.planning.planning_actions import PlanningActions
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -17,6 +16,7 @@ class PlanningAgent(ABC):
         self.problem = problem
         self.state = state
         self.planner = self.get_planner(planner)
+        self.planning_actions = PlanningActions(state)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -198,5 +198,5 @@ class PlanningAgent(ABC):
         Action PDDL strings will be looked up and appended to string"""
         actions_str = ""
         for action in actions:
-            actions_str += "{a}\n".format(a=planning_actions[action]["pddl"])
+            actions_str += "{a}\n".format(a=self.planning_actions.actions[action]["pddl"])
         return actions_str
