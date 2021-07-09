@@ -7,6 +7,7 @@ from dmai.game.game import Game
 from dmai.ui.ui import UserInterface
 from dmai.nlg.nlg import NLG
 from dmai.utils.config import Config
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -63,20 +64,20 @@ def run(game: Game) -> None:
     ui.execute()
 
 
-def gameover(game: Game, session: str = None) -> None:
+def gameover(output_builder: OutputBuilder, session: str = None) -> None:
     """Gracefully exit the game"""
-    game.output_builder.append(
+    output_builder.append(
         "Thanks for playing! Don't forget to complete your feedback, in fact, why don't you do it now? :-)"
     )
     if Config.cleanup:
         shutil.rmtree(Config.directory.planning)
         os.remove("dmai.log")
     if not session:
-        game.output_builder.print()
+        output_builder.print()
         exit_game()
     else:
-        game.output_builder.append("Your unique ID for filling in the questionnaire is {s}.".format(s=session))
-        return game.output_builder.format()
+        output_builder.append("Your unique ID for filling in the questionnaire is {s}.".format(s=session))
+        return output_builder.format()
 
 
 def exit_game(exit_str: str = None) -> None:

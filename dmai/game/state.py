@@ -623,7 +623,7 @@ class State():
                     death_text = attacker.text["killed_player"]
                     self.output_builder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
                     self.output_builder.append(self.get_dm().get_bad_ending())
-                    dmai.dmai_helpers.gameover()
+                    dmai.dmai_helpers.gameover(self.output_builder)
                 else:
                     self.kill_monster(entity)
                     # deregister triggers

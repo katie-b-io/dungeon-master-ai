@@ -563,7 +563,7 @@ class DM:
             npc = self.npcs.get_entity(self.state.current_conversation)
             self.output_builder.append(npc.dialogue["turns_down_quest"])
             self.output_builder.append(self.get_bad_ending())
-            dmai.dmai_helpers.gameover()
+            dmai.dmai_helpers.gameover(self.output_builder)
         return True
 
     def explore(self, target: str = None, target_type: str = None, nlu_entities: dict = None) -> bool:
@@ -741,7 +741,7 @@ class DM:
             if self.state.ales > 2:
                 # this is a gameover state
                 self.output_builder.append(NLG.drunk_end_game())
-                dmai.dmai_helpers.gameover()
+                dmai.dmai_helpers.gameover(self.output_builder)
             self.output_builder.append(NLG.drink_ale(self.state.ales))
             self.state.drink_ale()
         else:

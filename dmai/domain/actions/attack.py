@@ -68,7 +68,7 @@ class Attack(Action):
                     # this is a game end condition
                     self.output_builder.append(NLG.attack_npc_end_game(self.target))
                     self.output_builder.append(self.state.get_dm().get_bad_ending())
-                    dmai.dmai_helpers.gameover()
+                    dmai.dmai_helpers.gameover(self.output_builder)
             self.state.combat(self.attacker, self.target)
             return can_attack
         else:
