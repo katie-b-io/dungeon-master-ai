@@ -17,7 +17,6 @@ class TestPotionOfHealing(unittest.TestCase):
                          char_name="Xena",
                          adventure="the_tomb_of_baradin_stormfury")
         self.game.load()
-        NLG.set_game(self.game)
         item_data = {
             "name": "Potion of Healing",
             "type": "potion",
@@ -35,7 +34,7 @@ class TestPotionOfHealing(unittest.TestCase):
                 }
             }
         }
-        self.potion = PotionOfHealing(item_data)
+        self.potion = PotionOfHealing(item_data, self.game.state, self.game.output_builder)
     
     def test_use(self) -> None:
         starting_hp = 1
