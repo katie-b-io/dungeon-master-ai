@@ -4,5 +4,5 @@ from dmai.game.state import State
 
 
 class Rogue(Character):
-    def __init__(self, character_data: dict, state: State, outout_builder: OutputBuilder) -> None:
+    def __init__(self, character_data: dict, state: State, output_builder: OutputBuilder) -> None:
         Character.__init__(self, character_data, state, output_builder)

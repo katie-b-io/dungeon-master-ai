@@ -12,7 +12,7 @@ class Weapons:
         self.weapons = weapons
         self.right_hand = None
         self.left_hand = None
-        self.state = State
+        self.state = state
         self.proficiencies = proficiencies
         self._load_weapons_data()
 
