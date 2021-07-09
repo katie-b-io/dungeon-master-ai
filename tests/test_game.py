@@ -1,3 +1,5 @@
+from dmai.game.state import State
+from dmai.utils.output_builder import OutputBuilder
 import unittest
 import sys
 import os
@@ -185,8 +187,10 @@ class TestAdventure(unittest.TestCase):
 class TestNPCCollection(unittest.TestCase):
     """Test the NPCCollection class"""
     def setUp(self) -> None:
-        self.adventure = Adventure("the_tomb_of_baradin_stormfury")
-        self.npc_collection = NPCCollection(self.adventure)
+        self.output_builder = OutputBuilder()
+        self.state = State(self.output_builder)
+        self.adventure = Adventure("the_tomb_of_baradin_stormfury", self.state, self.output_builder)
+        self.npc_collection = NPCCollection(self.adventure, self.state, self.output_builder)
         MonsterCollection.load()
     
     def test__create_npcs(self) -> None:
