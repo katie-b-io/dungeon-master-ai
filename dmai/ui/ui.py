@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.game import Game
 from dmai.utils.logger import get_logger
 
@@ -8,6 +9,10 @@ class UserInterface:
     def __init__(self, game: Game) -> None:
         """UserInterface class for the game and interacting with the DM"""
         self.game = game
+    
+    @property
+    def output_builder(self) -> OutputBuilder:
+        return self.game.output_builder
 
     def execute(self) -> None:
         """Execute function which allows CLI communication between
