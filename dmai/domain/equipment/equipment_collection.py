@@ -2,6 +2,8 @@ from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedEquipment
 from dmai.domain.equipment.torch import Torch
 from dmai.domain.equipment.equipment import Equipment
+from dmai.game.state import State
+from dmai.utils.output_builder import OutputBuilder
 
 
 class EquipmentCollection:
@@ -9,9 +11,11 @@ class EquipmentCollection:
     # class variables
     equipment_data = dict()
 
-    def __init__(self, equipment: dict, proficiencies=None) -> None:
+    def __init__(self, equipment: dict, state: State, output_builder: OutputBuilder, proficiencies=None) -> None:
         """EquipmentCollection class"""
         self.equipment = equipment
+        self.state = state
+        self.output_builder = output_builder
         self.proficiencies = proficiencies
         self._load_equipment_data()
 
@@ -38,7 +42,7 @@ class EquipmentCollection:
             msg = "Cannot create equipment {e} - it does not exist!".format(
                 e=equipment)
             raise UnrecognisedEquipment(msg)
-        return equipment_obj(self.equipment_data[equipment])
+        return equipment_obj(self.equipment_data[equipment], self.state, self.output_builder)
 
     def _load_equipment_data(self) -> None:
         """Set the self.equipment_data class variable data"""

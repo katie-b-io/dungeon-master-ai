@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 import dmai
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
@@ -5,7 +6,6 @@ from dmai.domain.actions.actions import Actions
 from dmai.nlg.nlg import NLG
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.output_builder import OutputBuilder
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -16,20 +16,23 @@ class DM:
     # class variables
     ENTITY_CONFIDENCE = 0.5
 
-    def __init__(self, adventure: str) -> None:
+    def __init__(self, adventure: str, state: State, output_builder: OutputBuilder) -> None:
         """Main DM class"""
         self._dm_utter = None
         self._player_utter = None
+        self.player_name = ""
         self.triggers = []
-        self.adventure = Adventure(adventure)
+        self.state = state
+        self.output_builder = output_builder
+        self.adventure = Adventure(adventure, self.state, self.output_builder)
 
     def load(self) -> None:
         # Initialise the NPC Collection with the adventure data
-        self.npcs = NPCCollection(self.adventure)
+        self.npcs = NPCCollection(self.adventure, self.state, self.output_builder)
         self.npcs.load()
 
         # Initialise the actions with the adventure and npc data
-        self.actions = Actions(self.adventure, self.npcs)
+        self.actions = Actions(self.adventure, self.npcs, self.state, self.output_builder)
 
         # Initialise the player intent map
         self.player_intent_map = {
@@ -143,9 +146,9 @@ class DM:
         self._player_utter = player_utter
         if utter_type:
             if utter_type == "name":
-                OutputBuilder.append(NLG.acknowledge_name())
+                self.output_builder.append(NLG.acknowledge_name(self.player_name))
             else:
-                OutputBuilder.append(NLG.get_action())
+                self.output_builder.append(NLG.get_action(self.player_name))
             succeed = True
 
         elif intent:
@@ -161,28 +164,32 @@ class DM:
             self.execute_triggers()
 
         # prepare next AI moves
-        State.get_player().prepare_next_move()
+        self.state.get_player().prepare_next_move()
 
         # prepare next monster moves
         for monster in self.npcs.get_all_monsters():
-            if State.is_alive(monster.unique_id):
-                if State.get_current_room_id() == State.get_current_room_id(
+            if self.state.is_alive(monster.unique_id):
+                if self.state.get_current_room_id() == self.state.get_current_room_id(
                     monster.unique_id
                 ):
                     monster.prepare_next_move()
 
         # last thing to do: maintain state
-        State.maintenance()
+        self.state.maintenance()
 
         return succeed
 
     @property
     def output(self) -> str:
         """Return an output for the player"""
-        if OutputBuilder.has_response():
-            return OutputBuilder.format()
+        if self.output_builder.has_response():
+            return self.output_builder.format()
         else:
-            return NLG.get_action()
+            return NLG.get_action(self.player_name)
+
+    def set_player_name(self, name: str) -> None:
+        """Method to set the player name"""
+        self.player_name = name
 
     def register_trigger(self, trigger: object) -> None:
         """Register a trigger object"""
@@ -212,9 +219,9 @@ class DM:
 
     def hint(self, **kwargs) -> bool:
         """Use the player AI to get the next possible move.
-        Appends the hint to output with the OutputBuilder.
+        Appends the hint to output with the self.output_builder.
         """
-        return State.get_player().print_next_move()
+        return self.state.get_player().print_next_move()
 
     def _get_destination(self, nlu_entities: dict) -> str:
         """Extract a destination from NLU entities dictionary.
@@ -228,7 +235,7 @@ class DM:
             
             (target_type, target) = self._get_target(nlu_entities)
             if target and (target_type == "npc" or target_type == "monster"):
-                return ("location", State.get_current_room_id(target))
+                return ("location", self.state.get_current_room_id(target))
         return (None, None)
 
     def _get_target(self, nlu_entities: dict, monster_status: str = "alive") -> tuple:
@@ -305,7 +312,7 @@ class DM:
             else:
                 # player hasn't appeared to specify particular individual, pick first alive one
                 monster_id = self.npcs.get_monster_id(
-                    monster, status=monster_status, location=State.get_current_room_id()
+                    monster, status=monster_status, location=self.state.get_current_room_id()
                 )
             return ("monster", monster_id)
 
@@ -319,7 +326,7 @@ class DM:
         """Get an NPC.
         Returns a string with NPC ID"""
         for npc in self.npcs.get_all_npc_ids():
-            if State.get_current_room_id() == State.get_current_room_id(npc):
+            if self.state.get_current_room_id() == self.state.get_current_room_id(npc):
                 return ("npc", npc)
         return (None, None)
 
@@ -390,12 +397,12 @@ class DM:
 
         if not destination:
             moved = False
-            State.set_expected_entities(["location"])
-            connected_rooms = State.get_current_room().get_connected_rooms()
+            self.state.set_expected_entities(["location"])
+            connected_rooms = self.state.get_current_room().get_connected_rooms()
             possible_destinations = [
-                State.get_room_name(room) for room in connected_rooms
+                self.state.get_room_name(room) for room in connected_rooms
             ]
-            OutputBuilder.append(NLG.no_destination(possible_destinations))
+            self.output_builder.append(NLG.no_destination(possible_destinations))
         else:
             logger.info("Moving {e} to {d}!".format(e=entity, d=destination))
             moved = self.actions.move(entity, destination)
@@ -415,31 +422,31 @@ class DM:
         
         # check if there's only one possible target
         if not target and target_type == "door":
-            targets = State.get_possible_door_targets()
+            targets = self.state.get_possible_door_targets()
             if len(targets) == 1:
                 target = targets[0]
         elif not target:
-            targets = State.get_possible_monster_targets()
+            targets = self.state.get_possible_monster_targets()
             if len(targets) == 1:
                 target = targets[0].unique_id
                 
         if not target:
             attacked = False
             if target_type == "door":
-                if not State.get_possible_door_targets():
-                    OutputBuilder.append(NLG.no_door_targets("attack"))
+                if not self.state.get_possible_door_targets():
+                    self.output_builder.append(NLG.no_door_targets("attack"))
                 else:
-                    State.set_expected_entities(["door", "location"])
-                    OutputBuilder.append(
-                        NLG.no_door_target("attack", State.get_formatted_possible_door_targets())
+                    self.state.set_expected_entities(["door", "location"])
+                    self.output_builder.append(
+                        NLG.no_door_target("attack", self.state.get_formatted_possible_door_targets())
                     )
             else:
-                if not State.get_possible_monster_targets():
-                    OutputBuilder.append(NLG.no_monster_targets())
+                if not self.state.get_possible_monster_targets():
+                    self.output_builder.append(NLG.no_monster_targets())
                 else:
-                    State.set_expected_entities(["monster", "npc"])
-                    OutputBuilder.append(
-                        NLG.no_target("attack", State.get_formatted_possible_monster_targets())
+                    self.state.set_expected_entities(["monster", "npc"])
+                    self.output_builder.append(
+                        NLG.no_target("attack", self.state.get_formatted_possible_monster_targets())
                     )
         else:
             if target_type == "door":
@@ -468,7 +475,7 @@ class DM:
             item = self._get_item(nlu_entities)[1]
         if not equipment and not item:
             used = False
-            OutputBuilder.append(NLG.no_equipment(stop=stop))
+            self.output_builder.append(NLG.no_equipment(stop=stop))
         elif equipment:
             logger.info("{e} is using {q}!".format(e=entity, q=equipment))
             used = self.actions.use(equipment=equipment, entity=entity, stop=stop)
@@ -496,7 +503,7 @@ class DM:
 
         if not weapon:
             equipped = False
-            OutputBuilder.append(NLG.no_weapon(unequip=False))
+            self.output_builder.append(NLG.no_weapon(unequip=False))
         else:
             logger.info("{e} is equipping {q}!".format(e=entity, q=weapon))
             equipped = self.actions.equip(weapon, entity)
@@ -530,13 +537,13 @@ class DM:
 
         # check if there's only one possible target
         if not target:
-            targets = State.get_possible_npc_targets()
+            targets = self.state.get_possible_npc_targets()
             if len(targets) == 1:
                 target = targets[0].id
                 
         if not target:
             conversation = False
-            OutputBuilder.append(NLG.no_target("talk to"))
+            self.output_builder.append(NLG.no_target("talk to"))
         else:
             logger.info("player is conversing with {t}!".format(t=target))
             conversation = self.actions.converse(target)
@@ -544,24 +551,24 @@ class DM:
 
     def affirm(self, **kwargs) -> bool:
         """Player has uttered an affirmation.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
-        if State.roleplaying and State.received_quest and not State.questing:
-            npc = self.npcs.get_entity(State.current_conversation)
-            OutputBuilder.append(npc.dialogue["accepts_quest"])
-            State.quest()
+        if self.state.roleplaying and self.state.received_quest and not self.state.questing:
+            npc = self.npcs.get_entity(self.state.current_conversation)
+            self.output_builder.append(npc.dialogue["accepts_quest"])
+            self.state.quest()
         return True
 
     def deny(self, **kwargs) -> bool:
         """Player has uttered a denial.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
-        if State.roleplaying and State.received_quest and not State.questing:
+        if self.state.roleplaying and self.state.received_quest and not self.state.questing:
             # this is a game end condition
-            npc = self.npcs.get_entity(State.current_conversation)
-            OutputBuilder.append(npc.dialogue["turns_down_quest"])
-            OutputBuilder.append(self.get_bad_ending())
-            dmai.dmai_helpers.gameover()
+            npc = self.npcs.get_entity(self.state.current_conversation)
+            self.output_builder.append(npc.dialogue["turns_down_quest"])
+            self.output_builder.append(self.get_bad_ending())
+            dmai.dmai_helpers.gameover(self.output_builder)
         return True
 
     def explore(self, target: str = None, target_type: str = None, nlu_entities: dict = None) -> bool:
@@ -585,17 +592,17 @@ class DM:
         
         # check if there's only one possible door target - if so, use it
         if target_type == "door" and target == "door":
-            if len(State.get_current_room().get_connected_rooms()) == 1:
-                target = State.get_current_room().get_connected_rooms()[0]
+            if len(self.state.get_current_room().get_connected_rooms()) == 1:
+                target = self.state.get_current_room().get_connected_rooms()[0]
             else:
-                targets = State.get_possible_door_targets()
+                targets = self.state.get_possible_door_targets()
                 if len(targets) == 1:
                     target = targets[0]
                 
-        if not target or (target_type == "location" and State.get_current_room_id() == target):
+        if not target or (target_type == "location" and self.state.get_current_room_id() == target):
             logger.info("player is exploring!")
-            room = State.get_current_room()
-            OutputBuilder.append(room.get_description())
+            room = self.state.get_current_room()
+            self.output_builder.append(room.get_description())
             # trigger the explore triggers in the room
             room.explore_trigger()
             explore = True
@@ -603,7 +610,7 @@ class DM:
             logger.info("player is investigating {t}!".format(t=target))
             explore = self.actions.investigate(target, target_type=target_type)
         if explore:
-            State.explore()
+            self.state.explore()
         return explore
 
     def roll(
@@ -618,25 +625,25 @@ class DM:
             # or ask for clarification
             die = "d20"
             
-        if State.stored_intent:
-            if "nlu_entities" in State.stored_intent["params"]:
-                nlu_entities.extend(State.stored_intent["params"]["nlu_entities"])
-            if State.stored_intent["intent"] == "attack":
-                if State.in_combat_with_door:
+        if self.state.stored_intent:
+            if "nlu_entities" in self.state.stored_intent["params"]:
+                nlu_entities.extend(self.state.stored_intent["params"]["nlu_entities"])
+            if self.state.stored_intent["intent"] == "attack":
+                if self.state.in_combat_with_door:
                     return self.actions.roll("door_attack", nlu_entities, die)
                 else:
                     return self.actions.roll("attack", nlu_entities, die)
-            elif State.stored_intent["intent"] == "force":
-                if State.stored_ability_check:
+            elif self.state.stored_intent["intent"] == "force":
+                if self.state.stored_ability_check:
                     return self.actions.roll("ability_check", nlu_entities, die)
 
-        if State.in_combat_with_door:
+        if self.state.in_combat_with_door:
             return self.actions.roll("door_attack", nlu_entities, die)
-        if State.in_combat:
+        if self.state.in_combat:
             return self.actions.roll("attack", nlu_entities, die)
-        if State.stored_ability_check:
+        if self.state.stored_ability_check:
             return self.actions.roll("ability_check", nlu_entities, die)
-        if State.stored_skill_check:
+        if self.state.stored_skill_check:
             return self.actions.roll("skill_check", nlu_entities, die)
         return self.actions.roll("roll", nlu_entities, die)
 
@@ -650,7 +657,7 @@ class DM:
 
         if not item:
             picked_up = False
-            OutputBuilder.append(NLG.no_item())
+            self.output_builder.append(NLG.no_item())
         else:
             logger.info("{e} is picking up {i}!".format(e=entity, i=item))
             picked_up = self.actions.pick_up(item, entity)
@@ -658,24 +665,24 @@ class DM:
 
     def health(self, **kwargs) -> bool:
         """Player wants a health update.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
-        player = State.get_player()
-        hp = State.get_current_hp()
-        OutputBuilder.append(NLG.health_update(hp, hp_max=player.hp_max))
+        player = self.state.get_player()
+        hp = self.state.get_current_hp()
+        self.output_builder.append(NLG.health_update(hp, hp_max=player.hp_max))
         return True
 
     def inventory(self, **kwargs) -> bool:
         """Player wants a inventory update.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
-        item_collection = State.get_player().character.items
-        OutputBuilder.append(item_collection.get_all_formatted())
+        item_collection = self.state.get_player().character.items
+        self.output_builder.append(item_collection.get_all_formatted())
         return True
 
     def force(self, target: str = None, entity: str = None, nlu_entities: dict = {}) -> bool:
         """Player wants to attempt to force a target.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
         if not entity:
             entity = "player"
@@ -686,27 +693,27 @@ class DM:
         
         if target and (target_type != "door" and target_type != "puzzle"):
             forced = False
-            OutputBuilder.append(NLG.not_force_target(target))
+            self.output_builder.append(NLG.not_force_target(target))
             return forced
         
         # check if there's only one possible target
         if target_type == "door" and (not target or target == "door"):
-            targets = State.get_possible_door_targets()
+            targets = self.state.get_possible_door_targets()
             if len(targets) == 1:
                 target = targets[0]
-            elif len(State.get_current_room().get_connected_rooms()) == 1:
-                target = State.get_current_room().get_connected_rooms()[0]
+            elif len(self.state.get_current_room().get_connected_rooms()) == 1:
+                target = self.state.get_current_room().get_connected_rooms()[0]
         
         # TODO add additional code for puzzle target
             
         if not target:
             forced = False
-            if not State.get_possible_door_targets():
-                OutputBuilder.append(NLG.no_door_targets("force"))
+            if not self.state.get_possible_door_targets():
+                self.output_builder.append(NLG.no_door_targets("force"))
             else:
-                State.set_expected_entities(["door", "location"])
-                OutputBuilder.append(
-                    NLG.no_door_target("force", State.get_formatted_possible_door_targets())
+                self.state.set_expected_entities(["door", "location"])
+                self.output_builder.append(
+                    NLG.no_door_target("force", self.state.get_formatted_possible_door_targets())
                 )
         else:
             logger.info("{e} is forcing door {t}!".format(e=entity, t=target))
@@ -715,32 +722,32 @@ class DM:
 
     def ability_check(self, **kwargs) -> bool:
         """Player wants to attempt to perform a ability check.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
-        OutputBuilder.append("You can do an ability check when I ask you to.")
+        self.output_builder.append("You can do an ability check when I ask you to.")
         return True
         
     def skill_check(self, **kwargs) -> bool:
         """Player wants to attempt to perform a skill check.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
-        OutputBuilder.append("You can do a skill check when I ask you to.")
+        self.output_builder.append("You can do a skill check when I ask you to.")
         return True
 
     def ale(self, nlu_entities: dict = {}) -> bool:
         """Player wants to attempt to drink some ale.
-        Appends the text to output with the OutputBuilder.
+        Appends the text to output with the self.output_builder.
         """
         if nlu_entities:
             drink = self._get_drink(nlu_entities)[1]
             if drink != "ale":
-                OutputBuilder.append("They only serve ale here!")
-        if State.get_current_room().ale:
-            if State.ales > 2:
+                self.output_builder.append("They only serve ale here!")
+        if self.state.get_current_room().ale:
+            if self.state.ales > 2:
                 # this is a gameover state
-                OutputBuilder.append(NLG.drunk_end_game())
-                dmai.dmai_helpers.gameover()
-            OutputBuilder.append(NLG.drink_ale(State.ales))
-            State.drink_ale()
+                self.output_builder.append(NLG.drunk_end_game())
+                dmai.dmai_helpers.gameover(self.output_builder)
+            self.output_builder.append(NLG.drink_ale(self.state.ales))
+            self.state.drink_ale()
         else:
-            OutputBuilder.append("You wish you could get an ale here!")
+            self.output_builder.append("You wish you could get an ale here!")

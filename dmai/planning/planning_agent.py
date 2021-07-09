@@ -3,19 +3,22 @@ from abc import ABC, abstractmethod
 from dmai.game.state import State
 from dmai.planning.planner_adapter import PlannerAdapter
 from dmai.planning.fast_downward_adapter import FastDownwardAdapter
-from dmai.planning.planning_actions import planning_actions
-from dmai.utils.config import Config
+from dmai.planning.planning_actions import PlanningActions
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 class PlanningAgent(ABC):
-    def __init__(self, planner: str, domain: str, problem: str) -> None:
+    def __init__(self, planner: str, domain: str, state: State, output_builder: OutputBuilder, problem: str) -> None:
         """PlanningAgent abstract class"""
         self.domain = domain
         self.problem = problem
+        self.state = state
+        self.output_builder = output_builder
         self.planner = self.get_planner(planner)
+        self.planning_actions = PlanningActions(state)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -40,7 +43,7 @@ class PlanningAgent(ABC):
         try:
             planner_map = {"fd": FastDownwardAdapter}
             planner = planner_map[planner]
-            return planner(self.domain, self.problem)
+            return planner(self.domain, self.problem, self.state, self.output_builder)
         except (ValueError, KeyError) as e:
             msg = "Cannot create planner {p} - it does not exist!".format(
                 p=planner)
@@ -197,5 +200,5 @@ class PlanningAgent(ABC):
         Action PDDL strings will be looked up and appended to string"""
         actions_str = ""
         for action in actions:
-            actions_str += "{a}\n".format(a=planning_actions[action]["pddl"])
+            actions_str += "{a}\n".format(a=self.planning_actions.actions[action]["pddl"])
         return actions_str

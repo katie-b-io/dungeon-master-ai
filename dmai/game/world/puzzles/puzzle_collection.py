@@ -1,14 +1,18 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.world.puzzles.puzzle import Puzzle
+from dmai.game.state import State
 
 
 class PuzzleCollection:
-    def __init__(self, puzzles_dict: dict) -> None:
+    def __init__(self, puzzles_dict: dict, state: State, output_builder: OutputBuilder) -> None:
         """PuzzleCollection class"""
         self.puzzles = {}
+        self.state = state
+        self.output_builder = output_builder
 
         # prepare the puzzles
         for puzzle_id in puzzles_dict:
-            puzzle = Puzzle(puzzles_dict[puzzle_id])
+            puzzle = Puzzle(puzzles_dict[puzzle_id], self.state, self.output_builder)
             self.puzzles[puzzle_id] = puzzle
 
     def __repr__(self) -> str:

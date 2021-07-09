@@ -1,17 +1,18 @@
 from abc import ABC, abstractmethod
-from dmai.utils.output_builder import OutputBuilder
 
+from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.actions.skill_check import SkillCheck
 from dmai.game.state import State
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 class Puzzle(ABC):
-    def __init__(self, puzzle_data: dict) -> None:
+    def __init__(self, puzzle_data: dict, state: State, output_builder: OutputBuilder) -> None:
         """Puzzle abstract class"""
+        self.state = state
+        self.output_builder = output_builder
         self.solved = False
         self.triggered = False
         self.solution_map = {}
@@ -162,8 +163,8 @@ class Puzzle(ABC):
             for explore in self.explore_map:
                 if self.explore_map[explore]["can_trigger"]:
                     if "skill" in self.explore[explore]:
-                        State.set_expected_intent(["roll"])
-                        skill_check = SkillCheck(self.explore[explore]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id)
+                        self.state.set_expected_intent(["roll"])
+                        skill_check = SkillCheck(self.explore[explore]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id)
                         skill_check.execute()
                     else:
                         self.explore_success_func(explore)
@@ -177,8 +178,8 @@ class Puzzle(ABC):
             for investigate in self.investigate_map:
                 if self.investigate_map[investigate]["can_trigger"]:
                     if "skill" in self.investigate[investigate]:
-                        State.set_expected_intent(["roll"])
-                        skill_check = SkillCheck(self.investigate[investigate]["skill"], "player", target=State.get_current_room_id(), dm_request=True, puzzle=self.id, investigate=True)
+                        self.state.set_expected_intent(["roll"])
+                        skill_check = SkillCheck(self.investigate[investigate]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id, investigate=True)
                         skill_check.execute()
                     else:
                         self.investigate_success_func(investigate)
@@ -189,18 +190,18 @@ class Puzzle(ABC):
         """Method to construct solution success function"""
         # TODO support non-door types
         if self.solutions[option]["say"]:
-            OutputBuilder.append(self.solutions[option]["say"])
+            self.output_builder.append(self.solutions[option]["say"])
         if self.type == "door":
             room1 = self.id.split("---")[0]
             room2 = self.id.split("---")[1]
-            State.unlock_door(room1, room2)
+            self.state.unlock_door(room1, room2)
         elif self.type == "trap":
             self.solution_map[option]["can_trigger"] = False
             result = self.solutions[option]["result"]
             # TODO support non-monster results
-            if State.get_entity(result):
-                State.set_current_status(result, "alive")
-                State.combat(result, "player")
+            if self.state.get_entity(result):
+                self.state.set_current_status(result, "alive")
+                self.state.combat(result, "player")
         self.solve()
         
     def explore_success_func(self, option: str) -> None:
@@ -210,12 +211,12 @@ class Puzzle(ABC):
             if result == "open_door":
                 room1 = self.id.split("---")[0]
                 room2 = self.id.split("---")[1]
-                State.unlock_door(room1, room2)
+                self.state.unlock_door(room1, room2)
             if result == "add_to_inventory":
                 item_data = self.__dict__
-                State.get_player().character.items.add_item(self.id, item_data=item_data)
+                self.state.get_player().character.items.add_item(self.id, item_data=item_data)
         if self.explore[option]["say"]:
-            OutputBuilder.append(self.explore[option]["say"])
+            self.output_builder.append(self.explore[option]["say"])
         self.solve()
     
     def investigate_success_func(self, option: str) -> None:
@@ -226,18 +227,18 @@ class Puzzle(ABC):
             if result == "open_door":
                 room1 = self.id.split("---")[0]
                 room2 = self.id.split("---")[1]
-                State.unlock_door(room1, room2)
+                self.state.unlock_door(room1, room2)
             if result == "add_to_inventory":
                 item_data = self.__dict__
-                State.get_player().character.items.add_item(self.id, item_data=item_data)
+                self.state.get_player().character.items.add_item(self.id, item_data=item_data)
             if result == "explore":
                 if self.investigate[option]["id"]:
                     explore_id = self.investigate[option]["explore_id"]
-                    puzzle = State.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
+                    puzzle = self.state.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
                     if puzzle.explore_map[explore_id]["can_trigger"]:
                         puzzle.explore_success_func(explore_id)
         if self.investigate[option]["say"]:
-            OutputBuilder.append(self.investigate[option]["say"])
+            self.output_builder.append(self.investigate[option]["say"])
         self.solve()
         
     def get_solution_success_func(self) -> object:

@@ -1,5 +1,6 @@
+from dmai.utils.output_builder import OutputBuilder
+from dmai.game.state import State
 from dmai.utils.loader import Loader
-from dmai.utils.config import Config
 from dmai.domain.characters.character import Character
 from dmai.domain.characters.fighter import Fighter
 from dmai.domain.characters.wizard import Wizard
@@ -47,17 +48,17 @@ class CharacterCollection(metaclass=CharacterCollectionMeta):
         return [cls.character_data[c]["name"] for c in cls.character_data]
 
     @classmethod
-    def get_character(cls, character: str) -> Character:
+    def get_character(cls, character: str, state: State, output_builder: OutputBuilder) -> Character:
         """Return a character of specified type"""
         character_obj = None
         try:
-            character_obj = cls._character_factory(character)
+            character_obj = cls._character_factory(character, state, output_builder)
         except ValueError as e:
             logger.error(e)
         return character_obj
 
     @classmethod
-    def _character_factory(cls, character: str) -> Character:
+    def _character_factory(cls, character: str, state: State, output_builder: OutputBuilder) -> Character:
         """Construct a character of specified type"""
         character = character.lower()
         if character in cls.character_data.keys():
@@ -72,4 +73,4 @@ class CharacterCollection(metaclass=CharacterCollectionMeta):
             msg = "Cannot create character class {c} - it does not exist!".format(
                 c=character)
             raise ValueError(msg)
-        return character_obj(cls.character_data[character])
+        return character_obj(cls.character_data[character], state, output_builder)

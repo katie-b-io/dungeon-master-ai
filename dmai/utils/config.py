@@ -20,14 +20,6 @@ class Config(metaclass=ConfigMeta):
         pass
 
     ################################################################
-    class Session(object):
-        session_id = "SESSION"
-
-        @classmethod
-        def set_session_id(cls, session_id: str) -> None:
-            cls.session_id = session_id
-
-    ################################################################
     class Hosts(object):
         rasa_host = "localhost"
         rasa_port = 5005
@@ -113,7 +105,6 @@ class Config(metaclass=ConfigMeta):
     cleanup = False
     god_mode = False
     no_monsters = False
-    session = Session()
     hosts = Hosts()
     directory = Directories()
     agent = Agents()

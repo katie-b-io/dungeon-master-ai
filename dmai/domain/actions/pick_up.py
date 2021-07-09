@@ -7,11 +7,13 @@ import dmai
 
 
 class PickUp(Action):
-    def __init__(self, item: str, entity: str) -> None:
+    def __init__(self, item: str, entity: str, state: State, output_builder: OutputBuilder) -> None:
         """PickUp class"""
         Action.__init__(self)
         self.item = item
         self.entity = entity
+        self.state = state
+        self.output_builder = output_builder
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -26,7 +28,7 @@ class PickUp(Action):
 
         # check if entity and item are within pick up range
         try:
-            current = State.get_current_room(self.entity)
+            current = self.state.get_current_room(self.entity)
             if not current.has_item(self.item):
                 return (False, "not in room")
 
@@ -34,8 +36,8 @@ class PickUp(Action):
             if not current.visibility:
                 if self.entity == "player":
                     if (
-                        not State.torch_lit
-                        and not State.get_player().character.has_darkvision()
+                        not self.state.torch_lit
+                        and not self.state.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
 
@@ -52,19 +54,19 @@ class PickUp(Action):
         (picked_up, reason) = self._can_pick_up()
         if picked_up:
             # TODO check if picking up item will end game
-            # OutputBuilder.append(State.get_dm().get_bad_ending())
-            # dmai.dmai_helpers.gameover()
-            picked_up = State.get_player().character.items.add_item(self.item)
+            # self.output_builder.append(self.state.get_dm().get_bad_ending())
+            # dmai.dmai_helpers.gameover(self.output_builder)
+            picked_up = self.state.get_player().character.items.add_item(self.item)
             if picked_up:
-                State.get_current_room(self.entity).took_item(self.item)
-                OutputBuilder.append(
-                    NLG.pick_up(State.get_player().character.items.get_name(self.item))
+                self.state.get_current_room(self.entity).took_item(self.item)
+                self.output_builder.append(
+                    NLG.pick_up(self.state.get_player().character.items.get_name(self.item))
                 )
             return picked_up
         else:
-            OutputBuilder.append(
+            self.output_builder.append(
                 NLG.cannot_pick_up(
-                    State.get_player().character.items.get_name(self.item), reason
+                    self.state.get_player().character.items.get_name(self.item), reason
                 )
             )
             return picked_up

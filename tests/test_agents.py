@@ -13,7 +13,6 @@ from dmai.planning.planning_monster import PlanningMonster
 from dmai.agents.monster_agent import MonsterAgent
 from dmai.agents.player_agent import PlayerAgent
 from dmai.utils.config import Config
-from dmai.game.state import State
 from dmai.game.game import Game
 
 
@@ -28,7 +27,7 @@ class TestPlayerAgent(unittest.TestCase):
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         self.problem = "fighter"
-        self.agent = PlayerAgent(problem=self.problem)
+        self.agent = PlayerAgent(self.game.state, self.game.output_builder, problem=self.problem)
 
     def tearDown(self) -> None:
         shutil.rmtree(Config.directory.planning)
@@ -63,7 +62,7 @@ class TestMonsterAgent(unittest.TestCase):
         Config.agent.set_monster("planning")
         Config.planner.set_monster("fd")
         self.problem = "giant_rat_1"
-        self.agent = MonsterAgent(problem=self.problem)
+        self.agent = MonsterAgent(self.game.state, self.game.output_builder,problem=self.problem)
 
     def tearDown(self) -> None:
         shutil.rmtree(Config.directory.planning)
@@ -78,7 +77,7 @@ class TestMonsterAgent(unittest.TestCase):
                               PlanningMonster)
 
     def test_prepare_next_move(self) -> None:
-        State.set_current_room("player", "inns_cellar")
+        self.game.state.set_current_room("player", "inns_cellar")
         succeed = self.agent.prepare_next_move()
         self.assertEqual(True, succeed)
 

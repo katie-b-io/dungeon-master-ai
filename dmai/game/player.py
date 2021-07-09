@@ -1,3 +1,4 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.characters.character import Character
 from dmai.agents.player_agent import PlayerAgent
 from dmai.domain.skills import Skills
@@ -11,12 +12,13 @@ logger = get_logger(__name__)
 
 
 class Player(PlayerAgent):
-    def __init__(self, character: Character) -> None:
+    def __init__(self, character: Character, state: State, output_builder: OutputBuilder) -> None:
         """Main class for the player"""
-        PlayerAgent.__init__(self, problem=character.id)
+        PlayerAgent.__init__(self, state, output_builder, problem=character.id)
         logger.info("Initialising character: {c}".format(c=str(character)))
         self.name = None
         self.character = character
+        self.state = state
 
     def set_name(self, name: str) -> None:
         logger.info("Setting player name: {n}".format(n=name))
@@ -96,7 +98,9 @@ class Player(PlayerAgent):
         if Config.god_mode:
             return 50
         else:
-            return DiceRoller.roll(die)
+            (roll_str, roll) = DiceRoller.roll(die)
+            self.output_builder.append(roll_str)
+            return roll
     
     def attack_roll(self, weapon_id: str = None) -> int:
         """Method to roll attack"""
@@ -108,7 +112,9 @@ class Player(PlayerAgent):
         if Config.god_mode:
             return 50
         else:
-            return DiceRoller.roll(die)
+            (roll_str, roll) = DiceRoller.roll(die)
+            self.output_builder.append(roll_str)
+            return roll
     
     def damage_roll(self, weapon_id: str = None) -> int:
         """Method to roll damage"""
@@ -121,7 +127,9 @@ class Player(PlayerAgent):
         if Config.god_mode:
             return 50
         else:
-            return DiceRoller.roll_dice(dice_spec)
+            (roll_str, roll) = DiceRoller.roll_dice(dice_spec)
+            self.output_builder.append(roll_str)
+            return roll
     
     def ability_roll(self, ability: str) -> int:
         """Method to perform ability roll"""
@@ -129,7 +137,9 @@ class Player(PlayerAgent):
         if Config.god_mode:
             return 50
         else:
-            return DiceRoller.roll(dice)
+            (roll_str, roll) = DiceRoller.roll(dice)
+            self.output_builder.append(roll_str)
+            return roll
     
     def skill_roll(self, skill: str) -> int:
         """Method to perform skill roll"""
@@ -137,7 +147,9 @@ class Player(PlayerAgent):
         if Config.god_mode:
             return 50
         else:
-            return DiceRoller.roll(dice)
+            (roll_str, roll) = DiceRoller.roll(dice)
+            self.output_builder.append(roll_str)
+            return roll
         
     def get_character_sheet(self) -> str:
         """Method to return a properly formatted character sheet"""
@@ -170,7 +182,7 @@ class Player(PlayerAgent):
         char_str += "{l:<20} {v:<30}\n".format(l="Hit point maximum:",
                                                v=self.character.hp_max)
         char_str += "{l:<20} {v:<30}\n".format(l="Current hit points:",
-                                               v=State.get_current_hp())
+                                               v=self.state.get_current_hp())
 
         # Abilities
         char_str += div

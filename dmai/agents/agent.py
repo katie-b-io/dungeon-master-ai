@@ -1,15 +1,18 @@
 from abc import ABC, abstractmethod
-
 from dmai.utils.output_builder import OutputBuilder
-from dmai.utils.config import Config
+
+from dmai.game.state import State
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 class Agent(ABC):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder, **kwargs) -> None:
         """Agent abstract class"""
+        self.state = state
+        self.output_builder = output_builder
         self.agent = self.get_agent(**kwargs)
 
     def __repr__(self) -> str:
@@ -27,7 +30,7 @@ class Agent(ABC):
         """Method to print the next move"""
         logger.debug("Printing next move")
         move = self.agent.get_next_move()
-        OutputBuilder.append(move)
+        self.output_builder.append(move)
         return bool(move)
 
     def perform_next_move(self) -> bool:

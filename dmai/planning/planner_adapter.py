@@ -2,19 +2,21 @@ from abc import ABC, abstractmethod
 
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
-from dmai.planning.planning_actions import planning_actions
-from dmai.utils.config import Config
-from dmai.game.state import State
+from dmai.planning.planning_actions import PlanningActions
+from dmai.game.state import State, State
 
 logger = get_logger(__name__)
 
 
 class PlannerAdapter(ABC):
-    def __init__(self, domain: str, problem: str) -> None:
+    def __init__(self, domain: str, problem: str, state: State, output_builder: OutputBuilder) -> None:
         """PlannerAdapter abstract class"""
         self.domain = domain
         self.problem = problem
+        self.state = state
+        self.output_builder = output_builder
         self.plan = None
+        self.planning_actions = PlanningActions(state)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -44,11 +46,11 @@ class PlannerAdapter(ABC):
         action = step.split(" ")[0]
         params = step.split(" ")[1:]
         
-        if action in planning_actions:
-            func = planning_actions[action]["func"]
-            # if the function is NLG, it needs to be wrapped in the OutputBuilder
+        if action in self.planning_actions.actions:
+            func = self.planning_actions.actions[action]["func"]
+            # if the function is NLG, it needs to be wrapped in the self.output_builder
             if hasattr(func, ".__self__") and func.__self__.__name__ == "NLG":
-                OutputBuilder.append(func(*params))
+                self.output_builder.append(func(*params))
             else:
                 func(*params)
         

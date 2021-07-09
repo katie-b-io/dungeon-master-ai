@@ -1,15 +1,17 @@
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
 from dmai.utils.config import Config
 from dmai.agents.agent import Agent
 from dmai.planning.planning_monster import PlanningMonster
+from dmai.game.state import State
 
 logger = get_logger(__name__)
 
 
 class MonsterAgent(Agent):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder, **kwargs) -> None:
         """MonsterAgent class"""
-        Agent.__init__(self, **kwargs)
+        Agent.__init__(self, state, output_builder, **kwargs)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -26,7 +28,7 @@ class MonsterAgent(Agent):
         try:
             agent_map = {"planning": PlanningMonster}
             agent = agent_map[agent]
-            return agent(**kwargs)
+            return agent(self.state, self.output_builder, **kwargs)
         except (ValueError, KeyError) as e:
             msg = "Cannot create agent {a} - it does not exist!".format(
                 a=agent)

@@ -1,6 +1,4 @@
 from dmai.game.game import Game
-from dmai.game.state import State
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -23,11 +21,11 @@ class UserInterface:
             else:
                 prompt = "\n"
 
-            if State.in_combat:
+            if self.game.state.in_combat:
                 prompt += "[COMBAT] "
 
             prompt += "> "
-            if State.paused:
+            if self.game.state.paused:
                 prompt += "Press enter to continue... "
 
             user_input = input(prompt)
@@ -49,11 +47,11 @@ class UserInterface:
         else:
             prompt = "\n"
 
-        if State.in_combat:
+        if self.game.state.in_combat:
             prompt += "[COMBAT] "
 
         prompt += "> "
-        if State.paused:
+        if self.game.state.paused:
             prompt += "Press enter to continue... "
 
         return prompt

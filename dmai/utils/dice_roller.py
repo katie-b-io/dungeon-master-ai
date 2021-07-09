@@ -1,4 +1,3 @@
-from dmai.utils.output_builder import OutputBuilder
 import random
 
 from dmai.utils.exceptions import DiceFormatError
@@ -65,8 +64,8 @@ class DiceRoller(metaclass=DiceRollerMeta):
             else:
                 dice_spec = {"die": die[d:], "total": total, "mod": 0}
 
-            dice_val = cls.roll_dice(dice_spec, silent)
-            return dice_val
+            (roll_str, dice_val) = cls.roll_dice(dice_spec, silent)
+            return (roll_str, dice_val)
 
         except (KeyError, TypeError, ValueError) as e:
             msg = 'Cannot roll dice: "{d}"\nUse format /roll d4 or /roll 2d12+2 for example'.format(
@@ -82,12 +81,13 @@ class DiceRoller(metaclass=DiceRollerMeta):
         try:
             max_val = cls.dice_map[die]
             val = random.randint(1, max_val)
+            roll_str = ""
             if not silent:
-                OutputBuilder.append("Rolling {d}... {v}".format(d=die, v=val))
+                roll_str = "Rolling {d}... {v}".format(d=die, v=val)
         except KeyError as e:
             raise
 
-        return val
+        return (roll_str, val)
 
     @classmethod
     def roll_dice(cls, dice_spec: dict, silent: bool = False) -> int:
@@ -105,13 +105,13 @@ class DiceRoller(metaclass=DiceRollerMeta):
             rolls = [random.randint(1, max_val) for _ in dice]
             total_roll = sum(rolls) + modifier
             die = cls.construct_dice_spec_string(dice_spec)
+            roll_str = ""
             if not silent:
-                OutputBuilder.append("Rolling {d}... {t}".format(d=die,
-                                                                t=total_roll))
+                roll_str = "Rolling {d}... {t}".format(d=die, t=total_roll)
         except (KeyError, TypeError, ValueError) as e:
             raise
 
-        return total_roll
+        return (roll_str, total_roll)
 
     @classmethod
     def check(cls, die: str) -> None:

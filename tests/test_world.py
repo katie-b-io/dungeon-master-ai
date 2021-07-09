@@ -1,4 +1,3 @@
-from typing import Generator
 import unittest
 import sys
 import os
@@ -7,7 +6,9 @@ import shutil
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
+from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.config import Config
+from dmai.game.state import State
 from dmai.game.world.puzzles.puzzle import Puzzle
 from dmai.game.world.puzzles.puzzle_collection import PuzzleCollection
 
@@ -16,6 +17,8 @@ class TestPuzzle(unittest.TestCase):
     """Test the Puzzle class"""
 
     def setUp(self) -> None:
+        self.output_builder = OutputBuilder()
+        self.state = State(self.output_builder)
         puzzle_data = {
             "id": "storage_room---western_corridor",
             "type": "door",
@@ -43,7 +46,7 @@ class TestPuzzle(unittest.TestCase):
             },
             "investigate": {}
         }
-        self.puzzle = Puzzle(puzzle_data)
+        self.puzzle = Puzzle(puzzle_data, self.state, self.output_builder)
 
     def tearDown(self) -> None:
         shutil.rmtree(Config.directory.planning)
@@ -63,6 +66,8 @@ class TestPuzzleCollection(unittest.TestCase):
     """Test the PuzzleCollection class"""
 
     def setUp(self) -> None:
+        self.output_builder = OutputBuilder()
+        self.state = State(self.output_builder)
         puzzles_data = {
             "vault": {
                 "id": "vault",
@@ -110,7 +115,7 @@ class TestPuzzleCollection(unittest.TestCase):
                 }
             }
         }
-        self.puzzles = PuzzleCollection(puzzles_data)
+        self.puzzles = PuzzleCollection(puzzles_data, self.state, self.output_builder)
 
     def tearDown(self) -> None:
         shutil.rmtree(Config.directory.planning)

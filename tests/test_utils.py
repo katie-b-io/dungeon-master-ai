@@ -8,25 +8,24 @@ sys.path.insert(0, p + "/../")
 from dmai.utils.dice_roller import DiceRoller
 from dmai.utils.text import Text
 from dmai.utils.output_builder import OutputBuilder
-from dmai.utils.loader import Loader
 
 
 
 class TestOutputBuilder(unittest.TestCase):
-    """Test the OutputBuilder class"""
+    """Test the self.output_builder class"""
 
     def setUp(self) -> None:
-        pass
+        self.output_builder = OutputBuilder()
 
     def test_format(self) -> None:
-        OutputBuilder.clear()
+        self.output_builder.clear()
         statement1 = "This is a statement"
         statement2 = "Also this is a statement"
         statement3 = "And this one"
-        OutputBuilder.append(statement1)
-        OutputBuilder.append(statement2)
-        OutputBuilder.append(statement3)
-        self.assertEqual(OutputBuilder.format(), "This is a statement\n\nAlso this is a statement\n\nAnd this one\n")
+        self.output_builder.append(statement1)
+        self.output_builder.append(statement2)
+        self.output_builder.append(statement3)
+        self.assertEqual(self.output_builder.format(), "This is a statement\n\nAlso this is a statement\n\nAnd this one\n")
         
     
 class TestText(unittest.TestCase):
@@ -107,7 +106,7 @@ class TestDiceRoller(unittest.TestCase):
         # roll d4 600 times
         total_rolls = 600
         rolls = [
-            DiceRoller.roll_dice(self.dice["d4"]["specs"]) for _ in range(total_rolls)
+            DiceRoller.roll_dice(self.dice["d4"]["specs"])[1] for _ in range(total_rolls)
         ]
 
         self.assertGreaterEqual(min(rolls), self.dice["d4"]["min"])
@@ -122,7 +121,7 @@ class TestDiceRoller(unittest.TestCase):
         # roll d6 600 times
         total_rolls = 600
         rolls = [
-            DiceRoller.roll_dice(self.dice["d6"]["specs"]) for _ in range(total_rolls)
+            DiceRoller.roll_dice(self.dice["d6"]["specs"])[1] for _ in range(total_rolls)
         ]
 
         self.assertGreaterEqual(min(rolls), self.dice["d6"]["min"])
@@ -137,7 +136,7 @@ class TestDiceRoller(unittest.TestCase):
         # roll d8 600 times
         total_rolls = 600
         rolls = [
-            DiceRoller.roll_dice(self.dice["d8"]["specs"]) for _ in range(total_rolls)
+            DiceRoller.roll_dice(self.dice["d8"]["specs"])[1] for _ in range(total_rolls)
         ]
 
         self.assertGreaterEqual(min(rolls), self.dice["d8"]["min"])
@@ -152,7 +151,7 @@ class TestDiceRoller(unittest.TestCase):
         # roll d10 600 times
         total_rolls = 600
         rolls = [
-            DiceRoller.roll_dice(self.dice["d10"]["specs"]) for _ in range(total_rolls)
+            DiceRoller.roll_dice(self.dice["d10"]["specs"])[1] for _ in range(total_rolls)
         ]
 
         self.assertGreaterEqual(min(rolls), self.dice["d10"]["min"])
@@ -167,7 +166,7 @@ class TestDiceRoller(unittest.TestCase):
         # roll d12 600 times
         total_rolls = 600
         rolls = [
-            DiceRoller.roll_dice(self.dice["d12"]["specs"]) for _ in range(total_rolls)
+            DiceRoller.roll_dice(self.dice["d12"]["specs"])[1] for _ in range(total_rolls)
         ]
 
         self.assertGreaterEqual(min(rolls), self.dice["d12"]["min"])
@@ -182,7 +181,7 @@ class TestDiceRoller(unittest.TestCase):
         # roll d20 600 times
         total_rolls = 600
         rolls = [
-            DiceRoller.roll_dice(self.dice["d20"]["specs"]) for _ in range(total_rolls)
+            DiceRoller.roll_dice(self.dice["d20"]["specs"])[1] for _ in range(total_rolls)
         ]
 
         self.assertGreaterEqual(min(rolls), self.dice["d20"]["min"])
@@ -197,7 +196,7 @@ class TestDiceRoller(unittest.TestCase):
         # roll d100 600 times
         total_rolls = 600
         rolls = [
-            DiceRoller.roll_dice(self.dice["d100"]["specs"]) for _ in range(total_rolls)
+            DiceRoller.roll_dice(self.dice["d100"]["specs"])[1] for _ in range(total_rolls)
         ]
 
         self.assertGreaterEqual(min(rolls), self.dice["d100"]["min"])

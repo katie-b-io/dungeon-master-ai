@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dmai.utils.output_builder import OutputBuilder
 import os
 
 from dmai.planning.planning_agent import PlanningAgent
@@ -12,9 +13,9 @@ logger = get_logger(__name__)
 
 
 class PlanningMonster(PlanningAgent):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder, **kwargs) -> None:
         """PlanningMonster class"""
-        PlanningAgent.__init__(self, Config.planner.monster, "monster", **kwargs)
+        PlanningAgent.__init__(self, Config.planner.monster, "monster", state, output_builder, **kwargs)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -175,7 +176,7 @@ class PlanningMonster(PlanningAgent):
 
     def build_problem(self) -> None:
         logger.debug("Building problem")
-        monster = State.get_entity(self.problem)
+        monster = self.state.get_entity(self.problem)
         problem_file = os.path.join(
             Config.directory.planning,
             "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem),
@@ -197,7 +198,7 @@ class PlanningMonster(PlanningAgent):
             objects.append([monster.unique_id, "monster"])
 
             # Rooms
-            objects.append([State.get_current_room_id(monster.unique_id), "room"])
+            objects.append([self.state.get_current_room_id(monster.unique_id), "room"])
 
             # Weapons
             for attack in monster.get_all_attack_ids():
@@ -211,18 +212,18 @@ class PlanningMonster(PlanningAgent):
             init = []
 
             # Player
-            init.append(["at", "player", State.get_current_room().id])
-            if State.is_alive():
+            init.append(["at", "player", self.state.get_current_room().id])
+            if self.state.is_alive():
                 init.append(["alive", "player"])
 
             # Monsters
-            init.append(["at", monster.unique_id, State.get_current_room(monster.unique_id).id])
-            if State.is_alive(monster.unique_id):
+            init.append(["at", monster.unique_id, self.state.get_current_room(monster.unique_id).id])
+            if self.state.is_alive(monster.unique_id):
                 init.append(["alive", monster.unique_id])
             if monster.has_darkvision():
                 init.append(["darkvision"])
-            if not State.get_current_room(monster.unique_id).visibility:
-                init.append(["dark", State.get_current_room(monster.unique_id).id])
+            if not self.state.get_current_room(monster.unique_id).visibility:
+                init.append(["dark", self.state.get_current_room(monster.unique_id).id])
 
             # Weapons
             for attack in monster.get_all_attack_ids():
@@ -234,11 +235,11 @@ class PlanningMonster(PlanningAgent):
                 # TODO check if player is visible to monster
                 init.append(["must_kill", "player"])
             else:
-                for m in State.get_possible_monster_targets(monster.unique_id):
-                    if State.was_attacked(m.unique_id):
+                for m in self.state.get_possible_monster_targets(monster.unique_id):
+                    if self.state.was_attacked(m.unique_id):
                         init.append(["must_kill", "player"])
                         break
-            if State.was_attacked(monster.unique_id):
+            if self.state.was_attacked(monster.unique_id):
                 init.append(["attacked", "player", monster.unique_id])
 
             # Construct the string

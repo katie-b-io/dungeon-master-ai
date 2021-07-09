@@ -1,17 +1,19 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedRoomError
-from dmai.game.state import State, Status
+from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
 import dmai
 
 
 class AttackDoor(Action):
-    def __init__(self, attacker: str, target: str) -> None:
+    def __init__(self, attacker: str, target: str, state: State, output_builder: OutputBuilder) -> None:
         """AttackDoor class"""
         Action.__init__(self)
         self.attacker = attacker
         self.target = target
+        self.state = state
+        self.output_builder = output_builder
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -26,7 +28,7 @@ class AttackDoor(Action):
 
         # check if attacker and door are within attack range
         try:
-            current = State.get_current_room(self.attacker)
+            current = self.state.get_current_room(self.attacker)
             if not self.target in current.get_connected_rooms():
                 return (False, "different location")
             
@@ -35,21 +37,21 @@ class AttackDoor(Action):
             if not current.visibility:
                 if self.attacker == "player":
                     if (
-                        not State.torch_lit
-                        and not State.get_player().character.has_darkvision()
+                        not self.state.torch_lit
+                        and not self.state.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
                     
             # can't attack a destroyed door
-            if State.connection_broken(current.id, self.target):
+            if self.state.connection_broken(current.id, self.target):
                 return (False, "destroyed door")
 
             # can't attack an unlocked door
-            if State.travel_allowed(current.id, self.target):
+            if self.state.travel_allowed(current.id, self.target):
                 return (False, "travel allowed")
             
             # can't attack if no weapon equipped
-            if not State.get_player().is_equipped():
+            if not self.state.get_player().is_equipped():
                 return (False, "no weapon")
 
             # none of the above situations were triggered so allow attack
@@ -64,16 +66,17 @@ class AttackDoor(Action):
         # check if attack can happen
         (can_attack, reason) = self._can_attack_door()
         if can_attack:
-            State.combat_with_door(self.target)
+            self.state.combat_with_door(self.target)
             return can_attack
         else:
-            door_name = "the door to the {t}".format(t=State.get_room_name(self.target))
-            OutputBuilder.append(
+            door_name = "the door to the {t}".format(t=self.state.get_room_name(self.target))
+            self.output_builder.append(
                 NLG.cannot_attack_door(
-                    State.get_entity_name(self.attacker),
+                    self.state.get_entity_name(self.attacker),
                     door_name,
+                    self.state.get_player().name,
                     reason,
-                    State.get_formatted_possible_door_targets(),
+                    self.state.get_formatted_possible_door_targets(),
                 )
             )
             return can_attack

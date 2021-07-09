@@ -7,11 +7,12 @@ class Weapons:
     # class variables
     weapons_data = dict()
 
-    def __init__(self, weapons: str, proficiencies=None) -> None:
+    def __init__(self, weapons: str, state: State, proficiencies=None) -> None:
         """Weapons class"""
         self.weapons = weapons
         self.right_hand = None
         self.left_hand = None
+        self.state = state
         self.proficiencies = proficiencies
         self._load_weapons_data()
 
@@ -114,7 +115,7 @@ class Weapons:
             if self.is_ranged(weapon_id):
                 return "dex"
             else:
-                c = State.get_player().character
+                c = self.state.get_player().character
                 if c.get_ability_modifier("dex") > c.get_ability_modifier("str"):
                     return "dex"
         return "str"
@@ -141,6 +142,10 @@ class Weapons:
     def unequip_weapon(self, weapon_id: str = None) -> bool:
         """Method to unequip specified weapon"""
         if not weapon_id:
+            self.right_hand = None
+            self.left_hand = None
+            return True
+        if self.has_property(weapon_id, "two_handed"):
             self.right_hand = None
             self.left_hand = None
             return True

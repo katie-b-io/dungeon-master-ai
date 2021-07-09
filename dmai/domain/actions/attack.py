@@ -7,11 +7,13 @@ import dmai
 
 
 class Attack(Action):
-    def __init__(self, attacker: str, target: str) -> None:
+    def __init__(self, attacker: str, target: str, state: State, output_builder: OutputBuilder) -> None:
         """Attack class"""
         Action.__init__(self)
         self.attacker = attacker
         self.target = target
+        self.state = state
+        self.output_builder = output_builder
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -26,12 +28,12 @@ class Attack(Action):
 
         # check if attacker and target are within attack range
         try:
-            current = State.get_current_room(self.attacker)
-            if not current == State.get_current_room(self.target):
+            current = self.state.get_current_room(self.attacker)
+            if not current == self.state.get_current_room(self.target):
                 return (False, "different location")
             
             # can't attack a dead target
-            if State.get_current_status(self.target) == Status("dead"):
+            if self.state.get_current_status(self.target) == Status("dead"):
                 return (False, "dead target")
 
             # can't attack if can't see
@@ -39,13 +41,13 @@ class Attack(Action):
             if not current.visibility:
                 if self.attacker == "player":
                     if (
-                        not State.torch_lit
-                        and not State.get_player().character.has_darkvision()
+                        not self.state.torch_lit
+                        and not self.state.get_player().character.has_darkvision()
                     ):
                         return (False, "no visibility")
             
             # can't attack if no weapon equipped
-            if not State.get_player().is_equipped():
+            if not self.state.get_player().is_equipped():
                 return (False, "no weapon")
 
             # none of the above situations were triggered so allow attack
@@ -61,21 +63,22 @@ class Attack(Action):
         (can_attack, reason) = self._can_attack()
         if can_attack:
             # check if target will end game
-            if State.get_dm().npcs.get_type(self.target) == "npc":
-                if State.get_dm().npcs.get_npc(self.target).attack_ends_game:
+            if self.state.get_dm().npcs.get_type(self.target) == "npc":
+                if self.state.get_dm().npcs.get_npc(self.target).attack_ends_game:
                     # this is a game end condition
-                    OutputBuilder.append(NLG.attack_npc_end_game(self.target))
-                    OutputBuilder.append(State.get_dm().get_bad_ending())
-                    dmai.dmai_helpers.gameover()
-            State.combat(self.attacker, self.target)
+                    self.output_builder.append(NLG.attack_npc_end_game(self.state.get_entity(self.target).short_name))
+                    self.output_builder.append(self.state.get_dm().get_bad_ending())
+                    dmai.dmai_helpers.gameover(self.output_builder)
+            self.state.combat(self.attacker, self.target)
             return can_attack
         else:
-            OutputBuilder.append(
+            self.output_builder.append(
                 NLG.cannot_attack(
-                    State.get_entity_name(self.attacker),
-                    State.get_entity_name(self.target),
+                    self.state.get_entity_name(self.attacker),
+                    self.state.get_entity_name(self.target),
+                    self.state.get_player().name,
                     reason,
-                    State.get_formatted_possible_monster_targets(),
+                    self.state.get_formatted_possible_monster_targets(),
                 )
             )
             return can_attack

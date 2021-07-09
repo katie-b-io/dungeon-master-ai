@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dmai.utils.output_builder import OutputBuilder
 import os
 
 from dmai.planning.planning_agent import PlanningAgent
@@ -13,9 +14,9 @@ logger = get_logger(__name__)
 
 
 class PlanningPlayer(PlanningAgent):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder, **kwargs) -> None:
         """PlanningPlayer class"""
-        PlanningAgent.__init__(self, Config.planner.player, "player", **kwargs)
+        PlanningAgent.__init__(self, Config.planner.player, "player", state, output_builder, **kwargs)
 
     def __repr__(self) -> str:
         return "{c}".format(c=self.__class__.__name__)
@@ -194,11 +195,11 @@ class PlanningPlayer(PlanningAgent):
                     "params": [("player", "player"), ("target", "object")],
                 }
             )
-            for equipment in State.get_player().get_all_equipment_ids():
+            for equipment in self.state.get_player().get_all_equipment_ids():
                 predicates.append(
                     {"predicate": equipment, "params": [("equipment", "equipment")]}
                 )
-            for item in State.get_player().character.items.item_data.keys():
+            for item in self.state.get_player().character.items.item_data.keys():
                 predicates.append(
                     {"predicate": item, "params": [("item", "item")]}
                 )
@@ -286,9 +287,9 @@ class PlanningPlayer(PlanningAgent):
                 "declare_attack_against_entity",
                 "kill_monster",
             ]
-            if State.get_player().has_equipment("thieves_tools")[0]:
+            if self.state.get_player().has_equipment("thieves_tools")[0]:
                 actions.append("use_thieves_tools")
-            if State.get_player().has_equipment("torch")[0]:
+            if self.state.get_player().has_equipment("torch")[0]:
                 actions.append("light_torch")
                 actions.append("extinguish_torch")
             
@@ -313,25 +314,25 @@ class PlanningPlayer(PlanningAgent):
 
             # Player
             objects.append(["player", "player"])
-            for intent in State.get_dm().player_intent_map.keys():
+            for intent in self.state.get_dm().player_intent_map.keys():
                 objects.append([intent, "intent"])
-            for item in State.get_player().get_all_item_ids():
+            for item in self.state.get_player().get_all_item_ids():
                 objects.append([item, "item"])
 
             # NPCs
-            for npc in State.get_dm().npcs.get_all_npcs():
+            for npc in self.state.get_dm().npcs.get_all_npcs():
                 objects.append([npc.id, "npc"])
             objects.append(["indifferent", "indifferent"])
             objects.append(["friendly", "friendly"])
             objects.append(["hostile", "hostile"])
 
             # Rooms
-            for room in State.get_dm().adventure.get_all_rooms():
+            for room in self.state.get_dm().adventure.get_all_rooms():
                 objects.append([room.id, "room"])
 
             # Doors
             doors = []
-            for room in State.get_dm().adventure.get_all_rooms():
+            for room in self.state.get_dm().adventure.get_all_rooms():
                 for connection in room.get_connected_rooms():
                     door = "{r}---{c}".format(r=room.id, c=connection)
                     reverse_door = "{c}---{r}".format(r=room.id, c=connection)
@@ -341,7 +342,7 @@ class PlanningPlayer(PlanningAgent):
                 objects.append([door, "door"])
 
             # Monsters
-            for monster in State.get_dm().npcs.get_all_monsters():
+            for monster in self.state.get_dm().npcs.get_all_monsters():
                 objects.append([monster.unique_id, monster.id])
 
             # Abilities
@@ -353,18 +354,18 @@ class PlanningPlayer(PlanningAgent):
                 objects.append([skill[0], "skill"])
 
             # Weapons
-            for weapon in State.get_player().get_all_weapon_ids():
+            for weapon in self.state.get_player().get_all_weapon_ids():
                 objects.append([weapon, "weapon"])
 
             # Equipment
-            for equipment in State.get_player().get_all_equipment_ids():
+            for equipment in self.state.get_player().get_all_equipment_ids():
                 objects.append([equipment, "equipment"])
 
             # Puzzles
-            for room in State.get_dm().adventure.get_all_rooms():
+            for room in self.state.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
                     if not puzzle.type == "door":
-                        if not State.get_player().character.items.has_item(puzzle.id)[0]:
+                        if not self.state.get_player().character.items.has_item(puzzle.id)[0]:
                             objects.append([puzzle.id, "puzzle"])
 
             # Construct the string
@@ -375,38 +376,38 @@ class PlanningPlayer(PlanningAgent):
             init = []
 
             # Adventure
-            if State.questing:
+            if self.state.questing:
                 init.append(["quest"])
 
             # Player
-            init.append(["at", "player", State.get_current_room().id])
-            if State.is_alive():
+            init.append(["at", "player", self.state.get_current_room().id])
+            if self.state.is_alive():
                 init.append(["alive", "player"])
-            if State.get_current_hp() <= (State.get_player().hp_max/2):
+            if self.state.get_current_hp() <= (self.state.get_player().hp_max/2):
                 init.append(["injured", "player"])
-            for item in State.get_player().get_all_item_ids():
+            for item in self.state.get_player().get_all_item_ids():
                 init.append([item, item])
                 init.append(["has", "player", item])
-            if State.torch_lit:
+            if self.state.torch_lit:
                 init.append(["torch_lit"])
-            if State.get_player().character.has_darkvision():
+            if self.state.get_player().character.has_darkvision():
                 init.append(["darkvision"])
             for ability in Abilities.get_all_abilities():
                 init.append([ability[1].lower(), ability[0]])
             for skill in Skills.get_all_skills():
                 init.append([skill[0], skill[0]])
-            for weapon in State.get_player().get_all_weapon_ids():
+            for weapon in self.state.get_player().get_all_weapon_ids():
                 init.append(["has", "player", weapon])
-                if State.get_player().is_equipped(weapon):
+                if self.state.get_player().is_equipped(weapon):
                     init.append(["equipped", "player", weapon])
-            for equipment in State.get_player().get_all_equipment_ids():
+            for equipment in self.state.get_player().get_all_equipment_ids():
                 init.append([equipment, equipment])
                 init.append(["has", "player", equipment])
 
             # NPCs
-            for npc in State.get_dm().npcs.get_all_npcs():
-                init.append(["at", npc.id, State.get_current_room(npc.id).id])
-                if State.is_alive(npc.id):
+            for npc in self.state.get_dm().npcs.get_all_npcs():
+                init.append(["at", npc.id, self.state.get_current_room(npc.id).id])
+                if self.state.is_alive(npc.id):
                     init.append(["alive", npc.id])
                 if npc.gives_quest:
                     init.append(["gives_quest", npc.id])
@@ -414,38 +415,38 @@ class PlanningPlayer(PlanningAgent):
             init.append(["improve_attitude", "hostile", "indifferent"])
             init.append(["degrade_attitude", "friendly", "indifferent"])
             init.append(["degrade_attitude", "indifferent", "hostile"])
-            for npc in State.get_dm().npcs.get_all_npcs():
+            for npc in self.state.get_dm().npcs.get_all_npcs():
                 init.append(
                     [
                         "attitude_towards_player",
                         npc.id,
-                        State.get_current_attitude(npc.id).value,
+                        self.state.get_current_attitude(npc.id).value,
                     ]
                 )
 
             # Monsters
-            for monster in State.get_dm().npcs.get_all_monsters():
+            for monster in self.state.get_dm().npcs.get_all_monsters():
                 init.append(
                     [
                         "at",
                         monster.unique_id,
-                        State.get_current_room(monster.unique_id).id,
+                        self.state.get_current_room(monster.unique_id).id,
                     ]
                 )
-            for monster in State.get_dm().npcs.get_all_monsters():
-                if State.is_alive(monster.unique_id):
+            for monster in self.state.get_dm().npcs.get_all_monsters():
+                if self.state.is_alive(monster.unique_id):
                     init.append(["alive", monster.unique_id])
 
             # Combat
-            for npc in State.get_dm().npcs.get_all_npcs():
+            for npc in self.state.get_dm().npcs.get_all_npcs():
                 if npc.must_kill:
                     init.append(["must_kill", npc.id])
-            for monster in State.get_dm().npcs.get_all_monsters():
+            for monster in self.state.get_dm().npcs.get_all_monsters():
                 if monster.must_kill:
                     init.append(["must_kill", monster.unique_id])
 
             # Rooms
-            for room in State.get_dm().adventure.get_all_rooms():
+            for room in self.state.get_dm().adventure.get_all_rooms():
                 if not room.visibility:
                     init.append(["dark", room.id])
                 if bool(room.treasure):
@@ -459,13 +460,13 @@ class PlanningPlayer(PlanningAgent):
                 init.append(["connected", door, room2, room1])
                 init.append(["at", door, room1])
                 init.append(["at", door, room2])
-                if not State.travel_allowed(room1, room2):
+                if not self.state.travel_allowed(room1, room2):
                     init.append(["locked", door])
-                if not State.connection_broken(room1, room2):
+                if not self.state.connection_broken(room1, room2):
                     init.append(["alive", door])
 
             # Puzzles
-            for room in State.get_dm().adventure.get_all_rooms():
+            for room in self.state.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
                     # Ability solution
                     for ability in Abilities.get_all_abilities():
@@ -476,15 +477,15 @@ class PlanningPlayer(PlanningAgent):
                         if puzzle.check_solution_skill(skill[0]):
                             init.append(["ability_solution", puzzle.id, skill[0]])
                     # Equipment solution
-                    for equipment in State.get_player().get_all_equipment_ids():
+                    for equipment in self.state.get_player().get_all_equipment_ids():
                         if puzzle.check_solution_equipment(equipment):
                             init.append(["equipment_solution", puzzle.id, equipment])
                     # Intent solution
-                    for intent in State.get_dm().player_intent_map.keys():
+                    for intent in self.state.get_dm().player_intent_map.keys():
                         if puzzle.check_solution_intent(intent):
                             init.append(["intent_solution", puzzle.id, intent])
                     # Item solution
-                    for item in State.get_player().get_all_item_ids():
+                    for item in self.state.get_player().get_all_item_ids():
                         if puzzle.check_solution_item(item):
                             init.append(["item_solution", puzzle.id, item])
 
@@ -496,6 +497,6 @@ class PlanningPlayer(PlanningAgent):
             ################################################
             # Construct the problem file goal
             goal = []
-            goal.append(State.current_goal)
+            goal.append(self.state.current_goal)
             writer.write(self._construct_goal(goal))
             writer.write(self._construct_problem_footer())
