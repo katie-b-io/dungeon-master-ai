@@ -26,6 +26,7 @@ def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005) ->
     game.output_builder.append(
         "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
     )
+    game.output_builder.append("Your unique ID for filling in the questionnaire is {s}. Please make a note of it.".format(s=session_id))
     ui = UserInterface(game)
 
     return (ui, session_id)
@@ -76,6 +77,7 @@ def gameover(output_builder: OutputBuilder, session: str = None) -> None:
         exit_game()
     else:
         output_builder.append("Your unique ID for filling in the questionnaire is {s}.".format(s=session))
+        output_builder.append("Exiting game...")
         return output_builder.format()
 
 
