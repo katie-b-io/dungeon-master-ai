@@ -46,7 +46,7 @@ class Character(ABC):
             self.equipment = EquipmentCollection(
                 equipment=self.equipment, state=self.state, output_builder=self.output_builder, proficiencies=self.proficiencies["tools"]
             )
-            self.items = ItemCollection()
+            self.items = ItemCollection(self.state, self.output_builder)
             self.languages = Languages(self.languages)
             self.race = Race(self.race)
             self.skills = Skills(

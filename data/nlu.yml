@@ -238,6 +238,11 @@ nlu:
     - look at the [giant rat](monster)
     - look at [rat](monster)
     - examine the [zombie](monster)
+    - look at [goblin body](monster)
+    - look at [giant rat body](monster)
+    - look at [rat body](monster)
+    - look at [skeleton body](monster)
+    - look at [zombie body](monster)
     - get a closer look at the [skeleton](monster)
     - investigate [goblin](monster)
     - look at dead [goblin](monster)
@@ -962,22 +967,27 @@ nlu:
     - rat
     - giant rats
     - rats
+    - giant rat body
+    - rat body
 
 - synonym: goblin
   examples: |
     - goblin
     - goblins
+    - goblin body
 
 - synonym: skeleton
   examples: |
     - skeleton
     - skellington
     - skeletons
+    - skeleton body
 
 - synonym: zombie
   examples: |
     - zombie
     - zombies
+    - zombie body
 
 - synonym: "1"
   examples: |

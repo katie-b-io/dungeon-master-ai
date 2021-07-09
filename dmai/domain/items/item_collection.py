@@ -1,3 +1,5 @@
+from dmai.utils.output_builder import OutputBuilder
+from dmai.game.state import State
 from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedItem
 from dmai.domain.items.potion_of_healing import PotionOfHealing
@@ -11,9 +13,11 @@ class ItemCollection:
     # class variables
     item_data = dict()
 
-    def __init__(self) -> None:
+    def __init__(self, state: State, output_builder: OutputBuilder) -> None:
         """ItemCollection class"""
         self.items = {}
+        self.state = state
+        self.output_builder = output_builder
         self._load_item_data()
 
     def __repr__(self) -> str:
@@ -38,7 +42,7 @@ class ItemCollection:
             msg = "Cannot create item {e} - it does not exist!".format(
                 e=item)
             raise UnrecognisedItem(msg)
-        return item_obj(self.item_data[item])
+        return item_obj(self.item_data[item], self.state, self.output_builder)
 
     def _check_item(self, item_id: str) -> bool:
         """Method to return whether specified item exists.

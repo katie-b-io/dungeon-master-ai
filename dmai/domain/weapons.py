@@ -145,6 +145,10 @@ class Weapons:
             self.right_hand = None
             self.left_hand = None
             return True
+        if self.has_property(weapon_id, "two_handed"):
+            self.right_hand = None
+            self.left_hand = None
+            return True
         if self.right_hand == weapon_id:
             self.right_hand = None
             return True
