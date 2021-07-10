@@ -51,15 +51,12 @@ class Game:
         self.dm.load()
         self.state.set_dm(self.dm)
 
-        # start off with no player input allowed
-        self.state.pause()
-
         # set character class and name if possible
         if not self.char_class and self.state.char_class:
             self.char_class = self.state.char_class
         if not self.char_name and self.state.char_name:
             self.char_name = self.state.char_name
-
+        
         if self.char_class:
             character = CharacterCollection.get_character(self.char_class, self.state, self.output_builder)
             self.player = Player(character, self.state, self.output_builder)
@@ -77,6 +74,7 @@ class Game:
         else:
             self.intro = True
             self.intro_text = self.dm.get_intro_text()
+            self.state.pause()
 
     def input(self, player_utter: str) -> None:
         """Receive a player input"""

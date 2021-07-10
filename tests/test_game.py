@@ -32,6 +32,42 @@ class TestGame(unittest.TestCase):
         self.assertEqual("antechamber", ui.game.state.get_current_room_id())
         self.assertEqual(session_id, session_id2)
 
+    def test_continue_after_load(self) -> None:
+        # 1st input
+        (ui, session_id) = dmai.init(".")
+        self.assertFalse(ui.game.state.intro_read)
+        ui.output()
+        self.assertTrue(ui.game.state.intro_read)
+        self.assertTrue(ui.game.state.paused)
+        self.assertIsNone(ui.game.state.char_name)
+        self.assertFalse(ui.game.state.started)
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+
+        # 2nd input
+        (ui, session_id) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        ui.input("")
+        ui.output()
+        self.assertTrue(ui.game.state.intro_read)
+        self.assertFalse(ui.game.state.paused)
+        self.assertEqual("", ui.game.state.char_name)
+        self.assertTrue(ui.game.state.started)
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+
+        # 3rd input
+        (ui, session_id) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        ui.input("Xena")
+        ui.output()
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+    
+        # 4th input
+        (ui, session_id) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        self.assertEqual("Xena", ui.game.state.char_name)
 
 class TestState(unittest.TestCase):
     """Test the State class"""
