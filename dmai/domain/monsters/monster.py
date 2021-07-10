@@ -71,9 +71,13 @@ class Monster(NPC, MonsterAgent):
             self.unique_name = "{n} {i}".format(n=self.name, i=i)
 
         # set up triggers
+        if self.unique_id not in self.state.monster_trigger_map:
+            self.state.monster_trigger_map[unique_id] = {}
+
+        if "attack_of_opportunity" not in self.state.monster_trigger_map[unique_id]:
+            self.state.monster_trigger_map[unique_id]["attack_of_opportunity"] = True
         self.trigger_map = {
             "attack_of_opportunity": {
-                "can_trigger": True,
                 "trigger": self.attack_of_opportunity,
             }
         }
@@ -82,8 +86,9 @@ class Monster(NPC, MonsterAgent):
         if npc_data:
             if npc_data["triggers"]:
                 if "move" in npc_data["triggers"]:
+                    if "move" not in self.state.monster_trigger_map[self.unique_id]:
+                        self.state.monster_trigger_map[self.unique_id]["move"] = True
                     self.trigger_map["move"] = {
-                        "can_trigger": True,
                         "trigger": self.move,
                         "params": {
                             "destination": npc_data["triggers"]["move"],
@@ -184,7 +189,7 @@ class Monster(NPC, MonsterAgent):
     def trigger(self) -> None:
         """Method to perform any actions or print any new text if conditions met"""
         for trigger_type in self.trigger_map:
-            if self.trigger_map[trigger_type]["can_trigger"]:
+            if self.state.monster_trigger_map[self.unique_id][trigger_type]:
                 if "params" in self.trigger_map[trigger_type]:
                     self.trigger_map[trigger_type]["trigger"](
                         **self.trigger_map[trigger_type]["params"]

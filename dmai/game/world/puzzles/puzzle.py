@@ -13,11 +13,6 @@ class Puzzle(ABC):
         """Puzzle abstract class"""
         self.state = state
         self.output_builder = output_builder
-        self.solved = False
-        self.triggered = False
-        self.solution_map = {}
-        self.explore_map = {}
-        self.investigate_map = {}
         try:
             for key in puzzle_data:
                 self.__setattr__(key, puzzle_data[key])
@@ -26,29 +21,31 @@ class Puzzle(ABC):
                 "Cannot create puzzle, incorrect attribute: {e}".format(e=e))
             raise
         
+        if self.id not in self.state.puzzle_trigger_map:
+            self.state.puzzle_trigger_map[self.id] = {
+                    "solution": {},
+                    "explore": {},
+                    "investigate": {}
+                }
+
         for solution in self.solutions:
-            self.solution_map[solution] = {
-                "can_trigger": True
-            }
+            if solution not in self.state.puzzle_trigger_map[self.id]["solution"]:
+                self.state.puzzle_trigger_map[self.id]["solution"][solution] = True
             
         for explore in self.explore:
-            self.explore_map[explore] = {
-                "can_trigger": True
-            }
-            
+            if explore not in self.state.puzzle_trigger_map[self.id]["explore"]:
+                self.state.puzzle_trigger_map[self.id]["explore"][explore] = True
+
         for investigate in self.investigate:
-            self.investigate_map[investigate] = {
-                "can_trigger": True
-            }
+            if investigate not in self.state.puzzle_trigger_map[self.id]["investigate"]:
+                self.state.puzzle_trigger_map[self.id]["investigate"][investigate] = True
+
             
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
     def solve(self) -> None:
-        self.solved = True
-
-    def trigger(self) -> None:
-        self.triggered = True
+        self.state.solved_puzzles.append(self.id)
 
     def get_solution(self, solution: str) -> dict:
         """Method to return specified solution details"""
@@ -159,31 +156,31 @@ class Puzzle(ABC):
     
     def explore_trigger(self) -> None:
         """Method to print any new text if conditions met"""
-        if not self.solved:
-            for explore in self.explore_map:
-                if self.explore_map[explore]["can_trigger"]:
+        if not self.id in self.state.solved_puzzles:
+            for explore in self.state.puzzle_trigger_map[self.id]["explore"]:
+                if self.state.puzzle_trigger_map[self.id]["explore"][explore]:
+                    print(self.explore)
                     if "skill" in self.explore[explore]:
                         self.state.set_expected_intent(["roll"])
                         skill_check = SkillCheck(self.explore[explore]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id)
                         skill_check.execute()
                     else:
                         self.explore_success_func(explore)
-                    self.explore_map[explore]["can_trigger"] = False
+                    self.state.puzzle_trigger_map[self.id]["explore"][explore] = False
                     break
     
     def investigate_trigger(self) -> None:
         """Method to print any new text if conditions met"""
-        
-        if not self.solved:
-            for investigate in self.investigate_map:
-                if self.investigate_map[investigate]["can_trigger"]:
+        if not self.id in self.state.solved_puzzles:
+            for investigate in self.state.puzzle_trigger_map[self.id]["investigate"]:
+                if self.state.puzzle_trigger_map[self.id]["investigate"][investigate]:
                     if "skill" in self.investigate[investigate]:
                         self.state.set_expected_intent(["roll"])
                         skill_check = SkillCheck(self.investigate[investigate]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id, investigate=True)
                         skill_check.execute()
                     else:
                         self.investigate_success_func(investigate)
-                    self.investigate_map[investigate]["can_trigger"] = False
+                    self.state.puzzle_trigger_map[self.id]["investigate"][investigate] = False
                     break
 
     def solution_success_func(self, option: str = None) -> None:
@@ -196,7 +193,7 @@ class Puzzle(ABC):
             room2 = self.id.split("---")[1]
             self.state.unlock_door(room1, room2)
         elif self.type == "trap":
-            self.solution_map[option]["can_trigger"] = False
+            self.state.puzzle_trigger_map[self.id]["solution"][option] = False
             result = self.solutions[option]["result"]
             # TODO support non-monster results
             if self.state.get_entity(result):
@@ -235,7 +232,7 @@ class Puzzle(ABC):
                 if self.investigate[option]["id"]:
                     explore_id = self.investigate[option]["explore_id"]
                     puzzle = self.state.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
-                    if puzzle.explore_map[explore_id]["can_trigger"]:
+                    if self.state.puzzle_trigger_map[self.id]["explore"][explore_id]:
                         puzzle.explore_success_func(explore_id)
         if self.investigate[option]["say"]:
             self.output_builder.append(self.investigate[option]["say"])

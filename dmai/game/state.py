@@ -89,6 +89,14 @@ class State():
     stored_ability_check = None
     stored_skill_check = None
     ales = 0
+    # puzzle triggers
+    puzzle_trigger_map = {}
+    solved_puzzles = []
+    # monster triggers
+    monster_trigger_map = {}
+    # room triggers
+    room_trigger_map = {}
+    visited_rooms = []
 
     def __init__(self, output_builder: OutputBuilder, session_id: str = "") -> None:
         """Main class for the game state"""

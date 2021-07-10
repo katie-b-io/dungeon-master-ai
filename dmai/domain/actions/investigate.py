@@ -95,7 +95,6 @@ class Investigate(Action):
             puzzle = self.state.get_current_room().puzzles.get_puzzle(self.target)
             if hasattr(puzzle, "description"):
                 self.output_builder.append(puzzle.description)
-            self.output_builder.append("Trigger the puzzle checks")
             puzzle.investigate_trigger()
             return True
 
