@@ -92,6 +92,14 @@ class State():
         self.session.set_session_id(session_id)
         self.output_builder = output_builder
     
+    def save(self) -> dict:
+        """Method to save the game state to dict"""
+        return self.__dict__
+    
+    def load(self, saved_state: dict) -> None:
+        """Method to load the game state"""
+        self.__dict__ = saved_state
+        
     def combat(self, attacker: str, target: str) -> None:
         if not self.in_combat:
             self.reset_combat_status()
