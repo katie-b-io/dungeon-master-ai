@@ -10,8 +10,6 @@ class Weapons:
     def __init__(self, weapons: str, state: State, proficiencies=None) -> None:
         """Weapons class"""
         self.weapons = weapons
-        self.right_hand = None
-        self.left_hand = None
         self.state = state
         self.proficiencies = proficiencies
         self._load_weapons_data()
@@ -124,51 +122,51 @@ class Weapons:
         """Method to equip specified weapon"""
         if weapon_id in self.weapons:
             if slot:
-                self.__setattr__(slot, weapon_id)
+                self.state.__setattr__(slot, weapon_id)
                 return True
             else:
                 if self.has_property(weapon_id, "two_handed"):
-                    self.__setattr__("left_hand", weapon_id)
-                    self.__setattr__("right_hand", weapon_id)
+                    self.state.__setattr__("left_hand", weapon_id)
+                    self.state.__setattr__("right_hand", weapon_id)
                     return True
                 else:
                     if self.get_equipped("right_hand"):
-                        self.__setattr__("left_hand", weapon_id)
+                        self.state.__setattr__("left_hand", weapon_id)
                         return True
-                    self.__setattr__("right_hand", weapon_id)
+                    self.state.__setattr__("right_hand", weapon_id)
                     return True
         return False
 
     def unequip_weapon(self, weapon_id: str = None) -> bool:
         """Method to unequip specified weapon"""
         if not weapon_id:
-            self.right_hand = None
-            self.left_hand = None
+            self.state.right_hand = None
+            self.state.left_hand = None
             return True
         if self.has_property(weapon_id, "two_handed"):
-            self.right_hand = None
-            self.left_hand = None
+            self.state.right_hand = None
+            self.state.left_hand = None
             return True
-        if self.right_hand == weapon_id:
-            self.right_hand = None
+        if self.state.right_hand == weapon_id:
+            self.state.right_hand = None
             return True
-        if self.left_hand == weapon_id:
-            self.left_hand = None
+        if self.state.left_hand == weapon_id:
+            self.state.left_hand = None
             return True
         return False
 
     def get_equipped(self, slot: str = None) -> dict:
         """Method to get equipped weapon.
         Returns a dictionary"""
-        if slot == "right_hand" and self.right_hand:
-            return self.weapons_data[self.right_hand]
-        if slot == "left_hand" and self.left_hand:
-            return self.weapons_data[self.left_hand]
+        if slot == "right_hand" and self.state.right_hand:
+            return self.weapons_data[self.state.right_hand]
+        if slot == "left_hand" and self.state.left_hand:
+            return self.weapons_data[self.state.left_hand]
         if slot == "any":
-            if self.right_hand:
-                return self.weapons_data[self.right_hand]
-            elif self.left_hand:
-                return self.weapons_data[self.left_hand]
+            if self.state.right_hand:
+                return self.weapons_data[self.state.right_hand]
+            elif self.state.left_hand:
+                return self.weapons_data[self.state.left_hand]
 
     def is_equipped(self, weapon_id: str = None) -> bool:
         """Method to determine if weapon is equipped.

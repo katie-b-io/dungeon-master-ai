@@ -101,6 +101,13 @@ class State():
         # treasure
         self.room_treasure_map = {}
         self.monster_treasure_map = {}
+        # weapons
+        self.right_hand = None
+        self.left_hand = None
+        # items
+        self.items = {}
+        # equipment quantity
+        self.equipment_quantity = {}
     
     def set_char_class(self, char_class: str) -> None:
         self.char_class = char_class
