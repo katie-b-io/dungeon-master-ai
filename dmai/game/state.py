@@ -236,11 +236,13 @@ class State():
         logger.debug("Setting DM")
         self.dm = dm
         init_room = self.dm.adventure.get_init_room()
-        self.current_room["player"] = init_room
+        if "player" not in self.current_room:
+            self.current_room["player"] = init_room
         for room in self.dm.adventure.get_all_rooms():
             for connected_room in room.get_connected_rooms():
                 if room.can_attack_door(connected_room):
-                    self.current_hp_door[connected_room] = room.get_door_hp(connected_room)
+                    if connected_room not in self.current_hp_door:
+                        self.current_hp_door[connected_room] = room.get_door_hp(connected_room)
         
         # register room triggers
         for room in self.dm.adventure.get_all_rooms():
@@ -263,11 +265,16 @@ class State():
     
     def set_player(self, player) -> None:
         self.player = player
-        self.current_hp["player"] = player.character.hp_max
-        self.current_status["player"] = Status.ALIVE
-        self.current_target["player"] = None
-        self.current_combat_status["player"] = Combat.INITIATIVE
-        self.char_class = player.character.char_class.name
+        if "player" not in self.current_hp:
+            self.current_hp["player"] = player.character.hp_max
+        if "player" not in self.current_status:
+            self.current_status["player"] = Status.ALIVE
+        if "player" not in self.current_target:
+            self.current_target["player"] = None
+        if "player" not in self.current_combat_status:
+            self.current_combat_status["player"] = Combat.INITIATIVE
+        if not self.char_class:
+            self.char_class = player.character.char_class.name
     
     def get_player(self):
         """Method to return player"""
@@ -306,18 +313,25 @@ class State():
     def set_init_monster(self, unique_id: str, room_id: str, status: str, hp: int):
         """Method to set the init status for data objects where 
         no initial value is required"""
-        self.current_target[unique_id] = None
-        self.current_hp[unique_id] = hp
-        self.set_init_room(unique_id, room_id)
-        self.set_init_status(unique_id, status)
+        if unique_id not in self.current_target:
+            self.current_target[unique_id] = None
+        if unique_id not in self.current_hp:
+            self.current_hp[unique_id] = hp
+        if unique_id not in self.current_room:
+            self.set_init_room(unique_id, room_id)
+        if unique_id not in self.current_status:
+            self.set_init_status(unique_id, status)
     
     
     def set_init_npc(self, npc_data: dict):
         """Method to set the init status for data objects where 
         no initial value is required"""
-        self.current_target[npc_data["id"]] = None
-        self.set_init_status(npc_data["id"], npc_data["status"])
-        self.set_init_attitude(npc_data["id"], npc_data["attitude"])
+        if npc_data["id"] not in self.current_target:
+            self.current_target[npc_data["id"]] = None
+        if npc_data["id"] not in self.current_status:
+            self.set_init_status(npc_data["id"], npc_data["status"])
+        if npc_data["id"] not in self.current_attitude:
+            self.set_init_attitude(npc_data["id"], npc_data["attitude"])
         
     
     def set_init_attitude(self, entity: str, attitude: str) -> None:

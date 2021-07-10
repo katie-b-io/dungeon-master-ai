@@ -2,10 +2,12 @@ from typing import Generator
 import unittest
 import sys
 import os
+import pickle
 
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
+import dmai
 from dmai.game.state import State
 from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc import NPC
@@ -19,10 +21,16 @@ from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError
 
 class TestGame(unittest.TestCase):
     """Test the Game class"""
-    def setUp(self) -> None:
-        self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
-        self.game.load()
-    
+    def test_saving_and_loading(self) -> None:
+        (ui, session_id) = dmai.init(".")
+        self.assertEqual("stout_meal_inn", ui.game.state.get_current_room_id())
+        ui.game.state.set_current_room("player", "antechamber")
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+        (ui, session_id2) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        self.assertEqual("antechamber", ui.game.state.get_current_room_id())
+        self.assertEqual(session_id, session_id2)
 
 
 class TestState(unittest.TestCase):
