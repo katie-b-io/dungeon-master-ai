@@ -97,6 +97,8 @@ class State():
     # room triggers
     room_trigger_map = {}
     visited_rooms = []
+    # room treasure
+    room_treasure_map = {}
 
     def __init__(self, output_builder: OutputBuilder, session_id: str = "") -> None:
         """Main class for the game state"""

@@ -402,6 +402,7 @@ class TestDM(unittest.TestCase):
         self.game.state.set_current_room("player", "inns_cellar")
         self.game.state.light_torch()
         self.assertEqual(True, self.dm.pick_up(item="potion_of_healing"))
+        self.game.state.room_treasure_map["inns_cellar"].append("potion_of_healing")
 
     def test_pick_up_item_bad(self) -> None:
         self.game.state.set_current_room("player", "stout_meal_inn")
@@ -413,6 +414,7 @@ class TestDM(unittest.TestCase):
         self.game.state.light_torch()
         nlu_entities = [{"entity": "item", "confidence": 1, "value": "potion_of_healing"}]
         self.assertEqual(True, self.dm.pick_up(nlu_entities=nlu_entities))
+        self.game.state.room_treasure_map["inns_cellar"].append("potion_of_healing")
 
     def test_pick_up_nlu_entities_bad(self) -> None:
         self.game.state.set_current_room("player", "stout_meal_inn")

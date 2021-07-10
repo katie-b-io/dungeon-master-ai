@@ -27,6 +27,10 @@ class Room:
             logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
             raise
 
+        # set up treasure
+        if self.id not in self.state.room_treasure_map:
+            self.state.room_treasure_map[self.id] = self.treasure
+
         # set up triggers
         if self.id not in self.state.room_trigger_map:
             self.state.room_trigger_map[self.id] = {}
@@ -99,18 +103,18 @@ class Room:
 
     def has_item(self, item: str) -> bool:
         """Method to determine if query item is in the room's treasure"""
-        return bool(item in self.treasure)
+        return bool(item in self.state.room_treasure_map[self.id])
 
     def get_item(self, item: str) -> Item:
         """Method to return an item from the room's treasure"""
         # TODO return Item
         if self.has_item(item):
             # TODO factory method to make and return an Item object
-            return self.treasure[item]
+            return self.state.room_treasure_map[self.id][item]
 
     def took_item(self, item: str) -> None:
         """Method to remove the item from the room"""
-        self.treasure.remove(item)
+        self.state.room_treasure_map[self.id].remove(item)
         
     def can_attack_door(self, door: str) -> bool:
         """Method to return whether a door of room can be attacked"""
