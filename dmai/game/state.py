@@ -49,62 +49,58 @@ class State():
     # initialise session
     session = Session()
 
-    # class variables
-    dm = None
-    player = None
-
-    # class state variables
-    intro_read = False
-    char_class = None
-    char_name = None
-    started = False
-    paused = False
-    talking = False
-    quest_received = False
-    questing = False
-    complete = False
-    in_combat = False
-    in_combat_with_door = False
-    door_target = None
-    roleplaying = False
-    torch_lit = False
-    stationary = False
-    current_conversation = None
-    current_room = {}
-    current_status = {}
-    current_hp = {}
-    current_hp_door = {}
-    current_game_mode = GameMode.EXPLORE
-    current_intent = None
-    stored_intent = {}
-    current_target = {}
-    current_goal = ("at", "player", "southern_corridor")
-    current_items = {}
-    current_attitude = {}
-    attacked_by_player = []
-    current_combat_status = {}
-    expected_intent = []
-    expected_entities = []
-    initiative_order = []
-    stored_ability_check = None
-    stored_skill_check = None
-    ales = 0
-    # puzzle triggers
-    puzzle_trigger_map = {}
-    solved_puzzles = []
-    # monster triggers
-    monster_trigger_map = {}
-    # room triggers
-    room_trigger_map = {}
-    visited_rooms = []
-    # treasure
-    room_treasure_map = {}
-    monster_treasure_map = {}
-
     def __init__(self, output_builder: OutputBuilder, session_id: str = "") -> None:
         """Main class for the game state"""
         self.session.set_session_id(session_id)
         self.output_builder = output_builder
+        self.dm = None
+        self.player = None
+        self.intro_read = False
+        self.char_class = None
+        self.char_name = None
+        self.started = False
+        self.paused = False
+        self.talking = False
+        self.quest_received = False
+        self.questing = False
+        self.complete = False
+        self.in_combat = False
+        self.in_combat_with_door = False
+        self.door_target = None
+        self.roleplaying = False
+        self.torch_lit = False
+        self.stationary = False
+        self.current_conversation = None
+        self.current_room = {}
+        self.current_status = {}
+        self.current_hp = {}
+        self.current_hp_door = {}
+        self.current_game_mode = GameMode.EXPLORE
+        self.current_intent = None
+        self.stored_intent = {}
+        self.current_target = {}
+        self.current_goal = ("at", "player", "southern_corridor")
+        self.current_items = {}
+        self.current_attitude = {}
+        self.attacked_by_player = []
+        self.current_combat_status = {}
+        self.expected_intent = []
+        self.expected_entities = []
+        self.initiative_order = []
+        self.stored_ability_check = None
+        self.stored_skill_check = None
+        self.ales = 0
+        # puzzle triggers
+        self.puzzle_trigger_map = {}
+        self.solved_puzzles = []
+        # monster triggers
+        self.monster_trigger_map = {}
+        # room triggers
+        self.room_trigger_map = {}
+        self.visited_rooms = []
+        # treasure
+        self.room_treasure_map = {}
+        self.monster_treasure_map = {}
     
     def set_char_class(self, char_class: str) -> None:
         self.char_class = char_class
@@ -114,11 +110,16 @@ class State():
 
     def save(self) -> dict:
         """Method to save the game state to dict"""
-        return self.__dict__
+        save_dict = self.__dict__
+        del save_dict["output_builder"]
+        del save_dict["dm"]
+        del save_dict["player"]
+        return save_dict
     
     def load(self, saved_state: dict) -> None:
         """Method to load the game state"""
-        self.__dict__ = saved_state
+        for key in saved_state:
+            self.__setattr__(key, saved_state[key])
         
     def combat(self, attacker: str, target: str) -> None:
         if not self.in_combat:
@@ -259,8 +260,7 @@ class State():
         self.current_status["player"] = Status.ALIVE
         self.current_target["player"] = None
         self.current_combat_status["player"] = Combat.INITIATIVE
-        self.char_class = player.character.char_class
-
+        self.char_class = player.character.char_class.name
     
     def get_player(self):
         """Method to return player"""

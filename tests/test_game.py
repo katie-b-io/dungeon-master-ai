@@ -17,12 +17,39 @@ from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 
 
+class TestGame(unittest.TestCase):
+    """Test the Game class"""
+    def setUp(self) -> None:
+        self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
+        self.game.load()
+    
+
+
 class TestState(unittest.TestCase):
     """Test the State class"""
     def setUp(self) -> None:
         self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
         self.game.load()
         self.adventure = self.game.dm.adventure
+
+    def test_save_state(self) -> None:
+        self.game.state.light_torch()
+        self.game.state.set_current_room("player", "antechamber")
+        saved_state = self.game.state.save()
+        self.assertIn("torch_lit", saved_state)
+        self.assertEqual("Fighter", saved_state["char_class"])
+    
+    def test_load_state(self) -> None:
+        saved_state = {
+            "paused": True,
+            "char_class": "Fighter",
+            "started": True,
+            "char_name": "Xena",
+            "torch_lit": True,
+            "current_room": {"player": "western_corridor"}
+        }
+        self.game.state.load(saved_state)
+        self.assertEqual("western_corridor", self.game.state.get_current_room_id())
 
     def test_get_room_name(self) -> None:
         room = "burial_chamber"
