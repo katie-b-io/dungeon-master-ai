@@ -76,7 +76,7 @@ class Attack(Action):
                 NLG.cannot_attack(
                     self.state.get_entity_name(self.attacker),
                     self.state.get_entity_name(self.target),
-                    self.state.get_player().name,
+                    self.state.char_name,
                     reason,
                     self.state.get_formatted_possible_monster_targets(),
                 )

@@ -16,13 +16,8 @@ class Player(PlayerAgent):
         """Main class for the player"""
         PlayerAgent.__init__(self, state, output_builder, problem=character.id)
         logger.info("Initialising character: {c}".format(c=str(character)))
-        self.name = None
         self.character = character
         self.state = state
-
-    def set_name(self, name: str) -> None:
-        logger.info("Setting player name: {n}".format(n=name))
-        self.name = name
 
     @property
     def character_class(self) -> str:
@@ -158,7 +153,7 @@ class Player(PlayerAgent):
         # Character background
         char_str = div
         char_str += "Character Sheet:\n"
-        char_str += "{l:<20} {v:<30}\n".format(l="Name:", v=self.name)
+        char_str += "{l:<20} {v:<30}\n".format(l="Name:", v=self.state.char_name)
         char_str += "{l:<20} {v:<30}\n".format(l="Class & level:",
                                                v=self.character.get_class())
         char_str += "{l:<20} {v:<30}\n".format(l="Race:",

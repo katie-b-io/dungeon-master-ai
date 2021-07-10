@@ -1,5 +1,4 @@
-from dmai.game.state import State
-from dmai.utils.output_builder import OutputBuilder
+from typing import Generator
 import unittest
 import sys
 import os
@@ -7,6 +6,8 @@ import os
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
+from dmai.game.state import State
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc import NPC
 from dmai.domain.monsters.monster_collection import MonsterCollection
 from dmai.domain.monsters.skeleton import Skeleton
@@ -182,7 +183,12 @@ class TestAdventure(unittest.TestCase):
         room_ids = ["stout_meal_inn", "inns_cellar", "storage_room", "burial_chamber", "western_corridor", "antechamber", "southern_corridor", "baradins_crypt"]
         rooms = self.adventure.get_all_rooms()
         self.assertListEqual(room_ids, [room.id for room in rooms])
-
+    
+    def test_get_intro_text_generator(self) -> None:
+        intro = self.adventure.intro_text_generator()
+        text = "Greyforge, the mountain city in the north of the Kaldarian lands is home to the proud dwarves who settled in the area over 8,000 years ago, led by a silver dragon, according to some stories."
+        self.assertIsInstance(intro, Generator)
+        self.assertEqual(next(intro), text)
 
 class TestNPCCollection(unittest.TestCase):
     """Test the NPCCollection class"""

@@ -54,6 +54,9 @@ class State():
     player = None
 
     # class state variables
+    intro_read = False
+    char_class = None
+    char_name = None
     started = False
     paused = False
     talking = False
@@ -92,6 +95,12 @@ class State():
         self.session.set_session_id(session_id)
         self.output_builder = output_builder
     
+    def set_char_class(self, char_class: str) -> None:
+        self.char_class = char_class
+
+    def set_char_name(self, char_name: str) -> None:
+        self.char_name = char_name
+
     def save(self) -> dict:
         """Method to save the game state to dict"""
         return self.__dict__
@@ -169,6 +178,8 @@ class State():
         """Method to set the current goal"""
         self.current_goal = goal
 
+    def skip_intro(self) -> None:
+        self.intro_read = True
     
     def start(self) -> None:
         self.started = True
@@ -237,6 +248,7 @@ class State():
         self.current_status["player"] = Status.ALIVE
         self.current_target["player"] = None
         self.current_combat_status["player"] = Combat.INITIATIVE
+        self.char_class = player.character.char_class
 
     
     def get_player(self):
@@ -248,7 +260,7 @@ class State():
         """Method to return name of entity"""
         try:
             if entity == "player":
-                return self.get_player().name
+                return self.char_name
             else:
                 if hasattr(self.get_dm().npcs.get_entity(entity), "unique_name"):
                     return self.get_dm().npcs.get_entity(entity).unique_name

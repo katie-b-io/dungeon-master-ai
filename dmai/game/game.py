@@ -18,7 +18,8 @@ class Game:
                  char_name: str = None,
                  skip_intro: bool = False,
                  adventure: str = "the_tomb_of_baradin_stormfury",
-                 session_id: str = "") -> None:
+                 session_id: str = "",
+                 saved_state: dict = None) -> None:
         """Main class for the game"""
         self.char_class = char_class
         self.char_name = char_name
@@ -26,6 +27,10 @@ class Game:
         self.adventure = adventure
         self.session_id = session_id
         self.output_builder = OutputBuilder()
+        # Initialise state
+        self.state = State(self.output_builder, self.session_id)
+        if saved_state:
+            self.state.load(saved_state)
 
     def load(self) -> None:
         logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=self.session_id, a=self.adventure))
@@ -38,9 +43,6 @@ class Game:
         CharacterCollection.load()
         MonsterCollection.load()
 
-        # Initialise state
-        self.state = State(self.output_builder, self.session_id)
-
         # Initialise NLU
         self.nlu = NLU(self.state, self.output_builder)
 
@@ -49,20 +51,29 @@ class Game:
         self.dm.load()
         self.state.set_dm(self.dm)
 
+        # start off with no player input allowed
+        self.state.pause()
+
         # set character class and name if possible
+        if not self.char_class and self.state.char_class:
+            self.char_class = self.state.char_class
+        if not self.char_name and self.state.char_name:
+            self.char_name = self.state.char_name
+
         if self.char_class:
             character = CharacterCollection.get_character(self.char_class, self.state, self.output_builder)
             self.player = Player(character, self.state, self.output_builder)
             self.state.set_player(self.player)
 
             if self.char_name:
-                self.player.set_name(self.char_name)
+                self.state.start()
+                if not self.state.char_name:
+                    self.state.set_char_name(self.char_name)
 
-        # intro text generator
-        if self.skip_intro:
-            self.state.pause()
+        # intro text
+        if self.skip_intro or self.state.intro_read:
             self.intro = False
-            self.intro_text = iter(())
+            self.intro_text = ""
         else:
             self.intro = True
             self.intro_text = self.dm.get_intro_text()
@@ -89,14 +100,13 @@ class Game:
             player_utter = player_utter.lower()
             character = CharacterCollection.get_character(player_utter, self.state, self.output_builder)
             if character:
+                self.state.set_char_class(character)
                 self.player = Player(character, self.state, self.output_builder)
                 self.state.set_player(self.player)
 
-        elif not self.player.name:
+        elif not self.state.char_name:
             # player is entering a name
-            self.player.set_name(player_utter)
-            self.dm.set_player_name(player_utter)
-            self.state.start()
+            self.state.set_char_name(player_utter)
             succeed = self.dm.input(player_utter, utter_type="name")
 
         elif player_utter:
@@ -119,33 +129,41 @@ class Game:
     def output(self) -> str:
         """Return an output for the player"""
 
-        # print welcome text
-        if self.output_builder.has_response():
-                return self.output_builder.format()
-        
         # the game starts
         if self.intro:
-            try:
-                self.state.pause()
-                return next(self.intro_text)
-            except StopIteration:
+            self.intro = False
+            self.state.skip_intro()
+            if self.player and self.state.char_name:
                 self.state.play()
-                self.intro = False
-
-        if self.state.paused:
-            if self.output_builder.has_response():
-                return self.output_builder.format()
-            else:
-                return ""
+            return self.intro_text
 
         # the player variable is not set at the beginning of the game
         if not self.player:
+            self.state.play()
             # get the character options for player
-            return NLG.get_char_class(CharacterCollection.get_all_names())
+            return "\n" + NLG.get_char_class(CharacterCollection.get_all_names())
 
-        elif not self.player.name:
+        if not self.state.char_name:
             # get the player's name
-            return NLG.get_player_name(self.player.character_class)
+            self.state.start()
+            self.state.play()
+            return "\n" + NLG.get_player_name(self.player.character_class)
+        
+        # get output ready
+        output = ""
+
+        # print welcome text
+        if self.output_builder.has_response():
+            output = self.output_builder.format()
+
+        elif self.state.paused:
+            if self.output_builder.has_response():
+                output += "\n" + self.output_builder.format()
+            else:
+                output += "\n" + ""
 
         # get the DM's utterance
-        return self.dm.output
+        else:
+            output += "\n" + self.dm.output
+
+        return output

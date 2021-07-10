@@ -20,7 +20,6 @@ class DM:
         """Main DM class"""
         self._dm_utter = None
         self._player_utter = None
-        self.player_name = ""
         self.triggers = []
         self.state = state
         self.output_builder = output_builder
@@ -146,9 +145,9 @@ class DM:
         self._player_utter = player_utter
         if utter_type:
             if utter_type == "name":
-                self.output_builder.append(NLG.acknowledge_name(self.player_name))
+                self.output_builder.append(NLG.acknowledge_name(self.state.char_name))
             else:
-                self.output_builder.append(NLG.get_action(self.player_name))
+                self.output_builder.append(NLG.get_action(self.state.char_name))
             succeed = True
 
         elif intent:
@@ -185,11 +184,7 @@ class DM:
         if self.output_builder.has_response():
             return self.output_builder.format()
         else:
-            return NLG.get_action(self.player_name)
-
-    def set_player_name(self, name: str) -> None:
-        """Method to set the player name"""
-        self.player_name = name
+            return NLG.get_action(self.state.char_name)
 
     def register_trigger(self, trigger: object) -> None:
         """Register a trigger object"""
