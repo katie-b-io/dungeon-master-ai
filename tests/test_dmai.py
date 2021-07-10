@@ -1,4 +1,3 @@
-from typing import Generator
 import unittest
 import sys
 import os
@@ -26,7 +25,7 @@ class TestDM(unittest.TestCase):
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         self.dm = self.game.dm
-        self.dm.set_player_name("Xena")
+        self.game.state.set_char_name("Xena")
 
     def tearDown(self) -> None:
         self.game.state.extinguish_torch()
@@ -76,12 +75,6 @@ class TestDM(unittest.TestCase):
         self.dm.deregister_trigger(trigger2)
         self.assertNotIn(trigger2, self.dm.triggers)
         self.assertIn(trigger3, self.dm.triggers)
-
-    def test_get_intro_text(self) -> None:
-        intro = self.dm.get_intro_text()
-        text = "Greyforge, the mountain city in the north of the Kaldarian lands is home to the proud dwarves who settled in the area over 8,000 years ago, led by a silver dragon, according to some stories."
-        self.assertIsInstance(intro, Generator)
-        self.assertEqual(next(intro), text)
 
     def test_hint(self) -> None:
         self.dm.input("", utter_type="test")

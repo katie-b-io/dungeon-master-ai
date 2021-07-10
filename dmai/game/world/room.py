@@ -49,7 +49,8 @@ class Room:
     def enter(self) -> None:
         """Method when entering a room"""
         logger.debug("Triggering enter in room: {r}".format(r=self.id))
-        if not self.state.stationary:
+        if not self.state.stationary and self.state.started:
+            print("Triggering enter in room: {r}".format(r=self.id))
             if not self.visited:
                 self.visited = True
                 self.output_builder.append(self.text["enter"]["text"])

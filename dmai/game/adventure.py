@@ -52,7 +52,10 @@ class Adventure:
             self.rooms[room_name] = room
 
     @property
-    def intro_text(self) -> Generator:
+    def intro_text(self) -> str:
+        return self.text["intro"]
+
+    def intro_text_generator(self) -> Generator:
         return Text.yield_text(self.text["intro"], "\n")
 
     def get_init_room(self) -> str:

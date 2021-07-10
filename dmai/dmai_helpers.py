@@ -52,10 +52,9 @@ def start(char_class: str = None,
                 char_name=char_name,
                 skip_intro=skip_intro,
                 adventure=adventure,
-                session_id=session_id)
+                session_id=session_id,
+                saved_state=saved_state)
     game.load()
-    if saved_state:
-        game.state.load(saved_state)
     
     # return the game instance
     return game
