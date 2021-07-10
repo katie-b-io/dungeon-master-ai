@@ -118,9 +118,9 @@ class Investigate(Action):
             elif self.target_type == "monster":
                 monster = self.state.get_entity(self.target)
                 if not self.state.is_alive(self.target):
-                    if monster.treasure:
+                    if self.state.monster_treasure_map[monster.unique_id]:
                         t = []
-                        for treasure in monster.treasure:
+                        for treasure in self.state.monster_treasure_map[monster.unique_id]:
                             self.state.get_player().character.items.add_item(treasure)
                             monster.took_item(treasure)
                             t.append(

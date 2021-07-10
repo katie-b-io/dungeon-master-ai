@@ -449,7 +449,7 @@ class PlanningPlayer(PlanningAgent):
             for room in self.state.get_dm().adventure.get_all_rooms():
                 if not room.visibility:
                     init.append(["dark", room.id])
-                if bool(room.treasure):
+                if bool(self.state.room_treasure_map[room.id]):
                     init.append(["treasure", room.id])
                     
             # Room connections

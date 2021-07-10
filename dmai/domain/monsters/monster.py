@@ -60,7 +60,6 @@ class Monster(NPC, MonsterAgent):
 
         # Initialise additional variables
         self.unique_id = unique_id
-        self.treasure = []
         self.must_kill = False
         self.will_attack_player = False
 
@@ -148,7 +147,8 @@ class Monster(NPC, MonsterAgent):
 
     def set_treasure(self, treasure: list) -> None:
         """Method to set treasure."""
-        self.treasure = treasure
+        if self.unique_id not in self.state.monster_treasure_map:
+            self.state.monster_treasure_map[self.unique_id] = treasure
 
     def set_must_kill(self, must_kill: bool) -> None:
         """Method to set must_kill."""
@@ -164,7 +164,7 @@ class Monster(NPC, MonsterAgent):
 
     def took_item(self, item: str) -> None:
         """Method to remove the item from the monster treasure"""
-        self.treasure.remove(item)
+        self.state.monster_treasure_map[self.unique_id].remove(item)
         
     # =============================================
     # TRIGGERS
