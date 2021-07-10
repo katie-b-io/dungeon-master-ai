@@ -49,49 +49,85 @@ class State():
     # initialise session
     session = Session()
 
-    # class variables
-    dm = None
-    player = None
-
-    # class state variables
-    started = False
-    paused = False
-    talking = False
-    quest_received = False
-    questing = False
-    complete = False
-    in_combat = False
-    in_combat_with_door = False
-    door_target = None
-    roleplaying = False
-    torch_lit = False
-    stationary = False
-    current_conversation = None
-    current_room = {}
-    current_status = {}
-    current_hp = {}
-    current_hp_door = {}
-    current_game_mode = GameMode.EXPLORE
-    current_intent = None
-    stored_intent = {}
-    current_target = {}
-    current_goal = ("at", "player", "southern_corridor")
-    current_items = {}
-    current_attitude = {}
-    attacked_by_player = []
-    current_combat_status = {}
-    expected_intent = []
-    expected_entities = []
-    initiative_order = []
-    stored_ability_check = None
-    stored_skill_check = None
-    ales = 0
-
     def __init__(self, output_builder: OutputBuilder, session_id: str = "") -> None:
         """Main class for the game state"""
         self.session.set_session_id(session_id)
         self.output_builder = output_builder
+        self.dm = None
+        self.player = None
+        self.intro_read = False
+        self.char_class = None
+        self.char_name = None
+        self.started = False
+        self.paused = False
+        self.talking = False
+        self.quest_received = False
+        self.questing = False
+        self.complete = False
+        self.in_combat = False
+        self.in_combat_with_door = False
+        self.door_target = None
+        self.roleplaying = False
+        self.torch_lit = False
+        self.stationary = False
+        self.current_conversation = None
+        self.current_room = {}
+        self.current_status = {}
+        self.current_hp = {}
+        self.current_hp_door = {}
+        self.current_game_mode = GameMode.EXPLORE
+        self.current_intent = None
+        self.stored_intent = {}
+        self.current_target = {}
+        self.current_goal = ("at", "player", "southern_corridor")
+        self.current_items = {}
+        self.current_attitude = {}
+        self.attacked_by_player = []
+        self.current_combat_status = {}
+        self.expected_intent = []
+        self.expected_entities = []
+        self.initiative_order = []
+        self.stored_ability_check = None
+        self.stored_skill_check = None
+        self.ales = 0
+        # puzzle triggers
+        self.puzzle_trigger_map = {}
+        self.solved_puzzles = []
+        # monster triggers
+        self.monster_trigger_map = {}
+        # room triggers
+        self.room_trigger_map = {}
+        self.visited_rooms = []
+        # treasure
+        self.room_treasure_map = {}
+        self.monster_treasure_map = {}
+        # weapons
+        self.right_hand = None
+        self.left_hand = None
+        # items
+        self.items = {}
+        # equipment quantity
+        self.equipment_quantity = {}
     
+    def set_char_class(self, char_class: str) -> None:
+        self.char_class = char_class
+
+    def set_char_name(self, char_name: str) -> None:
+        self.char_name = char_name
+
+    def save(self) -> dict:
+        """Method to save the game state to dict"""
+        save_dict = self.__dict__
+        del save_dict["output_builder"]
+        del save_dict["dm"]
+        del save_dict["player"]
+        return save_dict
+    
+    def load(self, saved_state: dict) -> None:
+        """Method to load the game state"""
+        for key in saved_state:
+            self.__setattr__(key, saved_state[key])
+        
     def combat(self, attacker: str, target: str) -> None:
         if not self.in_combat:
             self.reset_combat_status()
@@ -161,6 +197,8 @@ class State():
         """Method to set the current goal"""
         self.current_goal = goal
 
+    def skip_intro(self) -> None:
+        self.intro_read = True
     
     def start(self) -> None:
         self.started = True
@@ -198,11 +236,13 @@ class State():
         logger.debug("Setting DM")
         self.dm = dm
         init_room = self.dm.adventure.get_init_room()
-        self.current_room["player"] = init_room
+        if "player" not in self.current_room:
+            self.current_room["player"] = init_room
         for room in self.dm.adventure.get_all_rooms():
             for connected_room in room.get_connected_rooms():
                 if room.can_attack_door(connected_room):
-                    self.current_hp_door[connected_room] = room.get_door_hp(connected_room)
+                    if connected_room not in self.current_hp_door:
+                        self.current_hp_door[connected_room] = room.get_door_hp(connected_room)
         
         # register room triggers
         for room in self.dm.adventure.get_all_rooms():
@@ -225,11 +265,16 @@ class State():
     
     def set_player(self, player) -> None:
         self.player = player
-        self.current_hp["player"] = player.character.hp_max
-        self.current_status["player"] = Status.ALIVE
-        self.current_target["player"] = None
-        self.current_combat_status["player"] = Combat.INITIATIVE
-
+        if "player" not in self.current_hp:
+            self.current_hp["player"] = player.character.hp_max
+        if "player" not in self.current_status:
+            self.current_status["player"] = Status.ALIVE
+        if "player" not in self.current_target:
+            self.current_target["player"] = None
+        if "player" not in self.current_combat_status:
+            self.current_combat_status["player"] = Combat.INITIATIVE
+        if not self.char_class:
+            self.char_class = player.character.char_class.name
     
     def get_player(self):
         """Method to return player"""
@@ -240,7 +285,7 @@ class State():
         """Method to return name of entity"""
         try:
             if entity == "player":
-                return self.get_player().name
+                return self.char_name
             else:
                 if hasattr(self.get_dm().npcs.get_entity(entity), "unique_name"):
                     return self.get_dm().npcs.get_entity(entity).unique_name
@@ -268,18 +313,25 @@ class State():
     def set_init_monster(self, unique_id: str, room_id: str, status: str, hp: int):
         """Method to set the init status for data objects where 
         no initial value is required"""
-        self.current_target[unique_id] = None
-        self.current_hp[unique_id] = hp
-        self.set_init_room(unique_id, room_id)
-        self.set_init_status(unique_id, status)
+        if unique_id not in self.current_target:
+            self.current_target[unique_id] = None
+        if unique_id not in self.current_hp:
+            self.current_hp[unique_id] = hp
+        if unique_id not in self.current_room:
+            self.set_init_room(unique_id, room_id)
+        if unique_id not in self.current_status:
+            self.set_init_status(unique_id, status)
     
     
     def set_init_npc(self, npc_data: dict):
         """Method to set the init status for data objects where 
         no initial value is required"""
-        self.current_target[npc_data["id"]] = None
-        self.set_init_status(npc_data["id"], npc_data["status"])
-        self.set_init_attitude(npc_data["id"], npc_data["attitude"])
+        if npc_data["id"] not in self.current_target:
+            self.current_target[npc_data["id"]] = None
+        if npc_data["id"] not in self.current_status:
+            self.set_init_status(npc_data["id"], npc_data["status"])
+        if npc_data["id"] not in self.current_attitude:
+            self.set_init_attitude(npc_data["id"], npc_data["attitude"])
         
     
     def set_init_attitude(self, entity: str, attitude: str) -> None:

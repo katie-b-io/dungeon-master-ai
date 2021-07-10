@@ -54,7 +54,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
 def main() -> None:
     """Main entry point to the DMAI"""
     logger.debug("Starting game")
-    Config.set_uuid()
     Config.set_root(os.path.dirname(os.path.abspath(__file__)))
 
     # get the command line arguments

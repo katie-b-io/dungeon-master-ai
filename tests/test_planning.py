@@ -19,41 +19,41 @@ class TestFastDownwardAdapter(unittest.TestCase):
                          problem: str) -> FastDownwardAdapter:
         output_builder = OutputBuilder()
         state = State(output_builder)
+        state.session.set_session_id("test")
         shutil.copy(
             os.path.join(Config.directory.planning_test,
                          "{d}.pddl".format(d=domain)),
             os.path.join(Config.directory.planning,
                          "{u}.{d}.domain.pddl".format(d=domain,
-                                                      u=Config.uuid)))
+                                                      u="test")))
         shutil.copy(
             os.path.join(Config.directory.planning_test,
                          "{p}.pddl".format(p=problem)),
             os.path.join(
                 Config.directory.planning,
-                "{u}.{p}.problem.pddl".format(p=problem, u=Config.uuid)))
+                "{u}.{p}.problem.pddl".format(p=problem, u="test")))
         return FastDownwardAdapter(domain, problem, state, output_builder)
 
     def _cleanup(self, domain, problem) -> None:
             os.remove(
                 os.path.join(
                     Config.directory.planning,
-                    "{u}.{d}.domain.pddl".format(d=domain, u=Config.uuid)))
+                    "{u}.{d}.domain.pddl".format(d=domain, u="test")))
             os.remove(
                 os.path.join(
                     Config.directory.planning,
-                    "{u}.{p}.problem.pddl".format(p=problem, u=Config.uuid)))
+                    "{u}.{p}.problem.pddl".format(p=problem, u="test")))
             os.remove(
                 os.path.join(
                     Config.directory.planning,
                     "{u}.{d}-{p}.plan".format(d=domain,
                                               p=problem,
-                                              u=Config.uuid)))
+                                              u="test")))
 
     def test_build_plan_player(self) -> None:
         domain = "player_domain"
         problem = "player_problem_fighter"
         try:
-            Config.set_uuid()
             adapter = self._prepare_adapter(domain, problem)
             p = adapter.build_plan()
         except Exception:
@@ -65,7 +65,6 @@ class TestFastDownwardAdapter(unittest.TestCase):
         domain = "monster_domain"
         problem = "monster_problem_inns_cellar"
         try:
-            Config.set_uuid()
             adapter = self._prepare_adapter(domain, problem)
             m = adapter.build_plan()
         except Exception:
@@ -81,9 +80,9 @@ class TestPlanningMonster(unittest.TestCase):
             char_class="fighter",
             char_name="Xena",
             adventure="the_tomb_of_baradin_stormfury",
+            session_id="test"
         )
         self.game.load()
-        Config.set_uuid()
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         monster_id = "giant_rat_1"
@@ -102,14 +101,14 @@ class TestPlanningMonster(unittest.TestCase):
     def test_build_domain(self) -> None:
         file_path = os.path.join(
             Config.directory.planning,
-            "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.monster.agent.domain)
+            "{u}.{d}.domain.pddl".format(u="test", d=self.monster.agent.domain)
         )
         self.assertTrue(os.path.exists(file_path))
         
     def test_build_problem(self) -> None:
         file_path = os.path.join(
             Config.directory.planning,
-            "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.monster.agent.problem)
+            "{u}.{p}.problem.pddl".format(u="test", p=self.monster.agent.problem)
         )
         self.assertTrue(os.path.exists(file_path))
 
@@ -121,9 +120,9 @@ class TestPlanningPlayer(unittest.TestCase):
             char_class="fighter",
             char_name="Xena",
             adventure="the_tomb_of_baradin_stormfury",
+            session_id="test"
         )
         self.game.load()
-        Config.set_uuid()
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         monster_id = "giant_rat_1"
@@ -144,14 +143,14 @@ class TestPlanningPlayer(unittest.TestCase):
     def test_build_domain(self) -> None:
         file_path = os.path.join(
             Config.directory.planning,
-            "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.player.agent.domain)
+            "{u}.{d}.domain.pddl".format(u="test", d=self.player.agent.domain)
         )
         self.assertTrue(os.path.exists(file_path))
         
     def test_build_problem(self) -> None:
         file_path = os.path.join(
             Config.directory.planning,
-            "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.player.agent.problem)
+            "{u}.{p}.problem.pddl".format(u="test", p=self.player.agent.problem)
         )
         self.assertTrue(os.path.exists(file_path))
         

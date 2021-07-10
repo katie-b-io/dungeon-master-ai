@@ -60,7 +60,6 @@ class Monster(NPC, MonsterAgent):
 
         # Initialise additional variables
         self.unique_id = unique_id
-        self.treasure = []
         self.must_kill = False
         self.will_attack_player = False
 
@@ -71,9 +70,13 @@ class Monster(NPC, MonsterAgent):
             self.unique_name = "{n} {i}".format(n=self.name, i=i)
 
         # set up triggers
+        if self.unique_id not in self.state.monster_trigger_map:
+            self.state.monster_trigger_map[unique_id] = {}
+
+        if "attack_of_opportunity" not in self.state.monster_trigger_map[unique_id]:
+            self.state.monster_trigger_map[unique_id]["attack_of_opportunity"] = True
         self.trigger_map = {
             "attack_of_opportunity": {
-                "can_trigger": True,
                 "trigger": self.attack_of_opportunity,
             }
         }
@@ -82,8 +85,9 @@ class Monster(NPC, MonsterAgent):
         if npc_data:
             if npc_data["triggers"]:
                 if "move" in npc_data["triggers"]:
+                    if "move" not in self.state.monster_trigger_map[self.unique_id]:
+                        self.state.monster_trigger_map[self.unique_id]["move"] = True
                     self.trigger_map["move"] = {
-                        "can_trigger": True,
                         "trigger": self.move,
                         "params": {
                             "destination": npc_data["triggers"]["move"],
@@ -143,7 +147,8 @@ class Monster(NPC, MonsterAgent):
 
     def set_treasure(self, treasure: list) -> None:
         """Method to set treasure."""
-        self.treasure = treasure
+        if self.unique_id not in self.state.monster_treasure_map:
+            self.state.monster_treasure_map[self.unique_id] = treasure
 
     def set_must_kill(self, must_kill: bool) -> None:
         """Method to set must_kill."""
@@ -159,7 +164,7 @@ class Monster(NPC, MonsterAgent):
 
     def took_item(self, item: str) -> None:
         """Method to remove the item from the monster treasure"""
-        self.treasure.remove(item)
+        self.state.monster_treasure_map[self.unique_id].remove(item)
         
     # =============================================
     # TRIGGERS
@@ -184,7 +189,7 @@ class Monster(NPC, MonsterAgent):
     def trigger(self) -> None:
         """Method to perform any actions or print any new text if conditions met"""
         for trigger_type in self.trigger_map:
-            if self.trigger_map[trigger_type]["can_trigger"]:
+            if self.state.monster_trigger_map[self.unique_id][trigger_type]:
                 if "params" in self.trigger_map[trigger_type]:
                     self.trigger_map[trigger_type]["trigger"](
                         **self.trigger_map[trigger_type]["params"]

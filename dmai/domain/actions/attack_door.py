@@ -74,7 +74,7 @@ class AttackDoor(Action):
                 NLG.cannot_attack_door(
                     self.state.get_entity_name(self.attacker),
                     door_name,
-                    self.state.get_player().name,
+                    self.state.char_name,
                     reason,
                     self.state.get_formatted_possible_door_targets(),
                 )

@@ -22,9 +22,11 @@ class EquipmentCollection:
         # prepare the equipment
         for equipment_id in self.equipment:
             equipment_obj = self._equipment_factory(equipment_id)
+            if equipment_id not in self.state.equipment_quantity:
+                quantity = self.equipment[equipment_id]
+                self.state.equipment_quantity[equipment_id] = quantity
             self.equipment[equipment_id] = {
-                "equipment": equipment_obj,
-                "quantity": self.equipment[equipment_id]
+                "equipment": equipment_obj
             }
 
     def __repr__(self) -> str:
@@ -73,7 +75,7 @@ class EquipmentCollection:
     def quantity_above_zero(self, equipment_id: str) -> bool:
         """Method to return whether quantity of specified equipment is above zero"""
         if equipment_id in self.equipment:
-            return self.equipment[equipment_id]["quantity"] > 0
+            return self.state.equipment_quantity[equipment_id] > 0
 
     def use_equipment(self, equipment_id: str) -> bool:
         """Method to use specified equipment.
@@ -82,8 +84,7 @@ class EquipmentCollection:
             if self._check_equipment(equipment_id):
                 (has_equipment, reason) = self.has_equipment(equipment_id)
                 if has_equipment:
-                    self.equipment[equipment_id][
-                        "quantity"] = self.equipment[equipment_id]["quantity"] - 1
+                    self.state.equipment_quantity[equipment_id] -= 1
                     return self.equipment[equipment_id]["equipment"].use()
             return False
         except UnrecognisedEquipment:
@@ -107,7 +108,7 @@ class EquipmentCollection:
     def get_formatted(self, equipment_id) -> str:
         """Return the formatted equipment with quantities"""
         if equipment_id in self.equipment_data:
-            quantity = self.equipment[equipment_id]
+            quantity = self.state.equipment_quantity[equipment_id]
             equipment = self.equipment_data[equipment_id]
             if equipment_id == "rope_hempen":
                 return "{q} ft {e}".format(q=quantity, e=equipment["name"])

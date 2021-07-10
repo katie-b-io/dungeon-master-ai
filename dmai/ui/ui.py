@@ -60,3 +60,8 @@ class UserInterface:
             prompt += "Press enter to continue... "
 
         return prompt
+
+    def save(self) -> dict:
+        """Method to save the game state.
+        Returns a dict."""
+        return self.game.state.save()

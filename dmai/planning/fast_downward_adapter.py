@@ -24,13 +24,13 @@ class FastDownwardAdapter(PlannerAdapter):
         logger.debug("Building plan with FastDownward")
         domain_file = os.path.join(
             Config.directory.planning,
-            "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.domain))
+            "{u}.{d}.domain.pddl".format(u=self.state.session.session_id, d=self.domain))
         problem_file = os.path.join(
             Config.directory.planning,
-            "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem))
+            "{u}.{p}.problem.pddl".format(u=self.state.session.session_id, p=self.problem))
         plan_file = os.path.join(
             Config.directory.planning,
-            "{u}.{d}-{p}.plan".format(u=Config.uuid,
+            "{u}.{d}-{p}.plan".format(u=self.state.session.session_id,
                                       d=self.domain,
                                       p=self.problem))
         p = run([
@@ -49,7 +49,7 @@ class FastDownwardAdapter(PlannerAdapter):
         """Reads the plan file, saves to self.plan"""
         plan_file = os.path.join(
             Config.directory.planning,
-            "{u}.{d}-{p}.plan".format(u=Config.uuid,
+            "{u}.{d}-{p}.plan".format(u=self.state.session.session_id,
                                       d=self.domain,
                                       p=self.problem))
         with open(plan_file, 'r') as reader:

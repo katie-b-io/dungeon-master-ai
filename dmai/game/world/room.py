@@ -27,6 +27,14 @@ class Room:
             logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
             raise
 
+        # set up treasure
+        if self.id not in self.state.room_treasure_map:
+            self.state.room_treasure_map[self.id] = self.treasure
+
+        # set up triggers
+        if self.id not in self.state.room_trigger_map:
+            self.state.room_trigger_map[self.id] = {}
+
         trigger_map = {
             "enter": self.enter,
             "visibility": self.trigger_visibility,
@@ -37,9 +45,11 @@ class Room:
         for text_type in self.text:
             text = self.text[text_type]
             trigger = trigger_map[text_type] if text_type in trigger_map else None
+            if text_type not in self.state.room_trigger_map[self.id]:
+                can_trigger = text_type in trigger_map
+                self.state.room_trigger_map[self.id][text_type] = can_trigger
             self.text[text_type] = {
                 "text": text,
-                "can_trigger": text_type in trigger_map,
                 "trigger": trigger,
             }
 
@@ -49,9 +59,9 @@ class Room:
     def enter(self) -> None:
         """Method when entering a room"""
         logger.debug("Triggering enter in room: {r}".format(r=self.id))
-        if not self.state.stationary:
-            if not self.visited:
-                self.visited = True
+        if not self.state.stationary and self.state.started:
+            if self.id not in self.state.visited_rooms:
+                self.state.visited_rooms.append(self.id)
                 self.output_builder.append(self.text["enter"]["text"])
             else:
                 self.output_builder.append(NLG.enter_room(self.name))
@@ -63,20 +73,20 @@ class Room:
         if not self.visibility:
             if self.state.torch_lit or self.state.get_player().character.has_darkvision():
                 self.output_builder.append(self.text["visibility"]["text"])
-                self.text["visibility"]["can_trigger"] = False
+                self.state.room_trigger_map[self.id]["visibility"] = False
 
     def trigger_fight_ends(self) -> str:
         """Method when triggering fight ends text"""
         logger.debug("Triggering fight ending in room: {r}".format(r=self.id))
         if self.state.all_dead():
             self.output_builder.append(self.text["fight_ends"]["text"])
-            self.text["fight_ends"]["can_trigger"] = False
+            self.state.room_trigger_map[self.id]["fight_ends"] = False
 
     def trigger(self) -> None:
         """Method to print any new text if conditions met"""
         if self.state.get_current_room_id() == self.id:
             for text_type in self.text:
-                if self.text[text_type]["can_trigger"]:
+                if self.state.room_trigger_map[self.id][text_type]:
                     # execute function
                     if text_type in self.text:
                         self.text[text_type]["trigger"]()
@@ -92,18 +102,18 @@ class Room:
 
     def has_item(self, item: str) -> bool:
         """Method to determine if query item is in the room's treasure"""
-        return bool(item in self.treasure)
+        return bool(item in self.state.room_treasure_map[self.id])
 
     def get_item(self, item: str) -> Item:
         """Method to return an item from the room's treasure"""
         # TODO return Item
         if self.has_item(item):
             # TODO factory method to make and return an Item object
-            return self.treasure[item]
+            return self.state.room_treasure_map[self.id][item]
 
     def took_item(self, item: str) -> None:
         """Method to remove the item from the room"""
-        self.treasure.remove(item)
+        self.state.room_treasure_map[self.id].remove(item)
         
     def can_attack_door(self, door: str) -> bool:
         """Method to return whether a door of room can be attacked"""

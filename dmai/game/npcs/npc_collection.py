@@ -48,7 +48,8 @@ class NPCCollection:
             # update state with npc location
             for room in self.adventure.rooms:
                 if npc_id in self.adventure.rooms[room].npcs:
-                    self.state.set_init_room(npc_id, room)
+                    if npc_id not in self.state.current_room:
+                        self.state.set_init_room(npc_id, room)
                     break
         return npcs
 

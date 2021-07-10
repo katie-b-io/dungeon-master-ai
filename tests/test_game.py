@@ -1,12 +1,15 @@
-from dmai.game.state import State
-from dmai.utils.output_builder import OutputBuilder
+from typing import Generator
 import unittest
 import sys
 import os
+import pickle
 
 p = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, p + "/../")
 
+import dmai
+from dmai.game.state import State
+from dmai.utils.output_builder import OutputBuilder
 from dmai.game.npcs.npc import NPC
 from dmai.domain.monsters.monster_collection import MonsterCollection
 from dmai.domain.monsters.skeleton import Skeleton
@@ -16,12 +19,81 @@ from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 
 
+class TestGame(unittest.TestCase):
+    """Test the Game class"""
+    def test_saving_and_loading(self) -> None:
+        (ui, session_id) = dmai.init(".")
+        self.assertEqual("stout_meal_inn", ui.game.state.get_current_room_id())
+        ui.game.state.set_current_room("player", "antechamber")
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+        (ui, session_id2) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        self.assertEqual("antechamber", ui.game.state.get_current_room_id())
+        self.assertEqual(session_id, session_id2)
+
+    def test_continue_after_load(self) -> None:
+        # 1st input
+        (ui, session_id) = dmai.init(".")
+        self.assertFalse(ui.game.state.intro_read)
+        ui.output()
+        self.assertTrue(ui.game.state.intro_read)
+        self.assertTrue(ui.game.state.paused)
+        self.assertIsNone(ui.game.state.char_name)
+        self.assertFalse(ui.game.state.started)
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+
+        # 2nd input
+        (ui, session_id) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        ui.input("")
+        ui.output()
+        self.assertTrue(ui.game.state.intro_read)
+        self.assertFalse(ui.game.state.paused)
+        self.assertEqual("", ui.game.state.char_name)
+        self.assertTrue(ui.game.state.started)
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+
+        # 3rd input
+        (ui, session_id) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        ui.input("Xena")
+        ui.output()
+        saved_state = pickle.dumps(ui.save())
+        del ui
+        loaded_state = pickle.loads(saved_state)
+    
+        # 4th input
+        (ui, session_id) = dmai.init(".", session_id=session_id, saved_state=loaded_state)
+        self.assertEqual("Xena", ui.game.state.char_name)
+
 class TestState(unittest.TestCase):
     """Test the State class"""
     def setUp(self) -> None:
         self.game = Game(char_class="fighter", char_name="Xena", adventure="the_tomb_of_baradin_stormfury")
         self.game.load()
         self.adventure = self.game.dm.adventure
+
+    def test_save_state(self) -> None:
+        self.game.state.light_torch()
+        self.game.state.set_current_room("player", "antechamber")
+        saved_state = self.game.state.save()
+        self.assertIn("torch_lit", saved_state)
+        self.assertEqual("Fighter", saved_state["char_class"])
+    
+    def test_load_state(self) -> None:
+        saved_state = {
+            "paused": True,
+            "char_class": "Fighter",
+            "started": True,
+            "char_name": "Xena",
+            "torch_lit": True,
+            "current_room": {"player": "western_corridor"}
+        }
+        self.game.state.load(saved_state)
+        self.assertEqual("western_corridor", self.game.state.get_current_room_id())
 
     def test_get_room_name(self) -> None:
         room = "burial_chamber"
@@ -182,7 +254,12 @@ class TestAdventure(unittest.TestCase):
         room_ids = ["stout_meal_inn", "inns_cellar", "storage_room", "burial_chamber", "western_corridor", "antechamber", "southern_corridor", "baradins_crypt"]
         rooms = self.adventure.get_all_rooms()
         self.assertListEqual(room_ids, [room.id for room in rooms])
-
+    
+    def test_get_intro_text_generator(self) -> None:
+        intro = self.adventure.intro_text_generator()
+        text = "Greyforge, the mountain city in the north of the Kaldarian lands is home to the proud dwarves who settled in the area over 8,000 years ago, led by a silver dragon, according to some stories."
+        self.assertIsInstance(intro, Generator)
+        self.assertEqual(next(intro), text)
 
 class TestNPCCollection(unittest.TestCase):
     """Test the NPCCollection class"""

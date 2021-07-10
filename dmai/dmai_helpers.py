@@ -12,21 +12,24 @@ from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005) -> None:
-    session_id = create_session_id()
-    logger.debug("(SESSION: {s}) Initialising game".format(s=session_id))
-    Config.set_uuid()
+def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005, saved_state: dict = None, session_id: str = None) -> None:
+    if not session_id:
+        session_id = create_session_id()
+        logger.debug("(SESSION: {s}) Initialising game".format(s=session_id))
     Config.set_root(root_path)
     Config.hosts.set_rasa_host(rasa_host)
     Config.hosts.set_rasa_port(rasa_port)
-    game = start(char_class="fighter", session_id=session_id)
-    game.output_builder.append(
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    )
-    game.output_builder.append(
-        "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
-    )
-    game.output_builder.append("Your unique ID for filling in the questionnaire is {s}. Please make a note of it.".format(s=session_id))
+    game = start(char_class="fighter", session_id=session_id, saved_state=saved_state)
+    if not saved_state:
+        game.output_builder.append(
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        )
+        game.output_builder.append(
+            "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
+        )
+        game.output_builder.append("Your unique ID for filling in the questionnaire is {s}. Please make a note of it.".format(s=session_id))
+        game.output_builder.append(
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title(game.dm.adventure.title)))
     ui = UserInterface(game)
 
     return (ui, session_id)
@@ -41,18 +44,16 @@ def start(char_class: str = None,
           char_name: str = None,
           skip_intro: bool = False,
           adventure: str = "the_tomb_of_baradin_stormfury",
-          session_id: str = "") -> Game:
+          session_id: str = "",
+          saved_state: dict = None) -> Game:
     """Initialise the game"""
     game = Game(char_class=char_class,
                 char_name=char_name,
                 skip_intro=skip_intro,
                 adventure=adventure,
-                session_id=session_id)
+                session_id=session_id,
+                saved_state=saved_state)
     game.load()
-
-    # print some info for the user
-    game.output_builder.append(
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title(game.dm.adventure.title)))
     
     # return the game instance
     return game
@@ -60,6 +61,8 @@ def start(char_class: str = None,
 
 def run(game: Game) -> None:
     """Run the game via CLI"""
+    game.output_builder.append(
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title(game.dm.adventure.title)))
     ui = UserInterface(game)
     ui.execute()
 
