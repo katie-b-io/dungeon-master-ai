@@ -24,7 +24,7 @@ class PlanningMonster(PlanningAgent):
         logger.debug("Building domain")
         domain_file = os.path.join(
             Config.directory.planning,
-            "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.domain),
+            "{u}.{d}.domain.pddl".format(u=self.state.session.session_id, d=self.domain),
         )
 
         with open(domain_file, "w") as writer:
@@ -179,7 +179,7 @@ class PlanningMonster(PlanningAgent):
         monster = self.state.get_entity(self.problem)
         problem_file = os.path.join(
             Config.directory.planning,
-            "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem),
+            "{u}.{p}.problem.pddl".format(u=self.state.session.session_id, p=self.problem),
         )
 
         with open(problem_file, "w") as writer:

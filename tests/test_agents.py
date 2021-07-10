@@ -23,7 +23,6 @@ class TestPlayerAgent(unittest.TestCase):
                          char_name="Xena",
                          adventure="the_tomb_of_baradin_stormfury")
         self.game.load()
-        Config.set_uuid()
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         self.problem = "fighter"
@@ -58,7 +57,6 @@ class TestMonsterAgent(unittest.TestCase):
                          char_name="Xena",
                          adventure="the_tomb_of_baradin_stormfury")
         self.game.load()
-        Config.set_uuid()
         Config.agent.set_monster("planning")
         Config.planner.set_monster("fd")
         self.problem = "giant_rat_1"

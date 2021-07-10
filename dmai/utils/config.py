@@ -1,5 +1,4 @@
 import os
-import uuid
 from pathlib import Path
 
 
@@ -114,11 +113,6 @@ class Config(metaclass=ConfigMeta):
     def set_root(cls, root: str) -> None:
         """Method to set the dmai root directory"""
         cls.directory.set_root(root)
-
-    @classmethod
-    def set_uuid(cls) -> None:
-        """Method to set the UUID"""
-        cls.uuid = str(uuid.uuid1())
 
     @classmethod
     def cleanup_on_exit(cls) -> None:

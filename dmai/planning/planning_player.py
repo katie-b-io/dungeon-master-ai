@@ -25,7 +25,7 @@ class PlanningPlayer(PlanningAgent):
         logger.debug("Building domain")
         domain_file = os.path.join(
             Config.directory.planning,
-            "{u}.{d}.domain.pddl".format(u=Config.uuid, d=self.domain),
+            "{u}.{d}.domain.pddl".format(u=self.state.session.session_id, d=self.domain),
         )
 
         # TODO implement intent solution
@@ -300,7 +300,7 @@ class PlanningPlayer(PlanningAgent):
         logger.debug("Building problem")
         problem_file = os.path.join(
             Config.directory.planning,
-            "{u}.{p}.problem.pddl".format(u=Config.uuid, p=self.problem),
+            "{u}.{p}.problem.pddl".format(u=self.state.session.session_id, p=self.problem),
         )
 
         with open(problem_file, "w") as writer:

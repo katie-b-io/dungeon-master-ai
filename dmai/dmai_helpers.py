@@ -16,7 +16,6 @@ def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005, sa
     if not session_id:
         session_id = create_session_id()
         logger.debug("(SESSION: {s}) Initialising game".format(s=session_id))
-    Config.set_uuid()
     Config.set_root(root_path)
     Config.hosts.set_rasa_host(rasa_host)
     Config.hosts.set_rasa_port(rasa_port)

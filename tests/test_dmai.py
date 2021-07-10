@@ -21,7 +21,6 @@ class TestDM(unittest.TestCase):
             adventure="the_tomb_of_baradin_stormfury",
         )
         self.game.load()
-        Config.set_uuid()
         Config.agent.set_player("planning")
         Config.planner.set_player("fd")
         self.dm = self.game.dm
