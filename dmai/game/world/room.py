@@ -27,6 +27,10 @@ class Room:
             logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
             raise
 
+        # set up connections
+        if self.id not in self.state.room_connect_map:
+            self.state.room_connect_map[self.id] = self.connections
+  
         # set up treasure
         if self.id not in self.state.room_treasure_map:
             self.state.room_treasure_map[self.id] = self.treasure
@@ -98,7 +102,7 @@ class Room:
 
     def get_connected_rooms(self) -> list:
         """Method to return the connected rooms"""
-        return list(self.connections.keys())
+        return list(self.state.room_connect_map[self.id].keys())
 
     def has_item(self, item: str) -> bool:
         """Method to determine if query item is in the room's treasure"""

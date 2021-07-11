@@ -188,8 +188,11 @@ class Roll(Action):
         if roll >= dc:
             self.output_builder.append(NLG.succeed_check())
             self.state.stored_ability_check["success_func"](*self.state.stored_ability_check["success_params"])
+            self.state.clear_ability_check()
         else:
-            self.output_builder.append(NLG.fail_check())
+            self.output_builder.append(NLG.fail_check(self.state.stored_ability_check["allow_repeat"]))
+            if not self.state.stored_ability_check["allow_repeat"]:
+                self.state.clear_ability_check()
         self.state.clear_expected_intent()
         self.state.clear_ability_check()
         return True
@@ -206,6 +209,8 @@ class Roll(Action):
             self.state.stored_skill_check["success_func"](*self.state.stored_skill_check["success_params"])
             self.state.clear_skill_check()
         else:
-            self.output_builder.append(NLG.fail_check())
+            self.output_builder.append(NLG.fail_check(self.state.stored_skill_check["allow_repeat"]))
+            if not self.state.stored_skill_check["allow_repeat"]:
+                self.state.clear_skill_check()
         self.state.clear_expected_intent()
         return True

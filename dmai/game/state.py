@@ -55,6 +55,7 @@ class State():
         self.output_builder = output_builder
         self.dm = None
         self.player = None
+        self.game_ended = False
         self.intro_read = False
         self.char_class = None
         self.char_name = None
@@ -90,6 +91,8 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        # room connection map
+        self.room_connect_map = {}
         # puzzle triggers
         self.puzzle_trigger_map = {}
         self.solved_puzzles = []
@@ -105,7 +108,7 @@ class State():
         self.right_hand = None
         self.left_hand = None
         # items
-        self.items = {}
+        self.item_quantity = {}
         # equipment quantity
         self.equipment_quantity = {}
     
@@ -115,6 +118,10 @@ class State():
     def set_char_name(self, char_name: str) -> None:
         self.char_name = char_name
 
+    def gameover(self) -> None:
+        self.game_ended = True
+        dmai.dmai_helpers.gameover(self.output_builder, self.session.session_id)
+        
     def save(self) -> dict:
         """Method to save the game state to dict"""
         save_dict = self.__dict__
@@ -472,6 +479,8 @@ class State():
     def heal(self, hp: int, hp_max: int = None, entity: str = "player") -> None:
         """Method to heal a number of hit points, up to a max"""
         current_hp = self.get_current_hp(entity)
+        if entity == "player":
+            hp_max = self.player.hp_max
         new_hp = current_hp + hp
         if hp_max:
             if new_hp > hp_max:
@@ -675,7 +684,7 @@ class State():
                     death_text = attacker.text["killed_player"]
                     self.output_builder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
                     self.output_builder.append(self.get_dm().get_bad_ending())
-                    dmai.dmai_helpers.gameover(self.output_builder)
+                    self.gameover()
                 else:
                     self.kill_monster(entity)
                     # deregister triggers
@@ -773,7 +782,7 @@ class State():
         r1, r2 = "", ""
         try:
             for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
-                self.dm.adventure.rooms[r1].connections[r2]
+                self.room_connect_map[r1][r2]
             return True
         except KeyError:
             msg = "Connection does not exist: {r1}-{r2}".format(r1=r1, r2=r2)
@@ -822,9 +831,9 @@ class State():
             if self.check_room_exists(current_id) and self.check_room_exists(
                     destination_id) and self._check_connection_exists(
                         current_id, destination_id):
-                current = self.dm.adventure.get_room(current_id)
-                return current.connections[destination_id][
-                    "broken"] or not current.connections[destination_id][
+                current = self.room_connect_map[current_id]
+                return current[destination_id][
+                    "broken"] or not current[destination_id][
                         "locked"]
         except UnrecognisedRoomError:
             raise
@@ -838,8 +847,8 @@ class State():
             if self.check_room_exists(current_id) and self.check_room_exists(
                     destination_id) and self._check_connection_exists(
                         current_id, destination_id):
-                current = self.dm.adventure.rooms[current_id]
-                return current.connections[destination_id]["broken"]
+                current = self.room_connect_map[current_id]
+                return current[destination_id]["broken"]
         except UnrecognisedRoomError:
             raise
         except RoomConnectionError:
@@ -848,8 +857,8 @@ class State():
     
     def _update_connection(self, r1: str, r2: str, status: str,
                            state: bool) -> None:
-        self.dm.adventure.rooms[r1].connections[r2][status] = state
-        self.dm.adventure.rooms[r2].connections[r1][status] = state
+        self.room_connect_map[r1][r2][status] = state
+        self.room_connect_map[r2][r1][status] = state
 
     
     def lock_door(self, room_id1: str, room_id2: str) -> None:

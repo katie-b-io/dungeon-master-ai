@@ -286,7 +286,7 @@ class Actions:
                     self.output_builder.append(
                         self.npcs.get_entity(target).dialogue["turn_in_quest"])
                     self.output_builder.append(self.state.get_dm().get_bad_ending())
-                    dmai.dmai_helpers.gameover(self.output_builder)
+                    self.state.gameover()
                 else:
                     self.output_builder.append(NLG.roleplay(self.state.char_name, self.state.get_entity_name(target)))
             return can_converse

@@ -60,15 +60,20 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def get_player_name(cls, character_class: str) -> str:
+    def get_player_name(cls, character_class: str, player_selected_class: bool = True) -> str:
         """Return the utterance for getting player's name"""
-        utters = [
-            "What is your character's name, this great {c}?".format(c=character_class),
-            "Ahh, a {c}. Excellent choice! And what is your character's name?".
-            format(c=character_class),
-            "A {c}, marvelous! And what do they call your character?".format(
-                c=character_class),
-        ]
+        if not player_selected_class:
+            utters = [
+                "You'll be playing as a {c}. What is your character's name?".format(c=character_class)
+            ]
+        else:
+            utters = [
+                "What is your character's name, this great {c}?".format(c=character_class),
+                "Ahh, a {c}. Excellent choice! And what is your character's name?".
+                format(c=character_class),
+                "A {c}, marvelous! And what do they call your character?".format(
+                    c=character_class),
+            ]
         return random.choice(utters)
 
     @classmethod
@@ -750,12 +755,16 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def fail_check(cls) -> str:
+    def fail_check(cls, allow_repeat: bool = True) -> str:
         """Return the utterance for failing on an ability check"""
+        if allow_repeat:
+            r = "You could try again or do something different."
+        else:
+            r = "You're going to have to try something else."
         utters = [
-            "You didn't do it. You could try again or do something different.",
-            "That didn't work. You could try again or do something different.",
-            "That fails. You could try again or do something different.",
+            "You didn't do it. {r}".format(r=r),
+            "That didn't work. {r}".format(r=r),
+            "That fails. {r}".format(r=r)
         ]
         return random.choice(utters)
     

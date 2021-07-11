@@ -35,7 +35,7 @@ class TestText(unittest.TestCase):
         pass
 
     def test_get_signed_value(self) -> None:
-        self.assertEqual(Text.get_signed_value(0), " 0")
+        self.assertEqual(Text.get_signed_value(0), "")
         self.assertEqual(Text.get_signed_value(-1), "-1")
         self.assertEqual(Text.get_signed_value(1), "+1")
 

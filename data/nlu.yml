@@ -231,9 +231,17 @@ nlu:
     - examine [burial chamber](location)
     - investigate the [southern corridor](location)
     - investigate [stout meal inn](location)
+    - check out the [storage room](location)
+    - check [inn](location)
+    - checkout [burial chamber](location)
+    - checkout the [cellar](location)
     - examine [corvus](npc)
     - look at [corvus stouthammer](npc)
-    - examine the [dwarf](npc)
+    - check out the [dwarf](puzzle)
+    - check [corvus](npc)
+    - checkout [corvus stouthammer](npc)
+    - checkout the [dwarf](puzzle)
+    - examine the [dwarf](puzzle)
     - examine [anvil](npc)
     - look at the [giant rat](monster)
     - look at [rat](monster)
@@ -243,6 +251,10 @@ nlu:
     - look at [rat body](monster)
     - look at [skeleton body](monster)
     - look at [zombie body](monster)
+    - check out the [goblin body](monster)
+    - check [goblin](monster)
+    - checkout [giant rat](monster)
+    - checkout the [goblin](monster)
     - get a closer look at the [skeleton](monster)
     - investigate [goblin](monster)
     - look at dead [goblin](monster)
@@ -263,6 +275,14 @@ nlu:
     - admire [slabs](scenery)
     - inspect [altar](puzzle)
     - admire [altar](puzzle)
+    - check [altar](puzzle)
+    - checkout [altar](puzzle)
+    - check the [altar](puzzle)
+    - checkout the [altar](puzzle)
+    - check [vault](puzzle)
+    - checkout [vault](puzzle)
+    - check the [vault](puzzle)
+    - checkout the [vault](puzzle)
     - look at the [altar](puzzle)
     - investigate the [ceremonial altar](puzzle)
     - examine [altar](puzzle)
@@ -336,7 +356,7 @@ nlu:
 - intent: attack
   examples: |
     - attack [corvus](npc)
-    - I ambush the [dwarf](npc)
+    - I ambush [corvus](npc)
     - assail [corvus stouthammer](npc)
     - assault [stouthammer](npc)
     - beat [anvil-jumper](npc)
@@ -614,8 +634,8 @@ nlu:
     - talk to [corvus](npc)
     - talk to [corvus stouthammer](npc)
     - talk to [stouthammer](npc)
+    - chat with [corvus](npc)
     - question [corvus stouthammer](npc)
-    - chat with the [dwarf](npc)
     - converse with [stouthammer](npc)
     - say to [corvus](npc)
     - say to [anvil](npc)
@@ -631,6 +651,8 @@ nlu:
     - say to the [giant rat](monster)
     - say to the [skeleton](monster)
     - say to the [zombie]
+    - chat with the [dwarf](puzzle)
+    - talk to the [dwarf](puzzle)
 
 - intent: question_npc
   examples: |
@@ -1239,6 +1261,7 @@ nlu:
     - dwarven stone face
     - large stone face
     - large face
+    - dwarf
 
 - synonym: dwarven_thrower
   examples: |
