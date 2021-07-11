@@ -20,17 +20,19 @@ def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005, sa
     Config.hosts.set_rasa_host(rasa_host)
     Config.hosts.set_rasa_port(rasa_port)
     game = start(char_class="fighter", session_id=session_id, saved_state=saved_state)
+    ui = UserInterface(game)
     if not saved_state:
-        game.output_builder.append(
+        ui.game.output_builder.clear()
+        ui.game.output_builder.append(
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         )
-        game.output_builder.append(
+        ui.game.output_builder.append(
             "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
         )
-        game.output_builder.append("Your unique ID for filling in the questionnaire is {s}. Please make a note of it.".format(s=session_id))
-        game.output_builder.append(
-            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title(game.dm.adventure.title)))
-    ui = UserInterface(game)
+        ui.game.output_builder.append("Your unique ID for filling in the questionnaire is {s}. Please make a note of it.".format(s=session_id))
+        ui.game.output_builder.append(
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title(ui.game.dm.adventure.title)))
+        ui.game.output_builder.append("> Press enter to continue...")
 
     return (ui, session_id)
 
