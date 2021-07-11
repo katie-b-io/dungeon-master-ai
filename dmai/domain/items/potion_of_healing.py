@@ -19,6 +19,6 @@ class PotionOfHealing(Item):
         dice_spec = self.effects["hit_point"]["delta"]
         (roll_str, hp) = DiceRoller.roll_dice(dice_spec)
         self.output_builder.append(roll_str)
-        self.state.heal(hp, self.state.get_player().hp_max)
+        self.state.heal(hp)
         return True
     

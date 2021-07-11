@@ -15,9 +15,17 @@ class ItemCollection:
 
     def __init__(self, state: State, output_builder: OutputBuilder) -> None:
         """ItemCollection class"""
+        self.items = {}
         self.state = state
         self.output_builder = output_builder
         self._load_item_data()
+
+        # prepare the items
+        for item_id in self.state.item_quantity:
+            item_obj = self._item_factory(item_id)
+            self.items[item_id] = {
+                "item": item_obj
+            }
 
     def __repr__(self) -> str:
         return "Item collection"
@@ -25,6 +33,11 @@ class ItemCollection:
     def _load_item_data(self) -> None:
         """Set the self.item_data class variable data"""
         self.item_data = Loader.load_domain("magic_items")
+        self.item_data["silver_key"] = {
+            "name": "Silver Key",
+            "type": "item",
+            "description": "A simple silver key"
+        }
         
     def _item_factory(self, item: str) -> Item:
         """Construct an item of specified type"""
@@ -53,11 +66,11 @@ class ItemCollection:
     def add_item(self, item_id: str, quantity: int = 1, item_data: dict = None) -> bool:
         """Method to add specified item to inventory."""
         if self._check_item(item_id):
-            if item_id in self.state.items:
-                self.state.items[item_id]["quantity"] += quantity
+            if item_id in self.state.item_quantity:
+                self.state.item_quantity[item_id] += quantity
             else:
                 item_obj = self._item_factory(item_id)
-                self.state.items[item_id] = {
+                self.state.item_quantity[item_id] = {
                     "item": item_obj,
                     "quantity": quantity
                 }
@@ -65,7 +78,7 @@ class ItemCollection:
         elif item_data:
             # new item to add to the inventory
             self.item_data[item_id] = item_data
-            self.state.items[item_id] = {
+            self.state.item_quantity[item_id] = {
                 "item": self._item_factory(item_id),
                 "quantity": quantity
             }
@@ -75,21 +88,21 @@ class ItemCollection:
     def remove_item(self, item_id: str, quantity: int = 1) -> None:
         """Method to remove item of specified quantity from inventory."""
         if self._check_item(item_id):
-            if item_id in self.state.items:
-                self.state.items[item_id]["quantity"] -= quantity
-                if self.state.items[item_id]["quantity"] <= 0:
-                    del self.state.items[item_id]
+            if item_id in self.state.item_quantity:
+                self.state.item_quantity[item_id] -= quantity
+                if self.state.item_quantity[item_id] <= 0:
+                    del self.state.item_quantity[item_id]
     
     def clear_items(self) -> None:
         """Method to clear inventory."""
-        self.state.items = {}
+        self.state.item_quantity = {}
 
     def has_item(self, item_id: str) -> tuple:
         """Method to return whether specified item exists.
         Returns a tuple with the boolean and a string with a reason."""
         try:
             if self._check_item(item_id):
-                if not item_id in self.state.items:
+                if not item_id in self.state.item_quantity:
                     return (False, "not in inventory")
                 return (True, "")
             return (False, "unknown")
@@ -98,8 +111,8 @@ class ItemCollection:
 
     def quantity_above_zero(self, item_id: str) -> bool:
         """Method to return whether quantity of specified item is above zero"""
-        if item_id in self.state.items:
-            return self.state.items[item_id]["quantity"] > 0
+        if item_id in self.state.item_quantity:
+            return self.state.item_quantity[item_id] > 0
 
     def use_item(self, item_id: str) -> bool:
         """Method to use specified item.
@@ -108,7 +121,7 @@ class ItemCollection:
             if self._check_item(item_id):
                 (has_item, reason) = self.has_item(item_id)
                 if has_item:
-                    used = self.state.items[item_id]["item"].use()
+                    used = self.items[item_id]["item"].use()
                     if used:
                         self.remove_item(item_id)
                     return used
@@ -121,22 +134,22 @@ class ItemCollection:
         Returns bool for whether item was stopped being used"""
         try:
             if self._check_item(item_id):
-                if item_id in self.state.items:
-                    return self.state.items[item_id]["item"].stop()
+                if item_id in self.state.item_quantity:
+                    return self.items[item_id]["item"].stop()
             return False
         except UnrecognisedItem:
             return False
 
     def get_all(self) -> list:
         """Return a list with all the item ids"""
-        return self.state.items.keys()
+        return self.state.item_quantity.keys()
 
     def get_item(self, item_id: str) -> Item:
         """Return a query item object"""
         try:
             if self._check_item(item_id):
-                if item_id in self.state.items:
-                    return self.state.items[item_id]["item"]
+                if item_id in self.state.item_quantity:
+                    return self.items[item_id]["item"]
             return False
         except UnrecognisedItem:
             return False
@@ -151,7 +164,7 @@ class ItemCollection:
     def get_formatted(self, item_id: str) -> str:
         """Return the formatted item with quantities"""
         if item_id in self.item_data:
-            quantity = self.state.items[item_id]["quantity"]
+            quantity = self.state.item_quantity[item_id]
             item = self.item_data[item_id]
             if quantity == 1:
                 return item["name"]

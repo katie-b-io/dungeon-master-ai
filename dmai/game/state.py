@@ -105,7 +105,7 @@ class State():
         self.right_hand = None
         self.left_hand = None
         # items
-        self.items = {}
+        self.item_quantity = {}
         # equipment quantity
         self.equipment_quantity = {}
     
@@ -472,6 +472,8 @@ class State():
     def heal(self, hp: int, hp_max: int = None, entity: str = "player") -> None:
         """Method to heal a number of hit points, up to a max"""
         current_hp = self.get_current_hp(entity)
+        if entity == "player":
+            hp_max = self.player.hp_max
         new_hp = current_hp + hp
         if hp_max:
             if new_hp > hp_max:
