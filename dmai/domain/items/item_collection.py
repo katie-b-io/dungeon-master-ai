@@ -23,9 +23,7 @@ class ItemCollection:
         # prepare the items
         for item_id in self.state.item_quantity:
             item_obj = self._item_factory(item_id)
-            self.items[item_id] = {
-                "item": item_obj
-            }
+            self.items[item_id] = item_obj
 
     def __repr__(self) -> str:
         return "Item collection"
@@ -70,18 +68,13 @@ class ItemCollection:
                 self.state.item_quantity[item_id] += quantity
             else:
                 item_obj = self._item_factory(item_id)
-                self.state.item_quantity[item_id] = {
-                    "item": item_obj,
-                    "quantity": quantity
-                }
+                self.items[item_id] = item_obj
+                self.state.item_quantity[item_id] = quantity
             return True
         elif item_data:
             # new item to add to the inventory
             self.item_data[item_id] = item_data
-            self.state.item_quantity[item_id] = {
-                "item": self._item_factory(item_id),
-                "quantity": quantity
-            }
+            self.state.item_quantity[item_id] = quantity
             return True
         return False
         
@@ -121,7 +114,7 @@ class ItemCollection:
             if self._check_item(item_id):
                 (has_item, reason) = self.has_item(item_id)
                 if has_item:
-                    used = self.items[item_id]["item"].use()
+                    used = self.items[item_id].use()
                     if used:
                         self.remove_item(item_id)
                     return used
@@ -135,7 +128,7 @@ class ItemCollection:
         try:
             if self._check_item(item_id):
                 if item_id in self.state.item_quantity:
-                    return self.items[item_id]["item"].stop()
+                    return self.items[item_id].stop()
             return False
         except UnrecognisedItem:
             return False
@@ -149,7 +142,7 @@ class ItemCollection:
         try:
             if self._check_item(item_id):
                 if item_id in self.state.item_quantity:
-                    return self.items[item_id]["item"]
+                    return self.items[item_id]
             return False
         except UnrecognisedItem:
             return False
