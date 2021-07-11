@@ -149,7 +149,10 @@ class Game:
             # get the player's name
             self.state.start()
             self.state.play()
-            return "\n" + NLG.get_player_name(self.player.character_class)
+            if bool(self.session_id):
+                return "\n" + NLG.get_player_name(self.player.character_class, player_selected_class=False)
+            else:
+                return "\n" + NLG.get_player_name(self.player.character_class)
         
         # get output ready
         output = ""

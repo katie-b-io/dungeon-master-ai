@@ -60,15 +60,20 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def get_player_name(cls, character_class: str) -> str:
+    def get_player_name(cls, character_class: str, player_selected_class: bool = True) -> str:
         """Return the utterance for getting player's name"""
-        utters = [
-            "What is your character's name, this great {c}?".format(c=character_class),
-            "Ahh, a {c}. Excellent choice! And what is your character's name?".
-            format(c=character_class),
-            "A {c}, marvelous! And what do they call your character?".format(
-                c=character_class),
-        ]
+        if not player_selected_class:
+            utters = [
+                "You'll be playing as a {c}. What is your character's name?".format(c=character_class)
+            ]
+        else:
+            utters = [
+                "What is your character's name, this great {c}?".format(c=character_class),
+                "Ahh, a {c}. Excellent choice! And what is your character's name?".
+                format(c=character_class),
+                "A {c}, marvelous! And what do they call your character?".format(
+                    c=character_class),
+            ]
         return random.choice(utters)
 
     @classmethod
