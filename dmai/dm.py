@@ -420,6 +420,8 @@ class DM:
             targets = self.state.get_possible_door_targets()
             if len(targets) == 1:
                 target = targets[0]
+            else:
+                target = None
         elif not target:
             targets = self.state.get_possible_monster_targets()
             if len(targets) == 1:

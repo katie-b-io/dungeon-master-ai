@@ -90,6 +90,8 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        # room connection map
+        self.room_connect_map = {}
         # puzzle triggers
         self.puzzle_trigger_map = {}
         self.solved_puzzles = []
@@ -775,7 +777,7 @@ class State():
         r1, r2 = "", ""
         try:
             for (r1, r2) in [(room_id1, room_id2), (room_id2, room_id1)]:
-                self.dm.adventure.rooms[r1].connections[r2]
+                self.room_connect_map[r1][r2]
             return True
         except KeyError:
             msg = "Connection does not exist: {r1}-{r2}".format(r1=r1, r2=r2)
@@ -824,9 +826,9 @@ class State():
             if self.check_room_exists(current_id) and self.check_room_exists(
                     destination_id) and self._check_connection_exists(
                         current_id, destination_id):
-                current = self.dm.adventure.get_room(current_id)
-                return current.connections[destination_id][
-                    "broken"] or not current.connections[destination_id][
+                current = self.room_connect_map[current_id]
+                return current[destination_id][
+                    "broken"] or not current[destination_id][
                         "locked"]
         except UnrecognisedRoomError:
             raise
@@ -840,8 +842,8 @@ class State():
             if self.check_room_exists(current_id) and self.check_room_exists(
                     destination_id) and self._check_connection_exists(
                         current_id, destination_id):
-                current = self.dm.adventure.rooms[current_id]
-                return current.connections[destination_id]["broken"]
+                current = self.room_connect_map[current_id]
+                return current[destination_id]["broken"]
         except UnrecognisedRoomError:
             raise
         except RoomConnectionError:
@@ -850,8 +852,8 @@ class State():
     
     def _update_connection(self, r1: str, r2: str, status: str,
                            state: bool) -> None:
-        self.dm.adventure.rooms[r1].connections[r2][status] = state
-        self.dm.adventure.rooms[r2].connections[r1][status] = state
+        self.room_connect_map[r1][r2][status] = state
+        self.room_connect_map[r2][r1][status] = state
 
     
     def lock_door(self, room_id1: str, room_id2: str) -> None:
