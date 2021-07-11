@@ -1,3 +1,5 @@
+import time
+
 from dmai.utils.output_builder import OutputBuilder
 from dmai.domain.characters.character_collection import CharacterCollection
 from dmai.domain.monsters.monster_collection import MonsterCollection
@@ -31,6 +33,8 @@ class Game:
         self.state = State(self.output_builder, self.session_id)
         if saved_state:
             self.state.load(saved_state)
+            time.sleep(1)
+
 
     def load(self) -> None:
         logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=self.session_id, a=self.adventure))
