@@ -111,7 +111,8 @@ class SkillCheck(Action):
                     "puzzle": self.puzzle,
                     "solution": self.solution,
                     "success_func": success_func,
-                    "success_params": success_params
+                    "success_params": success_params,
+                    "allow_repeat": False if self.dm_request else True
                 })
             return can_check
         else:

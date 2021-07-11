@@ -27,7 +27,7 @@ class Text(metaclass=TextMeta):
         if value > 0:
             value = "+{v}".format(v=value)
         elif value == 0:
-            value = " {v}".format(v=value)
+            value = "".format(v=value)
         else:
             value = "{v}".format(v=value)
         return value

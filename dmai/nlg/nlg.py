@@ -750,12 +750,16 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def fail_check(cls) -> str:
+    def fail_check(cls, allow_repeat: bool = True) -> str:
         """Return the utterance for failing on an ability check"""
+        if allow_repeat:
+            r = "You could try again or do something different."
+        else:
+            r = "You're going to have to try something else."
         utters = [
-            "You didn't do it. You could try again or do something different.",
-            "That didn't work. You could try again or do something different.",
-            "That fails. You could try again or do something different.",
+            "You didn't do it. {r}".format(r=r),
+            "That didn't work. {r}".format(r=r),
+            "That fails. {r}".format(r=r)
         ]
         return random.choice(utters)
     
