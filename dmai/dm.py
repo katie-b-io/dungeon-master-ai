@@ -416,7 +416,7 @@ class DM:
             target_type = None
         
         # check if there's only one possible target
-        if not target and target_type == "door":
+        if target_type == "door" and (not target or target == "door"):
             targets = self.state.get_possible_door_targets()
             if len(targets) == 1:
                 target = targets[0]
