@@ -27,7 +27,7 @@ class NLU():
             "exit": {
                 "text": "/exit",
                 "help": "Exit the game",
-                "cmd": "dmai.dmai_helpers.gameover(self.output_builder)"
+                "cmd": "self.state.gameover()"
             },
             "stats": {
                 "text":

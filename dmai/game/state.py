@@ -55,6 +55,7 @@ class State():
         self.output_builder = output_builder
         self.dm = None
         self.player = None
+        self.game_ended = False
         self.intro_read = False
         self.char_class = None
         self.char_name = None
@@ -117,6 +118,10 @@ class State():
     def set_char_name(self, char_name: str) -> None:
         self.char_name = char_name
 
+    def gameover(self) -> None:
+        self.game_ended = True
+        dmai.dmai_helpers.gameover(self.output_builder, self.session.session_id)
+        
     def save(self) -> dict:
         """Method to save the game state to dict"""
         save_dict = self.__dict__
@@ -679,7 +684,7 @@ class State():
                     death_text = attacker.text["killed_player"]
                     self.output_builder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
                     self.output_builder.append(self.get_dm().get_bad_ending())
-                    dmai.dmai_helpers.gameover(self.output_builder)
+                    self.gameover()
                 else:
                     self.kill_monster(entity)
                     # deregister triggers

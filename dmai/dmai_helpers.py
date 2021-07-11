@@ -69,20 +69,20 @@ def run(game: Game) -> None:
     ui.execute()
 
 
-def gameover(output_builder: OutputBuilder, session: str = None) -> None:
+def gameover(output_builder: OutputBuilder, session: str = "") -> None:
     """Gracefully exit the game"""
-    output_builder.append(
-        "Thanks for playing! Don't forget to complete your feedback, in fact, why don't you do it now? :-)"
-    )
     if Config.cleanup:
         shutil.rmtree(Config.directory.planning)
         os.remove("dmai.log")
-    if not session:
+    if not bool(session):
+        output_builder.append("Exiting game...")
         output_builder.print()
         exit_game()
     else:
+        output_builder.append(
+            "Thanks for playing! Don't forget to complete your feedback, in fact, why don't you do it now? :-)"
+        )
         output_builder.append("Your unique ID for filling in the questionnaire is {s}.".format(s=session))
-        output_builder.append("Exiting game...")
         return output_builder.format()
 
 

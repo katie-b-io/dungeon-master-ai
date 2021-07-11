@@ -59,7 +59,7 @@ class UserInterface:
         if self.game.state.paused:
             prompt += "Press enter to continue... "
 
-        return prompt
+        return (prompt, self.game.state.game_ended)
 
     def save(self) -> dict:
         """Method to save the game state.
