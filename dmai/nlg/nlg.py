@@ -487,6 +487,9 @@ class NLG(metaclass=NLGMeta):
         elif reason == "no weapon":
             return "{a} cannot attack {t} because you have no equipped weapons! Try equipping a weapon first.".format(
                 a=attacker, t=target) 
+        elif reason == "target is puzzle" or reason == "target is scenery":
+            return "{a} have struck a mighty blow at the {t}. What do you want to do now?".format(
+                a=attacker, t=target)
     
     @classmethod
     def attack_of_opportunity(cls,
@@ -779,20 +782,7 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     ############################################################
-    # Gameover utterances
-    @classmethod
-    def attack_npc_end_game(cls, name: str) -> str:
-        """Return the utterance for ending the game by attacking npc"""
-        utters = [
-            "You attacked and fatally wounded {n}. He was a much loved member of the community and retribution was swift. You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=name),
-            "Your unprovoked attack took your good friend {n} completely unawares. As the light left his eyes, he managed to utter a quiet \"why?\" with his dying breath. Why indeed? You were captured within the day and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=name),
-            "Not known for reasonable, measured behaviour you irrationally lashed out at {n}. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
-            .format(n=name),
-        ]
-        return random.choice(utters)
-    
+    # Gameover utterances   
     @classmethod
     def hp_end_game(cls, entity: str, death_text: str = "") -> str:
         """Return the utterance for ending the game by running out of hp"""

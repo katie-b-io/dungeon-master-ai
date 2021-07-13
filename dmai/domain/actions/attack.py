@@ -7,11 +7,12 @@ import dmai
 
 
 class Attack(Action):
-    def __init__(self, attacker: str, target: str, state: State, output_builder: OutputBuilder) -> None:
+    def __init__(self, attacker: str, target: str, target_type: str, state: State, output_builder: OutputBuilder) -> None:
         """Attack class"""
         Action.__init__(self)
         self.attacker = attacker
         self.target = target
+        self.target_type = target_type
         self.state = state
         self.output_builder = output_builder
 
@@ -29,6 +30,13 @@ class Attack(Action):
         # check if attacker and target are within attack range
         try:
             current = self.state.get_current_room(self.attacker)
+
+            if self.target_type == "scenery":
+                return (False, "target is scenery")
+            
+            if self.target_type == "puzzle":
+                return (False, "target is puzzle")
+
             if not current == self.state.get_current_room(self.target):
                 return (False, "different location")
             
@@ -64,23 +72,25 @@ class Attack(Action):
         if can_attack:
             # check if target will end game
             if self.state.get_dm().npcs.get_type(self.target) == "npc":
-                if self.state.get_dm().npcs.get_npc(self.target).attack_ends_game:
+                npc = self.state.get_entity(self.target)
+                if npc.attack_ends_game:
                     # this is a game end condition
-                    self.output_builder.append(NLG.attack_npc_end_game(self.state.get_entity(self.target).short_name))
+                    self.output_builder.append(npc.dialogue["attacked_by_player"])
                     self.output_builder.append(self.state.get_dm().get_bad_ending())
                     self.state.gameover()
                     return False
             self.state.combat(self.attacker, self.target)
-            return can_attack
         else:
+            target_name = self.state.get_entity_name(self.target)
+            if not target_name:
+                target_name = self.target
             self.output_builder.append(
                 NLG.cannot_attack(
                     self.state.get_entity_name(self.attacker),
-                    self.state.get_entity_name(self.target),
+                    target_name,
                     self.state.char_name,
                     reason,
                     self.state.get_formatted_possible_monster_targets(),
                 )
             )
-            return can_attack
-        
+        return can_attack

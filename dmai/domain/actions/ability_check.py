@@ -62,7 +62,7 @@ class AbilityCheck(Action):
 
             # now check if an ability check is required for this situation
             for puzzle in current.puzzles.get_all_puzzles():
-                if puzzle.check_solution_ability(self.ability):
+                if puzzle.check_solution_ability(self.ability) and puzzle.id not in self.state.solved_puzzles:
                     self.puzzle = puzzle.id
                     return (True, "")
             
@@ -97,6 +97,7 @@ class AbilityCheck(Action):
                         success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
                         success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.ability)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":
+                    current.puzzles.get_puzzle(self.puzzle).solve()
                     self.target = self.puzzle.split("---")[1]
                     success_func = self.state.unlock_door
                     success_params = [current.id, self.target]

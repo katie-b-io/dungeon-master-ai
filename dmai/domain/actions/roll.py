@@ -56,10 +56,12 @@ class Roll(Action):
                 self.output_builder.append(roll_str)
                 self.output_builder.append(NLG.no_reason_roll())
                 can_roll = True
-            return can_roll
         else:
-            self.output_builder.append("Can't roll!")
-            return can_roll
+            (roll_str, dice_val) = DiceRoller.roll("d20")
+            self.output_builder.append(roll_str)
+            self.output_builder.append(NLG.no_reason_roll())
+            can_roll = True
+        return can_roll
     
     def _door_attack_roll(self) -> bool:
         """Execute an attack roll against door.

@@ -210,7 +210,7 @@ class TestAttack(unittest.TestCase):
         entity = "player"
         target = "yoda"
         self.game.state.set_current_room(entity, "inns_cellar")
-        attack = Attack(entity, target, self.game.state, self.game.output_builder)
+        attack = Attack(entity, target, "monster", self.game.state, self.game.output_builder)
         (attacked, reason) = attack._can_attack()
         self.assertEqual(attacked, False)
         self.assertEqual(reason, "unknown target")
@@ -220,7 +220,7 @@ class TestAttack(unittest.TestCase):
         target = "zombie_1"
         self.game.state.set_current_room(entity, "inns_cellar")
         self.game.state.extinguish_torch()
-        attack = Attack(entity, target, self.game.state, self.game.output_builder)
+        attack = Attack(entity, target, "monster", self.game.state, self.game.output_builder)
         (attacked, reason) = attack._can_attack()
         self.assertEqual(attacked, False)
         self.assertEqual(reason, "different location")
@@ -230,7 +230,7 @@ class TestAttack(unittest.TestCase):
         target = "giant_rat_1"
         self.game.state.set_current_room(entity, "inns_cellar")
         self.game.state.extinguish_torch()
-        attack = Attack(entity, target, self.game.state, self.game.output_builder)
+        attack = Attack(entity, target, "monster", self.game.state, self.game.output_builder)
         (attacked, reason) = attack._can_attack()
         self.assertEqual(attacked, False)
         self.assertEqual(reason, "no visibility")

@@ -185,62 +185,68 @@ class Puzzle(ABC):
     def solution_success_func(self, option: str = None) -> None:
         """Method to construct solution success function"""
         # TODO support non-door types
-        if self.solutions[option]["say"]:
-            self.output_builder.append(self.solutions[option]["say"])
-        if self.type == "door":
-            room1 = self.id.split("---")[0]
-            room2 = self.id.split("---")[1]
-            self.state.unlock_door(room1, room2)
-        elif self.type == "trap":
-            self.state.puzzle_trigger_map[self.id]["solution"][option] = False
-            result = self.solutions[option]["result"]
-            # TODO support non-monster results
-            if self.state.get_entity(result):
-                self.state.set_current_status(result, "alive")
-                self.state.combat(result, "player")
-        self.solve()
+        if not self.id in self.state.solved_puzzles:
+            if self.solutions[option]["say"]:
+                self.output_builder.append(self.solutions[option]["say"])
+            if self.type == "door":
+                room1 = self.id.split("---")[0]
+                room2 = self.id.split("---")[1]
+                self.state.unlock_door(room1, room2)
+            elif self.type == "trap":
+                self.state.puzzle_trigger_map[self.id]["solution"][option] = False
+                result = self.solutions[option]["result"]
+                # TODO support non-monster results
+                if self.state.get_entity(result):
+                    self.state.set_current_status(result, "alive")
+                    self.state.combat(result, "player")
+            self.solve()
         
     def explore_success_func(self, option: str) -> None:
         """Method to construct explore success function"""
-        if self.explore[option]["say"]:
-            self.output_builder.append(self.explore[option]["say"])
-        if self.explore[option]["result"]:
-            result = self.explore[option]["result"]
-            if result == "open_door":
-                room1 = self.id.split("---")[0]
-                room2 = self.id.split("---")[1]
-                self.state.unlock_door(room1, room2)
-            elif result == "add_to_inventory":
-                item_data = self.__dict__
-                self.state.get_player().character.items.add_item(self.id, item_data=item_data)
-            elif result == "good_ending":
-                self.output_builder.append(self.state.get_dm().get_good_ending())
-                self.state.gameover()
-        self.solve()
+        if not self.id in self.state.solved_puzzles:
+            if self.explore[option]["say"]:
+                self.output_builder.append(self.explore[option]["say"])
+            if self.explore[option]["result"]:
+                result = self.explore[option]["result"]
+                if result == "open_door":
+                    room1 = self.id.split("---")[0]
+                    room2 = self.id.split("---")[1]
+                    self.state.unlock_door(room1, room2)
+                elif result == "add_to_inventory":
+                    item_data = self.__dict__
+                    self.state.get_player().character.items.add_item(self.id, item_data=item_data)
+                elif result == "good_ending":
+                    self.output_builder.append(self.state.get_dm().get_good_ending())
+                    self.state.gameover()
+            self.solve()
     
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
-        if self.investigate[option]["say"]:
-            self.output_builder.append(self.investigate[option]["say"])
-        if "result" in self.investigate[option] and self.investigate[option]["result"]:
-            result = self.investigate[option]["result"]
-            if result == "open_door":
-                room1 = self.id.split("---")[0]
-                room2 = self.id.split("---")[1]
-                self.state.unlock_door(room1, room2)
-            elif result == "add_to_inventory":
-                item_data = self.__dict__
-                self.state.get_player().character.items.add_item(self.id, item_data=item_data)
-            elif result == "explore":
-                if self.investigate[option]["id"]:
-                    explore_id = self.investigate[option]["id"]
-                    puzzle = self.state.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
-                    if self.state.puzzle_trigger_map[explore_id]["explore"][option]:
-                        puzzle.explore_success_func(option)
-            elif result == "good_ending":
-                self.output_builder.append(self.state.get_dm().get_good_ending())
-                self.state.gameover()
-        self.solve()
+        solve = True
+        if not self.id in self.state.solved_puzzles:
+            if self.investigate[option]["say"]:
+                self.output_builder.append(self.investigate[option]["say"])
+            if "result" in self.investigate[option] and self.investigate[option]["result"]:
+                result = self.investigate[option]["result"]
+                if result == "open_door":
+                    room1 = self.id.split("---")[0]
+                    room2 = self.id.split("---")[1]
+                    self.state.unlock_door(room1, room2)
+                elif result == "add_to_inventory":
+                    item_data = self.__dict__
+                    self.state.get_player().character.items.add_item(self.id, item_data=item_data)
+                elif result == "explore":
+                    if self.investigate[option]["id"]:
+                        explore_id = self.investigate[option]["id"]
+                        puzzle = self.state.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
+                        if self.state.puzzle_trigger_map[explore_id]["explore"][option]:
+                            solve = False
+                            puzzle.explore_success_func(option)
+                elif result == "good_ending":
+                    self.output_builder.append(self.state.get_dm().get_good_ending())
+                    self.state.gameover()
+            if solve:
+                self.solve()
         
     def get_solution_success_func(self) -> object:
         """Method to return the function on successful roll"""

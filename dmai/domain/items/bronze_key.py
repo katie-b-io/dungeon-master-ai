@@ -18,10 +18,14 @@ class BronzeKey(Item):
         for puzzle in self.state.get_current_room().puzzles.get_all_puzzles():
             if "unlock" in puzzle.solutions:
                 if puzzle.solutions["unlock"]["item"] == self.id:
-                    self.output_builder.append(puzzle.solutions["unlock"]["say"])
-                    room1 = puzzle.id.split("---")[0]
-                    room2 = puzzle.id.split("---")[1]
-                    self.state.unlock_door(room1, room2)
-                    return True
+                    if not puzzle.id in self.state.solved_puzzles:
+                        self.output_builder.append(puzzle.solutions["unlock"]["say"])
+                        room1 = puzzle.id.split("---")[0]
+                        room2 = puzzle.id.split("---")[1]
+                        self.state.unlock_door(room1, room2)
+                        return True
+                    else:
+                        self.output_builder.append("This key is no longer useful as the door is already open.")
+                        return False
         self.output_builder.append("The purpose of this key is not clear yet.")
     

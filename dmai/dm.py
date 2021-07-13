@@ -356,7 +356,7 @@ class DM:
                 and entity["confidence"] >= self.ENTITY_CONFIDENCE
             ):
                 return ("die", entity["value"])
-        return (None, None)
+        return ("die", None)
     
     def _get_item(self, nlu_entities: dict) -> str:
         """Extract an item from NLU entities dictionary.
@@ -451,7 +451,7 @@ class DM:
                 attacked = self.actions.attack_door(attacker, target)
             else:
                 logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
-                attacked = self.actions.attack(attacker, target)
+                attacked = self.actions.attack(attacker, target, target_type=target_type)
         return attacked
 
     def use(
@@ -615,33 +615,32 @@ class DM:
     ) -> bool:
         """Attempt to roll die.
         Returns whether the action was successful."""
-        if not die and nlu_entities:
-            die = self._get_die(nlu_entities)[1]
-        elif not die:
-            # TODO to something smarter here - default to the die that makes sense
-            # or ask for clarification
-            die = "d20"
-            
+
+        # If there's a stored intent, ignore the player specified die and use correct one
         if self.state.stored_intent:
             if "nlu_entities" in self.state.stored_intent["params"]:
                 nlu_entities.extend(self.state.stored_intent["params"]["nlu_entities"])
             if self.state.stored_intent["intent"] == "attack":
                 if self.state.in_combat_with_door:
-                    return self.actions.roll("door_attack", nlu_entities, die)
+                    return self.actions.roll("door_attack")
                 else:
-                    return self.actions.roll("attack", nlu_entities, die)
+                    return self.actions.roll("attack")
             elif self.state.stored_intent["intent"] == "force":
                 if self.state.stored_ability_check:
-                    return self.actions.roll("ability_check", nlu_entities, die)
-
+                    return self.actions.roll("ability_check")
+            
         if self.state.in_combat_with_door:
-            return self.actions.roll("door_attack", nlu_entities, die)
+            return self.actions.roll("door_attack")
         if self.state.in_combat:
-            return self.actions.roll("attack", nlu_entities, die)
+            return self.actions.roll("attack")
         if self.state.stored_ability_check:
-            return self.actions.roll("ability_check", nlu_entities, die)
+            return self.actions.roll("ability_check")
         if self.state.stored_skill_check:
-            return self.actions.roll("skill_check", nlu_entities, die)
+            return self.actions.roll("skill_check")
+
+        # not stored intent, get the dice spec now
+        if not die and nlu_entities:
+            die = self._get_die(nlu_entities)[1]
         return self.actions.roll("roll", nlu_entities, die)
 
     def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:

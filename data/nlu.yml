@@ -141,7 +141,6 @@ nlu:
     - go to the [cellar](location)
     - go [downstairs](location)
     - go [behind the bar](location)
-    - go to the [bar](location)
     - move [down stairs](location)
     - travel [down the stairs](location)
     - go [up stairs](location)
@@ -924,7 +923,6 @@ nlu:
     - down the stairs
     - cellar inn
     - behind the bar
-    - bar
 
 - synonym: storage_room
   examples: |
