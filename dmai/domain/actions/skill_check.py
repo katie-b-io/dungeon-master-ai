@@ -62,7 +62,7 @@ class SkillCheck(Action):
             for puzzle in current.puzzles.get_all_puzzles():
                 # TODO support non-door puzzles
                 if puzzle.id == "{c}---{t}".format(c=current.id, t=self.target):
-                    if puzzle.check_solution_skill(self.skill):
+                    if puzzle.check_solution_skill(self.skill) and puzzle.id not in self.state.solved_puzzles:
                         self.puzzle = puzzle.id
                         self.solution = self.skill
                         return (True, "")
@@ -99,6 +99,7 @@ class SkillCheck(Action):
                         success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
                         success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":
+                    current.puzzles.get_puzzle(self.puzzle).solve()
                     self.target = self.puzzle.split("---")[1]
                     success_func = self.state.unlock_door
                     success_params = [current.id, self.target]

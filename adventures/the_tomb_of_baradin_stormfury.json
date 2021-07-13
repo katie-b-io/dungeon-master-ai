@@ -293,6 +293,7 @@
                     "id": "vault",
                     "type": "trap",
                     "name": "Vault",
+                    "description": "Six stone vaults stand along the western wall.",
                     "solutions": {
                         "str": {
                             "description": "force lid",
@@ -307,7 +308,7 @@
                         "pick_up": {
                             "id": "silver_key",
                             "description": "A simple silver key.",
-                            "say": "You examine the closed vault next to this one and think it might be able to be forced open.",
+                            "say": "You examine a closed vault and think it might be able to be forced open.",
                             "result": "explore",
                             "explore_id": "pick_up"
                         }
