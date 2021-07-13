@@ -36,7 +36,8 @@
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
                 "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats and he hands over the promised reward. After telling him about the hole in the eastern wall he gets excited and says \"Baradin Stormfury! There's a legend that the resting place of the great dwarven warrior Baradin Stormfury lies below this inn.\". He goes behind the bar, searching various shelves and small boxes before exclaiming \"Aha! Here it is.\". He brings back an elaborate bronze key with a dwarven face engraved on it, which he hands to you. \"My family have been keeping hold of this for generations, please take it and see what you discover beyond the cellar.\". You may now want to investigate the storage room accessible through the hole in the eastern wall of the cellar.",
-                "end_after_quest": "You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
+                "end_after_quest": "You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!",
+                "fallback": "Corvus is busy preparing the inn for the day's customers and gives you a distracted smile before returning to his work."
             },
             "triggers": {
                 "turn_in_quest": {
@@ -52,7 +53,8 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    "triggered": false
                 }
             }
         },

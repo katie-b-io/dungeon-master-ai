@@ -285,25 +285,27 @@ class Actions:
                     fallback = True
                     # check triggers
                     for trigger_id in npc.triggers:
-                        trigger = npc.triggers[trigger_id]
-                        for room_id in trigger["conditions"]:
-                            if "monsters" in trigger["conditions"][room_id]:
-                                for monster_id in trigger["conditions"][room_id]["monsters"]:
-                                    status = trigger["conditions"][room_id]["monsters"][monster_id]["status"]
-                                    # TODO support other conditions
-                                    if status == "dead":
-                                        if not self.state.get_dm().npcs.get_monster_id(monster_id, status="alive", location=room_id):
-                                            # the conditions of the trigger have been met
-                                            self.state.set_conversation_target(target)
-                                            fallback = False
-                                            if trigger["say"]:
-                                                self.output_builder.append(npc.dialogue[trigger["say"]])
-                                            if trigger["result"]:
-                                                if trigger["result"] == "add_to_inventory":
-                                                    self.state.get_player().character.items.add_item(trigger["id"])
+                        if trigger_id not in self.state.npc_trigger_map[npc.id]:
+                            trigger = npc.triggers[trigger_id]
+                            for room_id in trigger["conditions"]:
+                                if "monsters" in trigger["conditions"][room_id]:
+                                    for monster_id in trigger["conditions"][room_id]["monsters"]:
+                                        status = trigger["conditions"][room_id]["monsters"][monster_id]["status"]
+                                        # TODO support other conditions
+                                        if status == "dead":
+                                            if not self.state.get_dm().npcs.get_monster_id(monster_id, status="alive", location=room_id):
+                                                # the conditions of the trigger have been met
+                                                self.state.npc_trigger_map[npc.id].append(trigger_id)
+                                                self.state.set_conversation_target(target)
+                                                fallback = False
+                                                if trigger["say"]:
+                                                    self.output_builder.append(npc.dialogue[trigger["say"]])
+                                                if trigger["result"]:
+                                                    if trigger["result"] == "add_to_inventory":
+                                                        self.state.get_player().character.items.add_item(trigger["id"])
                     # fall back
                     if fallback:
-                        self.output_builder.append(NLG.roleplay(self.state.char_name, self.state.get_entity_name(target)))
+                        self.output_builder.append(npc.dialogue["fallback"])
             return can_converse
         else:
             if bool(self.state.get_entity_name(target)):

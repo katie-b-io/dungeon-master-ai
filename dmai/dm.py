@@ -654,7 +654,7 @@ class DM:
 
         if not item:
             # check if item is puzzle item
-            (item_type, item) = self._get_target()
+            (item_type, item) = self._get_target(nlu_entities)
             if item and item_type == "puzzle":
                 # trigger explore
                 picked_up = self.actions.investigate(item, target_type=item_type)

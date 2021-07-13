@@ -91,6 +91,8 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        # npc triggers
+        self.npc_trigger_map = {}
         # room connection map
         self.room_connect_map = {}
         # puzzle triggers
