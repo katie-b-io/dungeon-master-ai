@@ -64,9 +64,10 @@ class Attack(Action):
         if can_attack:
             # check if target will end game
             if self.state.get_dm().npcs.get_type(self.target) == "npc":
-                if self.state.get_dm().npcs.get_npc(self.target).attack_ends_game:
+                npc = self.state.get_entity(self.target)
+                if npc.attack_ends_game:
                     # this is a game end condition
-                    self.output_builder.append(NLG.attack_npc_end_game(self.state.get_entity(self.target).short_name))
+                    self.output_builder.append(npc.dialogue["attacked_by_player"])
                     self.output_builder.append(self.state.get_dm().get_bad_ending())
                     self.state.gameover()
                     return False

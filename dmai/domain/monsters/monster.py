@@ -90,8 +90,8 @@ class Monster(NPC, MonsterAgent):
                     self.trigger_map["move"] = {
                         "trigger": self.move,
                         "params": {
-                            "destination": npc_data["triggers"]["move"],
-                            "conditions": npc_data["triggers"]["conditions"],
+                            "destination": npc_data["triggers"]["move"]["destination"],
+                            "conditions": npc_data["triggers"]["move"]["conditions"],
                         },
                     }
 

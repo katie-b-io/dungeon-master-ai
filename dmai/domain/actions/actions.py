@@ -276,7 +276,7 @@ class Actions:
             if npc.dialogue:
                 self.state.roleplay(target)
                 # TODO make the dialogue options flexible
-                if not self.state.quest_received:
+                if not self.state.quest_received and npc.gives_quest:
                     self.state.set_conversation_target(target)
                     self.state.received_quest()
                     self.output_builder.append(
@@ -285,7 +285,8 @@ class Actions:
                     fallback = True
                     # check triggers
                     for trigger_id in npc.triggers:
-                        if trigger_id not in self.state.npc_trigger_map[npc.id]:
+                        # TODO change into something less hardcoded: trigger_id != "move"
+                        if trigger_id != "move" and trigger_id not in self.state.npc_trigger_map[npc.id]:
                             trigger = npc.triggers[trigger_id]
                             for room_id in trigger["conditions"]:
                                 if "monsters" in trigger["conditions"][room_id]:

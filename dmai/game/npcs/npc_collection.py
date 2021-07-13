@@ -39,10 +39,10 @@ class NPCCollection:
         npcs = {}
         for npc_id in self.adventure.npcs:
             npc_data = self.adventure.npcs[npc_id]
+            if npc_id not in self.state.npc_trigger_map:
+                self.state.npc_trigger_map[npc_id] = []
             if "monster" not in npc_data:
                 npc = NPC(npc_data)
-                if npc.id not in self.state.npc_trigger_map:
-                    self.state.npc_trigger_map[npc.id] = []
             else:
                 npc = MonsterCollection.get_monster_npc(npc_data, self.state, self.output_builder)
             self.state.set_init_npc(npc_data)
