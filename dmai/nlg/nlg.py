@@ -487,6 +487,9 @@ class NLG(metaclass=NLGMeta):
         elif reason == "no weapon":
             return "{a} cannot attack {t} because you have no equipped weapons! Try equipping a weapon first.".format(
                 a=attacker, t=target) 
+        elif reason == "target is puzzle" or reason == "target is scenery":
+            return "{a} have struck a mighty blow at the {t}. What do you want to do now?".format(
+                a=attacker, t=target)
     
     @classmethod
     def attack_of_opportunity(cls,

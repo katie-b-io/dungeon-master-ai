@@ -162,7 +162,8 @@ class TestDM(unittest.TestCase):
     def test_attack_target_npc(self) -> None:
         self.game.state.set_current_room("player", "inns_cellar")
         self.game.state.light_torch()
-        self.assertEqual(True, self.dm.attack(target="anvil"))
+        with self.assertRaises(SystemExit):
+            self.dm.attack(target="anvil")
     
     def test_attack_target_npc_gameover(self) -> None:
         self.game.state.set_current_room("player", "stout_meal_inn")
@@ -183,7 +184,8 @@ class TestDM(unittest.TestCase):
         self.game.state.set_current_room("player", "inns_cellar")
         self.game.state.light_torch()
         nlu_entities = [{"entity": "npc", "confidence": 1, "value": "anvil"}]
-        self.assertEqual(True, self.dm.attack(nlu_entities=nlu_entities))
+        with self.assertRaises(SystemExit):
+            self.dm.attack(nlu_entities=nlu_entities)
     
     def test_attack_nlu_entities_monster_good(self) -> None:
         self.game.state.set_current_room("player", "inns_cellar")
@@ -387,7 +389,7 @@ class TestDM(unittest.TestCase):
         self.assertEqual(True, self.dm.roll(die="d12"))
 
     def test_roll_die_bad(self) -> None:
-        self.assertEqual(False, self.dm.roll(die="d13"))
+        self.assertEqual(True, self.dm.roll(die="d13"))
     
     def test_roll_nlu_entities_good(self) -> None:
         nlu_entities = [{"entity": "die", "confidence": 1, "value": "d8"}]
@@ -395,7 +397,7 @@ class TestDM(unittest.TestCase):
 
     def test_roll_nlu_entities_bad(self) -> None:
         nlu_entities = [{"entity": "die", "confidence": 1, "value": "d7"}]
-        self.assertEqual(False, self.dm.roll(nlu_entities=nlu_entities))
+        self.assertEqual(True, self.dm.roll(nlu_entities=nlu_entities))
 
     def test_pick_up_item_good(self) -> None:
         self.game.state.set_current_room("player", "inns_cellar")

@@ -451,7 +451,7 @@ class DM:
                 attacked = self.actions.attack_door(attacker, target)
             else:
                 logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
-                attacked = self.actions.attack(attacker, target)
+                attacked = self.actions.attack(attacker, target, target_type=target_type)
         return attacked
 
     def use(

@@ -101,10 +101,10 @@ class Actions:
             self.output_builder.append(NLG.cannot_move(destination, reason, possible_destinations))
         return can_move
 
-    def attack(self, attacker: str, target: str) -> bool:
+    def attack(self, attacker: str, target: str, target_type: str = "") -> bool:
         """Attempt to attack a specified target.
         Returns a bool to indicate whether the action was successful"""
-        attack = Attack(attacker, target, self.state, self.output_builder)
+        attack = Attack(attacker, target, target_type, self.state, self.output_builder)
         return attack.execute()
 
     def attack_door(self, attacker: str, location: str) -> bool:
