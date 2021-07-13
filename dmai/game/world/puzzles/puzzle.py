@@ -203,17 +203,20 @@ class Puzzle(ABC):
         
     def explore_success_func(self, option: str) -> None:
         """Method to construct explore success function"""
+        if self.explore[option]["say"]:
+            self.output_builder.append(self.explore[option]["say"])
         if self.explore[option]["result"]:
             result = self.explore[option]["result"]
             if result == "open_door":
                 room1 = self.id.split("---")[0]
                 room2 = self.id.split("---")[1]
                 self.state.unlock_door(room1, room2)
-            if result == "add_to_inventory":
+            elif result == "add_to_inventory":
                 item_data = self.__dict__
                 self.state.get_player().character.items.add_item(self.id, item_data=item_data)
-        if self.explore[option]["say"]:
-            self.output_builder.append(self.explore[option]["say"])
+            elif result == "good_ending":
+                self.output_builder.append(self.state.get_dm().get_good_ending())
+                self.state.gameover()
         self.solve()
     
     def investigate_success_func(self, option: str) -> None:

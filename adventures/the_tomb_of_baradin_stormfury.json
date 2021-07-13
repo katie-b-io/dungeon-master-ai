@@ -520,7 +520,7 @@
                     "explore": {
                         "pick_up": {
                             "description": "pick up dwarven thrower",
-                            "say": "You take a closer look in the sarcophagus. This must be the final resting place of Baradin Stormfury. You take the warhammer, which you later find out is a priceless, very rare weapon called \"Dwarven Thrower\". Corvus rejoices at your return and the discovery of this rare dwarven artifact. You share a celebratory ale and claim your reward. It was a great day!",
+                            "say": "You take a closer look in the sarcophagus. This must be the final resting place of Baradin Stormfury. You take the warhammer, which you later find out is a priceless, very rare weapon called \"Dwarven Thrower\". Corvus rejoices at your return and the discovery of this rare dwarven artifact. You share a celebratory ale, it was a great day!",
                             "result": "good_ending"
                         }
                     },
