@@ -2,7 +2,7 @@
     "title": "The Tomb of Baradin Stormfury",
     "author": "Rena Silver",
     "text": {
-        "intro": "Greyforge, the mountain city in the north of the Kaldarian lands is home to the proud dwarves who settled in the area over 8,000 years ago, led by a silver dragon, according to some stories.\nFamous for their expertise in crafting and artifice, the Greyforge dwarves use giant lava powered furnaces, deep underground, to process the toughest metals.\nScholars and mages travel here from all over the continent in search of ancient lore in the dusty tomes of the Greyforge library, which is famed as the largest library in all Aradia.\nMost of the city lies safely under the surface of the mountain making it easily defensible. A strong military force is ready to defend the city at all times from threats of goblinoid clans vying for control of the natural resources of the area and hungry herds of monstrous beasts.\nQueen Mabaegar Thunderarmour is the recently appointed Queen after her predecessor was found dead under mysterious circumstances. Young but wise, she seeks advice from the older members of the Council of Twelve. She is honest and honourable and wants the best for her people.\nApart from dwarves, many other ancestries call Greyforge home: humans, gnomes, halflings, tieflings and dragonborn.\nMore than anything, Greyforge is your home. You spend your whole life in the sheltered walls of the great stone city. Today, a day like any other, you are summoned by Corvus Stouthammer, proprietor of the Stout Meal Inn, one of the oldest establishments in the city. He said he has a quick job for you.",
+        "intro": "Greyforge, the mountain city in the north of the Kaldarian lands is home to the proud dwarves who settled in the area over 8,000 years ago, led by a silver dragon, according to some stories.\nFamous for their expertise in crafting and artifice, the Greyforge dwarves use giant lava powered furnaces, deep underground, to process the toughest metals.\nScholars and mages travel here from all over the continent in search of ancient lore in the dusty tomes of the Greyforge library, which is famed as the largest library in all Aradia.\nMost of the city lies safely under the surface of the mountain making it easily defensible. A strong military force is ready to defend the city at all times from threats of goblinoid clans vying for control of the natural resources of the area and hungry herds of monstrous beasts.\nApart from dwarves, many other ancestries call Greyforge home: humans, gnomes, halflings, tieflings and dragonborn.\nMore than anything, Greyforge is your home. You spend your whole life in the sheltered walls of the great stone city. Today, a day like any other, you are summoned by Corvus Stouthammer, proprietor of the Stout Meal Inn, one of the oldest establishments in the city. He said he has a quick job for you.",
         "conclusion": {
             "good_ending": "Well done! You discovered the secret tomb underneath the Stout Meal Inn.",
             "bad_ending": "You never discovered the secret underneath the Stout Meal Inn..."
@@ -23,7 +23,9 @@
             "attack_ends_game": true,
             "gives_quest": true,
             "status": "alive",
-            "treasure": [],
+            "treasure": [
+                "bronze_key"
+            ],
             "must_kill": false,
             "will_attack_player": false,
             "dialogue": {
@@ -33,9 +35,17 @@
                 "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 10 silver pieces per rat is more than fair.\"\"",
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
-                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats. You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
+                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats and he hands over the promised reward. After telling him about the hole in the eastern wall he gets excited and says \"Baradin Stormfury! There's a legend that the resting place of Baradin Stormfury lies below this inn.\". He goes behind the bar, searching various shelves and small boxes before exclaiming \"A-ha! Here it is\". He brings back an elaborate bronze key with a drarven face engraved on it, which he hands to you. \"My family have been keeping hold of this for generations, please take it and see what you discover beyond the cellar.\"",
+                "end_after_quest": "You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!"
             },
-            "triggers": {}
+            "triggers": {
+                "turn_in_quest": {
+                    "id": "bronze_key",
+                    "description": "An elaborate bronze key.",
+                    "say": "You examine the elaborate bronze key and add it to your inventory.",
+                    "result": "add_to_inventory"
+                }
+            }
         },
         "anvil": {
             "id": "anvil",
@@ -135,7 +145,7 @@
                 "visibility": "You see a terrible scene in front of you. Anvil-Jumper the cat is sitting on top of one of the barrels in the north-east corner of the room, meowing pathetically at the giant rats who are entirely indifferent to his plight. There are two giant rats in the cellar tearing through the food supplies. The rats have burst through a 5 ft by 5 ft hole in the eastern wall of the cellar.",
                 "description": "Dark and damp cellar.",
                 "no_visibility_description": "The room is too dark to see anything.",
-                "fight_ends": "You vanquished the giant rats! With a swish of his tail, Anvil-Jumper leaps from the barrel and dashes upstairs. Corvus will be pleased, if you choose you can return to him to receive your handsome reward. It may be worth investigating this room further to see if you find anything of value. You may also want to determine what caused the giant rats to come here, there may be something to investigate in the storage room accessible through the hole in the eastern wall."
+                "fight_ends": "You vanquished the giant rats! With a swish of his tail, Anvil-Jumper leaps from the barrel and dashes upstairs. Corvus will be pleased, you can return to him to receive your handsome reward. It may be worth investigating this room further to see if you find anything of value. You may also want to determine what caused the giant rats to come here, there may be something to investigate in the storage room accessible through the hole in the eastern wall."
             }
         },
         "storage_room": {
@@ -430,7 +440,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron which leads to the southern corridor. There are two goblins here.",
+                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron with a singular small key hole which leads to the southern corridor.\nThe source of the hushed conversation becomes apparent as you approach this room. Two goblins are having an animated discussion in a language you can’t understand. They have amber skin, flat faces, broad noses, pointed ears, wide mouths and small, sharp fangs. They stand upright with arms that hang down almost to their knees. They are wearing scrappy looking leather armour and each wields a rusting scimitar and a bow. One of them carries a lit torch that illuminates the room.\nAs you approach they jump in surprise and draw their scimitars as they move to attack.",
                 "description": "It's a circular room with intricate murals of the silver dragon, Rizoarithra.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."
@@ -458,66 +468,12 @@
                 "southern_corridor---baradins_crypt": {
                     "id": "southern_corridor---baradins_crypt",
                     "type": "door",
-                    "name": "Magic stone face",
+                    "name": "Elaborate door",
                     "solutions": {
-                        "solve": {
-                            "description": "solve riddle",
-                            "intent": "solve",
-                            "stages": [
-                                {
-                                    "utterance": "Speak these names and you shall pass."
-                                },
-                                {
-                                    "utterance": "I am the father of the children of metal born from the heart of the world. My anvil and hammer a sign for those who craft and learn.",
-                                    "response": "Thorogrin",
-                                    "hints": [
-                                        {
-                                            "skill": "history",
-                                            "dc": 10,
-                                            "text": "You know that \"children\" of metal is another name for dwarves."
-                                        },
-                                        {
-                                            "skill": "history",
-                                            "dc": 15,
-                                            "text": "You recognise the reference to the creation myth of the dwarves."
-                                        },
-                                        {
-                                            "skill": "religion",
-                                            "dc": 10,
-                                            "text": "You identify the anvil and hammer as a reference to Thorogrin's holy symbol and divine domains, the forge and knowledge."
-                                        }
-                                    ]
-                                },
-                                {
-                                    "utterance": "On mighty silver wings I fly, my breath cold as ice. Relics of old and treasures adorn my home. Secret guardian under the mountain.",
-                                    "response": "Rizoarithra",
-                                    "hints": [
-                                        {
-                                            "skill": [
-                                                "history",
-                                                "arcana",
-                                                "nature"
-                                            ],
-                                            "dc": 10,
-                                            "text": "You recognise the references to a silver dragon."
-                                        },
-                                        {
-                                            "skill": "history",
-                                            "dc": 10,
-                                            "text": "You know that the \"secret guardian under the mountain\" refers to the founding of Greyforge and the guardian dragon that led the dwarf settlers to the mountain that would become their home."
-                                        },
-                                        {
-                                            "skill": "history",
-                                            "dc": 15,
-                                            "text": "You remember the myths about Rizoarithra, the silver dragon guardian of Greyforge."
-                                        }
-                                    ]
-                                },
-                                {
-                                    "utterance": "Name me and so you shall break me.",
-                                    "response": "Baradin"
-                                }
-                            ]
+                        "unlock": {
+                            "description": "unlock door",
+                            "item": "bronze_key",
+                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the elaborate door. With a strong push the door swings open."
                         }
                     },
                     "explore": {},
@@ -527,8 +483,8 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the wall to the south.",
-                "description": "It's a corridor with an elaborate dwarven engraving at the end.",
+                "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the door to the south. It looks elaborate and incredibly sturdy, there is a single key hole on the left side of the door.",
+                "description": "It's a corridor with an elaborate engraved door at the end.",
                 "no_visibility_description": "The room is too dark to see anything."
             }
         },
