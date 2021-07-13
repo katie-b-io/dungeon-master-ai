@@ -272,23 +272,38 @@ class Actions:
         # check if conversation can happen
         (can_converse, reason) = self._can_converse(target)
         if can_converse:
-            if self.npcs.get_entity(target).dialogue:
+            npc = self.npcs.get_entity(target)
+            if npc.dialogue:
                 self.state.roleplay(target)
                 # TODO make the dialogue options flexible
                 if not self.state.quest_received:
                     self.state.set_conversation_target(target)
                     self.state.received_quest()
                     self.output_builder.append(
-                        self.npcs.get_entity(target).dialogue["gives_quest"])
-                elif not self.state.get_dm().npcs.get_monster_id("giant_rat", status="alive", location="inns_cellar"):
-                    # TODO this condition is hardcoded for the baradin tomb quest - don't hardcode it
-                    self.state.set_conversation_target(target)
-                    self.output_builder.append(
-                        self.npcs.get_entity(target).dialogue["turn_in_quest"])
-                    self.output_builder.append(self.state.get_dm().get_bad_ending())
-                    self.state.gameover()
+                       npc.dialogue["gives_quest"])
                 else:
-                    self.output_builder.append(NLG.roleplay(self.state.char_name, self.state.get_entity_name(target)))
+                    fallback = True
+                    # check triggers
+                    for trigger_id in npc.triggers:
+                        trigger = npc.triggers[trigger_id]
+                        for room_id in trigger["conditions"]:
+                            if "monsters" in trigger["conditions"][room_id]:
+                                for monster_id in trigger["conditions"][room_id]["monsters"]:
+                                    status = trigger["conditions"][room_id]["monsters"][monster_id]["status"]
+                                    # TODO support other conditions
+                                    if status == "dead":
+                                        if not self.state.get_dm().npcs.get_monster_id(monster_id, status="alive", location=room_id):
+                                            # the conditions of the trigger have been met
+                                            self.state.set_conversation_target(target)
+                                            fallback = False
+                                            if trigger["say"]:
+                                                self.output_builder.append(npc.dialogue[trigger["say"]])
+                                            if trigger["result"]:
+                                                if trigger["result"] == "add_to_inventory":
+                                                    self.state.get_player().character.items.add_item(trigger["id"])
+                    # fall back
+                    if fallback:
+                        self.output_builder.append(NLG.roleplay(self.state.char_name, self.state.get_entity_name(target)))
             return can_converse
         else:
             if bool(self.state.get_entity_name(target)):

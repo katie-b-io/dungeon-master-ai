@@ -743,6 +743,7 @@ class DM:
             if self.state.ales > 2:
                 # this is a gameover state
                 self.output_builder.append(NLG.drunk_end_game())
+                self.output_builder.append(self.get_bad_ending())
                 self.state.gameover()
             self.output_builder.append(NLG.drink_ale(self.state.ales))
             self.state.drink_ale()

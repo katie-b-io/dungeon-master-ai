@@ -563,6 +563,9 @@ nlu:
     - use the [silver key](item)
     - I want to use the [silver key](item)
     - unlock the door with the [silver key](item)
+    - use the [bronze key](item)
+    - I want to use the [bronze key](item)
+    - unlock the door with the [bronze key](item)
     - use the [key](item)
     - I want to use the [key](item)
     - unlock the door with the [key](item)
@@ -1222,7 +1225,10 @@ nlu:
 - synonym: silver_key
   examples: |
     - silver key
-    - key
+
+- synonym: bronze_key
+  examples: |
+    - bronze key
 
 - synonym: ale
   examples: |
