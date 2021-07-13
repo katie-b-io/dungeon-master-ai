@@ -233,10 +233,10 @@ class Puzzle(ABC):
                 self.state.get_player().character.items.add_item(self.id, item_data=item_data)
             elif result == "explore":
                 if self.investigate[option]["id"]:
-                    explore_id = self.investigate[option]["explore_id"]
+                    explore_id = self.investigate[option]["id"]
                     puzzle = self.state.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
-                    if self.state.puzzle_trigger_map[self.id]["explore"][explore_id]:
-                        puzzle.explore_success_func(explore_id)
+                    if self.state.puzzle_trigger_map[explore_id]["explore"][option]:
+                        puzzle.explore_success_func(option)
             elif result == "good_ending":
                 self.output_builder.append(self.state.get_dm().get_good_ending())
                 self.state.gameover()
