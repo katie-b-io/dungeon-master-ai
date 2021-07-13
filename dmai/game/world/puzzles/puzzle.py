@@ -159,7 +159,6 @@ class Puzzle(ABC):
         if not self.id in self.state.solved_puzzles:
             for explore in self.state.puzzle_trigger_map[self.id]["explore"]:
                 if self.state.puzzle_trigger_map[self.id]["explore"][explore]:
-                    print(self.explore)
                     if "skill" in self.explore[explore]:
                         self.state.set_expected_intent(["roll"])
                         skill_check = SkillCheck(self.explore[explore]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id)
@@ -221,24 +220,26 @@ class Puzzle(ABC):
     
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
-        
+        if self.investigate[option]["say"]:
+            self.output_builder.append(self.investigate[option]["say"])
         if "result" in self.investigate[option] and self.investigate[option]["result"]:
             result = self.investigate[option]["result"]
             if result == "open_door":
                 room1 = self.id.split("---")[0]
                 room2 = self.id.split("---")[1]
                 self.state.unlock_door(room1, room2)
-            if result == "add_to_inventory":
+            elif result == "add_to_inventory":
                 item_data = self.__dict__
                 self.state.get_player().character.items.add_item(self.id, item_data=item_data)
-            if result == "explore":
+            elif result == "explore":
                 if self.investigate[option]["id"]:
                     explore_id = self.investigate[option]["explore_id"]
                     puzzle = self.state.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
                     if self.state.puzzle_trigger_map[self.id]["explore"][explore_id]:
                         puzzle.explore_success_func(explore_id)
-        if self.investigate[option]["say"]:
-            self.output_builder.append(self.investigate[option]["say"])
+            elif result == "good_ending":
+                self.output_builder.append(self.state.get_dm().get_good_ending())
+                self.state.gameover()
         self.solve()
         
     def get_solution_success_func(self) -> object:

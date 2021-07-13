@@ -449,7 +449,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron with a singular small key hole which leads to the southern corridor.\nThe source of the hushed conversation becomes apparent as you approach this room. Two goblins are having an animated discussion in a language you can’t understand. They have amber skin, flat faces, broad noses, pointed ears, wide mouths and small, sharp fangs. They stand upright with arms that hang down almost to their knees. They are wearing scrappy looking leather armour and each wields a rusting scimitar and a bow. One of them carries a lit torch that illuminates the room.\nAs you approach they jump in surprise and draw their scimitars as they move to attack.",
+                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron with a singular small silver key hole which leads to the southern corridor.\nThe source of the hushed conversation becomes apparent as you approach this room. Two goblins are having an animated discussion in a language you can’t understand. They have amber skin, flat faces, broad noses, pointed ears, wide mouths and small, sharp fangs. They stand upright with arms that hang down almost to their knees. They are wearing scrappy looking leather armour and each wields a rusting scimitar and a bow. One of them carries a lit torch that illuminates the room.\nAs you approach they jump in surprise and draw their scimitars as they move to attack.",
                 "description": "It's a circular room with intricate murals of the silver dragon, Rizoarithra.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."
@@ -482,7 +482,7 @@
                         "unlock": {
                             "description": "unlock door",
                             "item": "bronze_key",
-                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the elaborate door. With a strong push the door swings open."
+                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the elaborate door. With a strong push the door swings open and you see a crypt in front of you."
                         }
                     },
                     "explore": {},
@@ -492,7 +492,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "This 40-feet-long corridor appears to end in a dead-end. A large bearded dwarven face has been engraved on the door to the south. It looks elaborate and incredibly sturdy, there is a single key hole on the left side of the door.",
+                "enter": "This 40-feet-long corridor is bare except for a door to the south. A large bronze warhammer has been engraved on the door. It looks elaborate and incredibly sturdy, there is a single key hole on the left side of the door.",
                 "description": "It's a corridor with an elaborate engraved door at the end.",
                 "no_visibility_description": "The room is too dark to see anything."
             }
@@ -524,7 +524,13 @@
                             "result": "good_ending"
                         }
                     },
-                    "investigate": {}
+                    "investigate": {
+                        "pick_up": {
+                            "description": "pick up dwarven thrower",
+                            "say": "You take a closer look in the sarcophagus. This must be the final resting place of Baradin Stormfury. You take the warhammer, which you later find out is a priceless, very rare weapon called \"Dwarven Thrower\". Corvus rejoices at your return and the discovery of this rare dwarven artifact. You share a celebratory ale, it was a great day!",
+                            "result": "good_ending"
+                        }
+                    }
                 }
             },
             "treasure": [],

@@ -33,11 +33,13 @@ class ItemCollection:
         """Set the self.item_data class variable data"""
         self.item_data = Loader.load_domain("magic_items")
         self.item_data["silver_key"] = {
+            "id": "silver_key",
             "name": "Silver Key",
             "type": "item",
             "description": "A simple silver key"
         }
         self.item_data["bronze_key"] = {
+            "id": "bronze_key",
             "name": "Bronze Key",
             "type": "item",
             "description": "An elaborate bronze key"

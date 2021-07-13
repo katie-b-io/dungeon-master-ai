@@ -307,17 +307,7 @@ nlu:
     - investigate the [picture](scenery)
     - examine the [candles](scenery)
     - look at the [candle](scenery)
-    - investigate the [face](puzzle)
-    - look at the [magic stone face](puzzle)
-    - examine [stone face](puzzle)
-    - admire [large stone face](puzzle)
-    - examine [face](puzzle)
-    - investigate [stone face](puzzle)
-    - look at [magic stone face](puzzle)
-    - admire [dwarven face](puzzle)
-    - examine [dwarven stone face](puzzle)
-    - investigate [large stone face](puzzle)
-    - look at [large face](puzzle)
+    - look at [bronze warhammer](scenery)
     - examine the [sarcophagus](puzzle)
     - look at the [warhammer](puzzle)
     - investigate the [dwarven warrior](puzzle)
@@ -408,7 +398,6 @@ nlu:
     - use the [quarter staff](weapon) on the [giant rat](monster)
     - attack with the [quaterstaff](weapon)
     - swing my [scimitar](weapon) at the [skeleton](monster)
-    - swing the [war hammer](weapon) at the [second](id) [giant rat](monster)
     - I attack the [door](door)
     - I hit the [door](door)
     - I use my [greataxe](weapon) against the [door](door)
@@ -654,8 +643,6 @@ nlu:
     - say to the [giant rat](monster)
     - say to the [skeleton](monster)
     - say to the [zombie]
-    - chat with the [dwarf](puzzle)
-    - talk to the [dwarf](puzzle)
 
 - intent: question_npc
   examples: |
@@ -911,8 +898,10 @@ nlu:
     - take [magic missile wand](item)
     - have [magic wand](item)
     - gain [wand of missiles](item)
-    - raise up [dwarven thrower](item)
-    - get [thrower](item)
+    - raise up [dwarven thrower](puzzle)
+    - pick up [thrower](puzzle)
+    - take the [warhammer](puzzle)
+    - get [war hammer](puzzle)
 
 - synonym: stout_meal_inn
   examples: |
@@ -1258,21 +1247,15 @@ nlu:
     - picture
     - painted mural
 
-- synonym: southern_corridor---baradins_crypt
+- synonym: bronze_warhammer
   examples: |
-    - face
-    - stone face
-    - magic stone face
-    - dwarven face
-    - dwarven stone face
-    - large stone face
-    - large face
-    - dwarf
+    - bronze warhammer
 
 - synonym: dwarven_thrower
   examples: |
     - dwarven thrower
     - dwarven warrior
+    - thrower
     - warhammer
     - war hammer
     - sarcophagus

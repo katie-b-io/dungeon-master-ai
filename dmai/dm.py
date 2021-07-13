@@ -653,6 +653,12 @@ class DM:
             item = self._get_item(nlu_entities)[1]
 
         if not item:
+            # check if item is puzzle item
+            (item_type, item) = self._get_target()
+            if item and item_type == "puzzle":
+                # trigger explore
+                picked_up = self.actions.investigate(item, target_type=item_type)
+        if not item:
             picked_up = False
             self.output_builder.append(NLG.no_item())
         else:

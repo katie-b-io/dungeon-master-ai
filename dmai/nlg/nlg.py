@@ -282,13 +282,13 @@ class NLG(metaclass=NLGMeta):
             utters = [
                 "Can you confirm the equipment you want to stop using",
                 "Sorry, what do you want to stop using?",
-                "I'm not sure where you want to stop using, can you repeat the equipment",
+                "I'm not sure what you want to stop using, can you repeat the equipment",
             ]
         else:
             utters = [
                 "Can you confirm the equipment you want to use",
                 "Sorry, what do you want to use?",
-                "I'm not sure where you want to use, can you repeat the equipment",
+                "I'm not sure what you want to use, can you repeat the equipment",
             ]
         return random.choice(utters)
 
@@ -299,13 +299,13 @@ class NLG(metaclass=NLGMeta):
             utters = [
                 "Can you confirm the weapon you want to unequip",
                 "Sorry, what do you want to unequip?",
-                "I'm not sure where you want to unequip, can you repeat the weapon",
+                "I'm not sure what you want to unequip, can you repeat the weapon",
             ]
         else:
             utters = [
                 "Can you confirm the weapon you want to equip",
                 "Sorry, what do you want to equip?",
-                "I'm not sure where you want to equip, can you repeat the weapon",
+                "I'm not sure what you want to equip, can you repeat the weapon",
             ]
         return random.choice(utters)
 
@@ -315,7 +315,7 @@ class NLG(metaclass=NLGMeta):
         utters = [
             "Can you confirm the item you want to pick up",
             "Sorry, what do you want to pick up?",
-            "I'm not sure where you want to pick up, can you repeat the item",
+            "I'm not sure what you want to pick up, can you repeat the item",
         ]
         return random.choice(utters)
     
