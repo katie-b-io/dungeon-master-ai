@@ -321,7 +321,7 @@ class Actions:
         investigate = Investigate(target, self.state, self.output_builder, target_type=target_type)
         return investigate.execute()
 
-    def roll(self, roll_type: str, nlu_entities: dict, die: str = "d20") -> bool:
+    def roll(self, roll_type: str, nlu_entities: dict = {}, die: str = "d20") -> bool:
         """Attempt to roll a specified type.
         Returns a bool to indicate whether the action was successful"""
         roll = Roll(roll_type, die, nlu_entities, self.state, self.output_builder)
