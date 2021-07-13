@@ -4,6 +4,7 @@ from dmai.utils.loader import Loader
 from dmai.utils.exceptions import UnrecognisedItem
 from dmai.domain.items.potion_of_healing import PotionOfHealing
 from dmai.domain.items.silver_key import SilverKey
+from dmai.domain.items.bronze_key import BronzeKey
 from dmai.domain.items.item import Item
 from dmai.utils.text import Text
 
@@ -36,13 +37,19 @@ class ItemCollection:
             "type": "item",
             "description": "A simple silver key"
         }
+        self.item_data["bronze_key"] = {
+            "name": "Bronze Key",
+            "type": "item",
+            "description": "An elaborate bronze key"
+        }
         
     def _item_factory(self, item: str) -> Item:
         """Construct an item of specified type"""
         if item in self.item_data.keys():
             item_map = {
                 "potion_of_healing": PotionOfHealing,
-                "silver_key": SilverKey
+                "silver_key": SilverKey,
+                "bronze_key": BronzeKey
             }
             if item in item_map:
                 item_obj = item_map[item]
