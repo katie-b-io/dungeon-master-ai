@@ -156,6 +156,11 @@ class DM:
                 "name": "bot_challenge",
                 "desc": "bot_challenge",
                 "func": self.bot_challenge
+            },
+            "stealth": {
+                "name": "stealth",
+                "desc": "stealth",
+                "func": self.stealth
             }
         }
 
@@ -952,4 +957,10 @@ class DM:
     def bot_challenge(self, **kwargs) -> bool:
         """Describe self to player."""
         self.output_builder.append("I'm an AI made by Katie Baker, I'm designed to play RPGs with you!")
+        return True
+
+    def stealth(self, **kwargs) -> bool:
+        """Describe self to player."""
+        self.output_builder.append("Unfortunately, stealth doesn't do anything in this game.")
+        self.state.nag_player()
         return True
