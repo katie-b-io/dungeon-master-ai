@@ -944,9 +944,11 @@ class DM:
         (npc_type, npc) = self._get_npc()
         if npc and self.state.get_entity(npc).gives_quest:
             self.output_builder.append(self.state.get_entity(npc).dialogue["no_negotiation"])
-            self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
+            if not self.state.questing:
+                self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
         else:
-            self.output_builder.append("There's nobody to negotiate with here")
+            self.output_builder.append("There's nobody to negotiate with here.")
+            self.state.nag_player()
         return True
     
     def rescue(self, **kwargs) -> bool:
@@ -957,6 +959,7 @@ class DM:
             self.output_builder.append(self.state.get_entity(npc).dialogue["rescue"])
         else:
             self.output_builder.append("There's nobody to rescue here")
+            self.state.nag_player()
         return True
     
     def bot_challenge(self, **kwargs) -> bool:
