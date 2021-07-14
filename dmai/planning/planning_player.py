@@ -315,7 +315,7 @@ class PlanningPlayer(PlanningAgent):
             # Player
             objects.append(["player", "player"])
             for intent in self.state.get_dm().player_intent_map.keys():
-                objects.append([intent, "intent"])
+                objects.append(["{i}_intent".format(i=intent), "intent"])
             for item in self.state.get_player().get_all_item_ids():
                 objects.append([item, "item"])
 
@@ -366,7 +366,7 @@ class PlanningPlayer(PlanningAgent):
                 for puzzle in room.puzzles.get_all_puzzles():
                     if not puzzle.type == "door":
                         if not self.state.get_player().character.items.has_item(puzzle.id)[0]:
-                            objects.append([puzzle.id, "puzzle"])
+                            objects.append(["{p}_puzzle".format(p=puzzle.id), "puzzle"])
 
             # Construct the string
             writer.write(self._construct_objects(objects))

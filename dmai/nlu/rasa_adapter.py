@@ -12,6 +12,7 @@ class RasaAdapterMeta(type):
     def __new__(cls, name, bases, dict):
         instance = super().__new__(cls, name, bases, dict)
         instance.endpoint = ""
+        instance.INTENT_CONFIDENCE = 0.5
         return instance
 
     def __call__(cls, *args, **kwargs) -> None:
@@ -35,7 +36,6 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
             h=Config.hosts.rasa_host,
             p=Config.hosts.rasa_port
         )
-        logger.debug("Rasa endpoint: {i}".format(i=cls.endpoint))
 
     @classmethod
     def get_intent(cls, player_utter: str) -> tuple:
@@ -43,8 +43,12 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
         Returns a tuple with the (intent, entities)."""
         try:
             response = cls._parse_message(player_utter)
-            intent = response["intent"]["name"]
-            entities = cls._prepare_entities(response["entities"])
+            if response["intent"]["confidence"] > cls.INTENT_CONFIDENCE:
+                intent = response["intent"]["name"]
+                entities = cls._prepare_entities(response["entities"])
+            else:
+                intent = "no_intent"
+                entities = []
             return (intent, entities)
         except ValueError as e:
             logger.error(e)

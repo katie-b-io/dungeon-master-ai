@@ -23,6 +23,21 @@ class NLG(metaclass=NLGMeta):
         """NLG static class"""
         pass
 
+    @classmethod
+    def no_intent(cls, next_move: str = None) -> str:
+        """Return the utterance for no intent detected"""
+        utters = [
+            "Umm... Sorry I don't know how to respond!!",
+            "Ehh, could you try something else?",
+            "Yeh, sorry, I don't understand what you want to do.",
+            "Well this is awkward, I don't understand what you're saying."
+        ]
+        
+        utter = random.choice(utters)
+        if next_move:
+            utter += " Maybe you could {m}?".format(m=next_move)
+        return utter
+        
     ############################################################
     # Player interaction utterances
     @classmethod
@@ -531,15 +546,78 @@ class NLG(metaclass=NLGMeta):
         ]
         return random.choice(utters)
 
+    @classmethod
+    def attack_with_non_weapon(cls, target: str, equipment: str = None, item: str = None, scenery: str = None) -> str:
+        if equipment:
+            thing = equipment
+        elif item:
+            thing = item
+        elif scenery:
+            thing = scenery
+        else:
+            return ""
+
+        a = "A"
+        if thing.lower().startswith(("a", "e", "i", "o", "u")):
+            a = "An"
+        if thing:
+            utters = [
+                "Well, it's unconventional, but you attack {t} with {a} {i}!".format(a=a.lower(), t=target, i=thing),
+                "{a} {i}? Hmm, okay! It triggers a fight.".format(a=a, i=thing),
+                "Haha, sure, you attack {t} with {a} {i}!".format(t=target, a=a.lower(), i=thing),
+            ]
+        return random.choice(utters)
+
     ############################################################
     # Roleplay utterances
     @classmethod
-    def roleplay(cls, name: str, target: str) -> str:
-        """Return the utterance for getting roleplay prompt"""
-        utters = [
-            "{n}, what do you say to {t}?".format(n=name, t=target)
-        ]
-        return random.choice(utters)
+    def roleplay(cls, verb: str = None, target: str = None, player_utter: str = None, failure: bool = False) -> str:
+        """Return the utterance for successful roleplay"""
+        if verb and target and player_utter and not failure:
+            return "You {p}. What do you want to do now?".format(p=player_utter)
+        if verb and target and player_utter and failure:
+            return "You try to {p}, but you can't because I'm not seeing {t}. What do you want to do now?".format(p=player_utter, v=verb, t=target)
+        if verb:
+            return "You {v}. What do you want to do now?".format(v=verb)
+        else:
+            return "What do you want to do now?"
+
+    @classmethod
+    def cannot_roleplay(cls, verb: str, target: str, reason: str = None, next_move: str = None) -> str:
+        """Return the utterance for not being able to roleplay"""
+        utter = ""
+        if not reason:
+            utter = "You cannot {v}.".format(v=verb)
+        elif reason == "unknown":
+            utter = "You cannot {v}".format(v=verb)
+        elif reason == "unknown target":
+            utter = "You cannot {v} unknown target {t}".format(v=verb, t=target)
+        elif reason == "unknown entity":
+            utter = "You cannot {v} unknown target {t}".format(v=verb, t=target)
+        elif reason == "different location":
+            utter = "You cannot {v} {t}, they're in a different room.".format(v=verb, t=target)
+        elif reason == "no visibility":
+            utter = "You cannot {v} {t} because it's too dark to see anything!".format(v=verb, t=target)
+
+        if next_move:
+            utter += " Maybe you could {m}?".format(m=next_move)
+        return utter
+
+    @classmethod
+    def no_roleplay(cls, target: str, next_move: str = None) -> str:
+        """Return the utterance for not understanding roleplay"""
+        if target:
+            utters = [
+                "I can't understand what you want to do with {t}.".format(t=target)
+            ]
+        else:
+            utters = [
+                "I can't understand what you want to do."
+            ]
+        utter = random.choice(utters)
+        if next_move:
+            utter += " Maybe you could {m}?".format(m=next_move)
+        return utter
 
     @classmethod
     def drink_ale(cls, ales: int) -> str:
@@ -550,6 +628,7 @@ class NLG(metaclass=NLGMeta):
             "The barkeep presents you with a cloudy pale ale. You take an experimental sip and you're in ale heaven! You down the whole glass."
         ]
         return utters[ales]
+
 
     ############################################################
     # Query utterances

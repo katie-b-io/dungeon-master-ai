@@ -132,6 +132,11 @@ class NLU():
                 intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
                 self.output_builder.append("I was expecting you to {i}".format(i=intent_str))
                 return (None, {"nlu_entities": entities})
+        
+        # check if there's a suggested next move
+        elif self.state.suggested_next_move["state"]:
+            if intent != "affirm":
+                self.state.clear_suggested_next_move()
 
         # check if in combat before allowing any player utterance
         if self.state.in_combat:
@@ -140,6 +145,8 @@ class NLU():
             else:
                 return ("roll", {"nlu_entities": entities})
         
+        if intent == "no_intent":
+            return ("no_intent", {})
         if intent == "move":
             return ("move", {"nlu_entities": entities})
         if intent == "attack" or intent == "ranged_attack":
@@ -157,6 +164,8 @@ class NLU():
         if intent == "converse":
             return ("converse", {"nlu_entities": entities})
         if intent == "greet":
+            return ("converse", {"nlu_entities": entities})
+        if intent == "question_npc":
             return ("converse", {"nlu_entities": entities})
         if intent == "affirm":
             return ("affirm", {})
@@ -180,6 +189,18 @@ class NLU():
             return ("skill_check", {"nlu_entities": entities})
         if intent == "ale":
             return ("ale", {"nlu_entities": entities})
+        if intent == "roleplay":
+            return ("roleplay", {"nlu_entities": entities})
+        if intent == "negotiate":
+            return ("negotiate", {"nlu_entities": entities})
+        if intent == "rescue":
+            return ("rescue", {"nlu_entities": entities})
+        if intent == "bot_challenge":
+            return ("bot_challenge", {})
+        if intent == "stealth":
+            return ("stealth", {"nlu_entities": entities})
+        if intent == "pick_lock":
+            return ("pick_lock", {"nlu_entities": entities})
         else:
             # check for stored intent in self.state
             if self.state.stored_intent:

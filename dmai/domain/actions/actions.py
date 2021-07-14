@@ -10,6 +10,7 @@ from dmai.domain.actions.attack_door import AttackDoor
 from dmai.domain.actions.ability_check import AbilityCheck
 from dmai.domain.actions.roll import Roll
 from dmai.domain.actions.pick_up import PickUp
+from dmai.domain.actions.roleplay import Roleplay
 import dmai
 
 
@@ -281,6 +282,8 @@ class Actions:
                     self.state.received_quest()
                     self.output_builder.append(
                        npc.dialogue["gives_quest"])
+                elif npc.gives_quest and self.state.quest_received and not self.state.questing:
+                    self.output_builder.append(npc.dialogue["quest_prompt"])
                 else:
                     fallback = True
                     # check triggers
@@ -345,3 +348,9 @@ class Actions:
         Returns a bool to indicate whether the action was successful"""
         check = AbilityCheck(ability, entity, target, target_type, self.state, self.output_builder)
         return check.execute()
+
+    def roleplay(self, verb: str, target: str, player_utter:str, target_type: str = "") -> bool:
+        """Attempt to perform roleplay.
+        Returns a bool to indicate whether the action was successful"""
+        roleplay = Roleplay(verb, target, target_type, player_utter, self.state, self.output_builder)
+        return roleplay.execute()

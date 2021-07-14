@@ -30,7 +30,9 @@
             "will_attack_player": false,
             "dialogue": {
                 "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a little silver in it for you of course! What do you say, do you accept the quest?\"",
+                "quest_prompt": "Corvus says: \"Do you accept the quest?\"",
                 "payment": "He says: \"10 silver pieces per rat.\"",
+                "no_negotiation": "Corvus is your old friend and doing you a favour by offering you this job, he says: \"10 silver pieces per rat, seeing as we're old friends.\"",
                 "good_negotiation": "He lets out a gentle chuckle and says: \"Well go on then, seeing as we're old friends, 20 silver pieces per rat!\"",
                 "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 10 silver pieces per rat is more than fair.\"\"",
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
@@ -75,7 +77,8 @@
             "will_attack_player": false,
             "dialogue": {
                 "fallback": "Anvil-Jumper regards you indifferently, licks a paw and flicks his tail.",
-                "attacked_by_player": "You attacked and fatally wounded Anvil-Jumper. He was a much loved pet and companion to Corvus, who was very shook up by the unprovoked attack. Corvus still refuses to speak to you to this day."
+                "attacked_by_player": "You attacked and fatally wounded Anvil-Jumper. He was a much loved pet and companion to Corvus, who was very shook up by the unprovoked attack. Corvus still refuses to speak to you to this day.",
+                "rescue": "Anvil-Jumper can only be rescued once you sort those rats out."
             },
             "triggers": {
                 "move": {

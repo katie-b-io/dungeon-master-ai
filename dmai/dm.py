@@ -4,6 +4,7 @@ from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.domain.actions.actions import Actions
 from dmai.nlg.nlg import NLG
+from dmai.nlu.nlu import NLU
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
@@ -16,8 +17,9 @@ class DM:
     # class variables
     ENTITY_CONFIDENCE = 0.5
 
-    def __init__(self, adventure: str, state: State, output_builder: OutputBuilder) -> None:
+    def __init__(self, adventure: str, nlu: NLU, state: State, output_builder: OutputBuilder) -> None:
         """Main DM class"""
+        self.nlu = nlu
         self._dm_utter = None
         self._player_utter = None
         self.triggers = []
@@ -35,6 +37,11 @@ class DM:
 
         # Initialise the player intent map
         self.player_intent_map = {
+            "no_intent": {
+                "name": "no intent",
+                "desc": "couldn't determine intent",
+                "func": self.no_intent
+            },
             "hint": {
                 "name": "hint",
                 "desc": "ask for a hint",
@@ -129,6 +136,36 @@ class DM:
                 "name": "ale",
                 "desc": "drink ale",
                 "func": self.ale
+            },
+            "roleplay": {
+                "name": "roleplay",
+                "desc": "roleplay",
+                "func": self.roleplay
+            },
+            "negotiate": {
+                "name": "negotiate",
+                "desc": "negotiate",
+                "func": self.negotiate
+            },
+            "rescue": {
+                "name": "rescue",
+                "desc": "rescue",
+                "func": self.rescue
+            },
+            "bot_challenge": {
+                "name": "bot_challenge",
+                "desc": "challenge the AI",
+                "func": self.bot_challenge
+            },
+            "stealth": {
+                "name": "stealth",
+                "desc": "stealth",
+                "func": self.stealth
+            },
+            "pick_lock": {
+                "name": "pick_lock",
+                "desc": "pick a lock",
+                "func": self.pick_lock
             }
         }
 
@@ -212,12 +249,6 @@ class DM:
     def get_bad_ending(self) -> str:
         return self.adventure.text["conclusion"]["bad_ending"]
 
-    def hint(self, **kwargs) -> bool:
-        """Use the player AI to get the next possible move.
-        Appends the hint to output with the self.output_builder.
-        """
-        return self.state.get_player().print_next_move()
-
     def _get_destination(self, nlu_entities: dict) -> str:
         """Extract a destination from NLU entities dictionary.
         Returns a string with destination"""
@@ -231,6 +262,23 @@ class DM:
             (target_type, target) = self._get_target(nlu_entities)
             if target and (target_type == "npc" or target_type == "monster"):
                 return ("location", self.state.get_current_room_id(target))
+        return (None, None)
+
+    def _get_noun(self, nlu_entities: dict) -> tuple:
+        """Extract any entity from NLU entities dictionary"""
+        for func in [
+                self._get_target,
+                self._get_equipment,
+                self._get_weapon,
+                self._get_item,
+                self._get_drink
+            ]:
+            if func == self._get_target:
+                (target_type, target) = func(nlu_entities, monster_status=None)
+            else:
+                (target_type, target) = func(nlu_entities)
+            if target:
+                return (target_type, target)
         return (None, None)
 
     def _get_target(self, nlu_entities: dict, monster_status: str = "alive") -> tuple:
@@ -317,6 +365,47 @@ class DM:
 
         return (None, None)
 
+    def _get_entity(self, nlu_entities: dict, monster_status: str = "alive") -> tuple:
+        """Extract a entity from NLU entities dictionary.
+        Returns tuple with the type of entity and a string with entity ID"""
+        monster = None
+        i = None
+        npc = None
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "monster"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                monster = entity["value"]
+            if (
+                entity["entity"] == "id"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                i = entity["value"]
+            if (
+                entity["entity"] == "npc"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                npc = entity["value"]
+
+        # monsters are indexed by a unique id, determine it if possible
+        if monster:
+            if i:
+                # player appeared to specify particular individual, get it's id
+                monster_id = "{m}_{i}".format(m=monster, i=i)
+            else:
+                # player hasn't appeared to specify particular individual, pick first alive one
+                monster_id = self.npcs.get_monster_id(
+                    monster, status=monster_status, location=self.state.get_current_room_id()
+                )
+            return ("monster", monster_id)
+
+        # NPCs have unique ids
+        if npc:
+            return ("npc", npc)
+
+        return (None, None)
+
     def _get_npc(self) -> str:
         """Get an NPC.
         Returns a string with NPC ID"""
@@ -368,7 +457,44 @@ class DM:
             ):
                 return ("item", entity["value"])
         return (None, None)
+
+    def _get_scenery(self, nlu_entities: dict) -> str:
+        """Extract scenery from NLU entities dictionary.
+        Returns a string with scenery"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "scenery"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return ("scenery", entity["value"])
+        return (None, None)
+
+    def _get_door(self, nlu_entities: dict) -> str:
+        """Extract door from NLU entities dictionary.
+        Returns a string with door"""
+        door = False
+        location = None
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "door"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                door = True
+            if (
+                entity["entity"] == "location"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                location = entity["value"]
             
+        # return the door and location
+        if door:
+            if location:
+                return ("door", location)
+            else:
+                return ("door", "door")
+
+        return (None, None)
+
     def _get_drink(self, nlu_entities: dict) -> str:
         """Extract a drink from NLU entities dictionary.
         Returns a string with item"""
@@ -379,6 +505,31 @@ class DM:
             ):
                 return ("drink", entity["value"])
         return (None, None)
+
+    def _get_verb(self, nlu_entities: dict) -> str:
+        """Extract a verb from NLU entities dictionary.
+        Returns a string with item"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "verb"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return ("verb", entity["value"])
+        return (None, None)
+
+    def no_intent(self, **kwargs) -> bool:
+        """Can't determine the player intent.
+        Appends the hint to output with the self.output_builder.
+        """
+        self.output_builder.append(NLG.no_intent())
+        self.state.nag_player()
+        return True
+
+    def hint(self, **kwargs) -> bool:
+        """Use the player AI to get the next possible move.
+        Appends the hint to output with the self.output_builder.
+        """
+        return self.state.get_player().print_next_move()
 
     def move(
         self, destination: str = None, entity: str = None, nlu_entities: dict = None
@@ -411,8 +562,18 @@ class DM:
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
-            (target_type, target) = self._get_target(nlu_entities)
+            (target_type, target) = self._get_entity(nlu_entities)
+            if not target:
+                (target_type, target) = self._get_door(nlu_entities)
+            if not target:
+                (target_type, target) = self._get_target(nlu_entities)
+            (equipment_type, equipment) = self._get_equipment(nlu_entities)
+            (item_type, item) = self._get_item(nlu_entities)
+            (scenery_type, scenery) = self._get_scenery(nlu_entities)
         else:
+            equipment = None
+            item = None
+            scenery = None
             target_type = None
         
         # check if there's only one possible target
@@ -450,6 +611,10 @@ class DM:
                 logger.info("{a} is attacking door {t}!".format(a=attacker, t=target))
                 attacked = self.actions.attack_door(attacker, target)
             else:
+                # check if the player tried to use equipment, item or scenery to attack target
+                if equipment or item or scenery:
+                    if target_type == "monster":
+                        self.output_builder.append(NLG.attack_with_non_weapon(self.state.get_entity_name(target), equipment=equipment, item=item, scenery=scenery))
                 logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
                 attacked = self.actions.attack(attacker, target, target_type=target_type)
         return attacked
@@ -525,7 +690,7 @@ class DM:
         return unequipped
 
     def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
-        """Attempt an attack by attacker against target determined by NLU or specified.
+        """Attempt to converse with a target determined by NLU or specified.
         Returns whether the action was successful."""
         if not target and nlu_entities:
             (target_type, target) = self._get_target(nlu_entities)
@@ -550,6 +715,11 @@ class DM:
         """Player has uttered an affirmation.
         Appends the text to output with the self.output_builder.
         """
+        if self.state.suggested_next_move["state"]:
+            # TODO NLU of suggested next move
+            utter = self.state.suggested_next_move["utter"]
+            (intent, params) = self.nlu.process_player_utterance(utter)
+            return self.input(utter, intent=intent, kwargs=params)
         if self.state.roleplaying and self.state.received_quest and not self.state.questing:
             npc = self.npcs.get_entity(self.state.current_conversation)
             self.output_builder.append(npc.dialogue["accepts_quest"])
@@ -572,20 +742,8 @@ class DM:
         """Attempt to explore/investigate.
         Returns whether the action was successful."""
         if not target and nlu_entities:
-            for func in [
-                    self._get_target,
-                    self._get_equipment,
-                    self._get_weapon,
-                    self._get_item,
-                    self._get_drink
-                ]:
-                if func == self._get_target:
-                    (target_type, target) = func(nlu_entities, monster_status=None)
-                else:
-                    (target_type, target) = func(nlu_entities)
-                if target:
-                    break
-        # TODO if not target, get the nouns as targets
+            (target_type, target) = self._get_noun(nlu_entities)
+        # TODO if not target, get any noun (not just those in NLU entitities) as targets
         
         # check if there's only one possible door target - if so, use it
         if target_type == "door" and target == "door":
@@ -726,15 +884,21 @@ class DM:
         """Player wants to attempt to perform a ability check.
         Appends the text to output with the self.output_builder.
         """
-        self.output_builder.append("You can do an ability check when I ask you to.")
-        return True
+        if self.state.stored_ability_check or "ability_check" in self.state.stored_intent:
+            return self.roll(**kwargs)
+        else:
+            self.output_builder.append("You can do an ability check when I ask you to.")
+            return True
         
     def skill_check(self, **kwargs) -> bool:
         """Player wants to attempt to perform a skill check.
         Appends the text to output with the self.output_builder.
         """
-        self.output_builder.append("You can do a skill check when I ask you to.")
-        return True
+        if self.state.stored_skill_check or "skill_check" in self.state.stored_intent:
+            return self.roll(**kwargs)
+        else:
+            self.output_builder.append("You can do a skill check when I ask you to.")
+            return True
 
     def ale(self, nlu_entities: dict = {}) -> bool:
         """Player wants to attempt to drink some ale.
@@ -754,3 +918,62 @@ class DM:
             self.state.drink_ale()
         else:
             self.output_builder.append("You wish you could get an ale here!")
+            
+    def roleplay(self, nlu_entities: dict = None) -> bool:
+        """Attempt to roleplay.
+        Returns whether the action was successful."""
+        verb = None
+        target = None
+        target_type = None
+        if nlu_entities:
+            (verb_type, verb) = self._get_verb(nlu_entities)
+            (target_type, target) = self._get_noun(nlu_entities)
+
+        if not verb:
+            roleplay = False
+            self.output_builder.append(NLG.no_roleplay(target))
+            self.state.nag_player()
+        else:
+            logger.info("(SESSION: {s}) Player is roleplaying \"{v}\" with {t}".format(s=self.state.session.session_id, v=verb, t=str(target)))
+            roleplay = self.actions.roleplay(verb, target, self._player_utter, target_type)
+        return roleplay
+    
+    def negotiate(self, **kwargs) -> bool:
+        """Attempt to negotiate.
+        Returns whether the action was successful."""
+        (npc_type, npc) = self._get_npc()
+        if npc and self.state.get_entity(npc).gives_quest:
+            self.output_builder.append(self.state.get_entity(npc).dialogue["no_negotiation"])
+            self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
+        else:
+            self.output_builder.append("There's nobody to negotiate with here")
+        return True
+    
+    def rescue(self, **kwargs) -> bool:
+        """Attempt to rescue.
+        Returns whether the action was successful."""
+        (npc_type, npc) = self._get_npc()
+        if "rescue" in self.state.get_entity(npc).dialogue:
+            self.output_builder.append(self.state.get_entity(npc).dialogue["rescue"])
+        else:
+            self.output_builder.append("There's nobody to rescue here")
+        return True
+    
+    def bot_challenge(self, **kwargs) -> bool:
+        """Describe self to player."""
+        self.output_builder.append("I'm an AI made by Katie Baker, I'm designed to play RPGs with you!")
+        return True
+
+    def stealth(self, **kwargs) -> bool:
+        """Describe self to player."""
+        self.output_builder.append("Unfortunately, being stealthy doesn't do anything in this game... except to make you look cool and mysterious.")
+        self.state.nag_player()
+        return True
+
+    def pick_lock(self, **kwargs) -> bool:
+        """Describe self to player."""
+        item_collection = self.state.get_player().character.items
+        if not item_collection.has_item("thieves_tools")[0]:
+            self.output_builder.append("Unfortunately, you don't have the required tools in order to pick locks.")
+            self.state.nag_player()
+        return True

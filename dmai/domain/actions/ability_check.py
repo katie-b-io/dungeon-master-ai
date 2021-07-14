@@ -87,7 +87,7 @@ class AbilityCheck(Action):
                 self.output_builder.append(
                     NLG.ability_check(Abilities.get_name(self.ability), dm_request=self.dm_request)
                 )
-                self.state.set_expected_intent(["roll"])
+                self.state.set_expected_intent(["roll", "ability_check"])
                 current = self.state.get_current_room()
                 if self.state.current_intent == "explore":
                     if self.investigate:

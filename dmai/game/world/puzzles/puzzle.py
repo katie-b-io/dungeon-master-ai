@@ -160,7 +160,7 @@ class Puzzle(ABC):
             for explore in self.state.puzzle_trigger_map[self.id]["explore"]:
                 if self.state.puzzle_trigger_map[self.id]["explore"][explore]:
                     if "skill" in self.explore[explore]:
-                        self.state.set_expected_intent(["roll"])
+                        self.state.set_expected_intent(["roll", "skill_check"])
                         skill_check = SkillCheck(self.explore[explore]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id)
                         skill_check.execute()
                     else:
@@ -174,7 +174,7 @@ class Puzzle(ABC):
             for investigate in self.state.puzzle_trigger_map[self.id]["investigate"]:
                 if self.state.puzzle_trigger_map[self.id]["investigate"][investigate]:
                     if "skill" in self.investigate[investigate]:
-                        self.state.set_expected_intent(["roll"])
+                        self.state.set_expected_intent(["roll", "skill_check"])
                         skill_check = SkillCheck(self.investigate[investigate]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id, investigate=True)
                         skill_check.execute()
                     else:

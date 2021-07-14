@@ -55,6 +55,7 @@ class State():
         self.output_builder = output_builder
         self.dm = None
         self.player = None
+        self.turns = 0
         self.game_ended = False
         self.intro_read = False
         self.char_class = None
@@ -91,6 +92,7 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        self.suggested_next_move = {"utter": "", "state": False}
         # npc triggers
         self.npc_trigger_map = {}
         # room connection map
@@ -136,7 +138,14 @@ class State():
         """Method to load the game state"""
         for key in saved_state:
             self.__setattr__(key, saved_state[key])
-        
+    
+    def nag_player(self) -> None:
+        """Method to prompt player to make a sensible action"""
+        next_move = self.get_player().agent.get_next_move()
+        if next_move:
+            self.suggested_next_move = {"utter": next_move, "state": True}
+            self.output_builder.append("Maybe you could {n}".format(n=next_move))
+
     def combat(self, attacker: str, target: str) -> None:
         if not self.in_combat:
             self.reset_combat_status()
@@ -430,9 +439,9 @@ class State():
             raise UnrecognisedEntityError(msg)
     
     
-    def set_expected_intent(self, intent: str) -> None:
+    def set_expected_intent(self, intents: list) -> None:
         """Method to set the expected intent"""
-        self.expected_intent = intent
+        self.expected_intent = intents
 
     
     def clear_expected_intent(self) -> None:
@@ -529,6 +538,9 @@ class State():
                 if not self.get_current_room_id(
                         entity) == self.get_current_room_id(target):
                     self.clear_target(entity)
+    
+    def clear_suggested_next_move(self) -> None:
+        self.suggested_next_move = {"utter": "", "state": False}
 
     ############################################################
     # METHODS RELATING TO COMBAT
@@ -724,7 +736,16 @@ class State():
         # TODO implement advantage/disadvantage
         attacker = self.get_entity(attacker)
         target = self.get_entity(target)
-        if attacker.attack_roll(weapon) >= target.armor_class:
+        attack_roll = attacker.attack_roll(weapon)
+
+        # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
+        if target == self.player:
+            if self.get_current_hp() <= 0.5*self.player.hp_max:
+                roll = attacker.attack_roll(weapon)
+                if roll < attack_roll:
+                    attack_roll = roll
+
+        if attack_roll >= target.armor_class:
             self.output_builder.append("{a} hits!".format(a=attacker.unique_name))
         else:
             self.output_builder.append("{a} misses!".format(a=attacker.unique_name))
