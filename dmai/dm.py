@@ -141,6 +141,11 @@ class DM:
                 "name": "roleplay",
                 "desc": "roleplay",
                 "func": self.roleplay
+            },
+            "negotiate": {
+                "name": "negotiate",
+                "desc": "negotiate",
+                "func": self.negotiate
             }
         }
 
@@ -912,3 +917,14 @@ class DM:
             logger.info("(SESSION: {s}) Player is roleplaying \"{v}\" with {t}".format(s=self.state.session.session_id, v=verb, t=str(target)))
             roleplay = self.actions.roleplay(verb, target, self._player_utter, target_type)
         return roleplay
+    
+    def negotiate(self, **kwargs) -> bool:
+        """Attempt to negotiate.
+        Returns whether the action was successful."""
+        (npc_type, npc) = self._get_npc()
+        if npc and self.state.get_entity(npc).gives_quest:
+            self.output_builder.append(self.state.get_entity(npc).dialogue["no_negotiation"])
+            self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
+        else:
+            self.output_builder.append("There's nobody to negotiate with here")
+        return True

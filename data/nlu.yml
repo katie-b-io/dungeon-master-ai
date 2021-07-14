@@ -350,6 +350,8 @@ nlu:
     - how much will you give me?
     - how much does it pay?
     - what's it worth to me?
+    - what's in it for me?
+    - let's talk about payment
     - i want more [money](money)
     - i want the [money](money) now
     - i want half the [money](money) now

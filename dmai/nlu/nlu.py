@@ -165,6 +165,8 @@ class NLU():
             return ("converse", {"nlu_entities": entities})
         if intent == "greet":
             return ("converse", {"nlu_entities": entities})
+        if intent == "question_npc":
+            return ("converse", {"nlu_entities": entities})
         if intent == "affirm":
             return ("affirm", {})
         if intent == "deny":
@@ -189,6 +191,8 @@ class NLU():
             return ("ale", {"nlu_entities": entities})
         if intent == "roleplay":
             return ("roleplay", {"nlu_entities": entities})
+        if intent == "negotiate":
+            return ("negotiate", {"nlu_entities": entities})
         else:
             # check for stored intent in self.state
             if self.state.stored_intent:

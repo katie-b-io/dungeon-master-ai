@@ -283,7 +283,7 @@ class Actions:
                     self.output_builder.append(
                        npc.dialogue["gives_quest"])
                 elif npc.gives_quest and self.state.quest_received and not self.state.questing:
-                    self.output_builder.append("I said, do you accept the quest?")
+                    self.output_builder.append(npc.dialogue["quest_prompt"])
                 else:
                     fallback = True
                     # check triggers
