@@ -80,7 +80,7 @@ class Investigate(Action):
                 if next_move:
                     self.state.suggested_next_move = {"utter": next_move, "state": True}
                     self.output_builder.append(
-                        "I don't think I mentioned anything about {t}. Maybe you could {m}".format(
+                        "I don't think I mentioned anything about {t}. Maybe you could {m}?".format(
                             t=self.target, m=next_move
                         )
                     )

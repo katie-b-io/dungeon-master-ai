@@ -23,6 +23,20 @@ class NLG(metaclass=NLGMeta):
         """NLG static class"""
         pass
 
+    @classmethod
+    def no_intent(cls, next_move: str) -> str:
+        """Return the utterance for no intent detected"""
+        utters = [
+            "Umm... Sorry I don't know how to respond!!",
+            "Ehh, could you try something else?",
+            "Yeh, sorry, I don't understand what you want to do."
+        ]
+        
+        utter = random.choice(utters)
+        if next_move:
+            utter += " Maybe you could {m}?".format(m=next_move)
+        return utter
+        
     ############################################################
     # Player interaction utterances
     @classmethod
@@ -539,7 +553,7 @@ class NLG(metaclass=NLGMeta):
         if verb and target and player_utter and not failure:
             return "You {p}. What do you want to do now?".format(p=player_utter)
         if verb and target and player_utter and failure:
-            return "You try to {p}, but you can't {v} the {t}. What do you want to do now?".format(p=player_utter, v=verb, t=target)
+            return "You try to {p}, but you can't because I'm not seeing {t}. What do you want to do now?".format(p=player_utter, v=verb, t=target)
         if verb:
             return "You {v}. What do you want to do now?".format(v=verb)
         else:
@@ -563,7 +577,7 @@ class NLG(metaclass=NLGMeta):
             utter = "You cannot {v} {t} because it's too dark to see anything!".format(v=verb, t=target)
 
         if next_move:
-            utter += " Maybe you could {m}".format(m=next_move)
+            utter += " Maybe you could {m}?".format(m=next_move)
         return utter
 
     @classmethod
@@ -579,7 +593,7 @@ class NLG(metaclass=NLGMeta):
             ]
         utter = random.choice(utters)
         if next_move:
-            utter += " Maybe you could {m}".format(m=next_move)
+            utter += " Maybe you could {m}?".format(m=next_move)
         return utter
 
     @classmethod

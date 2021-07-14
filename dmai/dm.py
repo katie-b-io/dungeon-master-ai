@@ -37,6 +37,11 @@ class DM:
 
         # Initialise the player intent map
         self.player_intent_map = {
+            "no_intent": {
+                "name": "no intent",
+                "desc": "couldn't determine intent",
+                "func": self.no_intent
+            },
             "hint": {
                 "name": "hint",
                 "desc": "ask for a hint",
@@ -218,12 +223,6 @@ class DM:
     
     def get_bad_ending(self) -> str:
         return self.adventure.text["conclusion"]["bad_ending"]
-
-    def hint(self, **kwargs) -> bool:
-        """Use the player AI to get the next possible move.
-        Appends the hint to output with the self.output_builder.
-        """
-        return self.state.get_player().print_next_move()
 
     def _get_destination(self, nlu_entities: dict) -> str:
         """Extract a destination from NLU entities dictionary.
@@ -414,6 +413,22 @@ class DM:
             ):
                 return ("verb", entity["value"])
         return (None, None)
+
+    def no_intent(self, **kwargs) -> bool:
+        """Can't determine the player intent.
+        Appends the hint to output with the self.output_builder.
+        """
+        next_move = self.state.get_player().agent.get_next_move()
+        if next_move:
+            self.state.suggested_next_move = {"utter": next_move, "state": True}
+        self.output_builder.append(NLG.no_intent(next_move))
+        return True
+
+    def hint(self, **kwargs) -> bool:
+        """Use the player AI to get the next possible move.
+        Appends the hint to output with the self.output_builder.
+        """
+        return self.state.get_player().print_next_move()
 
     def move(
         self, destination: str = None, entity: str = None, nlu_entities: dict = None

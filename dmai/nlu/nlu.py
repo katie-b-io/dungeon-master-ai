@@ -145,6 +145,8 @@ class NLU():
             else:
                 return ("roll", {"nlu_entities": entities})
         
+        if intent == "no_intent":
+            return ("no_intent", {})
         if intent == "move":
             return ("move", {"nlu_entities": entities})
         if intent == "attack" or intent == "ranged_attack":
