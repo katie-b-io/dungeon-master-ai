@@ -146,6 +146,11 @@ class DM:
                 "name": "negotiate",
                 "desc": "negotiate",
                 "func": self.negotiate
+            },
+            "rescue": {
+                "name": "rescue",
+                "desc": "rescue",
+                "func": self.rescue
             }
         }
 
@@ -927,4 +932,14 @@ class DM:
             self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
         else:
             self.output_builder.append("There's nobody to negotiate with here")
+        return True
+    
+    def rescue(self, **kwargs) -> bool:
+        """Attempt to rescue.
+        Returns whether the action was successful."""
+        (npc_type, npc) = self._get_npc()
+        if "rescue" in self.state.get_entity(npc).dialogue:
+            self.output_builder.append(self.state.get_entity(npc).dialogue["rescue"])
+        else:
+            self.output_builder.append("There's nobody to rescue here")
         return True
