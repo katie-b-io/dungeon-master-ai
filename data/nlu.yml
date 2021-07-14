@@ -223,6 +223,9 @@ nlu:
     - look around
     - look
     - explore the room
+    - I want to search
+    - search around
+    - search [goblin body](monster)
     - is there anything here?
     - examine the [storage room](location)
     - investigate [antechamber](location)
@@ -522,12 +525,6 @@ nlu:
     - I want to take cover
     - I take the hide action
     - I use my action to hide
-
-- intent: search
-  examples: |
-    - I want to search
-    - I use my action to search
-    - I take the search action
 
 - intent: equip
   examples: |
