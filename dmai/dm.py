@@ -4,6 +4,7 @@ from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.domain.actions.actions import Actions
 from dmai.nlg.nlg import NLG
+from dmai.nlu.nlu import NLU
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.logger import get_logger
@@ -16,8 +17,9 @@ class DM:
     # class variables
     ENTITY_CONFIDENCE = 0.5
 
-    def __init__(self, adventure: str, state: State, output_builder: OutputBuilder) -> None:
+    def __init__(self, adventure: str, nlu: NLU, state: State, output_builder: OutputBuilder) -> None:
         """Main DM class"""
+        self.nlu = nlu
         self._dm_utter = None
         self._player_utter = None
         self.triggers = []
@@ -129,6 +131,11 @@ class DM:
                 "name": "ale",
                 "desc": "drink ale",
                 "func": self.ale
+            },
+            "roleplay": {
+                "name": "roleplay",
+                "desc": "roleplay",
+                "func": self.roleplay
             }
         }
 
@@ -231,6 +238,23 @@ class DM:
             (target_type, target) = self._get_target(nlu_entities)
             if target and (target_type == "npc" or target_type == "monster"):
                 return ("location", self.state.get_current_room_id(target))
+        return (None, None)
+
+    def _get_noun(self, nlu_entities: dict) -> tuple:
+        """Extract any entity from NLU entities dictionary"""
+        for func in [
+                self._get_target,
+                self._get_equipment,
+                self._get_weapon,
+                self._get_item,
+                self._get_drink
+            ]:
+            if func == self._get_target:
+                (target_type, target) = func(nlu_entities, monster_status=None)
+            else:
+                (target_type, target) = func(nlu_entities)
+            if target:
+                return (target_type, target)
         return (None, None)
 
     def _get_target(self, nlu_entities: dict, monster_status: str = "alive") -> tuple:
@@ -380,6 +404,17 @@ class DM:
                 return ("drink", entity["value"])
         return (None, None)
 
+    def _get_verb(self, nlu_entities: dict) -> str:
+        """Extract a verb from NLU entities dictionary.
+        Returns a string with item"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "verb"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return ("verb", entity["value"])
+        return (None, None)
+
     def move(
         self, destination: str = None, entity: str = None, nlu_entities: dict = None
     ) -> bool:
@@ -525,7 +560,7 @@ class DM:
         return unequipped
 
     def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
-        """Attempt an attack by attacker against target determined by NLU or specified.
+        """Attempt to converse with a target determined by NLU or specified.
         Returns whether the action was successful."""
         if not target and nlu_entities:
             (target_type, target) = self._get_target(nlu_entities)
@@ -550,6 +585,11 @@ class DM:
         """Player has uttered an affirmation.
         Appends the text to output with the self.output_builder.
         """
+        if self.state.suggested_next_move["state"]:
+            # TODO NLU of suggested next move
+            utter = self.state.suggested_next_move["utter"]
+            (intent, params) = self.nlu.process_player_utterance(utter)
+            return self.input(utter, intent=intent, kwargs=params)
         if self.state.roleplaying and self.state.received_quest and not self.state.questing:
             npc = self.npcs.get_entity(self.state.current_conversation)
             self.output_builder.append(npc.dialogue["accepts_quest"])
@@ -572,20 +612,8 @@ class DM:
         """Attempt to explore/investigate.
         Returns whether the action was successful."""
         if not target and nlu_entities:
-            for func in [
-                    self._get_target,
-                    self._get_equipment,
-                    self._get_weapon,
-                    self._get_item,
-                    self._get_drink
-                ]:
-                if func == self._get_target:
-                    (target_type, target) = func(nlu_entities, monster_status=None)
-                else:
-                    (target_type, target) = func(nlu_entities)
-                if target:
-                    break
-        # TODO if not target, get the nouns as targets
+            (target_type, target) = self._get_noun(nlu_entities)
+        # TODO if not target, get any noun (not just those in NLU entitities) as targets
         
         # check if there's only one possible door target - if so, use it
         if target_type == "door" and target == "door":
@@ -726,6 +754,7 @@ class DM:
         """Player wants to attempt to perform a ability check.
         Appends the text to output with the self.output_builder.
         """
+        # TODO if stored intent involves an ability check, roll
         self.output_builder.append("You can do an ability check when I ask you to.")
         return True
         
@@ -733,6 +762,7 @@ class DM:
         """Player wants to attempt to perform a skill check.
         Appends the text to output with the self.output_builder.
         """
+        # TODO if stored intent involves a skill check, roll
         self.output_builder.append("You can do a skill check when I ask you to.")
         return True
 
@@ -754,3 +784,24 @@ class DM:
             self.state.drink_ale()
         else:
             self.output_builder.append("You wish you could get an ale here!")
+            
+    def roleplay(self, nlu_entities: dict = None) -> bool:
+        """Attempt to roleplay.
+        Returns whether the action was successful."""
+        verb = None
+        target = None
+        target_type = None
+        if nlu_entities:
+            (verb_type, verb) = self._get_verb(nlu_entities)
+            (target_type, target) = self._get_noun(nlu_entities)
+
+        if not verb:
+            roleplay = False
+            next_move = self.state.get_player().agent.get_next_move()
+            if next_move:
+                self.state.suggested_next_move = {"utter": next_move, "state": True}
+            self.output_builder.append(NLG.no_roleplay(target, next_move))
+        else:
+            logger.info("(SESSION: {s}) Player is roleplaying \"{v}\" with {t}".format(s=self.state.session.session_id, v=verb, t=str(target)))
+            roleplay = self.actions.roleplay(verb, target, self._player_utter, target_type)
+        return roleplay

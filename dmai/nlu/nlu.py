@@ -185,6 +185,8 @@ class NLU():
             return ("skill_check", {"nlu_entities": entities})
         if intent == "ale":
             return ("ale", {"nlu_entities": entities})
+        if intent == "roleplay":
+            return ("roleplay", {"nlu_entities": entities})
         else:
             # check for stored intent in self.state
             if self.state.stored_intent:

@@ -76,11 +76,18 @@ class Investigate(Action):
                     )
                 )
             else:
-                self.output_builder.append(
-                    "I don't think I mentioned anything about {t}. Maybe you could {h}".format(
-                        t=self.target, h=self.state.get_player().agent.get_next_move()
+                next_move = self.state.get_player().agent.get_next_move()
+                if next_move:
+                    self.state.suggested_next_move = {"utter": next_move, "state": True}
+                    self.output_builder.append(
+                        "I don't think I mentioned anything about {t}. Maybe you could {m}".format(
+                            t=self.target, m=next_move
+                        )
                     )
-                )
+                else:
+                    self.output_builder.append(
+                        "I don't think I mentioned anything about {t}.".format(t=self.target)
+                    )
             return True
 
         if self.target_type == "drink":
