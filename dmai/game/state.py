@@ -740,8 +740,7 @@ class State():
 
         # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
         if target == self.player:
-            if self.get_current_hp() <= self.player.hp_max:
-                print("Disadvantage on attack rolls")
+            if self.get_current_hp() <= 0.5*self.player.hp_max:
                 roll = attacker.attack_roll(weapon)
                 if roll < attack_roll:
                     attack_roll = roll

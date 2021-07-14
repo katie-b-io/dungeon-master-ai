@@ -29,7 +29,8 @@ class NLG(metaclass=NLGMeta):
         utters = [
             "Umm... Sorry I don't know how to respond!!",
             "Ehh, could you try something else?",
-            "Yeh, sorry, I don't understand what you want to do."
+            "Yeh, sorry, I don't understand what you want to do.",
+            "Well this is awkward, I don't understand what you're saying."
         ]
         
         utter = random.choice(utters)
@@ -543,6 +544,28 @@ class NLG(metaclass=NLGMeta):
             "You put up a good fight and it paid off",
             "Awesome, they won't be bothering you again!"
         ]
+        return random.choice(utters)
+
+    @classmethod
+    def attack_with_non_weapon(cls, target: str, equipment: str = None, item: str = None, scenery: str = None) -> str:
+        if equipment:
+            thing = equipment
+        elif item:
+            thing = item
+        elif scenery:
+            thing = scenery
+        else:
+            return ""
+
+        a = "A"
+        if thing.lower().startswith(("a", "e", "i", "o", "u")):
+            a = "An"
+        if thing:
+            utters = [
+                "Well, it's unconventional, but you attack {t} with {a} {i}!".format(a=a.lower(), t=target, i=thing),
+                "{a} {i}? Hmm, okay! It triggers a fight.".format(a=a, i=thing),
+                "Haha, sure, you attack {t} with {a} {i}!".format(t=target, a=a.lower(), i=thing),
+            ]
         return random.choice(utters)
 
     ############################################################

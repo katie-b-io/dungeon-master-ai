@@ -340,6 +340,47 @@ class DM:
 
         return (None, None)
 
+    def _get_entity(self, nlu_entities: dict, monster_status: str = "alive") -> tuple:
+        """Extract a entity from NLU entities dictionary.
+        Returns tuple with the type of entity and a string with entity ID"""
+        monster = None
+        i = None
+        npc = None
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "monster"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                monster = entity["value"]
+            if (
+                entity["entity"] == "id"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                i = entity["value"]
+            if (
+                entity["entity"] == "npc"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                npc = entity["value"]
+
+        # monsters are indexed by a unique id, determine it if possible
+        if monster:
+            if i:
+                # player appeared to specify particular individual, get it's id
+                monster_id = "{m}_{i}".format(m=monster, i=i)
+            else:
+                # player hasn't appeared to specify particular individual, pick first alive one
+                monster_id = self.npcs.get_monster_id(
+                    monster, status=monster_status, location=self.state.get_current_room_id()
+                )
+            return ("monster", monster_id)
+
+        # NPCs have unique ids
+        if npc:
+            return ("npc", npc)
+
+        return (None, None)
+
     def _get_npc(self) -> str:
         """Get an NPC.
         Returns a string with NPC ID"""
@@ -391,7 +432,44 @@ class DM:
             ):
                 return ("item", entity["value"])
         return (None, None)
+
+    def _get_scenery(self, nlu_entities: dict) -> str:
+        """Extract scenery from NLU entities dictionary.
+        Returns a string with scenery"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "scenery"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return ("scenery", entity["value"])
+        return (None, None)
+
+    def _get_door(self, nlu_entities: dict) -> str:
+        """Extract door from NLU entities dictionary.
+        Returns a string with door"""
+        door = False
+        location = None
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "door"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                door = True
+            if (
+                entity["entity"] == "location"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                location = entity["value"]
             
+        # return the door and location
+        if door:
+            if location:
+                return ("door", location)
+            else:
+                return ("door", "door")
+
+        return (None, None)
+
     def _get_drink(self, nlu_entities: dict) -> str:
         """Extract a drink from NLU entities dictionary.
         Returns a string with item"""
@@ -459,8 +537,18 @@ class DM:
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
-            (target_type, target) = self._get_target(nlu_entities)
+            (target_type, target) = self._get_entity(nlu_entities)
+            if not target:
+                (target_type, target) = self._get_door(nlu_entities)
+            if not target:
+                (target_type, target) = self._get_target(nlu_entities)
+            (equipment_type, equipment) = self._get_equipment(nlu_entities)
+            (item_type, item) = self._get_item(nlu_entities)
+            (scenery_type, scenery) = self._get_scenery(nlu_entities)
         else:
+            equipment = None
+            item = None
+            scenery = None
             target_type = None
         
         # check if there's only one possible target
@@ -498,6 +586,10 @@ class DM:
                 logger.info("{a} is attacking door {t}!".format(a=attacker, t=target))
                 attacked = self.actions.attack_door(attacker, target)
             else:
+                # check if the player tried to use equipment, item or scenery to attack target
+                if equipment or item or scenery:
+                    if target_type == "monster":
+                        self.output_builder.append(NLG.attack_with_non_weapon(self.state.get_entity_name(target), equipment=equipment, item=item, scenery=scenery))
                 logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
                 attacked = self.actions.attack(attacker, target, target_type=target_type)
         return attacked
