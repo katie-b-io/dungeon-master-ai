@@ -736,7 +736,17 @@ class State():
         # TODO implement advantage/disadvantage
         attacker = self.get_entity(attacker)
         target = self.get_entity(target)
-        if attacker.attack_roll(weapon) >= target.armor_class:
+        attack_roll = attacker.attack_roll(weapon)
+
+        # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
+        if target == self.player:
+            if self.get_current_hp() <= self.player.hp_max:
+                print("Disadvantage on attack rolls")
+                roll = attacker.attack_roll(weapon)
+                if roll < attack_roll:
+                    attack_roll = roll
+
+        if attack_roll >= target.armor_class:
             self.output_builder.append("{a} hits!".format(a=attacker.unique_name))
         else:
             self.output_builder.append("{a} misses!".format(a=attacker.unique_name))
