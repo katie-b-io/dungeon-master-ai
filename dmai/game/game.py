@@ -83,6 +83,9 @@ class Game:
     def input(self, player_utter: str) -> None:
         """Receive a player input"""
 
+        # increment turns
+        self.state.turns += 1
+        
         # clear the output
         self.output_builder.clear()
 
@@ -157,8 +160,12 @@ class Game:
         # get output ready
         output = ""
 
-        # print welcome text
+        # print response
         if self.output_builder.has_response():
+            # prompt the player to get a move on if they aren't making progress
+            if self.state.turns == 7 and not self.state.questing and not self.state.suggested_next_move["state"]:
+                self.state.nag_player()
+            # format the response
             output = self.output_builder.format()
 
         elif self.state.paused:

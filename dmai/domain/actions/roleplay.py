@@ -83,15 +83,9 @@ class Roleplay(Action):
                 self.output_builder.append(NLG.roleplay(verb=self.verb))
 
         else:
-            next_move = self.state.get_player().agent.get_next_move()
-            if next_move:
-                self.state.suggested_next_move = {"utter": next_move, "state": True}
             self.output_builder.append(
-                NLG.cannot_roleplay(
-                    self.verb,
-                    self.target,
-                    reason,
-                    next_move
-                )
+                NLG.cannot_roleplay(self.verb, self.target, reason)
             )
+            if self.state.get_player().agent.get_next_move():
+                self.state.nag_player()
         return roleplay

@@ -418,10 +418,8 @@ class DM:
         """Can't determine the player intent.
         Appends the hint to output with the self.output_builder.
         """
-        next_move = self.state.get_player().agent.get_next_move()
-        if next_move:
-            self.state.suggested_next_move = {"utter": next_move, "state": True}
-        self.output_builder.append(NLG.no_intent(next_move))
+        self.output_builder.append(NLG.no_intent())
+        self.state.nag_player()
         return True
 
     def hint(self, **kwargs) -> bool:
@@ -812,10 +810,8 @@ class DM:
 
         if not verb:
             roleplay = False
-            next_move = self.state.get_player().agent.get_next_move()
-            if next_move:
-                self.state.suggested_next_move = {"utter": next_move, "state": True}
-            self.output_builder.append(NLG.no_roleplay(target, next_move))
+            self.output_builder.append(NLG.no_roleplay(target))
+            self.state.nag_player()
         else:
             logger.info("(SESSION: {s}) Player is roleplaying \"{v}\" with {t}".format(s=self.state.session.session_id, v=verb, t=str(target)))
             roleplay = self.actions.roleplay(verb, target, self._player_utter, target_type)

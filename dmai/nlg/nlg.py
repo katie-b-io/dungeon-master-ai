@@ -24,7 +24,7 @@ class NLG(metaclass=NLGMeta):
         pass
 
     @classmethod
-    def no_intent(cls, next_move: str) -> str:
+    def no_intent(cls, next_move: str = None) -> str:
         """Return the utterance for no intent detected"""
         utters = [
             "Umm... Sorry I don't know how to respond!!",

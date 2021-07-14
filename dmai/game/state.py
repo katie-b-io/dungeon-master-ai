@@ -55,6 +55,7 @@ class State():
         self.output_builder = output_builder
         self.dm = None
         self.player = None
+        self.turns = 0
         self.game_ended = False
         self.intro_read = False
         self.char_class = None
@@ -137,7 +138,14 @@ class State():
         """Method to load the game state"""
         for key in saved_state:
             self.__setattr__(key, saved_state[key])
-        
+    
+    def nag_player(self) -> None:
+        """Method to prompt player to make a sensible action"""
+        next_move = self.get_player().agent.get_next_move()
+        if next_move:
+            self.suggested_next_move = {"utter": next_move, "state": True}
+            self.output_builder.append("Maybe you could {n}".format(n=next_move))
+
     def combat(self, attacker: str, target: str) -> None:
         if not self.in_combat:
             self.reset_combat_status()
