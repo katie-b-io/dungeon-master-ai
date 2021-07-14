@@ -91,6 +91,7 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        self.suggested_next_move = {"utter": "", "state": False}
         # npc triggers
         self.npc_trigger_map = {}
         # room connection map
@@ -529,6 +530,9 @@ class State():
                 if not self.get_current_room_id(
                         entity) == self.get_current_room_id(target):
                     self.clear_target(entity)
+    
+    def clear_suggested_next_move(self) -> None:
+        self.suggested_next_move = {"utter": "", "state": False}
 
     ############################################################
     # METHODS RELATING TO COMBAT

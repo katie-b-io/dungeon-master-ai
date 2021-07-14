@@ -132,6 +132,11 @@ class NLU():
                 intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
                 self.output_builder.append("I was expecting you to {i}".format(i=intent_str))
                 return (None, {"nlu_entities": entities})
+        
+        # check if there's a suggested next move
+        elif self.state.suggested_next_move["state"]:
+            if intent != "affirm":
+                self.state.clear_suggested_next_move()
 
         # check if in combat before allowing any player utterance
         if self.state.in_combat:

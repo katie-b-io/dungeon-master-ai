@@ -51,7 +51,7 @@ class Game:
         self.nlu = NLU(self.state, self.output_builder)
 
         # Initialise DM
-        self.dm = DM(self.adventure, self.state, self.output_builder)
+        self.dm = DM(self.adventure, self.nlu,self.state, self.output_builder)
         self.dm.load()
         self.state.set_dm(self.dm)
 
