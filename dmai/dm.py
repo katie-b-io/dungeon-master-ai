@@ -154,13 +154,18 @@ class DM:
             },
             "bot_challenge": {
                 "name": "bot_challenge",
-                "desc": "bot_challenge",
+                "desc": "challenge the AI",
                 "func": self.bot_challenge
             },
             "stealth": {
                 "name": "stealth",
                 "desc": "stealth",
                 "func": self.stealth
+            },
+            "pick_lock": {
+                "name": "pick_lock",
+                "desc": "pick a lock",
+                "func": self.pick_lock
             }
         }
 
@@ -961,6 +966,14 @@ class DM:
 
     def stealth(self, **kwargs) -> bool:
         """Describe self to player."""
-        self.output_builder.append("Unfortunately, stealth doesn't do anything in this game.")
+        self.output_builder.append("Unfortunately, being stealthy doesn't do anything in this game... except to make you look cool and mysterious.")
         self.state.nag_player()
+        return True
+
+    def pick_lock(self, **kwargs) -> bool:
+        """Describe self to player."""
+        item_collection = self.state.get_player().character.items
+        if not item_collection.has_item("thieves_tools")[0]:
+            self.output_builder.append("Unfortunately, you don't have the required tools in order to pick locks.")
+            self.state.nag_player()
         return True

@@ -199,6 +199,8 @@ class NLU():
             return ("bot_challenge", {})
         if intent == "stealth":
             return ("stealth", {"nlu_entities": entities})
+        if intent == "pick_lock":
+            return ("pick_lock", {"nlu_entities": entities})
         else:
             # check for stored intent in self.state
             if self.state.stored_intent:
