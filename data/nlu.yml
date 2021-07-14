@@ -371,6 +371,9 @@ nlu:
     - rescue [anvil](npc)
     - i attempt to rescue [anvil-jumper](npc)
     - i save [anvil](npc) from the [rats](monster)
+    - i rescue the [cat](npc) from the [rats](monster)
+    - i retrieve [anvil](npc)
+    - save [anvil](npc)
 
 - intent: attack
   examples: |
@@ -652,6 +655,7 @@ nlu:
     - chat with [corvus](npc)
     - question [corvus stouthammer](npc)
     - converse with [stouthammer](npc)
+    - tell [corvus](npc) I rescued [anvil](npc)
     - say to [corvus](npc)
     - say to [anvil](npc)
     - talk to [anvil](npc)

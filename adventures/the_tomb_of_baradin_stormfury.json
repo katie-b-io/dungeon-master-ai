@@ -77,7 +77,8 @@
             "will_attack_player": false,
             "dialogue": {
                 "fallback": "Anvil-Jumper regards you indifferently, licks a paw and flicks his tail.",
-                "attacked_by_player": "You attacked and fatally wounded Anvil-Jumper. He was a much loved pet and companion to Corvus, who was very shook up by the unprovoked attack. Corvus still refuses to speak to you to this day."
+                "attacked_by_player": "You attacked and fatally wounded Anvil-Jumper. He was a much loved pet and companion to Corvus, who was very shook up by the unprovoked attack. Corvus still refuses to speak to you to this day.",
+                "rescue": "Anvil-Jumper can only be rescued once you sort those rats out."
             },
             "triggers": {
                 "move": {
