@@ -767,17 +767,21 @@ class DM:
         """Player wants to attempt to perform a ability check.
         Appends the text to output with the self.output_builder.
         """
-        # TODO if stored intent involves an ability check, roll
-        self.output_builder.append("You can do an ability check when I ask you to.")
-        return True
+        if self.state.stored_ability_check or "ability_check" in self.state.stored_intent:
+            return self.roll(**kwargs)
+        else:
+            self.output_builder.append("You can do an ability check when I ask you to.")
+            return True
         
     def skill_check(self, **kwargs) -> bool:
         """Player wants to attempt to perform a skill check.
         Appends the text to output with the self.output_builder.
         """
-        # TODO if stored intent involves a skill check, roll
-        self.output_builder.append("You can do a skill check when I ask you to.")
-        return True
+        if self.state.stored_skill_check or "skill_check" in self.state.stored_intent:
+            return self.roll(**kwargs)
+        else:
+            self.output_builder.append("You can do a skill check when I ask you to.")
+            return True
 
     def ale(self, nlu_entities: dict = {}) -> bool:
         """Player wants to attempt to drink some ale.

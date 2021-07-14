@@ -439,9 +439,9 @@ class State():
             raise UnrecognisedEntityError(msg)
     
     
-    def set_expected_intent(self, intent: str) -> None:
+    def set_expected_intent(self, intents: list) -> None:
         """Method to set the expected intent"""
-        self.expected_intent = intent
+        self.expected_intent = intents
 
     
     def clear_expected_intent(self) -> None:
