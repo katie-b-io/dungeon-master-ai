@@ -87,6 +87,8 @@ nlu:
     - am I talking to a bot?
     - am I talking to an AI?
     - am I talking to a human?
+    - what are you?
+    - who are you?
 
 - intent: roll
   examples: |
@@ -313,30 +315,52 @@ nlu:
 
 - intent: roleplay
   examples: |
-    - i laugh
-    - i grin
-    - i smile
-    - i dance
-    - i sing
-    - i juggle
-    - i jump on the [barrel](scenery)
-    - i stand on the [barrel](scenery)
-    - i get on the [barrel](scenery)
-    - i jump on the [bar](scenery)
-    - i stand on the [bar](scenery)
-    - i get on the [bar](scenery)
-    - i jump on the [table](scenery)
-    - i stand on the [table](scenery)
-    - i get on the [table](scenery)
-    - i jump on the [bench](scenery)
-    - i stand on the [bench](scenery)
-    - i get on the [bench](scenery)
-    - i grab some [herbs](scenery)
-    - i warm myself by the [hearth](scenery)
-    - i grab the [mural](scenary)
-    - talk to the [large stone face](puzzle)
-    - poke the [face](puzzle)
-    - poke the [face](puzzle) in the eye
+    - i [laugh](verb)
+    - i [grin](verb)
+    - i [smile](verb)
+    - i [dance](verb)
+    - i [sing](verb)
+    - i [juggle](verb)
+    - i [jump](verb) on the [barrel](scenery)
+    - i [stand](verb) on the [barrel](scenery)
+    - i [get](verb) on the [barrel](scenery)
+    - i [jump](verb) on the [bar](scenery)
+    - i [stand](verb) on the [bar](scenery)
+    - i [get](verb) on the [bar](scenery)
+    - i [jump](verb) on the [table](scenery)
+    - i [stand](verb) on the [table](scenery)
+    - i [get](verb) on the [table](scenery)
+    - i [jump](verb) on the [bench](scenery)
+    - i [stand](verb) on the [bench](scenery)
+    - i [get](verb) on the [bench](scenery)
+    - i [grab](verb) some [herbs](scenery)
+    - i [warm](verb) myself by the [hearth](scenery)
+    - i [grab](verb) the [mural](scenary)
+    - i [pet](verb) [anvil](npc)
+    - i [stroke](verb) [anvil](npc)
+    - [cuddle](verb) the [cat](npc)
+
+- intent: negotiate
+  examples: |
+    - how much will you pay me?
+    - how much will you give me?
+    - how much does it pay?
+    - what's it worth to me?
+    - i want more [money](money)
+    - i want the [money](money) now
+    - i want half the [money](money) now
+    - i want more [coin](money)
+    - i want more [silver](money)
+    - i want more [gold](money)
+    - give me the money[money](money)
+    - give me more money[money](money)
+    - let's negotiate
+    - let's discuss terms
+    - persuade [corvus](npc) to give me more money[money](money)
+    - threaten [corvus stouthammer](npc) to give me more money[money](money)
+    - convince [corvus](npc) to give me more money[money](money)
+
+- intent: rescue
     - i save the [cat](npc)
     - rescue [anvil](npc)
     - i attempt to rescue [anvil-jumper](npc)
@@ -1257,3 +1281,10 @@ nlu:
     - warhammer
     - war hammer
     - sarcophagus
+    
+- synonym: money
+  examples: |
+    - money
+    - coin
+    - gold
+    - silver
