@@ -110,6 +110,12 @@ class Investigate(Action):
             else:
                 self.output_builder.append("This door goes to the {t}.".format(t=target))
             return True
+        
+        if self.target_type == "item":
+            item_collection = self.state.get_player().character.items
+            if item_collection.has_item(self.target)[0]:
+                self.output_builder.append(item_collection.get_item(self.target).description)
+                return True
 
         if can_investigate:
             self.state.explore()
