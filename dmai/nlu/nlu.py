@@ -195,6 +195,8 @@ class NLU():
             return ("negotiate", {"nlu_entities": entities})
         if intent == "rescue":
             return ("rescue", {"nlu_entities": entities})
+        if intent == "bot_challenge":
+            return ("bot_challenge", {})
         else:
             # check for stored intent in self.state
             if self.state.stored_intent:

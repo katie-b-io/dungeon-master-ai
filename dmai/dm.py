@@ -151,6 +151,11 @@ class DM:
                 "name": "rescue",
                 "desc": "rescue",
                 "func": self.rescue
+            },
+            "bot_challenge": {
+                "name": "bot_challenge",
+                "desc": "bot_challenge",
+                "func": self.bot_challenge
             }
         }
 
@@ -942,4 +947,9 @@ class DM:
             self.output_builder.append(self.state.get_entity(npc).dialogue["rescue"])
         else:
             self.output_builder.append("There's nobody to rescue here")
+        return True
+    
+    def bot_challenge(self, **kwargs) -> bool:
+        """Describe self to player."""
+        self.output_builder.append("I'm an AI made by Katie Baker, I'm designed to play RPGs with you!")
         return True
