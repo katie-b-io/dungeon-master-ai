@@ -56,22 +56,22 @@ class NLG(metaclass=NLGMeta):
     @classmethod
     def roll_reaction(cls, result: int) -> str:
         """Return utterance for reacting to a dice roll"""
-        if result < 1:
+        if result <= 2:
             utters = [
-                "Ouch!",
-                "That is painful",
-                "How unfortunate",
-                "Oof"
+                "Ouch! Not a good roll",
+                "That is a painful roll",
+                "That's an unfortunate result",
+                "Oof, not the best roll"
             ]
-        elif result > 19:
+        elif result >= 19:
             utters = [
-                "Nice!",
-                "Truly magnificent",
-                "Natural 20, way to go!",
-                "That's how you do it!",
+                "Nice roll!",
+                "Truly magnificent result",
+                "Good roll, way to go!",
+                "That roll, that's how you do it!",
             ]
         else:
-            utters = ["Well, it's a number!"]
+            return ""
         return random.choice(utters)
     
     @classmethod
