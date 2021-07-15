@@ -92,6 +92,7 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        self.help_player = False
         self.suggested_next_move = {"utter": "", "state": False}
         # npc triggers
         self.npc_trigger_map = {}
@@ -115,6 +116,8 @@ class State():
         self.item_quantity = {}
         # equipment quantity
         self.equipment_quantity = {}
+        # monster turn counter
+        self.monster_turn_counter = {}
     
     def set_char_class(self, char_class: str) -> None:
         self.char_class = char_class
@@ -141,10 +144,15 @@ class State():
     
     def nag_player(self) -> None:
         """Method to prompt player to make a sensible action"""
-        next_move = self.get_player().agent.get_next_move()
-        if next_move:
-            self.suggested_next_move = {"utter": next_move, "state": True}
-            self.output_builder.append("Maybe you could {n}".format(n=next_move))
+        self.help_player = True
+
+    def prompt_player(self) -> None:
+        if self.help_player and not self.in_combat:
+            next_move = self.get_player().agent.get_next_move()
+            if next_move:
+                self.suggested_next_move = {"utter": next_move, "state": True}
+                self.output_builder.append("Maybe you could {n}".format(n=next_move))
+        self.help_player = False
 
     def combat(self, attacker: str, target: str) -> None:
         if not self.in_combat:

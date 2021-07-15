@@ -67,7 +67,7 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
             monster.id = npc_data["id"]
             monster.set_treasure(npc_data["treasure"])
             monster.set_must_kill(npc_data["must_kill"])
-            monster.set_will_attack_player(npc_data["will_attack_player"])
+            monster.set_attack_player_after_n_moves(npc_data["attack_player_after_n_moves"])
             return monster
         except ValueError as e:
             logger.error(e)

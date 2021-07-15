@@ -27,7 +27,7 @@
                 "bronze_key"
             ],
             "must_kill": false,
-            "will_attack_player": false,
+            "attack_player_after_n_moves": -1,
             "dialogue": {
                 "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a little silver in it for you of course! What do you say, do you accept the quest?\"",
                 "quest_prompt": "Corvus says: \"Do you accept the quest?\"",
@@ -74,7 +74,7 @@
             "status": "alive",
             "treasure": [],
             "must_kill": false,
-            "will_attack_player": false,
+            "attack_player_after_n_moves": -1,
             "dialogue": {
                 "fallback": "Anvil-Jumper regards you indifferently, licks a paw and flicks his tail.",
                 "attacked_by_player": "You attacked and fatally wounded Anvil-Jumper. He was a much loved pet and companion to Corvus, who was very shook up by the unprovoked attack. Corvus still refuses to speak to you to this day.",
@@ -149,9 +149,9 @@
                         true,
                         true
                     ],
-                    "will_attack_player": [
-                        false,
-                        false
+                    "attack_player_after_n_moves": [
+                        -1,
+                        -1
                     ]
                 }
             },
@@ -200,8 +200,8 @@
                     "must_kill": [
                         true
                     ],
-                    "will_attack_player": [
-                        true
+                    "attack_player_after_n_moves": [
+                        2
                     ]
                 },
                 "goblin": {
@@ -216,8 +216,8 @@
                     "must_kill": [
                         false
                     ],
-                    "will_attack_player": [
-                        false
+                    "attack_player_after_n_moves": [
+                        -1
                     ]
                 }
             },
@@ -259,7 +259,8 @@
                 "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. One exit leads to the Burial Chamber and another exit leads to the Western Chamber, but it's blocked by a lowered portcullis. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
                 "description": "It's a storage room.",
                 "no_visibility_description": "The room is too dark to see anything.",
-                "fight_ends": "You slew the foul zombie! Although it looks like further progress is temporarily blocked by this portcullis. If you're strong enough you could probably force it open or you could look around the room for another solution."
+                "fight_ends": "You slew the foul zombie!",
+                "monster_attack": "The zombie slowly becomes aware of your presence and begins to shamble over to you, arms outstretched, groaning hungrily."
             }
         },
         "burial_chamber": {
@@ -286,8 +287,8 @@
                     "must_kill": [
                         false
                     ],
-                    "will_attack_player": [
-                        true
+                    "attack_player_after_n_moves": [
+                        0
                     ]
                 }
             },
@@ -420,9 +421,9 @@
                         true,
                         true
                     ],
-                    "will_attack_player": [
-                        true,
-                        true
+                    "attack_player_after_n_moves": [
+                        0,
+                        0
                     ]
                 }
             },
@@ -459,10 +460,10 @@
                 }
             },
             "treasure": [],
-            "visibility": false,
+            "visibility": true,
             "text": {
                 "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron with a singular small silver key hole which leads to the southern corridor.\nThe source of the hushed conversation becomes apparent as you approach this room. Two goblins are having an animated discussion in a language you can’t understand. They have amber skin, flat faces, broad noses, pointed ears, wide mouths and small, sharp fangs. They stand upright with arms that hang down almost to their knees. They are wearing scrappy looking leather armour and each wields a rusting scimitar and a bow. One of them carries a lit torch that illuminates the room.\nAs you approach they jump in surprise and draw their scimitars as they move to attack.",
-                "description": "It's a circular room with intricate murals of the silver dragon, Rizoarithra.",
+                "description": "It's a circular room with intricate murals of the silver dragon, Rizoarithra. There's a silver key hole in the southern door.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."
             }
