@@ -142,6 +142,17 @@ class Monster(NPC, MonsterAgent):
         """Method to roll damage"""
         dice_spec = self.get_damage_dice(weapon)
         (roll_str, roll) = DiceRoller.roll_dice(dice_spec, silent=True)
+        if roll < 0:
+            roll = 0
+        self.output_builder.append(roll_str)
+        return roll
+
+    def min_damage(self, weapon: str) -> int:
+        """Method to return minimum possible damage"""
+        dice_spec = self.get_damage_dice(weapon)
+        (roll_str, roll) = DiceRoller.get_min(dice_spec=dice_spec)
+        if roll < 0:
+            roll = 0
         self.output_builder.append(roll_str)
         return roll
 

@@ -32,7 +32,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
         pass
 
     @classmethod
-    def roll(cls, die: str, silent: bool = False) -> int:
+    def roll(cls, die: str, silent: bool = False, min: bool = False, max: bool = False) -> int:
         """Roll a die supplied by the user"""
         die = die.lower()
 
@@ -64,7 +64,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
             else:
                 dice_spec = {"die": die[d:], "total": total, "mod": 0}
 
-            (roll_str, dice_val) = cls.roll_dice(dice_spec, silent)
+            (roll_str, dice_val) = cls.roll_dice(dice_spec, silent, min, max)
             return (roll_str, dice_val)
 
         except (KeyError, TypeError, ValueError) as e:
@@ -90,7 +90,7 @@ class DiceRoller(metaclass=DiceRollerMeta):
         return (roll_str, val)
 
     @classmethod
-    def roll_dice(cls, dice_spec: dict, silent: bool = False) -> int:
+    def roll_dice(cls, dice_spec: dict, silent: bool = False, min: bool = False, max: bool = False) -> int:
         """Roll dice according to spec in dictionary:\n
         {
             "die": "d4",
@@ -102,7 +102,12 @@ class DiceRoller(metaclass=DiceRollerMeta):
             dice = range(dice_spec["total"])
             max_val = cls.dice_map[dice_spec["die"]]
             modifier = dice_spec["mod"]
-            rolls = [random.randint(1, max_val) for _ in dice]
+            if min:
+                rolls = [1 for _ in dice]
+            elif max:
+                rolls = [max_val for _ in dice]
+            else:
+                rolls = [random.randint(1, max_val) for _ in dice]
             total_roll = sum(rolls) + modifier
             die = cls.construct_dice_spec_string(dice_spec)
             roll_str = ""
@@ -124,8 +129,18 @@ class DiceRoller(metaclass=DiceRollerMeta):
             raise DiceFormatError(msg)
         
     @classmethod
-    def get_max(cls, die: str) -> int:
-        return cls.dice_map[die]
+    def get_max(cls, die: str = None, dice_spec: dict = {}, silent: bool = True) -> int:
+        if die:
+            return cls.roll(die, silent=silent, max=True)
+        if dice_spec:
+            return cls.roll_dice(dice_spec, silent=silent, max=True)
+    
+    @classmethod
+    def get_min(cls, die: str = None, dice_spec: dict = {}, silent: bool = True) -> int:
+        if die:
+            return cls.roll(die, silent=silent, min=True)
+        if dice_spec:
+            return cls.roll_dice(dice_spec, silent=silent, min=True)
 
     @classmethod
     def construct_dice_spec_string(cls, dice_spec: dict) -> str:

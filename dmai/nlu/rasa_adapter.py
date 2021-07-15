@@ -43,7 +43,7 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
         Returns a tuple with the (intent, entities)."""
         try:
             response = cls._parse_message(player_utter)
-            if response["intent"]["confidence"] > cls.INTENT_CONFIDENCE:
+            if response["intent"]["confidence"] >= cls.INTENT_CONFIDENCE:
                 intent = response["intent"]["name"]
                 entities = cls._prepare_entities(response["entities"])
             else:

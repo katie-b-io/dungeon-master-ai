@@ -757,6 +757,12 @@ class State():
         attacker = self.get_entity(attacker)
         target = self.get_entity(target)
         damage = attacker.damage_roll(weapon)
+
+        # if player is being attacked and health is at or below 50%, deal less damage
+        if target == self.player:
+            if self.get_current_hp() <= 0.5*self.player.hp_max:
+                damage = attacker.min_damage(weapon)
+
         hp = self.take_damage(damage, attacker.unique_id)
         if target == self.get_player():
             self.output_builder.append(NLG.health_update(hp, hp_max=target.hp_max))

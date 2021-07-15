@@ -75,7 +75,7 @@ class Character(ABC):
     @property
     def hp_max(self) -> int:
         """Method to return the maximum hit points"""
-        hp = DiceRoller.get_max(self.char_class.hit_dice)
+        hp = DiceRoller.get_max(die=self.char_class.hit_dice)[1]
         mod = self.abilities.get_modifier("con")
         return hp + mod
 
