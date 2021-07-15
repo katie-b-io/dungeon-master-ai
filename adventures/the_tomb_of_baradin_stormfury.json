@@ -232,13 +232,13 @@
                             "intent": "attack",
                             "hp": 27,
                             "ac": 19,
-                            "say": "You break the door into a pile of splinters!"
+                            "say": "You break the door into a pile of splinters! The western corridor is now accessible."
                         },
                         "str": {
                             "description": "force door",
                             "ability": "str",
                             "dc": 15,
-                            "say": "The door gives way after a well placed shoulder barge."
+                            "say": "The door gives way after a well placed shoulder barge. The western corridor is now accessible."
                         }
                     },
                     "explore": {
@@ -246,7 +246,7 @@
                             "description": "use switch",
                             "skill": "perception",
                             "dc": 10,
-                            "say": "You take a closer look around the room and you notice a switch to the left of the portcullis. You press the switch and with a rusty screech the portcullis rises.",
+                            "say": "You take a closer look around the room and you notice a switch to the left of the portcullis. You press the switch and with a rusty screech the portcullis rises. The western corridor is now accessible.",
                             "result": "open_door"
                         }
                     },
@@ -437,17 +437,19 @@
                             "description": "attack door",
                             "intent": "attack",
                             "hp": 39,
-                            "ac": 19
+                            "ac": 19,
+                            "say": "You break the door into a pile of splinters! The southern corridor is now accessible."
                         },
                         "str": {
                             "description": "force door",
                             "ability": "str",
-                            "dc": 21
+                            "dc": 21,
+                            "say": "The door gives way after a well placed shoulder barge. The southern corridor is now accessible."
                         },
                         "unlock": {
                             "description": "unlock door",
                             "item": "silver_key",
-                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the wooden door. With a small push the door swings open."
+                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the wooden door. With a small push the door swings open. The southern corridor is now accessible."
                         },
                         "lockpick": {
                             "description": "lockpick door",
@@ -495,7 +497,7 @@
                         "unlock": {
                             "description": "unlock door",
                             "item": "bronze_key",
-                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the elaborate door. With a strong push the door swings open and you see a crypt in front of you."
+                            "say": "You hear the unlocking mechanism as you twist the key in the lock of the elaborate door. With a strong push the door swings open and you see a crypt in front of you. Baradin's crypt is now accessible."
                         }
                     },
                     "explore": {},
