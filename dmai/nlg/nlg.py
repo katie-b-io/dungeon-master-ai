@@ -695,7 +695,7 @@ class NLG(metaclass=NLGMeta):
             utters = [
                 "The hit barely registers, you're going to be here a while.",
                 "You've dealt some damage... not that much though.",
-                "You've damaged the door a little. There might be a better way to deal with this."
+                "You've damaged the door a little."
             ]
         elif damage <= 0.5*hp:
             utters = [

@@ -857,6 +857,7 @@ class State():
             if self.check_room_exists(room_id1) and self.check_room_exists(
                     room_id2) and self._check_connection_exists(
                         room_id1, room_id2):
+                self.solved_puzzles.append("{r1}---{r2}".format(r1=room_id1, r2=room_id2))
                 self._update_connection(room_id1, room_id2, "locked", False)
         except (UnrecognisedRoomError, RoomConnectionError):
             raise
@@ -867,6 +868,7 @@ class State():
             if self.check_room_exists(room_id1) and self.check_room_exists(
                     room_id2) and self._check_connection_exists(
                         room_id1, room_id2):
+                self.solved_puzzles.append("{r1}---{r2}".format(r1=room_id1, r2=room_id2))
                 self._update_connection(room_id1, room_id2, "broken", True)
         except (UnrecognisedRoomError, RoomConnectionError):
             raise

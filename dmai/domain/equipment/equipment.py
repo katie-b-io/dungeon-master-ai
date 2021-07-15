@@ -24,7 +24,7 @@ class Equipment(ABC):
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
     def use(self) -> None:
-        print("Using this doesn't do anything special")
+        self.output_builder.append("Using this doesn't do anything special")
         return True
 
     def stop(self) -> None:

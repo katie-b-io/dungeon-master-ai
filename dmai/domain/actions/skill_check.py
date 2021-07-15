@@ -99,7 +99,6 @@ class SkillCheck(Action):
                         success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
                         success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.skill)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":
-                    current.puzzles.get_puzzle(self.puzzle).solve()
                     self.target = self.puzzle.split("---")[1]
                     success_func = self.state.unlock_door
                     success_params = [current.id, self.target]

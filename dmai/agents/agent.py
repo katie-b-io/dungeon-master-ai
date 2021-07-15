@@ -23,7 +23,6 @@ class Agent(ABC):
         pass
 
     def prepare_next_move(self) -> bool:
-        print(self.__dict__)
         logger.debug("(SESSION {s}) Preparing next move: {i}".format(s=self.state.session.session_id, i=self.unique_id))
         return self.agent.prepare_next_move()
 
