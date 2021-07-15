@@ -14,6 +14,9 @@ logger = get_logger(__name__)
 
 class NLU():
 
+    # class variables
+    INTENT_CONFIDENCE = 0.5
+
     def __init__(self, state: State, output_builder: OutputBuilder) -> None:
         self.state = state
         self.output_builder = output_builder
@@ -105,7 +108,10 @@ class NLU():
     def _determine_intent(self, player_utter: str) -> tuple:
         """Method to determine the player intent"""
         player_utter = player_utter.lower()
-        (intent, entities) = RasaAdapter.get_intent(player_utter)
+        (intent, confidence, entities) = RasaAdapter.get_intent(player_utter)
+        logger.debug("(SESSION {s}) Detected player intent: {i} ({c})".format(s=self.state.session.session_id, i=intent, c=confidence))
+        if confidence < self.INTENT_CONFIDENCE:
+            intent = "no_intent"
         self.state.set_intent(intent)
         if intent:
             print("intent: " + intent)
