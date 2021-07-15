@@ -42,7 +42,7 @@ class NPCCollection:
             if npc_id not in self.state.npc_trigger_map:
                 self.state.npc_trigger_map[npc_id] = []
             if "monster" not in npc_data:
-                npc = NPC(npc_data)
+                npc = NPC(self.state, npc_data)
             else:
                 npc = MonsterCollection.get_monster_npc(npc_data, self.state, self.output_builder)
             self.state.set_init_npc(npc_data)
@@ -139,7 +139,7 @@ class NPCCollection:
                     if select:
                         return monster_id
                 except UnrecognisedEntityError as e:
-                    logger.error(e)
+                    logger.error("(SESSION {s}) {e}".format(s=self.state.session.session_id, e=e))
 
     def get_all_npcs(self) -> list:
         """Method to return all NPC objects in a list.

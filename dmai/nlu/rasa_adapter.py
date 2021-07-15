@@ -47,7 +47,7 @@ class RasaAdapter(metaclass=RasaAdapterMeta):
             entities = cls._prepare_entities(response["entities"])
             return (intent, confidence, entities)
         except ValueError as e:
-            logger.error(e)
+            return ("no_intent", 1, [])
 
     @classmethod
     def _parse_message(cls, message: str) -> str:

@@ -36,7 +36,7 @@ class PlanningAgent(ABC):
         try:
             return self._planner_factory(planner)
         except ValueError as e:
-            logger.error(e)
+            logger.error("(SESSION {s}) {e}".format(s=self.state.session.session_id, e=e))
 
     def _planner_factory(self, planner: str) -> PlannerAdapter:
         """Construct an instance of a PlannerAdapter"""

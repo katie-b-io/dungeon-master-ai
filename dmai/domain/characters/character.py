@@ -39,16 +39,16 @@ class Character(ABC):
 
             # replace the attributes values with objects where appropriate
             self.abilities = Abilities(self.abilities)
-            self.alignment = Alignment(self.alignment)
+            self.alignment = Alignment(self.state, self.alignment)
             self.attacks = Attacks()
-            self.char_class = CharacterClass(self.char_class)
+            self.char_class = CharacterClass(self.state, self.char_class)
             self.conditions = Conditions()
             self.equipment = EquipmentCollection(
                 equipment=self.equipment, state=self.state, output_builder=self.output_builder, proficiencies=self.proficiencies["tools"]
             )
             self.items = ItemCollection(self.state, self.output_builder)
             self.languages = Languages(self.languages)
-            self.race = Race(self.race)
+            self.race = Race(self.state, self.race)
             self.skills = Skills(
                 abilities=self.abilities,
                 pro_bonus=self.proficiency_bonus,
@@ -64,9 +64,7 @@ class Character(ABC):
             self.features = Features(char_class=self.char_class, race=self.race)
 
         except AttributeError as e:
-            logger.error(
-                "Cannot create character, incorrect attribute: {e}".format(e=e)
-            )
+            logger.error("(SESSION {s}) Cannot create character, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
 
     def __repr__(self) -> str:

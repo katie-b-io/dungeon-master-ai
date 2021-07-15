@@ -17,9 +17,7 @@ class Equipment(ABC):
                 self.__setattr__(key, equipment_data[key])
 
         except AttributeError as e:
-            logger.error(
-                "Cannot create equipment, incorrect attribute: {e}".format(
-                    e=e))
+            logger.error("(SESSION {s}) Cannot create equipment, incorrect attribute: {e}".format(e=e, s=self.state.session.session_id))
             raise
 
     def __repr__(self) -> str:

@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005, saved_state: dict = None, session_id: str = None) -> None:
     if not session_id:
         session_id = create_session_id()
-        logger.debug("(SESSION: {s}) Initialising game".format(s=session_id))
+        logger.debug("(SESSION {s}) Initialising game".format(s=session_id))
     Config.set_root(root_path)
     Config.hosts.set_rasa_host(rasa_host)
     Config.hosts.set_rasa_port(rasa_port)
@@ -71,6 +71,7 @@ def run(game: Game) -> None:
 
 def gameover(output_builder: OutputBuilder, session: str = "") -> None:
     """Gracefully exit the game"""
+    logger.debug("(SESSION {s}) Gameover".format(s=session))
     if Config.cleanup:
         shutil.rmtree(Config.directory.planning)
         os.remove("dmai.log")

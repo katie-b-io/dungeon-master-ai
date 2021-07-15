@@ -14,7 +14,7 @@ class BronzeKey(Item):
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
     def use(self) -> bool:
-        logger.debug("Using bronze key")
+        logger.debug("(SESSION {s}) Using bronze key".format(s=self.state.session.session_id))
         for puzzle in self.state.get_current_room().puzzles.get_all_puzzles():
             if "unlock" in puzzle.solutions:
                 if puzzle.solutions["unlock"]["item"] == self.id:

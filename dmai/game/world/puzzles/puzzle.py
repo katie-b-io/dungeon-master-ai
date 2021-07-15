@@ -17,8 +17,7 @@ class Puzzle(ABC):
             for key in puzzle_data:
                 self.__setattr__(key, puzzle_data[key])
         except AttributeError as e:
-            logger.error(
-                "Cannot create puzzle, incorrect attribute: {e}".format(e=e))
+            logger.error("(SESSION {s}) Cannot create puzzle, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
         
         if self.id not in self.state.puzzle_trigger_map:
@@ -141,7 +140,7 @@ class Puzzle(ABC):
         elif solution in self.investigate and "dc" in self.investigate[solution]:
             return self.investigate[solution]["dc"]
         else:
-            logger.debug("Solution {s} not in puzzle {p}".format(s=solution, p=self.id))
+            logger.debug("(SESSION {s}) Solution {so} not in puzzle {p}".format(s=self.state.session.session_id, so=solution, p=self.id))
             return
     
     def get_armor_class(self) -> int:

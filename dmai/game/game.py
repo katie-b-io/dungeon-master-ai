@@ -37,7 +37,7 @@ class Game:
 
 
     def load(self) -> None:
-        logger.info("(SESSION: {s}) Initialising adventure: {a}".format(s=self.session_id, a=self.adventure))
+        logger.debug("(SESSION {s}) Initialising adventure: {a}".format(s=self.session_id, a=self.adventure))
         self.player = None
 
         # Configure endpoints
@@ -161,7 +161,7 @@ class Game:
         if self.state.turns == 7 and not self.state.questing and not self.state.suggested_next_move["state"]:
             self.state.nag_player()
         self.state.prompt_player()
-        
+
         # get output ready
         output = ""
 

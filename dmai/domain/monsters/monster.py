@@ -36,7 +36,7 @@ class Monster(NPC, MonsterAgent):
         else:
             MonsterAgent.__init__(self, state, output_builder, problem=monster_data["id"])
         if npc_data:
-            NPC.__init__(self, npc_data)
+            NPC.__init__(self, state, npc_data)
 
         try:
             for key in monster_data:
@@ -44,7 +44,7 @@ class Monster(NPC, MonsterAgent):
 
             # replace the attributes values with objects where appropriate
             self.abilities = Abilities(self.abilities)
-            self.alignment = Alignment(self.alignment)
+            self.alignment = Alignment(self.state, self.alignment)
             self.armor = Armor(self.armor)
             self.attacks = Attacks(self.attacks)
             self.conditions = Conditions()
@@ -55,7 +55,7 @@ class Monster(NPC, MonsterAgent):
             self.spells = Spells(self.spells)
 
         except AttributeError as e:
-            logger.error("(SESSION: {s}) Cannot create monster, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
+            logger.error("(SESSION {s}) Cannot create monster, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
 
         # Initialise additional variables
@@ -200,9 +200,7 @@ class Monster(NPC, MonsterAgent):
     def attack_of_opportunity(self) -> None:
         """Method to perform an attack of opportunity"""
         if not self.state.stationary and self.state.in_combat and self.state.is_alive(self.unique_id):
-            logger.debug(
-                "(SESSION: {s}) Triggering attack of opportunity in monster: {m}".format(s=self.state.session.session_id, m=self.unique_id)
-            )
+            logger.debug("(SESSION {s}) Triggering attack of opportunity in monster: {m}".format(s=self.state.session.session_id, m=self.unique_id))
             self.output_builder.append(NLG.attack_of_opportunity(attacker=self.name))
 
     def move(self, destination: str, conditions: dict) -> None:
@@ -212,7 +210,7 @@ class Monster(NPC, MonsterAgent):
                 if conditions["monsters"] == "dead":
                     location = self.state.get_current_room_id(self.unique_id)
                     if not self.state.get_dm().npcs.get_monster_id(monster_type="giant_rat", status="alive", location=location):
-                        logger.debug("(SESSION: {s}) Triggering movement of monster: {m}".format(s=self.state.session.session_id, m=self.unique_id))
+                        logger.debug("(SESSION {s}) Triggering movement of monster: {m}".format(s=self.state.session.session_id, m=self.unique_id))
                         self.state.set_current_room(self.unique_id, destination)
 
     def attack(self) -> None:
@@ -222,7 +220,7 @@ class Monster(NPC, MonsterAgent):
                 location = self.state.get_current_room(self.unique_id)
                 if location == self.state.get_current_room():
                     if not self.state.in_combat:
-                        logger.debug("(SESSION: {s}) Triggering combat with player: {m}".format(s=self.state.session.session_id, m=self.unique_id))
+                        logger.debug("(SESSION {s}) Triggering combat with player: {m}".format(s=self.state.session.session_id, m=self.unique_id))
                         if "monster_attack" in location.text:
                             self.output_builder.append(location.text["monster_attack"]["text"])
                         self.state.combat(self.unique_id, "player")

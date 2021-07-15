@@ -211,7 +211,7 @@ class TestDM(unittest.TestCase):
             {"entity": "door", "confidence": 1, "value": "door"},
             {"entity": "location", "confidence": 1, "value": "southern_corridor"},
         ]
-        self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities1))
+        self.assertEqual(True, self.dm.attack(nlu_entities=nlu_entities1))
     
     def test_attack_nlu_entities_door_bad(self) -> None:
         self.game.state.set_current_room("player", "antechamber")
@@ -220,17 +220,12 @@ class TestDM(unittest.TestCase):
             {"entity": "location", "confidence": 1, "value": "burial_chamber"},
         ]
         nlu_entities2 = [
-            {"entity": "door", "confidence": 1, "value": "gateway"},
-            {"entity": "location", "confidence": 1, "value": "southern_corridor"},
-        ]
-        nlu_entities3 = [
             {"entity": "door", "confidence": 1, "value": "door"},
-            {"entity": "location", "confidence": 1, "value": "the_moon"},
+            {"entity": "location", "confidence": 1, "value": "the moon"},
         ]
         self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities1))
-        self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities2))
         with self.assertRaises(UnrecognisedRoomError):
-            self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities3))
+            self.assertEqual(False, self.dm.attack(nlu_entities=nlu_entities2))
         
     def test_use_equipment_good(self) -> None:
         self.assertEqual(True, self.dm.use(equipment="torch"))

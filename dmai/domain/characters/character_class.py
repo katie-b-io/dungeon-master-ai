@@ -1,5 +1,5 @@
 from dmai.utils.loader import Loader
-from dmai.utils.config import Config
+from dmai.game.state import State
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -10,8 +10,9 @@ class CharacterClass:
     # class variables
     char_class_data = dict()
 
-    def __init__(self, char_class: dict) -> None:
+    def __init__(self, state: State, char_class: dict) -> None:
         """CharacterClass class"""
+        self.state = state
         self._load_char_class_data()
 
         try:
@@ -26,11 +27,10 @@ class CharacterClass:
                                  self.char_class_data[self.char_class][key])
 
         except KeyError as e:
-            logger.error("Class does not exist: {c}".format(c=e))
+            logger.error("(SESSION {s}) Class does not exist: {c}".format(c=e, s=self.state.session.session_id))
             raise
         except AttributeError as e:
-            logger.error(
-                "Cannot create class, incorrect attribute: {e}".format(e=e))
+            logger.error("(SESSION {s}) Cannot create class, incorrect attribute: {e}".format(e=e, s=self.state.session.session_id))
             raise
 
     def __repr__(self) -> str:

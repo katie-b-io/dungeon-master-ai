@@ -15,9 +15,11 @@ class Player(PlayerAgent):
     def __init__(self, character: Character, state: State, output_builder: OutputBuilder) -> None:
         """Main class for the player"""
         PlayerAgent.__init__(self, state, output_builder, problem=character.id)
-        logger.info("Initialising character: {c}".format(c=str(character)))
+        logger.debug("(SESSION {s}) Initialising character: {c}".format(s=self.state.session.session_id, c=str(character)))
         self.character = character
         self.state = state
+        self.id = "player"
+        self.unique_id = "player"
 
     @property
     def character_class(self) -> str:

@@ -131,6 +131,7 @@ class State():
         
     def save(self) -> dict:
         """Method to save the game state to dict"""
+        logger.debug("(SESSION {s}) State.save".format(s=self.session.session_id))
         save_dict = self.__dict__
         del save_dict["output_builder"]
         del save_dict["dm"]
@@ -139,6 +140,7 @@ class State():
     
     def load(self, saved_state: dict) -> None:
         """Method to load the game state"""
+        logger.debug("(SESSION {s}) State.load".format(s=self.session.session_id))
         for key in saved_state:
             self.__setattr__(key, saved_state[key])
     
@@ -150,11 +152,13 @@ class State():
         if self.help_player and not self.in_combat:
             next_move = self.get_player().agent.get_next_move()
             if next_move:
+                logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
                 self.suggested_next_move = {"utter": next_move, "state": True}
                 self.output_builder.append("Maybe you could {n}".format(n=next_move))
         self.help_player = False
 
     def combat(self, attacker: str, target: str) -> None:
+        logger.debug("(SESSION {s}) State.combat".format(s=self.session.session_id))
         if not self.in_combat:
             self.reset_combat_status()
             self.set_current_game_mode("combat")
@@ -173,8 +177,8 @@ class State():
             self.output_builder.append(NLG.perform_attack_roll())
             self.progress_combat_status()
                 
-    
     def combat_with_door(self, target: str) -> None:
+        logger.debug("(SESSION {s}) State.combat_with_door".format(s=self.session.session_id))
         self.door_target = target
         if not self.in_combat_with_door:
             self.in_combat_with_door = True
@@ -186,9 +190,9 @@ class State():
         else:
             self.set_combat_status(3)
             self.output_builder.append(NLG.perform_attack_roll())
-
     
     def explore(self) -> None:
+        logger.debug("(SESSION {s}) State.explore".format(s=self.session.session_id))
         if self.current_game_mode != GameMode.EXPLORE:
             self.set_current_game_mode("explore")
             self.in_combat = False
@@ -199,9 +203,9 @@ class State():
             self.clear_expected_intent()
             self.clear_expected_entities()
             self.door_target = None
-
     
     def roleplay(self, target: str) -> None:
+        logger.debug("(SESSION {s}) State.roleplay".format(s=self.session.session_id))
         if not self.roleplaying:
             self.set_current_game_mode("roleplay")
             self.in_combat = False
@@ -212,12 +216,10 @@ class State():
             self.clear_expected_intent()
             self.clear_expected_entities()
             self.door_target = None
-
     
     def set_current_game_mode(self, game_mode: str) -> None:
         """Method to set the current game mode."""
         self.current_game_mode = GameMode(game_mode)
-    
     
     def set_current_goal(self, goal: tuple) -> None:
         """Method to set the current goal"""
@@ -228,38 +230,30 @@ class State():
     
     def start(self) -> None:
         self.started = True
-
     
     def pause(self) -> None:
         self.paused = True
-
     
     def play(self) -> None:
         self.paused = False
-
     
     def received_quest(self) -> None:
         self.quest_received = True
     
-    
     def quest(self) -> None:
         self.questing = True
     
-    
     def complete_quest(self) -> None:
         self.complete = True
-
     
     def talk(self) -> None:
         self.talking = True
-
     
     def stop_talking(self) -> None:
         self.talking = False
-
     
     def set_dm(self, dm) -> None:
-        logger.debug("Setting DM")
+        logger.debug("(SESSION {s}) State.set_dm".format(s=self.session.session_id))
         self.dm = dm
         init_room = self.dm.adventure.get_init_room()
         if "player" not in self.current_room:
@@ -282,14 +276,13 @@ class State():
         for npc in self.dm.npcs.get_all_npcs():
             if hasattr(npc, "trigger"):
                 self.dm.register_trigger(npc)
-
     
     def get_dm(self) -> None:
         """Method to return dm"""
         return self.dm
-
     
     def set_player(self, player) -> None:
+        logger.debug("(SESSION {s}) State.set_player".format(s=self.session.session_id))
         self.player = player
         if "player" not in self.current_hp:
             self.current_hp["player"] = player.character.hp_max
@@ -306,7 +299,6 @@ class State():
         """Method to return player"""
         return self.player
     
-    
     def get_entity_name(self, entity: str = "player") -> str:
         """Method to return name of entity"""
         try:
@@ -318,9 +310,8 @@ class State():
                 else:
                     return self.get_dm().npcs.get_entity(entity).name
         except UnrecognisedEntityError:
-            logger.debug("Unrecognised entity: {e}".format(e=entity))
+            logger.debug("(SESSION {s}) Unrecognised entity: {e}".format(s=self.session.session_id, e=entity))
             return ""
-    
     
     def get_entity(self, entity: str = "player"):
         """Method to return entity"""
@@ -330,7 +321,7 @@ class State():
             else:
                 return self.get_dm().npcs.get_entity(entity)
         except UnrecognisedEntityError:
-            logger.debug("Unrecognised entity: {e}".format(e=entity))
+            logger.debug("(SESSION {s}) Unrecognised entity: {e}".format(s=self.session.session_id, e=entity))
             return None
     
     ############################################################
@@ -348,7 +339,6 @@ class State():
         if unique_id not in self.current_status:
             self.set_init_status(unique_id, status)
     
-    
     def set_init_npc(self, npc_data: dict):
         """Method to set the init status for data objects where 
         no initial value is required"""
@@ -359,22 +349,18 @@ class State():
         if npc_data["id"] not in self.current_attitude:
             self.set_init_attitude(npc_data["id"], npc_data["attitude"])
         
-    
     def set_init_attitude(self, entity: str, attitude: str) -> None:
         """Method to set the initial attitude towards player for specifed entity."""
         self.current_attitude[entity] = Attitude(attitude)
-    
     
     def set_init_status(self, entity: str, status: str) -> str:
         """Method to set the initial status for specified entity."""
         self.current_status[entity] = Status(status)
 
-    
     def set_init_room(self, entity: str, room_id: str) -> str:
         """Method to set the initial room for specified entity."""
         self.current_room[entity] = room_id
         
-    
     def get_current_hp(self, entity: str = "player") -> int:
         """Method to get the current hp for specified entity."""
         try:
@@ -382,7 +368,6 @@ class State():
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
-
     
     def set_current_status(self, entity: str = "player", status: str = "alive") -> str:
         """Method to set the current status for specified entity."""
@@ -391,7 +376,6 @@ class State():
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
-
     
     def get_current_status(self, entity: str = "player") -> str:
         """Method to get the current status for specified entity."""
@@ -400,22 +384,18 @@ class State():
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
-
     
     def is_alive(self, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is alive"""
         return self.get_current_status(entity) == Status("alive")
     
-    
     def is_dead(self, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is dead"""
         return self.get_current_status(entity) == Status("dead")
     
-    
     def is_hidden(self, entity: str = "player") -> bool:
         """Method to determine whether the specified entity is hidden"""
         return self.get_current_status(entity) == Status("hidden")
-
     
     def all_dead(self, entity: str = "player") -> bool:
         """Method to determine whether all the monsters are dead"""
@@ -428,7 +408,6 @@ class State():
                     dead += 1
         return count == dead
     
-    
     def set_current_attitude(self, entity: str = "player", attitude: str = "indifferent") -> str:
         """Method to set the current attitude towards player for specified entity."""
         try:
@@ -436,7 +415,6 @@ class State():
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
-
     
     def get_current_attitude(self, entity: str = "player") -> str:
         """Method to get the current attitude towards player for specified entity."""
@@ -446,21 +424,17 @@ class State():
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
     
-    
     def set_expected_intent(self, intents: list) -> None:
         """Method to set the expected intent"""
         self.expected_intent = intents
-
     
     def clear_expected_intent(self) -> None:
         """Method to clear the expected intent"""
         self.expected_intent = []
     
-    
     def set_expected_entities(self, entities: list) -> None:
         """Method to set the expected entities"""
         self.expected_entities = entities
-
     
     def clear_expected_entities(self) -> None:
         """Method to clear the expected entities"""
@@ -471,13 +445,12 @@ class State():
     
     def set_conversation_target(self, target: str) -> None:
         """Method to set the current target for a conversation"""
-        logger.debug("Setting current conversation target: {t}".format(t=target))
+        logger.debug("(SESSION {s}) Setting current conversation target: {t}".format(s=self.session.session_id, t=target))
         self.current_conversation = target
-
     
     def clear_conversation(self, entity: str = "player") -> None:
         """Method to clear the conversation for an entity"""
-        logger.debug("Clearing current conversation")
+        logger.debug("(SESSION {s}) Clearing current conversation: {e}".format(s=self.session.session_id, e=entity))
         self.current_conversation = None
 
     ############################################################
@@ -487,13 +460,11 @@ class State():
         """Method to light a torch"""
         self.torch_lit = True
         self.output_builder.append(NLG.light_torch())
-
     
     def extinguish_torch(self) -> None:
         """Method to extinguish a torch"""
         self.torch_lit = False
         self.output_builder.append(NLG.extinguish_torch())
-    
     
     def heal(self, hp: int, hp_max: int = None, entity: str = "player") -> None:
         """Method to heal a number of hit points, up to a max"""
@@ -508,7 +479,6 @@ class State():
         self.current_hp[entity] = new_hp
         self.output_builder.append(NLG.heal(hp, new_hp, self.player.character_class))
     
-    
     def drink_ale(self) -> None:
         """Method to drink ale"""
         self.ales += 1
@@ -519,12 +489,10 @@ class State():
     def clear_intent(self, ) -> None:
         """Method to clear the stored intent"""
         self.stored_intent = {}
-
     
     def store_intent(self, intent: str, params: dict) -> None:
         """Method to set the stored intent"""
         self.stored_intent = {"intent": intent, "params": params}
-    
     
     def set_intent(self, intent: str) -> None:
         """Method to set the current intent"""
@@ -536,7 +504,6 @@ class State():
     def maintenance(self) -> None:
         """Method to maintain the state correctly"""
         self.maintain_current_target()
-
     
     def maintain_current_target(self) -> None:
         """Check if current targets are still valid"""
@@ -561,16 +528,13 @@ class State():
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
         
-    
     def set_combat_status(self, status: int, entity: str = "player") -> None:
         """Method to set the combat status for specified entity."""
         self.current_combat_status[entity] = Combat(status)
     
-    
     def reset_combat_status(self, entity: str = "player") -> None:
         """Method to set the combat status for specified entity."""
         self.current_combat_status[entity] = Combat(0)
-    
     
     def progress_combat_status(self, entity: str = "player", can_reset: bool = False) -> str:
         """Method to progress the combat status for specified entity."""
@@ -586,9 +550,9 @@ class State():
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
     
-    
     def set_initiative_order(self) -> None:
         """Method to set the initative order"""
+        logger.debug("(SESSION {s}) Setting initiative order".format(s=self.session.session_id))
         rolls = {}
 
         # get player initiative
@@ -618,19 +582,16 @@ class State():
             # don't allow player input
             self.pause()
     
-    
     def update_initiative_order(self, *args) -> None:
         """Method to update the initiative order by popping from front of list
         and appending to end"""
-        logger.debug("Updating initiative order")
+        logger.debug("(SESSION {s}) Updating initiative order".format(s=self.session.session_id))
         self.initiative_order.append(self.initiative_order.pop(0))
-    
     
     def get_currently_acting_entity(self) -> str:
         """Method to return the id of the entity at the front of the initiative
         order"""
         return self.initiative_order[0]
-        
     
     def get_current_target_id(self, entity: str = "player") -> str:
         """Method to get the current target id for specified entity."""
@@ -639,7 +600,6 @@ class State():
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
-
     
     def get_current_target(self, entity: str = "player"):
         """Method to get the current target for specified entity."""
@@ -649,7 +609,6 @@ class State():
                 return self.get_entity(current_target)
         except UnrecognisedEntityError:
             raise
-
     
     def set_target(self, target: str, entity: str = "player") -> None:
         """Method to set the current target for an entity"""
@@ -657,7 +616,7 @@ class State():
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
 
-        logger.debug("Setting current target: {t}".format(t=target))
+        logger.debug("(SESSION {s}) Setting current target: {t}".format(s=self.session.session_id, t=target))
         # first, deregister any triggers from original target
         if self.get_current_target_id(entity):
             current_target_obj = self.get_entity(self.get_current_target_id(entity))
@@ -674,7 +633,6 @@ class State():
         # append target to attacked_by_player list
         if target != "player" and target not in self.attacked_by_player:
             self.attacked_by_player.append(target)
-
     
     def clear_target(self, entity: str = "player") -> None:
         """Method to clear the target for an entity"""
@@ -682,17 +640,15 @@ class State():
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
 
-        logger.debug("Clearing current target")
+        logger.debug("(SESSION {s}) Clearing current target".format(s=self.session.session_id))
         if self.get_current_target_id(entity):
             self.dm.deregister_trigger(
                 self.get_entity(self.get_current_target_id(entity)))
             self.current_target[entity] = None
 
-    
     def was_attacked(self, monster_id: str) -> bool:
         """Method to determine if monster was attacked by player"""
         return monster_id in self.attacked_by_player
-    
     
     def take_damage(self, damage: int, attacker: str, entity: str = "player") -> int:
         """Method to apply damage to specified entity.
@@ -717,7 +673,6 @@ class State():
             msg = "Entity not recognised: {e}".format(e=entity)
             raise UnrecognisedEntityError(msg)
     
-    
     def kill_monster(self, entity: str) -> None:
         # player has killed a monster
         name = self.get_entity_name(entity)
@@ -727,7 +682,6 @@ class State():
         self.initiative_order.remove(entity)
         if len(self.initiative_order) == 1:
             self.end_fight()
-
     
     def end_fight(self) -> None:
         self.output_builder.append(NLG.won_fight())
@@ -783,16 +737,14 @@ class State():
         """Method to set stationary to true"""
         self.stationary = True
     
-    
     def get_room_name(self, room_id: str) -> str:
         """Method to return the name of a room."""
         try:
             if self.check_room_exists(room_id):
                 return self.dm.adventure.get_room(room_id).name
         except UnrecognisedRoomError:
-            logger.info("Room not recognised: {r}".format(r=room_id))
+            logger.debug("(SESSION {s}) Room not recognised: {r}".format(s=self.session.session_id, r=room_id))
             raise
-
     
     def _check_entity_exists(self, entity_id: str) -> bool:
         """Method to check entity exists.
@@ -802,7 +754,6 @@ class State():
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity_id)
             raise UnrecognisedEntityError(msg)
-
     
     def check_room_exists(self, room_id: str) -> bool:
         """Method to check room exists.
@@ -811,7 +762,6 @@ class State():
             return bool(self.dm.adventure.get_room(room_id))
         except UnrecognisedRoomError:
             raise
-
     
     def _check_connection_exists(self, room_id1: str, room_id2: str) -> bool:
         """Method to check connection exists.
@@ -824,7 +774,6 @@ class State():
         except KeyError:
             msg = "Connection does not exist: {r1}-{r2}".format(r1=r1, r2=r2)
             raise RoomConnectionError(msg)
-
     
     def get_current_room_id(self, entity: str = "player") -> str:
         """Method to get the current room id for specified entity."""
@@ -833,7 +782,6 @@ class State():
                 return self.current_room[entity]
         except UnrecognisedEntityError:
             raise
-
     
     def get_current_room(self, entity: str = "player"):
         """Method to get the current room for specified entity."""
@@ -844,15 +792,14 @@ class State():
                     return self.dm.adventure.get_room(room_id)
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
-
     
     def set_current_room(self, entity: str, room_id: str) -> None:
         """Method to set the current room for specified entity."""
         try:
             if self._check_entity_exists(entity) and self.check_room_exists(
                     room_id):
-                logger.debug("Setting current room for {e}: {r}".format(
-                    e=entity, r=room_id))
+                logger.debug("(SESSION {s}) Setting current room for {e}: {r}".format(
+                    s=self.session.session_id, e=entity, r=room_id))
                 if entity == "player":
                     self.stationary = False
                     self.current_room[entity] = room_id
@@ -860,7 +807,6 @@ class State():
                     self.current_room[entity] = room_id
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
-
     
     def travel_allowed(self, current_id: str, destination_id: str) -> bool:
         """Method to determine if travel is allowed between specified rooms."""
@@ -876,7 +822,6 @@ class State():
             raise
         except RoomConnectionError:
             return False
-
     
     def connection_broken(self, current_id: str, destination_id: str) -> bool:
         """Method to determine if connection between specified rooms is broken."""
@@ -890,13 +835,11 @@ class State():
             raise
         except RoomConnectionError:
             return False
-
     
     def _update_connection(self, r1: str, r2: str, status: str,
                            state: bool) -> None:
         self.room_connect_map[r1][r2][status] = state
         self.room_connect_map[r2][r1][status] = state
-
     
     def lock_door(self, room_id1: str, room_id2: str) -> None:
         """Method to lock the connection between two given rooms."""
@@ -907,7 +850,6 @@ class State():
                 self._update_connection(room_id1, room_id2, "locked", True)
         except (UnrecognisedRoomError, RoomConnectionError):
             raise
-
     
     def unlock_door(self, room_id1: str, room_id2: str) -> None:
         """Method to unlock the connection between two given rooms."""
@@ -918,7 +860,6 @@ class State():
                 self._update_connection(room_id1, room_id2, "locked", False)
         except (UnrecognisedRoomError, RoomConnectionError):
             raise
-
     
     def break_door(self, room_id1: str, room_id2: str) -> None:
         """Method to break the connection between two given rooms."""
@@ -929,7 +870,6 @@ class State():
                 self._update_connection(room_id1, room_id2, "broken", True)
         except (UnrecognisedRoomError, RoomConnectionError):
             raise
-
     
     def get_possible_npc_targets(self, entity: str = "player") -> list:
         """Method to get all npcs in a room that specified entity is in"""
@@ -940,7 +880,6 @@ class State():
                     targets.append(npc)
         return targets
     
-    
     def get_possible_door_targets(self, entity: str = "player") -> list:
         """Method to get all doors in a room that specified entity is in"""
         targets = []
@@ -949,14 +888,12 @@ class State():
                 targets.append(room)
         return targets
     
-    
     def get_formatted_possible_door_targets(self, entity: str = "player") -> str:
         """Method to return a formatted string of possible door targets"""
         rooms = self.get_possible_door_targets(entity)
         possible_targets = [self.get_room_name(room) for room in rooms]
         formatted_str = "You could try to find a way to open the door to {a}.".format(a=Text.properly_format_list(possible_targets, delimiter=", the ", last_delimiter=" or the "))
         return formatted_str
-    
     
     def get_possible_monster_targets(self, entity: str = "player") -> list:
         """Method to get all monsters in a room that specified entity is in"""
@@ -967,14 +904,12 @@ class State():
                     targets.append(monster)
         return targets
     
-    
     def get_formatted_possible_monster_targets(self, entity: str = "player") -> str:
         """Method to return a formatted string of possible monster targets"""
         monsters = self.get_possible_monster_targets(entity)
         possible_targets = [monster.unique_name for monster in monsters]
         formatted_str = "You could attack {a}.".format(a=Text.properly_format_list(possible_targets, last_delimiter=" or "))
         return formatted_str
-    
     
     def get_monster_status_summary(self, location: str) -> dict:
         """Method to return a dictionary of monster status of specified location"""
@@ -989,7 +924,6 @@ class State():
         for status in monster_status:
             status_count[status] = dict(Counter(monster_status[status]))
         return status_count
-    
     
     def get_formatted_monster_status_summary(self, location: str) -> str:
         """Method to return a formatted string of monster status of specified location"""
@@ -1040,11 +974,9 @@ class State():
             msg = "Room not recognised: {e}".format(e=target)
             raise UnrecognisedRoomError(msg)
     
-    
     def get_door_armor_class(self, room: str, door: str) -> int:
         """Method to get a specified door's armor class"""
         return self.get_dm().adventure.get_room(room).get_door_armor_class(door)
-    
     
     def get_door_hp(self, door: str) -> int:
         """Method to get a specified door's hp"""
@@ -1058,17 +990,14 @@ class State():
         {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
         self.stored_ability_check = target
     
-    
     def clear_ability_check(self) -> None:
         """Method to clear the ability check target"""
         self.stored_ability_check = None
-    
     
     def set_skill_check(self, target: dict) -> None:
         """Method to set the skill check target, where the target is a dict:
         {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
         self.stored_skill_check = target
-    
     
     def clear_skill_check(self) -> None:
         """Method to clear the skill check target"""

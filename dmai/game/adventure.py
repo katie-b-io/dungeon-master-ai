@@ -27,9 +27,7 @@ class Adventure:
             for key in self.adventure_data:
                 self.__setattr__(key, self.adventure_data[key])
         except AttributeError as e:
-            logger.error(
-                "Cannot create adventure, incorrect attribute: {e}".format(
-                    e=e))
+            logger.error("(SESSION {s}) Cannot create adventure, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
 
         self._build_world()

@@ -15,7 +15,7 @@ class PotionOfHealing(Item):
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
     def use(self) -> bool:
-        logger.debug("Drinking a potion of healing")
+        logger.debug("(SESSION {s}) Drinking a potion of healing".format(s=self.state.session.session_id))
         dice_spec = self.effects["hit_point"]["delta"]
         (roll_str, hp) = DiceRoller.roll_dice(dice_spec)
         self.output_builder.append(roll_str)

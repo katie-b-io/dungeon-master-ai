@@ -60,7 +60,7 @@ class NLU():
             try:
                 return self._regex_and_exec(player_cmd)
             except UnrecognisedCommandError as e:
-                logger.error(e)
+                logger.error("(SESSION {s}) {e}".format(s=self.state.session.session_id, e=e))
         return (False, player_cmd)
 
     def _regex_and_exec(self, player_cmd: str) -> None:

@@ -33,6 +33,8 @@ class PlannerAdapter(ABC):
         """Method to pop the first action from the plan"""
         if not self.plan:
             self.parse_plan()
+            if not self.plan:
+                logger.debug("(SESSION {s}) Plan failed".format(s=self.state.session.session_id))
         if len(self.plan) > 0:
             return self.plan.pop(0)
         

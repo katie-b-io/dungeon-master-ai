@@ -24,7 +24,7 @@ class Room:
             self.puzzles = PuzzleCollection(self.puzzles, self.state, self.output_builder)
 
         except AttributeError as e:
-            logger.error("Cannot create room, incorrect attribute: {e}".format(e=e))
+            logger.error("(SESSION {s}) Cannot create room, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
 
         # set up connections
@@ -62,8 +62,8 @@ class Room:
 
     def enter(self) -> None:
         """Method when entering a room"""
-        logger.debug("Triggering enter in room: {r}".format(r=self.id))
         if not self.state.stationary and self.state.started:
+            logger.debug("(SESSION {s}) Triggering enter in room: {r}".format(s=self.state.session.session_id, r=self.id))
             if self.id not in self.state.visited_rooms:
                 self.state.visited_rooms.append(self.id)
                 self.output_builder.append(self.text["enter"]["text"])
@@ -73,16 +73,16 @@ class Room:
 
     def trigger_visibility(self) -> str:
         """Method when triggering visibility text"""
-        logger.debug("Triggering visibility in room: {r}".format(r=self.id))
         if not self.visibility:
             if self.state.torch_lit or self.state.get_player().character.has_darkvision():
+                logger.debug("(SESSION {s}) Triggering visibility in room: {r}".format(s=self.state.session.session_id, r=self.id))
                 self.output_builder.append(self.text["visibility"]["text"])
                 self.state.room_trigger_map[self.id]["visibility"] = False
 
     def trigger_fight_ends(self) -> str:
         """Method when triggering fight ends text"""
-        logger.debug("Triggering fight ending in room: {r}".format(r=self.id))
         if self.state.all_dead():
+            logger.debug("(SESSION {s}) Triggering fight ending in room: {r}".format(s=self.state.session.session_id, r=self.id))
             self.output_builder.append(self.text["fight_ends"]["text"])
             self.state.room_trigger_map[self.id]["fight_ends"] = False
 
@@ -98,6 +98,7 @@ class Room:
     def explore_trigger(self) -> None:
         """Method to print any new text if conditions met"""
         if self.state.get_current_room_id() == self.id:
+            logger.debug("(SESSION {s}) Triggering explore_trigger in room: {r}".format(s=self.state.session.session_id, r=self.id))
             self.puzzles.explore_trigger()
 
     def get_connected_rooms(self) -> list:
