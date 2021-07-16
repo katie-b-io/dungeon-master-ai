@@ -725,15 +725,16 @@ class DM:
         Appends the text to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.affirm".format(s=self.state.session.session_id))
-        if self.state.suggested_next_move["state"]:
-            # TODO NLU of suggested next move
-            utter = self.state.suggested_next_move["utter"]
-            (intent, params) = self.nlu.process_player_utterance(utter)
-            return self.input(utter, intent=intent, kwargs=params)
-        if self.state.roleplaying and self.state.received_quest and not self.state.questing:
+        if not self.state.suggested_next_move["state"] and self.state.received_quest and not self.state.questing:
+            logger.debug("(SESSION {s}) Accepted quest".format(s=self.state.session.session_id))
             npc = self.npcs.get_entity(self.state.current_conversation)
             self.output_builder.append(npc.dialogue["accepts_quest"])
             self.state.quest()
+        elif self.state.suggested_next_move["state"]:
+            logger.debug("(SESSION {s}) Accepted suggested next move: {n}".format(s=self.state.session.session_id, n=self.state.suggested_next_move["utter"]))
+            utter = self.state.suggested_next_move["utter"]
+            (intent, params) = self.nlu.process_player_utterance(utter)
+            return self.input(utter, intent=intent, kwargs=params)
         return True
 
     def deny(self, **kwargs) -> bool:
@@ -969,6 +970,9 @@ class DM:
         (npc_type, npc) = self._get_npc()
         if npc and self.state.get_entity(npc).gives_quest:
             logger.debug("(SESSION {s}) Player is negotiating with {n}".format(s=self.state.session.session_id, n=npc))
+            if self.state.get_entity(npc).dialogue:
+                self.state.roleplay(npc)
+                self.state.set_conversation_target(npc)
             self.output_builder.append(self.state.get_entity(npc).dialogue["no_negotiation"])
             if not self.state.questing:
                 self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
