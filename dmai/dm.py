@@ -938,6 +938,7 @@ class DM:
                 self.output_builder.append(NLG.drunk_end_game())
                 self.output_builder.append(self.get_bad_ending())
                 self.state.gameover()
+                return
             self.output_builder.append(NLG.drink_ale(self.state.ales))
             self.state.drink_ale()
         else:

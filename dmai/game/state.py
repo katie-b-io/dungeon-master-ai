@@ -482,6 +482,7 @@ class State():
     def drink_ale(self) -> None:
         """Method to drink ale"""
         self.ales += 1
+        logger.debug("(SESSION {s}) Ales drank: {a}".format(s=self.session.session_id, a=self.ales))
 
     ############################################################
     # METHODS RELATING TO INTENTS
