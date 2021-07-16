@@ -221,7 +221,52 @@ class TestDiceRoller(unittest.TestCase):
             DiceRoller.roll_dice(bad_spec3)
         with self.assertRaises(TypeError):
             DiceRoller.roll_dice(bad_spec4)
+    
+    def test_get_min_die(self) -> None:
+        self.assertEqual(1, DiceRoller.get_min(die="d4")[1])
+        self.assertEqual(1, DiceRoller.get_min(die="d20")[1])
+        self.assertEqual(2, DiceRoller.get_min(die="2d4")[1])
+        self.assertEqual(3, DiceRoller.get_min(die="3d20")[1])
+        self.assertEqual(-1, DiceRoller.get_min(die="2d4-3")[1])
+        self.assertEqual(7, DiceRoller.get_min(die="2d12+5")[1])
 
+    def test_get_min_dice_spec(self) -> None:
+        spec1 = {"die": "d4", "total": 1, "mod": 0}
+        spec2 = {"die": "d20", "total": 1, "mod": 0}
+        spec3 = {"die": "d4", "total": 2, "mod": 0}
+        spec4 = {"die": "d20", "total": 3, "mod": 0}
+        spec5 = {"die": "d4", "total": 2, "mod": -3}
+        spec6 = {"die": "d12", "total": 2, "mod": 5}
+
+        self.assertEqual(1, DiceRoller.get_min(dice_spec=spec1)[1])
+        self.assertEqual(1, DiceRoller.get_min(dice_spec=spec2)[1])
+        self.assertEqual(2, DiceRoller.get_min(dice_spec=spec3)[1])
+        self.assertEqual(3, DiceRoller.get_min(dice_spec=spec4)[1])
+        self.assertEqual(-1, DiceRoller.get_min(dice_spec=spec5)[1])
+        self.assertEqual(7, DiceRoller.get_min(dice_spec=spec6)[1])
+
+    def test_get_max_die(self) -> None:
+        self.assertEqual(4, DiceRoller.get_max(die="d4")[1])
+        self.assertEqual(20, DiceRoller.get_max(die="d20")[1])
+        self.assertEqual(8, DiceRoller.get_max(die="2d4")[1])
+        self.assertEqual(60, DiceRoller.get_max(die="3d20")[1])
+        self.assertEqual(5, DiceRoller.get_max(die="2d4-3")[1])
+        self.assertEqual(29, DiceRoller.get_max(die="2d12+5")[1])
+
+    def test_get_max_dice_spec(self) -> None:
+        spec1 = {"die": "d4", "total": 1, "mod": 0}
+        spec2 = {"die": "d20", "total": 1, "mod": 0}
+        spec3 = {"die": "d4", "total": 2, "mod": 0}
+        spec4 = {"die": "d20", "total": 3, "mod": 0}
+        spec5 = {"die": "d4", "total": 2, "mod": -3}
+        spec6 = {"die": "d12", "total": 2, "mod": 5}
+
+        self.assertEqual(4, DiceRoller.get_max(dice_spec=spec1)[1])
+        self.assertEqual(20, DiceRoller.get_max(dice_spec=spec2)[1])
+        self.assertEqual(8, DiceRoller.get_max(dice_spec=spec3)[1])
+        self.assertEqual(60, DiceRoller.get_max(dice_spec=spec4)[1])
+        self.assertEqual(5, DiceRoller.get_max(dice_spec=spec5)[1])
+        self.assertEqual(29, DiceRoller.get_max(dice_spec=spec6)[1])
 
 if __name__ == "__main__":
     unittest.main()

@@ -22,7 +22,7 @@ class PlanningPlayer(PlanningAgent):
         return "{c}".format(c=self.__class__.__name__)
 
     def build_domain(self) -> None:
-        logger.debug("Building domain")
+        logger.debug("(SESSION {s}) Building domain: player".format(s=self.state.session.session_id))
         domain_file = os.path.join(
             Config.directory.planning,
             "{u}.{d}.domain.pddl".format(u=self.state.session.session_id, d=self.domain),
@@ -297,7 +297,7 @@ class PlanningPlayer(PlanningAgent):
             writer.write(self._construct_domain_footer())
 
     def build_problem(self) -> None:
-        logger.debug("Building problem")
+        logger.debug("(SESSION {s}) Building problem: {p}".format(s=self.state.session.session_id, p=self.problem))
         problem_file = os.path.join(
             Config.directory.planning,
             "{u}.{p}.problem.pddl".format(u=self.state.session.session_id, p=self.problem),

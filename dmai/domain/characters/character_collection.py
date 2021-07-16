@@ -54,7 +54,7 @@ class CharacterCollection(metaclass=CharacterCollectionMeta):
         try:
             character_obj = cls._character_factory(character, state, output_builder)
         except ValueError as e:
-            logger.error(e)
+            logger.error("(SESSION {s}) {e}".format(s=state.session.session_id, e=e))
         return character_obj
 
     @classmethod

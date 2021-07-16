@@ -42,7 +42,7 @@ class NPCCollection:
             if npc_id not in self.state.npc_trigger_map:
                 self.state.npc_trigger_map[npc_id] = []
             if "monster" not in npc_data:
-                npc = NPC(npc_data)
+                npc = NPC(self.state, npc_data)
             else:
                 npc = MonsterCollection.get_monster_npc(npc_data, self.state, self.output_builder)
             self.state.set_init_npc(npc_data)
@@ -62,10 +62,10 @@ class NPCCollection:
             for monster_id in self.adventure.rooms[room].monsters:
                 monster_dict = self.adventure.rooms[room].monsters[monster_id]
                 for (status, treasure,
-                     must_kill, will_attack_player) in zip(monster_dict["status"],
+                     must_kill, attack_player_after_n_moves) in zip(monster_dict["status"],
                                        monster_dict["treasure"],
                                        monster_dict["must_kill"],
-                                       monster_dict["will_attack_player"]):
+                                       monster_dict["attack_player_after_n_moves"]):
                     # create a monster with unique id
                     i = 1 + sum(
                         1 for m in monsters.values() if m.id == monster_id)
@@ -73,7 +73,7 @@ class NPCCollection:
                     monster = MonsterCollection.get_monster(monster_id, self.state, self.output_builder, unique_id=unique_id)
                     monster.set_treasure(treasure)
                     monster.set_must_kill(must_kill)
-                    monster.set_will_attack_player(will_attack_player)
+                    monster.set_attack_player_after_n_moves(attack_player_after_n_moves)
                     monsters[unique_id] = monster
                     # initialise self.state
                     self.state.set_init_monster(unique_id, room, status, monster.hp_max)
@@ -139,7 +139,7 @@ class NPCCollection:
                     if select:
                         return monster_id
                 except UnrecognisedEntityError as e:
-                    logger.error(e)
+                    logger.error("(SESSION {s}) {e}".format(s=self.state.session.session_id, e=e))
 
     def get_all_npcs(self) -> list:
         """Method to return all NPC objects in a list.

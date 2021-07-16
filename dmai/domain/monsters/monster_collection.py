@@ -57,7 +57,7 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
         try:
             return cls._monster_factory(monster_cls=monster_cls, state=state, output_builder=output_builder, unique_id=unique_id, unique_name=unique_name)
         except ValueError as e:
-            logger.error(e)
+            logger.error("(SESSION {s}) {e}".format(s=state.session.session_id, e=e))
 
     @classmethod
     def get_monster_npc(cls, npc_data: dict, state: State, output_builder: OutputBuilder) -> NPC:
@@ -67,10 +67,10 @@ class MonsterCollection(metaclass=MonsterCollectionMeta):
             monster.id = npc_data["id"]
             monster.set_treasure(npc_data["treasure"])
             monster.set_must_kill(npc_data["must_kill"])
-            monster.set_will_attack_player(npc_data["will_attack_player"])
+            monster.set_attack_player_after_n_moves(npc_data["attack_player_after_n_moves"])
             return monster
         except ValueError as e:
-            logger.error(e)
+            logger.error("(SESSION {s}) {e}".format(s=state.session.session_id, e=e))
 
     @classmethod
     def _monster_factory(cls,

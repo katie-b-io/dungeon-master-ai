@@ -21,7 +21,7 @@ class FastDownwardAdapter(PlannerAdapter):
     def build_plan(self) -> bool:
         """Build a plan using FastDownward.
         Returns boolean indicating successful execution"""
-        logger.debug("Building plan with FastDownward")
+        logger.debug("(SESSION {s}) Started building plan with FastDownward".format(s=self.state.session.session_id))
         domain_file = os.path.join(
             Config.directory.planning,
             "{u}.{d}.domain.pddl".format(u=self.state.session.session_id, d=self.domain))
@@ -40,9 +40,10 @@ class FastDownwardAdapter(PlannerAdapter):
                 stdout=PIPE,
                 stderr=PIPE,
                 universal_newlines=True)
-        logger.debug(p.stdout)
-        logger.debug(p.stderr)
-
+        logger.debug("(SESSION {s}) Finished building plan with FastDownward".format(s=self.state.session.session_id))
+        logger.debug("(SESSION {s}) FastDownward returncode: {r}".format(s=self.state.session.session_id, r=p.returncode))
+        if p.stderr:
+            logger.debug("(SESSION {s}) FastDownward standard error: {e}".format(s=self.state.session.session_id, e=p.stderr))
         return p.returncode == 0
 
     def parse_plan(self) -> None:

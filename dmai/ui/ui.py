@@ -19,7 +19,7 @@ class UserInterface:
         player and DM"""
         while True:
             output = self.game.output()
-            logger.info("[DM]: {o}".format(o=output))
+            logger.info("(SESSION {s}) [DM]: {o}".format(s=self.game.state.session.session_id, o=output.replace("\n", "\\n")))
 
             if output:
                 prompt = "\n" + output + "\n"
@@ -34,18 +34,18 @@ class UserInterface:
                 prompt += "Press enter to continue... "
 
             user_input = input(prompt)
-            logger.info("[PLAYER]: {i}".format(i=user_input))
+            logger.info("(SESSION {s}) [PLAYER]: {i}".format(s=self.game.state.session.session_id, i=user_input.replace("\n", "\\n")))
             self.game.input(user_input)
 
     def input(self, user_input: str) -> None:
         """Input the user input"""
-        logger.info("[PLAYER]: {i}".format(i=user_input))
+        logger.info("(SESSION {s}) [PLAYER]: {i}".format(s=self.game.state.session.session_id, i=user_input.replace("\n", "\\n")))
         self.game.input(user_input)
     
     def output(self) -> str:
         """Return the DM output"""
         output = self.game.output()
-        logger.info("[DM]: {o}".format(o=output))
+        logger.info("(SESSION {s}) [DM]: {o}".format(s=self.game.state.session.session_id, o=output.replace("\n", "\\n")))
 
         if output:
             prompt = "\n" + output + "\n"

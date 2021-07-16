@@ -16,16 +16,14 @@ class Item(ABC):
                 self.__setattr__(key, item_data[key])
 
         except AttributeError as e:
-            logger.error(
-                "Cannot create item, incorrect attribute: {e}".format(
-                    e=e))
+            logger.error("(SESSION {s}) Cannot create item, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
 
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
     def use(self) -> None:
-        print("Using this doesn't do anything special")
+        self.output_builder.append("Using this doesn't do anything special")
         return True
 
     def stop(self) -> None:

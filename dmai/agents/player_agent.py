@@ -21,7 +21,7 @@ class PlayerAgent(Agent):
         try:
             return self._agent_factory(Config.agent.player, **kwargs)
         except ValueError as e:
-            logger.error(e)
+            logger.error("(SESSION {s}) {e}".format(s=self.state.session.session_id, e=e))
 
     def _agent_factory(self, agent: str, **kwargs):
         """Construct an instance of a specified agent"""

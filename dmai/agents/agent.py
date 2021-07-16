@@ -23,19 +23,19 @@ class Agent(ABC):
         pass
 
     def prepare_next_move(self) -> bool:
-        logger.debug("Preparing next move")
+        logger.debug("(SESSION {s}) Preparing next move: {i}".format(s=self.state.session.session_id, i=self.unique_id))
         return self.agent.prepare_next_move()
 
     def print_next_move(self) -> bool:
         """Method to print the next move"""
-        logger.debug("Printing next move")
+        logger.debug("(SESSION {s}) Printing next move: {i}".format(s=self.state.session.session_id, i=self.unique_id))
         move = self.agent.get_next_move()
         self.output_builder.append(move)
         return bool(move)
 
     def perform_next_move(self) -> bool:
         """Method to perform the next move"""
-        logger.debug("Performing the next move")
+        logger.debug("(SESSION {s}) Performing next move: {i}".format(s=self.state.session.session_id, i=self.unique_id))
         self.agent.perform_next_move()
         
         # TODO parse the PDDL and act accordinging 

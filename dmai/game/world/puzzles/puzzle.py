@@ -17,8 +17,7 @@ class Puzzle(ABC):
             for key in puzzle_data:
                 self.__setattr__(key, puzzle_data[key])
         except AttributeError as e:
-            logger.error(
-                "Cannot create puzzle, incorrect attribute: {e}".format(e=e))
+            logger.error("(SESSION {s}) Cannot create puzzle, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
         
         if self.id not in self.state.puzzle_trigger_map:
@@ -141,7 +140,7 @@ class Puzzle(ABC):
         elif solution in self.investigate and "dc" in self.investigate[solution]:
             return self.investigate[solution]["dc"]
         else:
-            logger.debug("Solution {s} not in puzzle {p}".format(s=solution, p=self.id))
+            logger.debug("(SESSION {s}) Solution {so} not in puzzle {p}".format(s=self.state.session.session_id, so=solution, p=self.id))
             return
     
     def get_armor_class(self) -> int:
@@ -159,6 +158,7 @@ class Puzzle(ABC):
         if not self.id in self.state.solved_puzzles:
             for explore in self.state.puzzle_trigger_map[self.id]["explore"]:
                 if self.state.puzzle_trigger_map[self.id]["explore"][explore]:
+                    logger.debug("(SESSION {s}) Explore trigger: {p}".format(s=self.state.session.session_id, p=self.id))
                     if "skill" in self.explore[explore]:
                         self.state.set_expected_intent(["roll", "skill_check"])
                         skill_check = SkillCheck(self.explore[explore]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id)
@@ -173,6 +173,7 @@ class Puzzle(ABC):
         if not self.id in self.state.solved_puzzles:
             for investigate in self.state.puzzle_trigger_map[self.id]["investigate"]:
                 if self.state.puzzle_trigger_map[self.id]["investigate"][investigate]:
+                    logger.debug("(SESSION {s}) Investigate trigger: {p}".format(s=self.state.session.session_id, p=self.id))
                     if "skill" in self.investigate[investigate]:
                         self.state.set_expected_intent(["roll", "skill_check"])
                         skill_check = SkillCheck(self.investigate[investigate]["skill"], "player", self.state.get_current_room_id(), self.state, self.output_builder, dm_request=True, puzzle=self.id, investigate=True)
@@ -185,6 +186,7 @@ class Puzzle(ABC):
     def solution_success_func(self, option: str = None) -> None:
         """Method to construct solution success function"""
         # TODO support non-door types
+        logger.debug("(SESSION {s}) Puzzle.solution_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
         if not self.id in self.state.solved_puzzles:
             if self.solutions[option]["say"]:
                 self.output_builder.append(self.solutions[option]["say"])
@@ -203,6 +205,7 @@ class Puzzle(ABC):
         
     def explore_success_func(self, option: str) -> None:
         """Method to construct explore success function"""
+        logger.debug("(SESSION {s}) Puzzle.explore_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
         if not self.id in self.state.solved_puzzles:
             if self.explore[option]["say"]:
                 self.output_builder.append(self.explore[option]["say"])
@@ -222,6 +225,7 @@ class Puzzle(ABC):
     
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
+        logger.debug("(SESSION {s}) Puzzle.investigate_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
         solve = True
         if not self.id in self.state.solved_puzzles:
             if self.investigate[option]["say"]:

@@ -1,5 +1,5 @@
+from dmai.game.state import State
 from dmai.utils.loader import Loader
-from dmai.utils.config import Config
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -10,8 +10,9 @@ class Race:
     # class variables
     race_data = dict()
 
-    def __init__(self, race: str) -> None:
+    def __init__(self, state: State, race: str) -> None:
         """Race class"""
+        self.state = state
         self._load_race_data()
 
         try:
@@ -25,11 +26,10 @@ class Race:
                 self.subrace = None
 
         except KeyError as e:
-            logger.error("Race does not exist: {r}".format(r=e))
+            logger.error("(SESSION {s}) Race does not exist: {r}".format(s=self.state.session.session_id, r=e))
             raise
         except AttributeError as e:
-            logger.error(
-                "Cannot create race, incorrect attribute: {e}".format(e=e))
+            logger.error("(SESSION {s}) Cannot create race, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
 
     def __repr__(self) -> str:

@@ -36,7 +36,7 @@ class Monster(NPC, MonsterAgent):
         else:
             MonsterAgent.__init__(self, state, output_builder, problem=monster_data["id"])
         if npc_data:
-            NPC.__init__(self, npc_data)
+            NPC.__init__(self, state, npc_data)
 
         try:
             for key in monster_data:
@@ -44,7 +44,7 @@ class Monster(NPC, MonsterAgent):
 
             # replace the attributes values with objects where appropriate
             self.abilities = Abilities(self.abilities)
-            self.alignment = Alignment(self.alignment)
+            self.alignment = Alignment(self.state, self.alignment)
             self.armor = Armor(self.armor)
             self.attacks = Attacks(self.attacks)
             self.conditions = Conditions()
@@ -55,12 +55,13 @@ class Monster(NPC, MonsterAgent):
             self.spells = Spells(self.spells)
 
         except AttributeError as e:
-            logger.error("Cannot create monster, incorrect attribute: {e}".format(e=e))
+            logger.error("(SESSION {s}) Cannot create monster, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
 
         # Initialise additional variables
         self.unique_id = unique_id
         self.must_kill = False
+        self.attack_player_after_n_moves = -1
         self.will_attack_player = False
 
         # set unique name
@@ -72,12 +73,28 @@ class Monster(NPC, MonsterAgent):
         # set up triggers
         if self.unique_id not in self.state.monster_trigger_map:
             self.state.monster_trigger_map[unique_id] = {}
+        
+        if self.unique_id not in self.state.monster_turn_counter:
+            self.state.monster_turn_counter[unique_id] = 0
 
         if "attack_of_opportunity" not in self.state.monster_trigger_map[unique_id]:
             self.state.monster_trigger_map[unique_id]["attack_of_opportunity"] = True
+
+        if "attack" not in self.state.monster_trigger_map[unique_id]:
+            self.state.monster_trigger_map[unique_id]["attack"] = True
+
+        if "increment" not in self.state.monster_trigger_map[unique_id]:
+            self.state.monster_trigger_map[unique_id]["increment"] = True
+
         self.trigger_map = {
             "attack_of_opportunity": {
                 "trigger": self.attack_of_opportunity,
+            },
+            "attack": {
+                "trigger": self.attack
+            },
+            "increment": {
+                "trigger": self.increment
             }
         }
 
@@ -96,7 +113,7 @@ class Monster(NPC, MonsterAgent):
                     }
 
     def __repr__(self) -> str:
-        return "Monster: {n}\nMax HP: {hp}".format(n=self.name, hp=self.hp_max)
+        return "Monster: {n}".format(n=self.unique_id)
 
     @property
     def initiative(self) -> int:
@@ -142,6 +159,17 @@ class Monster(NPC, MonsterAgent):
         """Method to roll damage"""
         dice_spec = self.get_damage_dice(weapon)
         (roll_str, roll) = DiceRoller.roll_dice(dice_spec, silent=True)
+        if roll < 0:
+            roll = 0
+        self.output_builder.append(roll_str)
+        return roll
+
+    def min_damage(self, weapon: str) -> int:
+        """Method to return minimum possible damage"""
+        dice_spec = self.get_damage_dice(weapon)
+        (roll_str, roll) = DiceRoller.get_min(dice_spec=dice_spec)
+        if roll < 0:
+            roll = 0
         self.output_builder.append(roll_str)
         return roll
 
@@ -154,9 +182,10 @@ class Monster(NPC, MonsterAgent):
         """Method to set must_kill."""
         self.must_kill = must_kill
 
-    def set_will_attack_player(self, will_attack_player: bool) -> None:
-        """Method to set will_attack_player."""
-        self.will_attack_player = will_attack_player
+    def set_attack_player_after_n_moves(self, attack_player_after_n_moves: int) -> None:
+        """Method to set attack_player_after_n_moves."""
+        self.attack_player_after_n_moves = attack_player_after_n_moves
+        self.will_attack_player = attack_player_after_n_moves == 0
 
     def get_all_attack_ids(self) -> list:
         """Method to get all attack IDs of monster"""
@@ -170,21 +199,40 @@ class Monster(NPC, MonsterAgent):
     # TRIGGERS
     def attack_of_opportunity(self) -> None:
         """Method to perform an attack of opportunity"""
-        logger.debug(
-            "Triggering attack of opportunity in monster: {m}".format(m=self.id)
-        )
-        if not self.state.stationary and self.state.in_combat and self.state.is_alive(self.id):
+        if not self.state.stationary and self.state.in_combat and self.state.is_alive(self.unique_id):
+            logger.debug("(SESSION {s}) Triggering attack of opportunity in monster: {m}".format(s=self.state.session.session_id, m=self.unique_id))
             self.output_builder.append(NLG.attack_of_opportunity(attacker=self.name))
 
     def move(self, destination: str, conditions: dict) -> None:
         """Method to move as a reaction to some situation"""
-        logger.debug("Triggering movement of monster: {m}".format(m=self.id))
-        if self.state.is_alive(self.id):
+        if self.state.is_alive(self.unique_id):
             if "monsters" in conditions:
                 if conditions["monsters"] == "dead":
                     location = self.state.get_current_room_id(self.unique_id)
                     if not self.state.get_dm().npcs.get_monster_id(monster_type="giant_rat", status="alive", location=location):
+                        logger.debug("(SESSION {s}) Triggering movement of monster: {m}".format(s=self.state.session.session_id, m=self.unique_id))
                         self.state.set_current_room(self.unique_id, destination)
+
+    def attack(self) -> None:
+        """Method to attack player"""
+        if self.state.is_alive(self.unique_id):
+            if self.will_attack_player:
+                location = self.state.get_current_room(self.unique_id)
+                if location == self.state.get_current_room():
+                    if not self.state.in_combat:
+                        logger.debug("(SESSION {s}) Triggering combat with player: {m}".format(s=self.state.session.session_id, m=self.unique_id))
+                        if "monster_attack" in location.text:
+                            self.output_builder.append(location.text["monster_attack"]["text"])
+                        self.state.combat(self.unique_id, "player")
+    
+    def increment(self) -> None:
+        """Method to increment number of turns player and monster in same room"""
+        if self.state.is_alive(self.unique_id):
+            location = self.state.get_current_room_id(self.unique_id)
+            if location == self.state.get_current_room_id():
+                self.state.monster_turn_counter[self.unique_id] += 1
+                if not self.will_attack_player and (self.state.monster_turn_counter[self.unique_id] == self.attack_player_after_n_moves):
+                    self.will_attack_player = True
 
     def trigger(self) -> None:
         """Method to perform any actions or print any new text if conditions met"""

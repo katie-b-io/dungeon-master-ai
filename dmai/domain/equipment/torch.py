@@ -15,7 +15,7 @@ class Torch(Equipment):
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
 
     def use(self) -> bool:
-        logger.debug("Lighting a torch")
+        logger.debug("(SESSION {s}) Lighting a torch".format(s=self.state.session.session_id))
         if not self.state.torch_lit:
             self.state.light_torch()
             return True
@@ -24,7 +24,7 @@ class Torch(Equipment):
         return False
 
     def stop(self) -> bool:
-        logger.debug("Extinguishing a torch")
+        logger.debug("(SESSION {s}) Extinguishing a torch".format(s=self.state.session.session_id))
         if self.state.torch_lit:
             self.state.extinguish_torch()
             return True

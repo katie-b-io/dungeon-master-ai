@@ -192,7 +192,7 @@ class DM:
             try:
                 succeed = self.player_intent_map[intent]["func"](**kwargs)
             except KeyError:
-                logger.error("Intent not in map: {i}".format(i=intent))
+                logger.error("(SESSION {s}) Intent not in map: {i}".format(s=self.state.session.session_id, i=intent))
                 raise
 
         # execute any triggers
@@ -226,13 +226,13 @@ class DM:
     def register_trigger(self, trigger: object) -> None:
         """Register a trigger object"""
         if trigger not in self.triggers:
-            logger.debug("Registering trigger: {n}".format(n=str(trigger)))
+            logger.debug("(SESSION {s}) Registering trigger: {n}".format(s=self.state.session.session_id, n=str(trigger)))
             self.triggers.append(trigger)
 
     def deregister_trigger(self, trigger: object) -> None:
         """Deregister a trigger object"""
         if trigger in self.triggers:
-            logger.debug("Deregistering trigger: {n}".format(n=str(trigger)))
+            logger.debug("(SESSION {s}) Deregistering trigger: {n}".format(s=self.state.session.session_id, n=str(trigger)))
             self.triggers.remove(trigger)
 
     def execute_triggers(self) -> None:
@@ -521,6 +521,7 @@ class DM:
         """Can't determine the player intent.
         Appends the hint to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.no_intent".format(s=self.state.session.session_id))
         self.output_builder.append(NLG.no_intent())
         self.state.nag_player()
         return True
@@ -529,6 +530,7 @@ class DM:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.hint".format(s=self.state.session.session_id))
         return self.state.get_player().print_next_move()
 
     def move(
@@ -536,6 +538,7 @@ class DM:
     ) -> bool:
         """Attempt to move an entity to a destination determined by NLU or specified.
         Returns whether the move was successful."""
+        logger.debug("(SESSION {s}) DM.move".format(s=self.state.session.session_id))
         if not entity:
             entity = "player"
         if not destination and nlu_entities:
@@ -550,7 +553,7 @@ class DM:
             ]
             self.output_builder.append(NLG.no_destination(possible_destinations))
         else:
-            logger.info("Moving {e} to {d}!".format(e=entity, d=destination))
+            logger.debug("(SESSION {s}) Moving {e} to {d}".format(s=self.state.session.session_id, e=entity, d=destination))
             moved = self.actions.move(entity, destination)
         return moved
 
@@ -559,6 +562,7 @@ class DM:
     ) -> bool:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the attack was successful."""
+        logger.debug("(SESSION {s}) DM.attack".format(s=self.state.session.session_id))
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
@@ -608,14 +612,14 @@ class DM:
                     )
         else:
             if target_type == "door":
-                logger.info("{a} is attacking door {t}!".format(a=attacker, t=target))
+                logger.debug("(SESSION {s}) {a} is attacking door {t}".format(s=self.state.session.session_id, a=attacker, t=target))
                 attacked = self.actions.attack_door(attacker, target)
             else:
                 # check if the player tried to use equipment, item or scenery to attack target
                 if equipment or item or scenery:
                     if target_type == "monster":
                         self.output_builder.append(NLG.attack_with_non_weapon(self.state.get_entity_name(target), equipment=equipment, item=item, scenery=scenery))
-                logger.info("{a} is attacking {t}!".format(a=attacker, t=target))
+                logger.debug("(SESSION {s}) {a} is attacking {t}".format(s=self.state.session.session_id, a=attacker, t=target))
                 attacked = self.actions.attack(attacker, target, target_type=target_type)
         return attacked
 
@@ -628,6 +632,7 @@ class DM:
     ) -> bool:
         """Attempt to use an equipment.
         Returns whether the use was successful."""
+        logger.debug("(SESSION {s}) DM.use".format(s=self.state.session.session_id))
         if not entity:
             entity = "player"
         if not equipment and nlu_entities:
@@ -639,10 +644,10 @@ class DM:
             used = False
             self.output_builder.append(NLG.no_equipment(stop=stop))
         elif equipment:
-            logger.info("{e} is using {q}!".format(e=entity, q=equipment))
+            logger.debug("(SESSION {s}) {e} is{stop} using: {q}".format(s=self.state.session.session_id, e=entity, q=equipment, stop="stop" if stop else " "))
             used = self.actions.use(equipment=equipment, entity=entity, stop=stop)
         elif item:
-            logger.info("{e} is using {q}!".format(e=entity, q=item))
+            logger.debug("(SESSION {s}) {e} is{stop} using: {q}".format(s=self.state.session.session_id, e=entity, q=item, stop="stop" if stop else " "))
             used = self.actions.use(item=item, entity=entity, stop=stop)
         return used
 
@@ -651,6 +656,7 @@ class DM:
     ) -> bool:
         """Attempt to stop using an equipment.
         Returns whether the stoppage was successful."""
+        logger.debug("(SESSION {s}) DM.stop_using".format(s=self.state.session.session_id))
         return self.use(
             equipment=equipment, entity=entity, nlu_entities=nlu_entities, stop=True
         )
@@ -658,6 +664,7 @@ class DM:
     def equip(self, weapon: str = None, entity: str = None, nlu_entities: dict = None):
         """Attempt to equip a weapon.
         Returns whether equipping was successful."""
+        logger.debug("(SESSION {s}) DM.equip".format(s=self.state.session.session_id))
         if not entity:
             entity = "player"
         if not weapon and nlu_entities:
@@ -667,7 +674,7 @@ class DM:
             equipped = False
             self.output_builder.append(NLG.no_weapon(unequip=False))
         else:
-            logger.info("{e} is equipping {q}!".format(e=entity, q=weapon))
+            logger.debug("(SESSION {s}) {e} is equipping {q}".format(s=self.state.session.session_id, e=entity, q=weapon))
             equipped = self.actions.equip(weapon, entity)
         return equipped
 
@@ -676,22 +683,24 @@ class DM:
     ) -> bool:
         """Attempt to unequip a weapon.
         Returns whether unequipping was successful."""
+        logger.debug("(SESSION {s}) DM.unequip".format(s=self.state.session.session_id))
         if not entity:
             entity = "player"
         if not weapon and nlu_entities:
             weapon = self._get_weapon(nlu_entities)[1]
 
         if not weapon:
-            logger.info("{e} is unequipping all!".format(e=entity))
+            logger.debug("(SESSION {s}) {e} is unequipping all".format(s=self.state.session.session_id, e=entity))
             unequipped = self.actions.unequip(entity=entity)
         else:
-            logger.info("{e} is unequipping {q}!".format(e=entity, q=weapon))
+            logger.debug("(SESSION {s}) {e} is unequipping {q}".format(s=self.state.session.session_id, e=entity, q=weapon))
             unequipped = self.actions.unequip(weapon=weapon, entity=entity)
         return unequipped
 
     def converse(self, target: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to converse with a target determined by NLU or specified.
         Returns whether the action was successful."""
+        logger.debug("(SESSION {s}) DM.converse".format(s=self.state.session.session_id))
         if not target and nlu_entities:
             (target_type, target) = self._get_target(nlu_entities)
         elif not target and not nlu_entities:
@@ -707,7 +716,7 @@ class DM:
             conversation = False
             self.output_builder.append(NLG.no_target("talk to"))
         else:
-            logger.info("player is conversing with {t}!".format(t=target))
+            logger.debug("(SESSION {s}) Player is conversing with {t}".format(s=self.state.session.session_id, t=target))
             conversation = self.actions.converse(target)
         return conversation
 
@@ -715,6 +724,7 @@ class DM:
         """Player has uttered an affirmation.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.affirm".format(s=self.state.session.session_id))
         if self.state.suggested_next_move["state"]:
             # TODO NLU of suggested next move
             utter = self.state.suggested_next_move["utter"]
@@ -730,6 +740,7 @@ class DM:
         """Player has uttered a denial.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.deny".format(s=self.state.session.session_id))
         if self.state.roleplaying and self.state.received_quest and not self.state.questing:
             # this is a game end condition
             npc = self.npcs.get_entity(self.state.current_conversation)
@@ -741,6 +752,7 @@ class DM:
     def explore(self, target: str = None, target_type: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to explore/investigate.
         Returns whether the action was successful."""
+        logger.debug("(SESSION {s}) DM.explore".format(s=self.state.session.session_id))
         if not target and nlu_entities:
             (target_type, target) = self._get_noun(nlu_entities)
         # TODO if not target, get any noun (not just those in NLU entitities) as targets
@@ -755,14 +767,14 @@ class DM:
                     target = targets[0]
                 
         if not target or (target_type == "location" and self.state.get_current_room_id() == target):
-            logger.info("player is exploring!")
+            logger.debug("(SESSION {s}) Player is exploring".format(s=self.state.session.session_id))
             room = self.state.get_current_room()
             self.output_builder.append(room.get_description())
             # trigger the explore triggers in the room
             room.explore_trigger()
             explore = True
         else:
-            logger.info("player is investigating {t}!".format(t=target))
+            logger.debug("(SESSION {s}) Player is investigating {t}".format(s=self.state.session.session_id, t=target))
             explore = self.actions.investigate(target, target_type=target_type)
         if explore:
             self.state.explore()
@@ -773,6 +785,7 @@ class DM:
     ) -> bool:
         """Attempt to roll die.
         Returns whether the action was successful."""
+        logger.debug("(SESSION {s}) DM.roll".format(s=self.state.session.session_id))
 
         # If there's a stored intent, ignore the player specified die and use correct one
         if self.state.stored_intent:
@@ -804,6 +817,7 @@ class DM:
     def pick_up(self, entity: str = "player", item: str = None, nlu_entities: dict = {}) -> bool:
         """Attempt to pick up an item.
         Returns whether the action was successful."""
+        logger.debug("(SESSION {s}) DM.pick_up".format(s=self.state.session.session_id))
         if not entity:
             entity = "player"
         if not item and nlu_entities:
@@ -819,7 +833,7 @@ class DM:
             picked_up = False
             self.output_builder.append(NLG.no_item())
         else:
-            logger.info("{e} is picking up {i}!".format(e=entity, i=item))
+            logger.debug("(SESSION {s}) {e} is picking up {i}".format(s=self.state.session.session_id, e=entity, i=item))
             picked_up = self.actions.pick_up(item, entity)
         return picked_up
 
@@ -827,6 +841,7 @@ class DM:
         """Player wants a health update.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.health".format(s=self.state.session.session_id))
         player = self.state.get_player()
         hp = self.state.get_current_hp()
         self.output_builder.append(NLG.health_update(hp, hp_max=player.hp_max))
@@ -836,6 +851,7 @@ class DM:
         """Player wants a inventory update.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.inventory".format(s=self.state.session.session_id))
         item_collection = self.state.get_player().character.items
         self.output_builder.append(item_collection.get_all_formatted())
         return True
@@ -844,6 +860,7 @@ class DM:
         """Player wants to attempt to force a target.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.force".format(s=self.state.session.session_id))
         if not entity:
             entity = "player"
         if not target and nlu_entities:
@@ -876,7 +893,7 @@ class DM:
                     NLG.no_door_target("force", self.state.get_formatted_possible_door_targets())
                 )
         else:
-            logger.info("{e} is forcing door {t}!".format(e=entity, t=target))
+            logger.debug("(SESSION {s}) {e} is forcing door {t}".format(s=self.state.session.session_id, e=entity, t=target))
             forced = self.actions.ability_check("str", entity, target, target_type)
         return forced
 
@@ -884,7 +901,9 @@ class DM:
         """Player wants to attempt to perform a ability check.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.ability_check".format(s=self.state.session.session_id))
         if self.state.stored_ability_check or "ability_check" in self.state.stored_intent:
+            logger.debug("(SESSION {s}) Player is performing ability check".format(s=self.state.session.session_id))
             return self.roll(**kwargs)
         else:
             self.output_builder.append("You can do an ability check when I ask you to.")
@@ -894,7 +913,9 @@ class DM:
         """Player wants to attempt to perform a skill check.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.skill_check".format(s=self.state.session.session_id))
         if self.state.stored_skill_check or "skill_check" in self.state.stored_intent:
+            logger.debug("(SESSION {s}) Player is performing skill check".format(s=self.state.session.session_id))
             return self.roll(**kwargs)
         else:
             self.output_builder.append("You can do a skill check when I ask you to.")
@@ -904,11 +925,13 @@ class DM:
         """Player wants to attempt to drink some ale.
         Appends the text to output with the self.output_builder.
         """
+        logger.debug("(SESSION {s}) DM.ale".format(s=self.state.session.session_id))
         if nlu_entities:
             drink = self._get_drink(nlu_entities)[1]
             if drink != "ale":
                 self.output_builder.append("They only serve ale here!")
         if self.state.get_current_room().ale:
+            logger.debug("(SESSION {s}) Player is getting an ale".format(s=self.state.session.session_id))
             if self.state.ales > 2:
                 # this is a gameover state
                 self.output_builder.append(NLG.drunk_end_game())
@@ -922,6 +945,7 @@ class DM:
     def roleplay(self, nlu_entities: dict = None) -> bool:
         """Attempt to roleplay.
         Returns whether the action was successful."""
+        logger.debug("(SESSION {s}) DM.roleplay".format(s=self.state.session.session_id))
         verb = None
         target = None
         target_type = None
@@ -934,44 +958,54 @@ class DM:
             self.output_builder.append(NLG.no_roleplay(target))
             self.state.nag_player()
         else:
-            logger.info("(SESSION: {s}) Player is roleplaying \"{v}\" with {t}".format(s=self.state.session.session_id, v=verb, t=str(target)))
+            logger.debug("(SESSION {s}) Player is roleplaying \"{v}\" with {t}".format(s=self.state.session.session_id, v=verb, t=str(target)))
             roleplay = self.actions.roleplay(verb, target, self._player_utter, target_type)
         return roleplay
     
     def negotiate(self, **kwargs) -> bool:
         """Attempt to negotiate.
         Returns whether the action was successful."""
+        logger.debug("(SESSION {s}) DM.negotiate".format(s=self.state.session.session_id))
         (npc_type, npc) = self._get_npc()
         if npc and self.state.get_entity(npc).gives_quest:
+            logger.debug("(SESSION {s}) Player is negotiating with {n}".format(s=self.state.session.session_id, n=npc))
             self.output_builder.append(self.state.get_entity(npc).dialogue["no_negotiation"])
-            self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
+            if not self.state.questing:
+                self.output_builder.append(self.state.get_entity(npc).dialogue["quest_prompt"])
         else:
-            self.output_builder.append("There's nobody to negotiate with here")
+            self.output_builder.append("There's nobody to negotiate with here.")
+            self.state.nag_player()
         return True
     
     def rescue(self, **kwargs) -> bool:
         """Attempt to rescue.
         Returns whether the action was successful."""
+        logger.debug("(SESSION {s}) DM.rescue".format(s=self.state.session.session_id))
         (npc_type, npc) = self._get_npc()
         if "rescue" in self.state.get_entity(npc).dialogue:
+            logger.debug("(SESSION {s}) Player is rescuing {n}".format(s=self.state.session.session_id, n=npc))
             self.output_builder.append(self.state.get_entity(npc).dialogue["rescue"])
         else:
             self.output_builder.append("There's nobody to rescue here")
+            self.state.nag_player()
         return True
     
     def bot_challenge(self, **kwargs) -> bool:
         """Describe self to player."""
+        logger.debug("(SESSION {s}) DM.bot_challenge".format(s=self.state.session.session_id))
         self.output_builder.append("I'm an AI made by Katie Baker, I'm designed to play RPGs with you!")
         return True
 
     def stealth(self, **kwargs) -> bool:
         """Describe self to player."""
+        logger.debug("(SESSION {s}) DM.stealth".format(s=self.state.session.session_id))
         self.output_builder.append("Unfortunately, being stealthy doesn't do anything in this game... except to make you look cool and mysterious.")
         self.state.nag_player()
         return True
 
     def pick_lock(self, **kwargs) -> bool:
         """Describe self to player."""
+        logger.debug("(SESSION {s}) DM.pick_lock".format(s=self.state.session.session_id))
         item_collection = self.state.get_player().character.items
         if not item_collection.has_item("thieves_tools")[0]:
             self.output_builder.append("Unfortunately, you don't have the required tools in order to pick locks.")
