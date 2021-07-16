@@ -230,9 +230,10 @@ class Monster(NPC, MonsterAgent):
         if self.state.is_alive(self.unique_id):
             location = self.state.get_current_room_id(self.unique_id)
             if location == self.state.get_current_room_id():
-                self.state.monster_turn_counter[self.unique_id] += 1
-                if not self.will_attack_player and (self.state.monster_turn_counter[self.unique_id] == self.attack_player_after_n_moves):
-                    self.will_attack_player = True
+                if not self.state.expected_intent:
+                    self.state.monster_turn_counter[self.unique_id] += 1
+                    if not self.will_attack_player and (self.state.monster_turn_counter[self.unique_id] == self.attack_player_after_n_moves):
+                        self.will_attack_player = True
 
     def trigger(self) -> None:
         """Method to perform any actions or print any new text if conditions met"""

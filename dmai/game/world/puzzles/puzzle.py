@@ -83,6 +83,11 @@ class Puzzle(ABC):
         Returns bool"""
         return solution in self.solutions
 
+    def check_solution_explore(self) -> bool:
+        """Method to determine if possible explore solution exists.
+        Returns bool"""
+        return bool(self.explore)
+
     def check_solution_ability(self, ability: str) -> bool:
         """Method to determine if possible ability solution exists.
         Returns bool"""
