@@ -81,8 +81,7 @@ class State():
         self.current_intent = None
         self.stored_intent = {}
         self.current_target = {}
-        self.current_goal = ("at", "player", "baradins_crypt")
-        self.current_items = {}
+        self.current_goal = [["quest"]]
         self.current_attitude = {}
         self.attacked_by_player = []
         self.current_combat_status = {}
@@ -109,6 +108,7 @@ class State():
         # treasure
         self.room_treasure_map = {}
         self.monster_treasure_map = {}
+        self.npc_treasure_map = {}
         # weapons
         self.right_hand = None
         self.left_hand = None
@@ -221,8 +221,10 @@ class State():
         """Method to set the current game mode."""
         self.current_game_mode = GameMode(game_mode)
     
-    def set_current_goal(self, goal: tuple) -> None:
+    def set_current_goal(self, goal: list) -> None:
         """Method to set the current goal"""
+        goal_str = "({g})".format(g=") and (".join([" ".join(g) for g in goal]))
+        logger.debug("(SESSION {s}) Setting current goal: {g}".format(s=self.session.session_id, g=goal_str))
         self.current_goal = goal
 
     def skip_intro(self) -> None:
