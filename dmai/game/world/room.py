@@ -183,11 +183,10 @@ class Room:
 
             # add description of treasure if there are no living monsters
             if not self.state.get_possible_monster_targets():
-                # TODO replace with properly formatted names
-                if self.treasure:
+                if self.state.room_treasure_map[self.id]:
                     treasure = [
                         self.state.get_player().character.items.get_name(item)
-                        for item in self.treasure
+                        for item in self.state.room_treasure_map[self.id]
                     ]
                     desc_str += " After searching the room thoroughly you find a {t}. You should pick {i} up.".format(
                         t=Text.properly_format_list(treasure),
