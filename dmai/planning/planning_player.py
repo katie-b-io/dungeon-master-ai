@@ -56,13 +56,8 @@ class PlanningPlayer(PlanningAgent):
                         "room",
                         "door",
                         "weapon",
-                        "armor",
                         "equipment",
                         "item",
-                        "damage_vulnerability",
-                        "damage_immunity",
-                        "condition_immunity",
-                        "language",
                     ],
                 }
             )
@@ -85,7 +80,7 @@ class PlanningPlayer(PlanningAgent):
             predicates.append({"predicate": "quest", "params": []})
             predicates.append({"predicate": "complete", "params": []})
             predicates.append({"predicate": "gives_quest", "params": [("npc", "npc")]})
-            predicates.append({"predicate": "treasure", "params": [("room", "room")]})
+            predicates.append({"predicate": "treasure", "params": [("object", "object")]})
             predicates.append(
                 {"predicate": "advantage", "params": [("object", "object")]}
             )
@@ -272,6 +267,7 @@ class PlanningPlayer(PlanningAgent):
                 "equip",
                 "unequip",
                 "explore",
+                "investigate_monster",
                 "use_potion_of_healing",
                 "move",
                 "open_door_with_ability",
@@ -433,9 +429,10 @@ class PlanningPlayer(PlanningAgent):
                         self.state.get_current_room(monster.unique_id).id,
                     ]
                 )
-            for monster in self.state.get_dm().npcs.get_all_monsters():
                 if self.state.is_alive(monster.unique_id):
                     init.append(["alive", monster.unique_id])
+                if self.state.monster_treasure_map[monster.unique_id]:
+                    init.append(["treasure", monster.unique_id])
 
             # Combat
             for npc in self.state.get_dm().npcs.get_all_npcs():

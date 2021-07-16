@@ -288,6 +288,22 @@ class PlanningActions():
             )
         )"""},
 
+            "investigate_monster": {
+                "pddl": """
+        ; Player investigates monster
+        (:action investigate_monster
+            :parameters (?player - player ?location - room ?monster - monster)
+            :precondition (and 
+                (at ?player ?location)
+                (at ?monster ?location)
+                (treasure ?monster)
+                (not (alive ?monster))
+            )
+            :effect (and 
+                (not (treasure ?monster))
+            )
+        )"""},
+
             "use_potion_of_healing": {
                 "pddl": """
         ; Player drinks potion of healing
@@ -338,11 +354,13 @@ class PlanningActions():
                         (and
                             (at ?monster ?location)
                             (not (must_kill ?monster))
+                            (not (treasure ?monster))
                         )
                         (and 
                             (at ?monster ?location)
                             (must_kill ?monster)
                             (not (alive ?monster))
+                            (not (treasure ?monster))
                         )
                     )
                 )
