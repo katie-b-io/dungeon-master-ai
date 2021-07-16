@@ -272,6 +272,7 @@ class PlanningPlayer(PlanningAgent):
                 "equip",
                 "unequip",
                 "explore",
+                "investigate_puzzle",
                 "investigate_monster",
                 "use_potion_of_healing",
                 "move",
@@ -488,8 +489,10 @@ class PlanningPlayer(PlanningAgent):
             # Puzzles
             for room in self.state.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
+                    puzzle_id = puzzle.id if puzzle.type == "door" else "{p}_puzzle".format(p=puzzle.id)
+                    if puzzle.type != "door":
+                        init.append(["at", puzzle_id, room.id])
                     if puzzle.id not in self.state.solved_puzzles:
-                        puzzle_id = puzzle.id if puzzle.type == "door" else "{p}_puzzle".format(p=puzzle.id)
                         puzzle_solution = False
                         if not puzzle_solution:
                             # Item solution

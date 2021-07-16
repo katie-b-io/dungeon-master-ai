@@ -288,6 +288,22 @@ class PlanningActions():
             )
         )"""},
 
+            "investigate_puzzle": {
+                "pddl": """
+        ; Player investigates puzzle
+        (:action investigate_puzzle
+            :parameters (?player - player ?location - room ?puzzle - puzzle)
+            :precondition (and 
+                (at ?player ?location)
+                (at ?puzzle ?location)
+                (not (has ?player ?puzzle))
+                (explore_solution ?puzzle)
+            )
+            :effect (and 
+                (has ?player ?puzzle)
+            )
+        )"""},
+
             "investigate_monster": {
                 "pddl": """
         ; Player investigates monster
@@ -319,7 +335,40 @@ class PlanningActions():
                 (not (injured ?player))
             )
         )"""},
-            
+
+            "pick_up_item": {
+                "pddl": """
+        ; Player picks up item
+        (:action pick_up_item
+            :parameters (?player - player ?item - item ?location - room)
+            :precondition (and 
+                (at ?item ?location)
+                (at ?player ?location)
+                (not (has ?player ?item))
+            )
+            :effect (and 
+                (has ?player ?item)
+                (not (at ?item ?location))
+            )
+        )"""},
+
+            "get_item_from_npc": {
+                "pddl": """
+        ; Player gets item from NPC
+        (:action get_item_from_npc
+            :parameters (?player - player ?item - item ?npc - npc ?location - room)
+            :precondition (and 
+                (at ?npc ?location)
+                (at ?player ?location)
+                (not (has ?player ?item))
+                (has ?npc ?item)
+            )
+            :effect (and 
+                (has ?player ?item)
+                (not (has ?npc ?item))
+            )
+        )"""},
+
             "move": {
                 "pddl": """
         ; Player moves from one room to another

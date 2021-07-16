@@ -68,7 +68,7 @@
                     },
                     "triggered": false,
                     "goal": [
-                        ["at", "player", "baradins_crypt"]
+                        ["has", "player", "dwarven_thrower_puzzle"]
                     ]
                 }
             }
