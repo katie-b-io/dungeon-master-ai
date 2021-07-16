@@ -81,7 +81,7 @@ class State():
         self.current_intent = None
         self.stored_intent = {}
         self.current_target = {}
-        self.current_goal = ("at", "player", "southern_corridor")
+        self.current_goal = ("at", "player", "baradins_crypt")
         self.current_items = {}
         self.current_attitude = {}
         self.attacked_by_player = []
@@ -149,7 +149,7 @@ class State():
         self.help_player = True
 
     def prompt_player(self) -> None:
-        if self.help_player and not self.in_combat:
+        if self.help_player and not self.in_combat and not self.current_conversation:
             next_move = self.get_player().agent.get_next_move()
             if next_move:
                 logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
