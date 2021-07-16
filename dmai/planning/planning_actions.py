@@ -288,6 +288,22 @@ class PlanningActions():
             )
         )"""},
 
+            "investigate_monster": {
+                "pddl": """
+        ; Player investigates monster
+        (:action investigate_monster
+            :parameters (?player - player ?location - room ?monster - monster)
+            :precondition (and 
+                (at ?player ?location)
+                (at ?monster ?location)
+                (treasure ?monster)
+                (not (alive ?monster))
+            )
+            :effect (and 
+                (not (treasure ?monster))
+            )
+        )"""},
+
             "use_potion_of_healing": {
                 "pddl": """
         ; Player drinks potion of healing
@@ -338,11 +354,13 @@ class PlanningActions():
                         (and
                             (at ?monster ?location)
                             (not (must_kill ?monster))
+                            (not (treasure ?monster))
                         )
                         (and 
                             (at ?monster ?location)
                             (must_kill ?monster)
                             (not (alive ?monster))
+                            (not (treasure ?monster))
                         )
                     )
                 )
@@ -350,6 +368,78 @@ class PlanningActions():
             :effect (and 
                 (not (at ?player ?location))
                 (at ?player ?destination)
+            )
+        )"""},
+
+            "open_door_with_item": {
+                "pddl": """
+        ; Player wants to open a door with an item
+        (:action open_door_with_item
+            :parameters (?player - player ?item - item ?door - door ?location - room ?destination - room)
+            :precondition (and 
+                (alive ?player)
+                (at ?player ?location)
+                (at ?door ?location)
+                (connected ?door ?location ?destination)
+                (locked ?door)
+                (item_solution ?door ?item)
+                (has ?player ?item)
+                (not (action))
+                (or
+                    (not (dark ?location))
+                    (or (torch_lit) (darkvision))
+                )
+                (or 
+                    (not (injured ?player))
+                    (and
+                        (injured ?player)
+                        (forall (?item2 - item2)
+                            (and
+                                (not (potion_of_healing ?item2))
+                                (not (has ?player ?item2))
+                            )
+                        )
+                    )
+                )
+            )
+            :effect (and 
+                (not (locked ?door))
+                (not (has ?player ?item))
+            )
+        )"""},
+
+            "open_door_with_explore": {
+                "pddl": """
+        ; Player wants to open a door by exploring
+        (:action open_door_with_explore
+            :parameters (?player - player ?door - door ?location - room ?destination - room)
+            :precondition (and 
+                (alive ?player)
+                (at ?player ?location)
+                (at ?door ?location)
+                (connected ?door ?location ?destination)
+                (locked ?door)
+                (explore_solution ?door)
+                (not (action))
+                (or
+                    (not (dark ?location))
+                    (or (torch_lit) (darkvision))
+                )
+                (or 
+                    (not (injured ?player))
+                    (and
+                        (injured ?player)
+                        (forall (?item - item)
+                            (and
+                                (not (potion_of_healing ?item))
+                                (not (has ?player ?item))
+                            )
+                        )
+                    )
+                )
+            )
+            :effect (and 
+                (not (locked ?door))
             )
         )"""},
 
@@ -429,13 +519,14 @@ class PlanningActions():
                 "pddl": """
         ; Player wants to open a door with attack
         (:action open_door_with_attack
-            :parameters (?player - player ?door - door ?location - room ?destination - room)
+            :parameters (?player - player ?door - door ?location - room ?destination - room ?intent - intent)
             :precondition (and 
                 (alive ?player)
                 (at ?player ?location)
                 (at ?door ?location)
                 (connected ?door ?location ?destination)
                 (locked ?door)
+                (intent_solution ?door ?intent)
                 (not (action))
                 (or
                     (not (dark ?location))

@@ -56,13 +56,8 @@ class PlanningPlayer(PlanningAgent):
                         "room",
                         "door",
                         "weapon",
-                        "armor",
                         "equipment",
                         "item",
-                        "damage_vulnerability",
-                        "damage_immunity",
-                        "condition_immunity",
-                        "language",
                     ],
                 }
             )
@@ -85,7 +80,7 @@ class PlanningPlayer(PlanningAgent):
             predicates.append({"predicate": "quest", "params": []})
             predicates.append({"predicate": "complete", "params": []})
             predicates.append({"predicate": "gives_quest", "params": [("npc", "npc")]})
-            predicates.append({"predicate": "treasure", "params": [("room", "room")]})
+            predicates.append({"predicate": "treasure", "params": [("object", "object")]})
             predicates.append(
                 {"predicate": "advantage", "params": [("object", "object")]}
             )
@@ -231,6 +226,12 @@ class PlanningPlayer(PlanningAgent):
             )
             predicates.append(
                 {
+                    "predicate": "explore_solution",
+                    "params": [("target", "object")],
+                }
+            )
+            predicates.append(
+                {
                     "predicate": "ability_solution",
                     "params": [("target", "object"), ("ability", "ability")],
                 }
@@ -272,8 +273,11 @@ class PlanningPlayer(PlanningAgent):
                 "equip",
                 "unequip",
                 "explore",
+                "investigate_monster",
                 "use_potion_of_healing",
                 "move",
+                "open_door_with_item",
+                "open_door_with_explore",
                 "open_door_with_ability",
                 "open_door_with_equipment",
                 "open_door_with_attack",
@@ -403,7 +407,7 @@ class PlanningPlayer(PlanningAgent):
             for equipment in self.state.get_player().get_all_equipment_ids():
                 init.append([equipment, equipment])
                 init.append(["has", "player", equipment])
-
+                
             # NPCs
             for npc in self.state.get_dm().npcs.get_all_npcs():
                 init.append(["at", npc.id, self.state.get_current_room(npc.id).id])
@@ -433,9 +437,11 @@ class PlanningPlayer(PlanningAgent):
                         self.state.get_current_room(monster.unique_id).id,
                     ]
                 )
-            for monster in self.state.get_dm().npcs.get_all_monsters():
                 if self.state.is_alive(monster.unique_id):
                     init.append(["alive", monster.unique_id])
+                if self.state.monster_treasure_map[monster.unique_id]:
+                    if not self.state.is_hidden(monster.unique_id):
+                        init.append(["treasure", monster.unique_id])
 
             # Combat
             for npc in self.state.get_dm().npcs.get_all_npcs():
@@ -468,26 +474,52 @@ class PlanningPlayer(PlanningAgent):
             # Puzzles
             for room in self.state.get_dm().adventure.get_all_rooms():
                 for puzzle in room.puzzles.get_all_puzzles():
-                    # Ability solution
-                    for ability in Abilities.get_all_abilities():
-                        if puzzle.check_solution_ability(ability[0]):
-                            init.append(["ability_solution", puzzle.id, ability[0]])
-                    # Skill solution
-                    for skill in Skills.get_all_skills():
-                        if puzzle.check_solution_skill(skill[0]):
-                            init.append(["ability_solution", puzzle.id, skill[0]])
-                    # Equipment solution
-                    for equipment in self.state.get_player().get_all_equipment_ids():
-                        if puzzle.check_solution_equipment(equipment):
-                            init.append(["equipment_solution", puzzle.id, equipment])
-                    # Intent solution
-                    for intent in self.state.get_dm().player_intent_map.keys():
-                        if puzzle.check_solution_intent(intent):
-                            init.append(["intent_solution", puzzle.id, intent])
-                    # Item solution
-                    for item in self.state.get_player().get_all_item_ids():
-                        if puzzle.check_solution_item(item):
-                            init.append(["item_solution", puzzle.id, item])
+                    if puzzle.id not in self.state.solved_puzzles:
+                        puzzle_id = puzzle.id if puzzle.type == "door" else "{p}_puzzle".format(p=puzzle.id)
+                        puzzle_solution = False
+                        if not puzzle_solution:
+                            # Item solution
+                            for item in self.state.get_player().get_all_item_ids():
+                                if puzzle.check_solution_item(item):
+                                    init.append(["item_solution", puzzle_id, item])
+                                    puzzle_solution = True
+                                    break
+                        if not puzzle_solution:
+                            # Skill solution
+                            for skill in Skills.get_all_skills():
+                                if puzzle.check_solution_skill(skill[0]):
+                                    init.append(["skill_solution", puzzle_id, skill[0]])
+                                    puzzle_solution = True
+                                    break
+                        if not puzzle_solution:
+                            # Explore solution
+                            for explore in self.state.puzzle_trigger_map[puzzle.id]["explore"]:
+                                if self.state.puzzle_trigger_map[puzzle.id]["explore"][explore]:
+                                    if puzzle.check_solution_explore():
+                                        init.append(["explore_solution", puzzle_id])
+                                        puzzle_solution = True
+                                        break
+                        if not puzzle_solution:
+                            # Ability solution
+                            for ability in Abilities.get_all_abilities():
+                                if puzzle.check_solution_ability(ability[0]):
+                                    init.append(["ability_solution", puzzle_id, ability[0]])
+                                    puzzle_solution = True
+                                    break
+                        if not puzzle_solution:
+                            # Intent solution
+                            for intent in self.state.get_dm().player_intent_map.keys():
+                                if puzzle.check_solution_intent(intent):
+                                    init.append(["intent_solution", puzzle_id, intent])
+                                    puzzle_solution = True
+                                    break
+                        if not puzzle_solution:
+                            # Equipment solution
+                            for equipment in self.state.get_player().get_all_equipment_ids():
+                                if puzzle.check_solution_equipment(equipment):
+                                    init.append(["equipment_solution", puzzle_id, equipment])
+                                    puzzle_solution = True
+                                    break
 
                     # TODO add spell solution
 

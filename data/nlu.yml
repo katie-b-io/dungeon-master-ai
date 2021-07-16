@@ -277,6 +277,7 @@ nlu:
     - examine the [pile of splinters](scenery)
     - investigate [stone slabs](scenery)
     - admire [slabs](scenery)
+    - look at [instrument](scenery)
     - inspect [altar](puzzle)
     - admire [altar](puzzle)
     - check [altar](puzzle)
@@ -339,10 +340,12 @@ nlu:
     - i [grab](verb) some [herbs](scenery)
     - i [warm](verb) myself by the [hearth](scenery)
     - i [grab](verb) the [mural](scenary)
+    - i [grab](verb) an [instrument](scenery)
     - i [go] behind the [bar](scenery)
     - i [pet](verb) [anvil](npc)
     - i [stroke](verb) [anvil](npc)
     - [cuddle](verb) the [cat](npc)
+    - i [listen](verb) to the voices
 
 - intent: negotiate
   examples: |
@@ -477,6 +480,7 @@ nlu:
     - throw [torch](equipment) at [rats](monster)
     - I throw my [torch](equipment) at [giant rat](monster)
     - I throw a [barrel](scenery)
+    - I throw an [instrument](scenery)
 
 - intent: disengage
   examples: |
