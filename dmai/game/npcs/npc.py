@@ -15,6 +15,10 @@ class NPC():
         except AttributeError as e:
             logger.error("(SESSION {s}) Cannot create NPC, incorrect attribute: {e}".format(s=self.state.session.session_id, e=e))
             raise
+        
+        # set treasure
+        if self.id not in self.state.npc_treasure_map:
+            self.state.npc_treasure_map[self.id] = self.treasure
 
     def __repr__(self) -> str:
         return "NPC: {a}".format(a=self.name)

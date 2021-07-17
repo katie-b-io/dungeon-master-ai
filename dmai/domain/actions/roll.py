@@ -125,7 +125,7 @@ class Roll(Action):
                 target = self.state.get_current_target()
                 player = self.state.get_entity()
                 damage = player.damage_roll()
-                hp = self.state.take_damage(damage, "player", entity=target.unique_id)
+                hp = max(0, self.state.take_damage(damage, "player", entity=target.unique_id))
                 self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:

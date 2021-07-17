@@ -43,6 +43,15 @@
                 "attacked_by_player": "Not known for reasonable, measured behaviour you irrationally lashed out at Corvus. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
             },
             "triggers": {
+                "gives_quest": {
+                    "id": "gives_quest",
+                    "say": "gives_quest",
+                    "goal": [
+                        ["not", "alive", "giant_rat_1"],
+                        ["not", "alive", "giant_rat_2"],
+                        ["at", "player", "stout_meal_inn"]
+                    ]
+                },
                 "turn_in_quest": {
                     "id": "bronze_key",
                     "description": "An elaborate bronze key.",
@@ -57,7 +66,10 @@
                             }
                         }
                     },
-                    "triggered": false
+                    "triggered": false,
+                    "goal": [
+                        ["has", "player", "dwarven_thrower_puzzle"]
+                    ]
                 }
             }
         },

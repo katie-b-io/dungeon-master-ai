@@ -277,36 +277,44 @@ class Actions:
             if npc.dialogue:
                 self.state.roleplay(target)
                 # TODO make the dialogue options flexible
-                if not self.state.quest_received and npc.gives_quest:
-                    self.state.set_conversation_target(target)
-                    self.state.received_quest()
-                    self.output_builder.append(
-                       npc.dialogue["gives_quest"])
-                elif npc.gives_quest and self.state.quest_received and not self.state.questing:
+                if npc.gives_quest and self.state.quest_received and not self.state.questing:
                     self.output_builder.append(npc.dialogue["quest_prompt"])
                 else:
                     fallback = True
                     # check triggers
                     for trigger_id in npc.triggers:
-                        # TODO change into something less hardcoded: trigger_id != "move"
-                        if trigger_id != "move" and trigger_id not in self.state.npc_trigger_map[npc.id]:
-                            trigger = npc.triggers[trigger_id]
-                            for room_id in trigger["conditions"]:
-                                if "monsters" in trigger["conditions"][room_id]:
-                                    for monster_id in trigger["conditions"][room_id]["monsters"]:
-                                        status = trigger["conditions"][room_id]["monsters"][monster_id]["status"]
-                                        # TODO support other conditions
-                                        if status == "dead":
-                                            if not self.state.get_dm().npcs.get_monster_id(monster_id, status="alive", location=room_id):
-                                                # the conditions of the trigger have been met
-                                                self.state.npc_trigger_map[npc.id].append(trigger_id)
-                                                self.state.set_conversation_target(target)
-                                                fallback = False
-                                                if trigger["say"]:
-                                                    self.output_builder.append(npc.dialogue[trigger["say"]])
-                                                if trigger["result"]:
-                                                    if trigger["result"] == "add_to_inventory":
-                                                        self.state.get_player().character.items.add_item(trigger["id"])
+                        trigger = npc.triggers[trigger_id]
+                        if trigger_id == "gives_quest":
+                            if not self.state.quest_received and npc.gives_quest:
+                                fallback = False
+                                self.state.set_conversation_target(target)
+                                self.state.received_quest()
+                                self.output_builder.append(npc.dialogue[trigger["say"]])
+                                if "goal" in trigger:
+                                    self.state.set_current_goal(trigger["goal"])
+                        elif trigger_id != "move" and trigger_id not in self.state.npc_trigger_map[npc.id]:
+                            if "conditions" in trigger:
+                                for room_id in trigger["conditions"]:
+                                    if "monsters" in trigger["conditions"][room_id]:
+                                        for monster_id in trigger["conditions"][room_id]["monsters"]:
+                                            status = trigger["conditions"][room_id]["monsters"][monster_id]["status"]
+                                            # TODO support other conditions
+                                            if status == "dead":
+                                                if not self.state.get_dm().npcs.get_monster_id(monster_id, status="alive", location=room_id):
+                                                    # the conditions of the trigger have been met
+                                                    self.state.npc_trigger_map[npc.id].append(trigger_id)
+                                                    self.state.set_conversation_target(target)
+                                                    fallback = False
+                                                    if trigger["say"]:
+                                                        self.output_builder.append(npc.dialogue[trigger["say"]])
+                                                    if trigger["result"]:
+                                                        if trigger["result"] == "add_to_inventory":
+                                                            self.state.npc_treasure_map[npc.id].remove(trigger["id"])
+                                                            self.state.get_player().character.items.add_item(trigger["id"])
+                                                    if trigger["goal"]:
+                                                        self.state.set_current_goal(trigger["goal"])
+                            elif "goal" in trigger:
+                                self.state.set_current_goal(trigger["goal"])
                     # fall back
                     if fallback:
                         self.output_builder.append(npc.dialogue["fallback"])

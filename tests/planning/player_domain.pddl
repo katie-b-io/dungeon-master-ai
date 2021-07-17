@@ -425,14 +425,17 @@
                 (or (torch_lit) (darkvision))
             )
             (not (treasure ?location))
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -476,14 +479,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -510,14 +516,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -543,14 +552,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -577,14 +589,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -612,14 +627,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -648,14 +666,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -684,14 +705,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -717,14 +741,17 @@
                 (not (dark ?location))
                 (or (torch_lit) (darkvision))
             )
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )
@@ -739,11 +766,13 @@
 
     ; Player lights a torch
     (:action light_torch
-        :parameters (?player - player ?torch - equipment)
+        :parameters (?player - player ?torch - equipment ?location - room)
         :precondition (and 
             (alive ?player)
             (torch ?torch)
             (has ?player ?torch)
+            (at ?player ?location)
+            (dark ?location)
         )
         :effect (and
             (torch_lit)
@@ -832,14 +861,17 @@
             (at ?target ?location)
             (not (action))
             (or (torch_lit) (darkvision))
-            (or 
+            (or
                 (not (injured ?player))
                 (and
                     (injured ?player)
                     (forall (?item - item)
-                        (and
+                        (or
                             (not (potion_of_healing ?item))
-                            (not (has ?player ?item))
+                            (and
+                                (potion_of_healing ?item)
+                                (not (has ?player ?item))
+                            )
                         )
                     )
                 )

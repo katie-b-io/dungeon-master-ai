@@ -33,8 +33,8 @@
         goblin1 - goblin
         goblin2 - goblin
         goblin3 - goblin
-        skeleton - skeleton
-        zombie - zombie
+        skeleton1 - skeleton
+        zombie1 - zombie
         ; Abilities
         cha - ability
         con - ability
@@ -49,7 +49,6 @@
         javelin - weapon
         crossbow_light - weapon
         ; Equipment
-        thieves_tools - equipment
         torch - equipment
         ; Items
         potion_of_healing - item
@@ -79,13 +78,9 @@
         (has player javelin)
         (has player crossbow_light)
         ; set equipment
-        (thieves_tools thieves_tools)
         (torch torch)
-        (has player thieves_tools)
         (has player torch)
         ; set items
-        (potion_of_healing potion_of_healing)
-        (has player potion_of_healing)
 
         ; =======================================
         ; NPCs
@@ -109,14 +104,16 @@
         (at goblin1 storage_room)
         (at goblin2 antechamber)
         (at goblin3 antechamber)
-        (at skeleton burial_chamber)
-        (at zombie storage_room)
+        (at skeleton1 burial_chamber)
+        (at zombie1 storage_room)
         (alive giant_rat1)
         (alive giant_rat2)
         (alive goblin2)
         (alive goblin3)
-        (alive skeleton)
-        (alive zombie)
+        (alive skeleton1)
+        (alive zombie1)
+        (treasure goblin1)
+        (treasure skeleton1)
 
         ; =======================================
         ; Rooms
@@ -160,8 +157,7 @@
         (dark southern_corridor)
         (dark baradins_crypt)
         (treasure inns_cellar)
-        (treasure southern_corridor)
-        (treasure baradins_crypt)
+        (treasure burial_chamber)
 
         ; =======================================
         ; Combat
@@ -169,8 +165,8 @@
         (must_kill giant_rat2)
         (must_kill goblin2)
         (must_kill goblin3)
-        (must_kill skeleton)
-        (must_kill zombie)
+        (must_kill skeleton1)
+        (must_kill zombie1)
 
         ; =======================================
         ; Challenges
@@ -180,8 +176,6 @@
         (ability_solution door6 str)
         (ability_solution door3 perception)
         (ability_solution door4 perception)
-        ; set equipment DC for doors
-        (equipment_solution door6 thieves_tools)
         ; doors not broken are considered "alive"
         (alive door1)
         (alive door2)
