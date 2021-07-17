@@ -94,6 +94,7 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        self.hint_requested = False
         self.help_player = False
         self.suggested_next_move = {"utter": "", "state": False}
         # npc triggers
@@ -147,17 +148,19 @@ class State():
         for key in saved_state:
             self.__setattr__(key, saved_state[key])
     
-    def nag_player(self) -> None:
+    def nag_player(self, hint: bool = False) -> None:
         """Method to prompt player to make a sensible action"""
+        self.hint_requested = True
         self.help_player = True
 
     def prompt_player(self) -> None:
-        if self.help_player and not self.in_combat and not self.current_conversation:
+        if self.hint_requested or (self.help_player and not self.in_combat and not self.current_conversation):
             next_move = self.get_player().agent.get_next_move()
             if next_move:
                 logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
                 self.suggested_next_move = {"utter": next_move, "state": True}
                 self.output_builder.append(next_move)
+        self.hint_requested = False
         self.help_player = False
 
     def combat(self, attacker: str, target: str) -> None:
