@@ -436,7 +436,7 @@ class NLG(metaclass=NLGMeta):
         """Return the utterance for telling the player whose turn it is"""
         entity = "your" if entity == "player" else "{e}'s".format(e=entity)
         utters = [
-            "Okay, it's {e} turn...".format(e=entity)
+            "It's {e} turn...".format(e=entity)
         ]
         return random.choice(utters)
     

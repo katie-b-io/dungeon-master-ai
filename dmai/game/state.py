@@ -1004,10 +1004,11 @@ class State():
                 if count > 1:
                     formatted_monsters[status].append("{c} {s} {m}s".format(c=count, s=status, m=monster))
                 else:
-                    formatted_monsters[status].append("a {s} {m}".format(s=status, m=monster))
+                    a = "an" if status == "alive" else "a"
+                    formatted_monsters[status].append("{a} {s} {m}".format(a=a, s=status, m=monster))
                   
         if monster_status["alive"] and monster_status["dead"]:
-            summary = "We've got {a} alive and {d} dead.".format(
+            summary = "We've got {a} and {d}.".format(
                 a=Text.properly_format_list(formatted_monsters["alive"]),
                 d=Text.properly_format_list(formatted_monsters["dead"]))
         elif monster_status["alive"]:

@@ -110,9 +110,11 @@ class Roll(Action):
     def _attack_roll(self) -> bool:
         """Execute an attack roll.
         Returns a bool to indicate whether the action was successful"""
-        
+        first_turn = False
+
         # set initiative order
         if self.state.get_combat_status() == Combat.INITIATIVE:
+            first_turn = True
             self.state.set_initiative_order()
             self.output_builder.append(
                 NLG.entity_turn(self.state.get_entity_name(self.state.get_currently_acting_entity()))
@@ -133,7 +135,8 @@ class Roll(Action):
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:
                     return True
-            self.output_builder.append("Okay, now the monsters get to have their turn!")
+            if not first_turn:
+                self.output_builder.append("Okay, now the monsters get to have their turn!")
             self.state.pause()
         elif self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)
@@ -187,7 +190,6 @@ class Roll(Action):
         """Execute an ability roll.
         Returns a bool to indicate whether the ability check was successful"""
         logger.debug("(SESSION {s}) Roll _ability_roll State.__dict__".format(s=self.state.session.session_id))
-        logger.debug(self.state.stored_ability_check)
 
         player = self.state.get_entity()
         roll = player.ability_roll(self.state.stored_ability_check["solution"])
@@ -210,7 +212,6 @@ class Roll(Action):
         """Execute an skill roll.
         Returns a bool to indicate whether the skill check was successful"""
         logger.debug("(SESSION {s}) Roll _skill_roll State.__dict__".format(s=self.state.session.session_id))
-        logger.debug(self.state.stored_skill_check)
 
         player = self.state.get_entity()
         roll = player.skill_roll(self.state.stored_skill_check["solution"])

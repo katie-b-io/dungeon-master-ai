@@ -530,7 +530,7 @@ class DM:
         Appends the hint to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.hint".format(s=self.state.session.session_id))
-        return self.state.get_player().print_next_move()
+        return self.state.get_player().agent.get_next_move()
 
     def move(
         self, destination: str = None, entity: str = None, nlu_entities: dict = None
