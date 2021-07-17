@@ -94,16 +94,16 @@ class AbilityCheck(Action):
                 current = self.state.get_current_room()
                 if self.state.current_intent == "explore":
                     if self.investigate:
-                        success_func = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_func()
+                        success_func = "investigate"
                         success_params = current.puzzles.get_puzzle(self.puzzle).get_investigate_success_params(self.ability)
                     else:
-                        success_func = current.puzzles.get_puzzle(self.puzzle).get_explore_success_func()
+                        success_func = "explore"
                         success_params = current.puzzles.get_puzzle(self.puzzle).get_explore_success_params(self.ability)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "door":
-                    success_func = current.puzzles.get_puzzle(self.puzzle).get_solution_success_func()
+                    success_func = "solution"
                     success_params = current.puzzles.get_puzzle(self.puzzle).get_solution_success_params(self.ability)
                 elif current.puzzles.get_puzzle(self.puzzle).type == "trap":
-                    success_func = current.puzzles.get_puzzle(self.puzzle).get_solution_success_func()
+                    success_func = "solution"
                     success_params = current.puzzles.get_puzzle(self.puzzle).get_solution_success_params(self.ability)
                 else:
                     # TODO better fallback

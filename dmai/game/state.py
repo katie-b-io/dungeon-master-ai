@@ -1055,7 +1055,7 @@ class State():
     
     def set_ability_check(self, target: dict) -> None:
         """Method to set the ability check target, where the target is a dict:
-        {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
+        {target: id, puzzle: id, solution: id, success_func: str, success_params: list}"""
         self.stored_ability_check = target
     
     def clear_ability_check(self) -> None:
@@ -1064,7 +1064,7 @@ class State():
     
     def set_skill_check(self, target: dict) -> None:
         """Method to set the skill check target, where the target is a dict:
-        {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
+        {target: id, puzzle: id, solution: id, success_func: str, success_params: list}"""
         self.stored_skill_check = target
     
     def clear_skill_check(self) -> None:
