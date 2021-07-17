@@ -276,7 +276,7 @@ class Puzzle(ABC):
         """Method to return the function params on successful roll following investigate intent"""
         return [roll]
     
-    def get_success_func(self, func: str) -> object
+    def get_success_func(self, func: str) -> object:
         func_map = {
             "investigate": self.investigate_success_func,
             "explore": self.explore_success_func,
