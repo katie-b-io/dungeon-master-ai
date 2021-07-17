@@ -226,6 +226,7 @@ class Puzzle(ABC):
                 elif result == "good_ending":
                     self.output_builder.append(self.state.get_dm().get_good_ending())
                     self.state.gameover()
+                    return
             self.solve()
     
     def investigate_success_func(self, option: str) -> None:
@@ -254,6 +255,7 @@ class Puzzle(ABC):
                 elif result == "good_ending":
                     self.output_builder.append(self.state.get_dm().get_good_ending())
                     self.state.gameover()
+                    return
             if solve:
                 self.solve()
         

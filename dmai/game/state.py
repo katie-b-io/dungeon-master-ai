@@ -723,6 +723,7 @@ class State():
                     self.output_builder.append(NLG.hp_end_game(attacker.unique_name, death_text=death_text))
                     self.output_builder.append(self.get_dm().get_bad_ending())
                     self.gameover()
+                    return
                 else:
                     self.kill_monster(entity)
                     # deregister triggers
@@ -759,10 +760,6 @@ class State():
         attacker = self.get_entity(attacker)
         target = self.get_entity(target)
         attack_roll = attacker.attack_roll(weapon)
-        if self.get_current_hp() <= 0.75*self.player.hp_max:
-            attack_roll = 1
-        else:
-            attack_roll = 20
 
         # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
         if target == self.player:
@@ -783,7 +780,6 @@ class State():
         attacker = self.get_entity(attacker)
         target = self.get_entity(target)
         damage = attacker.damage_roll(weapon)
-        damage = 4
 
         # if player is being attacked and health is at or below 50%, deal less damage
         if target == self.player:
@@ -791,7 +787,7 @@ class State():
                 damage = attacker.min_damage(weapon)
 
         hp = self.take_damage(damage, attacker.unique_id)
-        if target == self.get_player():
+        if target == self.get_player() and hp:
             self.output_builder.append(NLG.health_update(hp, hp_max=target.hp_max))
         return
         
