@@ -1,6 +1,7 @@
 from collections import Counter
 from enum import Enum
 import operator
+import time
 
 from dmai.utils.text import Text
 from dmai.domain.skills import Skills
@@ -283,6 +284,8 @@ class State():
     
     def get_dm(self) -> None:
         """Method to return dm"""
+        while not self.dm:
+            time.sleep(0.01)
         return self.dm
     
     def set_player(self, player) -> None:
@@ -301,6 +304,8 @@ class State():
     
     def get_player(self):
         """Method to return player"""
+        while not self.player:
+            time.sleep(0.01)
         return self.player
     
     def get_name(self, thing_id: str) -> str:
@@ -529,7 +534,7 @@ class State():
         """Method to heal a number of hit points, up to a max"""
         current_hp = self.get_current_hp(entity)
         if entity == "player":
-            hp_max = self.player.hp_max
+            hp_max = self.get_player().hp_max
         new_hp = current_hp + hp
         if hp_max:
             if new_hp > hp_max:
@@ -680,7 +685,7 @@ class State():
         # first, deregister any triggers from original target
         if self.get_current_target_id(entity):
             current_target_obj = self.get_entity(self.get_current_target_id(entity))
-            self.dm.deregister_trigger(current_target_obj)
+            self.get_dm().deregister_trigger(current_target_obj)
             
         # set new target
         self.current_target[entity] = target
@@ -702,7 +707,7 @@ class State():
 
         logger.debug("(SESSION {s}) Clearing current target".format(s=self.session.session_id))
         if self.get_current_target_id(entity):
-            self.dm.deregister_trigger(
+            self.get_dm().deregister_trigger(
                 self.get_entity(self.get_current_target_id(entity)))
             self.current_target[entity] = None
 
@@ -762,8 +767,8 @@ class State():
         attack_roll = attacker.attack_roll(weapon)
 
         # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
-        if target == self.player:
-            if self.get_current_hp() <= 0.5*self.player.hp_max:
+        if target == self.get_player():
+            if self.get_current_hp() <= 0.5*self.get_player().hp_max:
                 roll = attacker.attack_roll(weapon)
                 if roll < attack_roll:
                     attack_roll = roll
@@ -782,8 +787,8 @@ class State():
         damage = attacker.damage_roll(weapon)
 
         # if player is being attacked and health is at or below 50%, deal less damage
-        if target == self.player:
-            if self.get_current_hp() <= 0.5*self.player.hp_max:
+        if target == self.get_player():
+            if self.get_current_hp() <= 0.5*self.get_player().hp_max:
                 damage = attacker.min_damage(weapon)
 
         hp = self.take_damage(damage, attacker.unique_id)
@@ -802,7 +807,7 @@ class State():
         """Method to return the name of a room."""
         try:
             if self.check_room_exists(room_id):
-                return self.dm.adventure.get_room(room_id).name
+                return self.get_dm().adventure.get_room(room_id).name
         except UnrecognisedRoomError:
             logger.debug("(SESSION {s}) Room not recognised: {r}".format(s=self.session.session_id, r=room_id))
             raise
@@ -850,7 +855,7 @@ class State():
             if self._check_entity_exists(entity):
                 room_id = self.get_current_room_id(entity)
                 if self.check_room_exists(room_id):
-                    return self.dm.adventure.get_room(room_id)
+                    return self.get_dm().adventure.get_room(room_id)
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
     
