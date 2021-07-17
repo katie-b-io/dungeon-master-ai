@@ -207,6 +207,7 @@ class Puzzle(ABC):
                     self.state.set_current_status(result, "alive")
                     self.state.combat(result, "player")
             self.solve()
+        logger.debug("(SESSION {s}) Returning from Puzzle.solution_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
         
     def explore_success_func(self, option: str) -> None:
         """Method to construct explore success function"""
@@ -228,10 +229,11 @@ class Puzzle(ABC):
                     self.state.gameover()
                     return
             self.solve()
+        logger.debug("(SESSION {s}) Returning from Puzzle.explore_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
     
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
-        logger.debug("(SESSION {s}) Puzzle.investigate_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
+        logger.debug("(SESSION {s}) Puzzle.investigate_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
         solve = True
         if not self.id in self.state.solved_puzzles:
             if self.investigate[option]["say"]:
@@ -258,6 +260,7 @@ class Puzzle(ABC):
                     return
             if solve:
                 self.solve()
+        logger.debug("(SESSION {s}) Returning from Puzzle.investigate_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
         
     def get_solution_success_func(self) -> object:
         """Method to return the function on successful roll"""

@@ -1,6 +1,9 @@
 import random
 
 from dmai.utils.text import Text
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class NLGMeta(type):

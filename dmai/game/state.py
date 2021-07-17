@@ -3,6 +3,7 @@ from enum import Enum
 import operator
 import time
 
+import dmai
 from dmai.utils.text import Text
 from dmai.domain.skills import Skills
 from dmai.domain.abilities import Abilities
@@ -10,7 +11,6 @@ from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
 from dmai.utils.logger import get_logger
-import dmai
 
 logger = get_logger(__name__)
 

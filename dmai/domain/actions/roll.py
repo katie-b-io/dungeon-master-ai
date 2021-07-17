@@ -5,7 +5,10 @@ from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
 from dmai.game.state import Combat
-import dmai
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 
 class Roll(Action):

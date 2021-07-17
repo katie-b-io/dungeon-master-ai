@@ -1,5 +1,8 @@
 from dmai.domain.abilities import Abilities
 from dmai.utils.loader import Loader
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class Skills:

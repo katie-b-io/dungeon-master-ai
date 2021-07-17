@@ -11,7 +11,10 @@ from dmai.domain.actions.ability_check import AbilityCheck
 from dmai.domain.actions.roll import Roll
 from dmai.domain.actions.pick_up import PickUp
 from dmai.domain.actions.roleplay import Roleplay
-import dmai
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 
 class Actions:
@@ -336,6 +339,7 @@ class Actions:
     def roll(self, roll_type: str, nlu_entities: dict = {}, die: str = "d20") -> bool:
         """Attempt to roll a specified type.
         Returns a bool to indicate whether the action was successful"""
+        logger.debug("(SESSION {s}) Actions.roll: {r}".format(s=self.state.session.session_id, r=roll_type))
         roll = Roll(roll_type, die, nlu_entities, self.state, self.output_builder)
         return roll.execute()
 
