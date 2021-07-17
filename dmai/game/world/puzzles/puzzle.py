@@ -192,7 +192,9 @@ class Puzzle(ABC):
         """Method to construct solution success function"""
         # TODO support non-door types
         logger.debug("(SESSION {s}) Puzzle.solution_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
+        logger.debug("(SESSION {s}) State.solved_puzzles: {p}".format(s=self.state.session.session_id, p=str(self.state.solved_puzzles)))
         if not self.id in self.state.solved_puzzles:
+            logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
             if self.solutions[option]["say"]:
                 self.output_builder.append(self.solutions[option]["say"])
             if self.type == "door":
@@ -212,7 +214,9 @@ class Puzzle(ABC):
     def explore_success_func(self, option: str) -> None:
         """Method to construct explore success function"""
         logger.debug("(SESSION {s}) Puzzle.explore_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
+        logger.debug("(SESSION {s}) State.solved_puzzles: {p}".format(s=self.state.session.session_id, p=str(self.state.solved_puzzles)))
         if not self.id in self.state.solved_puzzles:
+            logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
             if self.explore[option]["say"]:
                 self.output_builder.append(self.explore[option]["say"])
             if self.explore[option]["result"]:
@@ -234,8 +238,10 @@ class Puzzle(ABC):
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
         logger.debug("(SESSION {s}) Puzzle.investigate_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
+        logger.debug("(SESSION {s}) State.solved_puzzles: {p}".format(s=self.state.session.session_id, p=str(self.state.solved_puzzles)))
         solve = True
         if not self.id in self.state.solved_puzzles:
+            logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
             if self.investigate[option]["say"]:
                 self.output_builder.append(self.investigate[option]["say"])
             if "result" in self.investigate[option] and self.investigate[option]["result"]:
