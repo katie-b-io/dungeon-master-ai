@@ -7,6 +7,9 @@ from dmai.domain.items.silver_key import SilverKey
 from dmai.domain.items.bronze_key import BronzeKey
 from dmai.domain.items.item import Item
 from dmai.utils.text import Text
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class ItemCollection:

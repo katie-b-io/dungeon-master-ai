@@ -4,6 +4,9 @@ from dmai.domain.equipment.torch import Torch
 from dmai.domain.equipment.equipment import Equipment
 from dmai.game.state import State
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class EquipmentCollection:

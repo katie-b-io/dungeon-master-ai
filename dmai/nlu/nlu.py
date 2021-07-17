@@ -1,6 +1,5 @@
 import traceback
 
-import dmai
 from dmai.utils.exceptions import UnrecognisedCommandError
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.text import Text
@@ -131,13 +130,14 @@ class NLU():
                 
         # check if there's an expected intent
         elif self.state.expected_intent:
-            if intent not in self.state.expected_intent:
-                # TODO make exception for hints or questions
-                # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
-                intents = [self.state.get_dm().player_intent_map[intent]["desc"] for intent in self.state.expected_intent]
-                intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
-                self.output_builder.append("I was expecting you to {i}".format(i=intent_str))
-                return (None, {"nlu_entities": entities})
+            if intent != "affirm" and "roll" not in self.state.expected_intent:
+                if intent not in self.state.expected_intent:
+                    # TODO make exception for hints or questions
+                    # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
+                    intents = [self.state.get_dm().player_intent_map[intent]["desc"] for intent in self.state.expected_intent]
+                    intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
+                    self.output_builder.append("I was expecting you to {i}".format(i=intent_str))
+                    return (None, {"nlu_entities": entities})
         
         # check if there's a suggested next move
         elif self.state.suggested_next_move["state"]:

@@ -1,4 +1,7 @@
 from dmai.game.state import State
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 class PlanningActions():
 

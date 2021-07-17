@@ -6,7 +6,10 @@ from dmai.utils.exceptions import UnrecognisedEntityError
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
-import dmai
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 
 class Roleplay(Action):

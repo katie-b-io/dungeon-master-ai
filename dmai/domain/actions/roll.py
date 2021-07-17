@@ -5,7 +5,10 @@ from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
 from dmai.game.state import Combat
-import dmai
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 
 class Roll(Action):
@@ -107,9 +110,11 @@ class Roll(Action):
     def _attack_roll(self) -> bool:
         """Execute an attack roll.
         Returns a bool to indicate whether the action was successful"""
-        
+        first_turn = False
+
         # set initiative order
         if self.state.get_combat_status() == Combat.INITIATIVE:
+            first_turn = True
             self.state.set_initiative_order()
             self.output_builder.append(
                 NLG.entity_turn(self.state.get_entity_name(self.state.get_currently_acting_entity()))
@@ -130,7 +135,8 @@ class Roll(Action):
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:
                     return True
-            self.output_builder.append("Okay, now the monsters get to have their turn!")
+            if not first_turn:
+                self.output_builder.append("Okay, now the monsters get to have their turn!")
             self.state.pause()
         elif self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)
@@ -183,13 +189,16 @@ class Roll(Action):
     def _ability_roll(self) -> bool:
         """Execute an ability roll.
         Returns a bool to indicate whether the ability check was successful"""
+        logger.debug("(SESSION {s}) Roll _ability_roll State.__dict__".format(s=self.state.session.session_id))
+
         player = self.state.get_entity()
         roll = player.ability_roll(self.state.stored_ability_check["solution"])
         puzzle = self.state.get_current_room().puzzles.get_puzzle(self.state.stored_ability_check["puzzle"])
         dc = puzzle.get_difficulty_class(self.state.stored_ability_check["solution"])
         if roll >= dc:
             self.output_builder.append(NLG.succeed_check())
-            self.state.stored_ability_check["success_func"](*self.state.stored_ability_check["success_params"])
+            success_func = puzzle.get_success_func(self.state.stored_ability_check["success_func"])
+            success_func(*self.state.stored_ability_check["success_params"])
             self.state.clear_ability_check()
         else:
             self.output_builder.append(NLG.fail_check(self.state.stored_ability_check["allow_repeat"]))
@@ -202,13 +211,16 @@ class Roll(Action):
     def _skill_roll(self) -> bool:
         """Execute an skill roll.
         Returns a bool to indicate whether the skill check was successful"""
+        logger.debug("(SESSION {s}) Roll _skill_roll State.__dict__".format(s=self.state.session.session_id))
+
         player = self.state.get_entity()
         roll = player.skill_roll(self.state.stored_skill_check["solution"])
         puzzle = self.state.get_current_room().puzzles.get_puzzle(self.state.stored_skill_check["puzzle"])
         dc = puzzle.get_difficulty_class(self.state.stored_skill_check["solution"])
         if roll >= dc:
             self.output_builder.append(NLG.succeed_check())
-            self.state.stored_skill_check["success_func"](*self.state.stored_skill_check["success_params"])
+            success_func = puzzle.get_success_func(self.state.stored_skill_check["success_func"])
+            success_func(*self.state.stored_skill_check["success_params"])
             self.state.clear_skill_check()
         else:
             self.output_builder.append(NLG.fail_check(self.state.stored_skill_check["allow_repeat"]))

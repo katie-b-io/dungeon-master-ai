@@ -1,6 +1,9 @@
 from dmai.utils.output_builder import OutputBuilder
 from dmai.game.world.puzzles.puzzle import Puzzle
 from dmai.game.state import State
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class PuzzleCollection:

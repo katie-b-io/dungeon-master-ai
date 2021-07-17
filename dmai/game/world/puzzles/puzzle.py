@@ -38,7 +38,6 @@ class Puzzle(ABC):
         for investigate in self.investigate:
             if investigate not in self.state.puzzle_trigger_map[self.id]["investigate"]:
                 self.state.puzzle_trigger_map[self.id]["investigate"][investigate] = True
-
             
     def __repr__(self) -> str:
         return "{c}: {n}".format(c=self.__class__.__name__, n=self.name)
@@ -193,6 +192,7 @@ class Puzzle(ABC):
         # TODO support non-door types
         logger.debug("(SESSION {s}) Puzzle.solution_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
         if not self.id in self.state.solved_puzzles:
+            logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
             if self.solutions[option]["say"]:
                 self.output_builder.append(self.solutions[option]["say"])
             if self.type == "door":
@@ -207,11 +207,13 @@ class Puzzle(ABC):
                     self.state.set_current_status(result, "alive")
                     self.state.combat(result, "player")
             self.solve()
+        logger.debug("(SESSION {s}) Returning from Puzzle.solution_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
         
     def explore_success_func(self, option: str) -> None:
         """Method to construct explore success function"""
         logger.debug("(SESSION {s}) Puzzle.explore_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
         if not self.id in self.state.solved_puzzles:
+            logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
             if self.explore[option]["say"]:
                 self.output_builder.append(self.explore[option]["say"])
             if self.explore[option]["result"]:
@@ -228,12 +230,14 @@ class Puzzle(ABC):
                     self.state.gameover()
                     return
             self.solve()
+        logger.debug("(SESSION {s}) Returning from Puzzle.explore_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
     
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
-        logger.debug("(SESSION {s}) Puzzle.investigate_success_func : {p}".format(s=self.state.session.session_id, p=self.id))
+        logger.debug("(SESSION {s}) Puzzle.investigate_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
         solve = True
         if not self.id in self.state.solved_puzzles:
+            logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
             if self.investigate[option]["say"]:
                 self.output_builder.append(self.investigate[option]["say"])
             if "result" in self.investigate[option] and self.investigate[option]["result"]:
@@ -258,27 +262,24 @@ class Puzzle(ABC):
                     return
             if solve:
                 self.solve()
-        
-    def get_solution_success_func(self) -> object:
-        """Method to return the function on successful roll"""
-        return self.solution_success_func
+        logger.debug("(SESSION {s}) Returning from Puzzle.investigate_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
     
     def get_solution_success_params(self, roll: str) -> list:
         """Method to return the function params on successful roll"""
         return [roll]
     
-    def get_explore_success_func(self) -> object:
-        """Method to return the function on successful roll following explore intent"""
-        return self.explore_success_func
-    
     def get_explore_success_params(self, roll: str) -> list:
         """Method to return the function params on successful roll following explore intent"""
         return [roll]
     
-    def get_investigate_success_func(self) -> object:
-        """Method to return the function on successful roll following investigate intent"""
-        return self.investigate_success_func
-    
     def get_investigate_success_params(self, roll: str) -> list:
         """Method to return the function params on successful roll following investigate intent"""
         return [roll]
+    
+    def get_success_func(self, func: str) -> object:
+        func_map = {
+            "investigate": self.investigate_success_func,
+            "explore": self.explore_success_func,
+            "solution": self.solution_success_func
+        }
+        return func_map[func]

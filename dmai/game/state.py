@@ -1,7 +1,9 @@
 from collections import Counter
 from enum import Enum
 import operator
+import time
 
+import dmai
 from dmai.utils.text import Text
 from dmai.domain.skills import Skills
 from dmai.domain.abilities import Abilities
@@ -9,7 +11,6 @@ from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
 from dmai.utils.logger import get_logger
-import dmai
 
 logger = get_logger(__name__)
 
@@ -93,6 +94,7 @@ class State():
         self.stored_ability_check = None
         self.stored_skill_check = None
         self.ales = 0
+        self.hint_requested = False
         self.help_player = False
         self.suggested_next_move = {"utter": "", "state": False}
         # npc triggers
@@ -146,17 +148,19 @@ class State():
         for key in saved_state:
             self.__setattr__(key, saved_state[key])
     
-    def nag_player(self) -> None:
+    def nag_player(self, hint: bool = False) -> None:
         """Method to prompt player to make a sensible action"""
+        self.hint_requested = True
         self.help_player = True
 
     def prompt_player(self) -> None:
-        if self.help_player and not self.in_combat and not self.current_conversation:
+        if self.hint_requested or (self.help_player and not self.in_combat and not self.current_conversation):
             next_move = self.get_player().agent.get_next_move()
             if next_move:
                 logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
                 self.suggested_next_move = {"utter": next_move, "state": True}
                 self.output_builder.append(next_move)
+        self.hint_requested = False
         self.help_player = False
 
     def combat(self, attacker: str, target: str) -> None:
@@ -283,6 +287,8 @@ class State():
     
     def get_dm(self) -> None:
         """Method to return dm"""
+        while not self.dm:
+            time.sleep(0.01)
         return self.dm
     
     def set_player(self, player) -> None:
@@ -301,6 +307,8 @@ class State():
     
     def get_player(self):
         """Method to return player"""
+        while not self.player:
+            time.sleep(0.01)
         return self.player
     
     def get_name(self, thing_id: str) -> str:
@@ -529,7 +537,7 @@ class State():
         """Method to heal a number of hit points, up to a max"""
         current_hp = self.get_current_hp(entity)
         if entity == "player":
-            hp_max = self.player.hp_max
+            hp_max = self.get_player().hp_max
         new_hp = current_hp + hp
         if hp_max:
             if new_hp > hp_max:
@@ -680,7 +688,7 @@ class State():
         # first, deregister any triggers from original target
         if self.get_current_target_id(entity):
             current_target_obj = self.get_entity(self.get_current_target_id(entity))
-            self.dm.deregister_trigger(current_target_obj)
+            self.get_dm().deregister_trigger(current_target_obj)
             
         # set new target
         self.current_target[entity] = target
@@ -702,7 +710,7 @@ class State():
 
         logger.debug("(SESSION {s}) Clearing current target".format(s=self.session.session_id))
         if self.get_current_target_id(entity):
-            self.dm.deregister_trigger(
+            self.get_dm().deregister_trigger(
                 self.get_entity(self.get_current_target_id(entity)))
             self.current_target[entity] = None
 
@@ -762,8 +770,8 @@ class State():
         attack_roll = attacker.attack_roll(weapon)
 
         # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
-        if target == self.player:
-            if self.get_current_hp() <= 0.5*self.player.hp_max:
+        if target == self.get_player():
+            if self.get_current_hp() <= 0.5*self.get_player().hp_max:
                 roll = attacker.attack_roll(weapon)
                 if roll < attack_roll:
                     attack_roll = roll
@@ -782,8 +790,8 @@ class State():
         damage = attacker.damage_roll(weapon)
 
         # if player is being attacked and health is at or below 50%, deal less damage
-        if target == self.player:
-            if self.get_current_hp() <= 0.5*self.player.hp_max:
+        if target == self.get_player():
+            if self.get_current_hp() <= 0.5*self.get_player().hp_max:
                 damage = attacker.min_damage(weapon)
 
         hp = self.take_damage(damage, attacker.unique_id)
@@ -802,7 +810,7 @@ class State():
         """Method to return the name of a room."""
         try:
             if self.check_room_exists(room_id):
-                return self.dm.adventure.get_room(room_id).name
+                return self.get_dm().adventure.get_room(room_id).name
         except UnrecognisedRoomError:
             logger.debug("(SESSION {s}) Room not recognised: {r}".format(s=self.session.session_id, r=room_id))
             raise
@@ -850,7 +858,7 @@ class State():
             if self._check_entity_exists(entity):
                 room_id = self.get_current_room_id(entity)
                 if self.check_room_exists(room_id):
-                    return self.dm.adventure.get_room(room_id)
+                    return self.get_dm().adventure.get_room(room_id)
         except (UnrecognisedRoomError, UnrecognisedEntityError):
             raise
     
@@ -999,10 +1007,11 @@ class State():
                 if count > 1:
                     formatted_monsters[status].append("{c} {s} {m}s".format(c=count, s=status, m=monster))
                 else:
-                    formatted_monsters[status].append("a {s} {m}".format(s=status, m=monster))
+                    a = "an" if status == "alive" else "a"
+                    formatted_monsters[status].append("{a} {s} {m}".format(a=a, s=status, m=monster))
                   
         if monster_status["alive"] and monster_status["dead"]:
-            summary = "We've got {a} alive and {d} dead.".format(
+            summary = "We've got {a} and {d}.".format(
                 a=Text.properly_format_list(formatted_monsters["alive"]),
                 d=Text.properly_format_list(formatted_monsters["dead"]))
         elif monster_status["alive"]:
@@ -1050,7 +1059,7 @@ class State():
     
     def set_ability_check(self, target: dict) -> None:
         """Method to set the ability check target, where the target is a dict:
-        {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
+        {target: id, puzzle: id, solution: id, success_func: str, success_params: list}"""
         self.stored_ability_check = target
     
     def clear_ability_check(self) -> None:
@@ -1059,7 +1068,7 @@ class State():
     
     def set_skill_check(self, target: dict) -> None:
         """Method to set the skill check target, where the target is a dict:
-        {target: id, puzzle: id, solution: id, success_func: func, success_params: list}"""
+        {target: id, puzzle: id, solution: id, success_func: str, success_params: list}"""
         self.stored_skill_check = target
     
     def clear_skill_check(self) -> None:

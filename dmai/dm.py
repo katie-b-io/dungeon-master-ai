@@ -1,5 +1,4 @@
 from dmai.utils.output_builder import OutputBuilder
-import dmai
 from dmai.game.state import State
 from dmai.game.adventure import Adventure
 from dmai.domain.actions.actions import Actions
@@ -531,7 +530,8 @@ class DM:
         Appends the hint to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.hint".format(s=self.state.session.session_id))
-        return self.state.get_player().print_next_move()
+        self.state.nag_player(hint=True)
+        return True
 
     def move(
         self, destination: str = None, entity: str = None, nlu_entities: dict = None
@@ -735,6 +735,8 @@ class DM:
             utter = self.state.suggested_next_move["utter"]
             (intent, params) = self.nlu.process_player_utterance(utter)
             return self.input(utter, intent=intent, kwargs=params)
+        elif "roll" in self.state.expected_intent:
+            return self.roll()
         return True
 
     def deny(self, **kwargs) -> bool:

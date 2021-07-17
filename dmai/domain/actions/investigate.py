@@ -7,7 +7,10 @@ from dmai.utils.text import Text
 from dmai.game.state import State
 from dmai.nlg.nlg import NLG
 from dmai.domain.actions.action import Action
-import dmai
+from dmai.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 
 class Investigate(Action):
