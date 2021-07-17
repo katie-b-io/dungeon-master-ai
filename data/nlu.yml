@@ -181,6 +181,7 @@ nlu:
     - I move to the [second](id) [rat](monster)
     - I move to the [third](id) [rat](monster)
     - I move to the [fourth](id) [rat](monster)
+    - maybe you should go to the [cellar](location)
 
 - intent: stealth
   examples: |
@@ -254,6 +255,8 @@ nlu:
     - look at [giant rat body](monster)
     - look at [rat body](monster)
     - look at [skeleton body](monster)
+    - investigate [goblin](monster) [1](id)
+    - investigate [skeleton](monster) [1](id)
     - look at [zombie body](monster)
     - check out the [goblin body](monster)
     - check [goblin](monster)
@@ -262,7 +265,6 @@ nlu:
     - get a closer look at the [skeleton](monster)
     - investigate [goblin](monster)
     - look at dead [goblin](monster)
-    - investigate [humanoid](monster)
     - look in [barrel](scenery)
     - examine [walls](scenery)
     - examine [wall](scenery)
@@ -316,6 +318,9 @@ nlu:
     - examine the [sarcophagus](puzzle)
     - look at the [warhammer](puzzle)
     - investigate the [dwarven warrior](puzzle)
+    - maybe you should explore the room
+    - maybe you should investigate [goblin](monster) [1](id)
+    - maybe you should investigate the [altar](puzzle)
 
 - intent: roleplay
   examples: |
@@ -458,6 +463,8 @@ nlu:
     - I attack the [skull](scenery)
     - wreck the [painting](scenery)
     - kick the [table](scenery) over
+    - maybe you should attack [giant rat](monster) [1](id)
+    - maybe you should attack the [door](door)
 
 - intent: ranged_attack
   examples: |
@@ -546,6 +553,7 @@ nlu:
     - I equip the [scimitar](weapon)
     - equip the [shortbow](weapon)
     - I equip my [shortsword](weapon)
+    - maybe you should equip your [greataxe](weapon)
 
 - intent: unequip
   examples: |
@@ -589,6 +597,9 @@ nlu:
     - I want to use the [key](item)
     - unlock the door with the [key](item)
     - use the [key](item) on the [door](door)
+    - maybe you should light a [torch](equipment)
+    - maybe you should use [potion of healing](item)
+    - maybe you should use the [silver key](item) to open the door
 
 - intent: stop_using
   examples: |
@@ -674,6 +685,7 @@ nlu:
     - say to the [giant rat](monster)
     - say to the [skeleton](monster)
     - say to the [zombie]
+    - maybe you should talk to [corvus](npc)
 
 - intent: question_npc
   examples: |
@@ -754,6 +766,8 @@ nlu:
     - force open the [vault lid](puzzle)
     - force the [vault](puzzle) open
     - force [lid](puzzle)
+    - maybe you should use strength to open the door
+    - maybe you should force the door open
 
 - intent: ability_check
   examples: |

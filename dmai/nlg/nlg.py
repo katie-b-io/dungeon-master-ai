@@ -35,7 +35,7 @@ class NLG(metaclass=NLGMeta):
         
         utter = random.choice(utters)
         if next_move:
-            utter += " Maybe you could {m}?".format(m=next_move)
+            utter += next_move
         return utter
         
     ############################################################
@@ -600,7 +600,7 @@ class NLG(metaclass=NLGMeta):
             utter = "You cannot {v} {t} because it's too dark to see anything!".format(v=verb, t=target)
 
         if next_move:
-            utter += " Maybe you could {m}?".format(m=next_move)
+            utter += next_move
         return utter
 
     @classmethod
@@ -616,7 +616,7 @@ class NLG(metaclass=NLGMeta):
             ]
         utter = random.choice(utters)
         if next_move:
-            utter += " Maybe you could {m}?".format(m=next_move)
+            utter += next_move
         return utter
 
     @classmethod

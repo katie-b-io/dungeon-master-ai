@@ -3,6 +3,8 @@ from enum import Enum
 import operator
 
 from dmai.utils.text import Text
+from dmai.domain.skills import Skills
+from dmai.domain.abilities import Abilities
 from dmai.utils.output_builder import OutputBuilder
 from dmai.utils.exceptions import UnrecognisedEntityError, UnrecognisedRoomError, RoomConnectionError
 from dmai.nlg.nlg import NLG
@@ -154,7 +156,7 @@ class State():
             if next_move:
                 logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
                 self.suggested_next_move = {"utter": next_move, "state": True}
-                self.output_builder.append("Maybe you could {n}".format(n=next_move))
+                self.output_builder.append(next_move)
         self.help_player = False
 
     def combat(self, attacker: str, target: str) -> None:
@@ -301,6 +303,61 @@ class State():
         """Method to return player"""
         return self.player
     
+    def get_name(self, thing_id: str) -> str:
+        """Method to return the name of ANYTHING in the game"""
+        logger.debug("(SESSION {s}) State.get_name: {t}".format(s=self.session.session_id, t=thing_id))
+        # player, monster or npc
+        if self.get_entity_name(thing_id):
+            logger.debug("(SESSION {s}) {t} is an entity".format(s=self.session.session_id, t=thing_id))
+            return self.get_entity_name(thing_id)
+        else: 
+            logger.debug("(SESSION {s}) Not player, monster or NPC: {t}".format(s=self.session.session_id, t=thing_id))
+        # room
+        try:
+            if self.get_room_name(thing_id):
+                logger.debug("(SESSION {s}) {t} is a room".format(s=self.session.session_id, t=thing_id))
+                return self.get_room_name(thing_id)
+        except UnrecognisedRoomError:
+            logger.debug("(SESSION {s}) Not room: {t}".format(s=self.session.session_id, t=thing_id))
+        
+        # item
+        if thing_id in self.get_player().character.items.item_data:
+            logger.debug("(SESSION {s}) {t} is an item".format(s=self.session.session_id, t=thing_id))
+            return self.get_player().character.items.item_data[thing_id]["name"]
+
+        # equipment
+        if thing_id in self.get_player().character.equipment.equipment_data:
+            logger.debug("(SESSION {s}) {t} is equipment".format(s=self.session.session_id, t=thing_id))
+            return self.get_player().character.equipment.equipment_data[thing_id]["name"]
+
+        # weapon
+        if thing_id in self.get_player().character.weapons.weapons_data:
+            logger.debug("(SESSION {s}) {t} is a weapon".format(s=self.session.session_id, t=thing_id))
+            return self.get_player().character.weapons.weapons_data[thing_id]["name"]
+
+        # ability
+        for ability, name in Abilities.get_all_abilities():
+            if ability == thing_id:
+                logger.debug("(SESSION {s}) {t} is an ability".format(s=self.session.session_id, t=thing_id))
+                return name
+        
+        # skill
+        for skill, name in Skills.get_all_skills():
+                if skill == thing_id:
+                    logger.debug("(SESSION {s}) {t} is a skill".format(s=self.session.session_id, t=thing_id))
+                    return name
+
+        # puzzle
+        for room in self.get_dm().adventure.get_all_rooms():
+            for puzzle in room.puzzles.get_all_puzzles():
+                if not puzzle.type == "door":
+                    if thing_id == puzzle.id or thing_id == "{p}_puzzle".format(p=puzzle.id):
+                        logger.debug("(SESSION {s}) {t} is a puzzle".format(s=self.session.session_id, t=thing_id))
+                        return puzzle.name
+        
+        logger.debug("(SESSION {s}) {t} was not found".format(s=self.session.session_id, t=thing_id))
+        return "unknown"
+
     def get_entity_name(self, entity: str = "player") -> str:
         """Method to return name of entity"""
         try:
@@ -702,6 +759,10 @@ class State():
         attacker = self.get_entity(attacker)
         target = self.get_entity(target)
         attack_roll = attacker.attack_roll(weapon)
+        if self.get_current_hp() <= 0.75*self.player.hp_max:
+            attack_roll = 1
+        else:
+            attack_roll = 20
 
         # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
         if target == self.player:
@@ -722,6 +783,7 @@ class State():
         attacker = self.get_entity(attacker)
         target = self.get_entity(target)
         damage = attacker.damage_roll(weapon)
+        damage = 4
 
         # if player is being attacked and health is at or below 50%, deal less damage
         if target == self.player:

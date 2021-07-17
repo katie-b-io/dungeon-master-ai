@@ -233,6 +233,11 @@ class PlanningActions():
         )"""},
 
             "equip": {
+                "action": "equip",
+                "string": "Maybe you should equip your {w}.",
+                "string_param_indices": {
+                    "w": 2
+                },
                 "pddl": """
         ; Entity equips weapon or equipment
         (:action equip
@@ -261,6 +266,9 @@ class PlanningActions():
         )"""},
             
             "explore": {
+                "action": "explore",
+                "string": "Maybe you should explore the room.",
+                "string_param_indices": {},
                 "pddl": """
         ; Player explores room
         (:action explore
@@ -289,6 +297,11 @@ class PlanningActions():
         )"""},
 
             "investigate_puzzle": {
+                "action": "investigate_puzzle",
+                "string": "Maybe you should investigate the {p}.",
+                "string_param_indices": {
+                    "p": 3
+                },
                 "pddl": """
         ; Player investigates puzzle
         (:action investigate_puzzle
@@ -305,6 +318,11 @@ class PlanningActions():
         )"""},
 
             "investigate_monster": {
+                "action": "investigate_monster",
+                "string": "Maybe you should investigate {m}.",
+                "string_param_indices": {
+                    "m": 3
+                },
                 "pddl": """
         ; Player investigates monster
         (:action investigate_monster
@@ -321,6 +339,9 @@ class PlanningActions():
         )"""},
 
             "use_potion_of_healing": {
+                "action": "use_potion_of_healing",
+                "string": "Maybe you should use Potion of Healing.",
+                "string_param_indices": {},
                 "pddl": """
         ; Player drinks potion of healing
         (:action use_potion_of_healing
@@ -370,6 +391,11 @@ class PlanningActions():
         )"""},
 
             "move": {
+                "action": "move",
+                "string": "Maybe you should go to the {d}.",
+                "string_param_indices": {
+                    "d": 4
+                },
                 "pddl": """
         ; Player moves from one room to another
         (:action move
@@ -382,14 +408,17 @@ class PlanningActions():
                     (or (torch_lit) (darkvision))
                 )
                 (not (treasure ?location))
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -421,6 +450,11 @@ class PlanningActions():
         )"""},
 
             "open_door_with_item": {
+                "action": "open_door_with_item",
+                "string": "Maybe you should use the {i} to open the door.",
+                "string_param_indices": {
+                    "i": 2
+                },
                 "pddl": """
         ; Player wants to open a door with an item
         (:action open_door_with_item
@@ -438,14 +472,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item2 - item2)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item2))
-                                (not (has ?player ?item2))
+                                (and
+                                    (potion_of_healing ?item2)
+                                    (not (has ?player ?item2))
+                                )
                             )
                         )
                     )
@@ -458,6 +495,9 @@ class PlanningActions():
         )"""},
 
             "open_door_with_explore": {
+                "action": "open_door_with_explore",
+                "string": "Maybe you should explore the room.",
+                "string_param_indices": {},
                 "pddl": """
         ; Player wants to open a door by exploring
         (:action open_door_with_explore
@@ -474,14 +514,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -493,6 +536,11 @@ class PlanningActions():
         )"""},
 
             "open_door_with_ability": {
+                "action": "open_door_with_ability",
+                "string": "Maybe you should use {a} to open the door.",
+                "string_param_indices": {
+                    "a": 2
+                },
                 "pddl": """
         ; Player wants to open a door with an ability/skill
         (:action open_door_with_ability
@@ -509,14 +557,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -529,6 +580,9 @@ class PlanningActions():
         )"""},
 
             "open_door_with_equipment": {
+                "action": "open_door_with_equipment",
+                "string": "Maybe you should use {e} to open the room.",
+                "string_param_indices": {},
                 "pddl": """
         ; Player wants to open a door with equipment
         (:action open_door_with_equipment
@@ -545,14 +599,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -565,6 +622,9 @@ class PlanningActions():
         )"""},
 
             "open_door_with_attack": {
+                "action": "open_door_with_attack",
+                "string": "Maybe you should attack the door.",
+                "string_param_indices": {},
                 "pddl": """
         ; Player wants to open a door with attack
         (:action open_door_with_attack
@@ -581,14 +641,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -601,6 +664,9 @@ class PlanningActions():
         )"""},
 
             "force_door": {
+                "action": "force_door",
+                "string": "Maybe you should force the door open.",
+                "string_param_indices": {},
                 "pddl": """
         ; Player forces open a door
         (:action force_door
@@ -617,14 +683,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -654,14 +723,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -692,14 +764,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -730,14 +805,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -765,14 +843,17 @@ class PlanningActions():
                     (not (dark ?location))
                     (or (torch_lit) (darkvision))
                 )
-                (or 
+                (or
                     (not (injured ?player))
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )
@@ -786,14 +867,19 @@ class PlanningActions():
         )"""},
             
             "light_torch": {
+                "action": "light_torch",
+                "string": "Maybe you should light a torch.",
+                "string_param_indices": {},
                 "pddl": """
         ; Player lights a torch
         (:action light_torch
-            :parameters (?player - player ?torch - equipment)
+            :parameters (?player - player ?torch - equipment ?location - room)
             :precondition (and 
                 (alive ?player)
                 (torch ?torch)
                 (has ?player ?torch)
+                (at ?player ?location)
+                (dark ?location)
             )
             :effect (and
                 (torch_lit)
@@ -819,6 +905,11 @@ class PlanningActions():
             )"""},
             
             "receive_quest": {
+                "action": "receive_quest",
+                "string": "Maybe you should talk to {n}.",
+                "string_param_indices": {
+                    "n": 2
+                },
                 "pddl": """
         ; Player receives quest from NPC that can give quests
         (:action receive_quest
@@ -875,6 +966,11 @@ class PlanningActions():
         )"""},
 
             "declare_attack_against_entity": {
+                "action": "declare_attack_against_entity",
+                "string": "Maybe you should attack {e}.",
+                "string_param_indices": {
+                    "e": 2
+                },
                 "pddl": """
         ; Player wants to attack another entity
         (:action declare_attack_against_entity
@@ -894,9 +990,12 @@ class PlanningActions():
                     (and
                         (injured ?player)
                         (forall (?item - item)
-                            (and
+                            (or
                                 (not (potion_of_healing ?item))
-                                (not (has ?player ?item))
+                                (and
+                                    (potion_of_healing ?item)
+                                    (not (has ?player ?item))
+                                )
                             )
                         )
                     )

@@ -40,6 +40,17 @@ class PlannerAdapter(ABC):
         
     def to_natural_language(self, step: str) -> str:
         """Method to convert a step in a plan to natural language"""
+        step = step.replace("(", "").replace(")", "").replace("\n", "")
+        params = step.split(" ")
+        action = params[0]
+        for planning_action_id in self.planning_actions.actions:
+            planning_action = self.planning_actions.actions[planning_action_id]
+            if "action" in planning_action:
+                if action == planning_action["action"]:
+                    string_params = {}
+                    for p, i in planning_action["string_param_indices"].items():
+                        string_params[p] = self.state.get_name(params[i])
+                    return planning_action["string"].format(**string_params)
         return step
     
     def call_function(self, step: str) -> object:

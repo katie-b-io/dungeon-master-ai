@@ -387,7 +387,7 @@ class PlanningPlayer(PlanningAgent):
             init.append(["at", "player", self.state.get_current_room().id])
             if self.state.is_alive():
                 init.append(["alive", "player"])
-            if self.state.get_current_hp() <= (self.state.get_player().hp_max/2):
+            if self.state.get_current_hp() <= (0.75*self.state.get_player().hp_max):
                 init.append(["injured", "player"])
             if self.state.torch_lit:
                 init.append(["torch_lit"])
