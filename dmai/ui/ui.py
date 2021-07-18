@@ -68,7 +68,7 @@ class UserInterface:
 
     def character_sheet(self) -> str:
         """Method to return the character sheet in a string"""
-        return self.game.player.get_character_sheet()
+        return self.game.state.get_player().get_character_sheet()
     
     def players_guide(self) -> str:
         """Method to return the player's guide in a string"""
