@@ -276,6 +276,18 @@ class Character(ABC):
         )
         return "\n".join(textwrap.wrap(equipment_str, 75))
 
+    def get_formatted_items(self) -> str:
+        """Method to return the items formatted string"""
+        item_collection = self.state.get_player().character.items
+        all = []
+        for item in item_collection.get_all():
+            all.append(item_collection.get_formatted(item))
+        if len(all) == 0:
+            return "None"
+        else:
+            item_str = Text.properly_format_list(all)
+            return "\n".join(textwrap.wrap(item_str, 75))
+
     def get_formatted_money(self) -> str:
         """Method to return the money formatted string"""
         return Money.get_formatted(self.cp)

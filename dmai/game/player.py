@@ -155,7 +155,8 @@ class Player(PlayerAgent):
         # Character background
         char_str = div
         char_str += "Character Sheet:\n"
-        char_str += "{l:<20} {v:<30}\n".format(l="Name:", v=self.state.char_name)
+        if self.state.char_name:
+            char_str += "{l:<20} {v:<30}\n".format(l="Name:", v=self.state.char_name)
         char_str += "{l:<20} {v:<30}\n".format(l="Class & level:",
                                                v=self.character.get_class())
         char_str += "{l:<20} {v:<30}\n".format(l="Race:",
@@ -209,13 +210,11 @@ class Player(PlayerAgent):
 
         # Attacks
         char_str += div
-        char_str += "{l:<20} {v:<20} {t:<30}\n".format(l="Attacks (equipped):",
-                                                       v="Attack bonus",
-                                                       t="Damage (type)")
+        char_str += "{l:<20} {v:<20} {t:<30}\n".format(l="Attacks (equipped):")
         for (weapon, name) in self.character.get_all_weapons():
             if self.character.is_equipped(weapon): 
                 name = "{n} (equipped)".format(n=name)
-            char_str += "{l:<25} {a:<20} {v:<30}\n".format(
+            char_str += "{l:<25} attack bonus = {a:<20}; damage = {v:<30}\n".format(
                 l=name + ":",
                 a=self.character.get_signed_attack_bonus(weapon),
                 v=self.character.get_formatted_attack(weapon),
@@ -231,33 +230,38 @@ class Player(PlayerAgent):
         char_str += "Equipment:\n"
         char_str += "{e}\n".format(e=self.character.get_formatted_equipment())
 
-        # Money
+        # Items
         char_str += div
-        char_str += "Money:\n"
-        char_str += "{m}\n".format(m=self.character.get_formatted_money())
+        char_str += "Items:\n"
+        char_str += "{e}\n".format(e=self.character.get_formatted_items())
+
+        # # Money
+        # char_str += div
+        # char_str += "Money:\n"
+        # char_str += "{m}\n".format(m=self.character.get_formatted_money())
 
         # Languages
         char_str += div
         char_str += "Languages:\n"
         char_str += "{l}\n".format(l=self.character.get_formatted_languages())
 
-        # Proficiencies
-        char_str += div
-        char_str += "Proficiencies:\n"
-        for (prof_type, profs) in self.character.get_formatted_proficiencies():
-            char_str += "{l:<20} {v:<30}\n".format(
-                l=prof_type + ":",
-                v=profs,
-            )
+        # # Proficiencies
+        # char_str += div
+        # char_str += "Proficiencies:\n"
+        # for (prof_type, profs) in self.character.get_formatted_proficiencies():
+        #     char_str += "{l:<20} {v:<30}\n".format(
+        #         l=prof_type + ":",
+        #         v=profs,
+        #     )
 
-        # Features
-        char_str += div
-        char_str += "Features:\n"
-        for (feature, name) in self.character.get_all_features():
-            char_str += "{l:<25} {v:<30}\n".format(
-                l=name + ":",
-                v=self.character.get_feature_description(feature,
-                                                         indent_length=26))
+        # # Features
+        # char_str += div
+        # char_str += "Features:\n"
+        # for (feature, name) in self.character.get_all_features():
+        #     char_str += "{l:<25} {v:<30}\n".format(
+        #         l=name + ":",
+        #         v=self.character.get_feature_description(feature,
+        #                                                  indent_length=26))
 
         char_str += div
         return char_str
