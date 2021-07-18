@@ -210,7 +210,7 @@ class Player(PlayerAgent):
 
         # Attacks
         char_str += div
-        char_str += "{l:<20} {v:<20} {t:<30}\n".format(l="Attacks (equipped):")
+        char_str += "{l:<20}\n".format(l="Attacks (equipped):")
         for (weapon, name) in self.character.get_all_weapons():
             if self.character.is_equipped(weapon): 
                 name = "{n} (equipped)".format(n=name)
