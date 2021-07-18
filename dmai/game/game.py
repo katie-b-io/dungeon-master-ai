@@ -178,3 +178,61 @@ class Game:
             output += "\n" + self.dm.output
 
         return output
+
+    @property
+    def players_guide(self) -> str:
+        """Method to return the player's guide"""
+        return (
+"""
+<h1>Welcome to the DMAI!
+
+This experience attempts to emulate a tabletop roleplaying game (TTRPG) as you
+might play in real life. Remember this is a prototype system and it may break
+easily.
+
+The game system uses a limited subset of the D&D 5th Edition rules according to
+the System Reference Document (SRD5.1). Subset is emphasised here, not all
+possible actions have been implemented. As such it is possible for you to:
+* Talk with NPCs
+* Move to different locations
+* Engage in combat with monsters
+* Solve puzzles
+* Perform skill/ability checks
+
+And many more things not listed above - explore the game to find out what's 
+possible. There are multiple endings to the game, most of them bad. You can ask
+the DMAI for help at anytime, e.g. "give me a hint" or "what should I do next?".
+If you want to know about the state of the game, such as what your remaining
+health is or what's in your inventory ask the DMAI ("what stuff do I have?").
+
+<h2>Roleplaying
+
+Throughout the game you tell the DMAI what you want to do next via natural 
+language commands. The DMAI will attempt to figure out what you want to do but
+may get it wrong, especially if your request is very outlandish! You can talk to
+the quest-giving NPC to start your quest.
+
+<h2>Puzzle solving
+
+During the game you will come across locked doors and other items of interest
+that have different solutions. You tell the DMAI how you want to proceed and it 
+will ask for ability/skill checks if your solution is suitable. Ability/skill
+checks determine whether actions suceed by rolling a dice (the DMAI calculates
+any modifiers automatically). Right now, it's not possible to request a
+particular ability/skill check, only the DMAI can decide when to do a 
+ability/skill check.
+
+<h2>Combat
+
+Combat proceeds in the following stages:
+1. As soon as combat starts, the DMAI asks you to roll initiative, this sets
+the order for the turn-based battle
+2. When it's your turn you declare which monster you want to attack and perform
+an attack roll - this determines whether you hit or not. You need to beat the 
+enemy's armor class in order to land a successful attack.
+3. If you make a successful attack roll you can then roll for damage. This value
+is subtracted from the enemy's life total.
+4. Steps 2 and 3 repeat until you or the monster are dead.
+
+It's not possible to perform any other actions in combat apart from attacking.
+""")

@@ -65,3 +65,11 @@ class UserInterface:
         """Method to save the game state.
         Returns a dict."""
         return self.game.state.save()
+
+    def character_sheet(self) -> str:
+        """Method to return the character sheet in a string"""
+        return self.game.player.get_character_sheet()
+    
+    def players_guide(self) -> str:
+        """Method to return the player's guide in a string"""
+        return self.game.players_guide
