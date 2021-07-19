@@ -122,6 +122,8 @@ class Roll(Action):
         
         # make sure the player can enter input when not waiting
         self.state.play()
+
+        hp = self.state.get_player().hp_max
         
         # process exising input before prompting for further input
         if self.state.get_combat_status() == Combat.WAIT:
@@ -134,8 +136,8 @@ class Roll(Action):
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:
                     return True
-            if not first_turn:
-                self.output_builder.append("Okay, now the monsters get to have their turn!")
+                if not first_turn:
+                    self.output_builder.append("Okay, now the monsters get to have their turn!")
             self.state.pause()
         elif self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)
@@ -160,6 +162,8 @@ class Roll(Action):
             else:
                 monster = self.state.get_entity(entity)
                 monster.perform_next_move()
+        
+        self.output_builder.append(NLG.health_update(hp, hp_max=self.state.get_player().hp_max))
 
         # get target declaration from player if no target,
         if self.state.get_combat_status() == Combat.DECLARE:

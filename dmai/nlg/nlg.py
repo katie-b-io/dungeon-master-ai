@@ -437,7 +437,7 @@ class NLG(metaclass=NLGMeta):
         entity = "You" if entity == "player" else "{e}".format(e=entity)
         g = "go" if entity == "player" else "goes"
         utters = [
-            "{e} {g} now".format(e=entity, g=g)
+            "{e} {g} first.".format(e=entity, g=g)
         ]
         return random.choice(utters)
     
