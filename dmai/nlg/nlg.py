@@ -432,11 +432,12 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
-    def entity_turn(cls, entity: str) -> str:
+    def first_turn(cls, entity: str) -> str:
         """Return the utterance for telling the player whose turn it is"""
-        entity = "your" if entity == "player" else "{e}'s".format(e=entity)
+        entity = "You" if entity == "player" else "{e}".format(e=entity)
+        g = "go" if entity == "player" else "goes"
         utters = [
-            "It's {e} turn...".format(e=entity)
+            "{e} {g} now".format(e=entity, g=g)
         ]
         return random.choice(utters)
     

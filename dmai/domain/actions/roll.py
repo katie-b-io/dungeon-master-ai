@@ -117,7 +117,7 @@ class Roll(Action):
             first_turn = True
             self.state.set_initiative_order()
             self.output_builder.append(
-                NLG.entity_turn(self.state.get_entity_name(self.state.get_currently_acting_entity()))
+                NLG.first_turn(self.state.get_entity_name(self.state.get_currently_acting_entity()))
             )
         
         # make sure the player can enter input when not waiting
@@ -131,7 +131,6 @@ class Roll(Action):
                 player = self.state.get_entity()
                 damage = player.damage_roll()
                 hp = max(0, self.state.take_damage(damage, "player", entity=target.unique_id))
-                self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:
                     return True

@@ -738,6 +738,9 @@ class State():
                     # deregister triggers
                     if hasattr(self.get_entity(entity), "trigger"):
                         self.dm.register_trigger(self.get_entity(entity))
+            else:
+                if entity != "player":
+                    self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
             return self.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
@@ -746,12 +749,13 @@ class State():
     def kill_monster(self, entity: str) -> None:
         # player has killed a monster
         name = self.get_entity_name(entity)
-        self.output_builder.append("You killed {n}!".format(n=name))
         self.set_current_status(entity, "dead")
         self.clear_target()
         self.initiative_order.remove(entity)
         if len(self.initiative_order) == 1:
             self.end_fight()
+        else:
+            self.output_builder.append("You killed {n}!".format(n=name))
     
     def end_fight(self) -> None:
         self.output_builder.append(NLG.won_fight())
