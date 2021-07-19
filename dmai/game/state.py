@@ -181,7 +181,7 @@ class State():
         else:
             self.set_target(target, attacker)
             self.set_expected_intent(["roll"])
-            self.output_builder.append(NLG.perform_attack_roll())
+            self.output_builder.append(NLG.perform_attack_roll(self.get_entity_name(target)))
             self.progress_combat_status()
                 
     def combat_with_door(self, target: str) -> None:
@@ -740,7 +740,7 @@ class State():
                         self.dm.register_trigger(self.get_entity(entity))
             else:
                 if entity != "player":
-                    self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=self.get_entity(entity).unique_name, h=self.current_hp[entity]))
+                    self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=self.get_entity_name(entity), h=self.current_hp[entity]))
             return self.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)

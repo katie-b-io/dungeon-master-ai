@@ -450,18 +450,23 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def perform_attack_roll(cls) -> str:
+    def perform_attack_roll(cls, target: str = None) -> str:
         """Return the utterance for getting player to perform attack roll"""
-        utters = [
-            "Make your attack roll"
-        ]
+        if target:
+            utters = [
+            "Make your attack roll against {t}.".format(t=target)
+            ]
+        else:
+            utters = [
+                "Make your attack roll."
+            ]
         return random.choice(utters)
 
     @classmethod
     def perform_damage_roll(cls) -> str:
         """Return the utterance for getting player to perform damage roll"""
         utters = [
-            "Make your damage roll"
+            "Make your damage roll."
         ]
         return random.choice(utters)
     
