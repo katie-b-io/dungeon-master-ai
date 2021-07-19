@@ -122,8 +122,6 @@ class Roll(Action):
         
         # make sure the player can enter input when not waiting
         self.state.play()
-
-        hp = self.state.get_player().hp_max
         
         # process exising input before prompting for further input
         if self.state.get_combat_status() == Combat.WAIT:
@@ -162,8 +160,6 @@ class Roll(Action):
             else:
                 monster = self.state.get_entity(entity)
                 monster.perform_next_move()
-        
-        self.output_builder.append(NLG.health_update(hp, hp_max=self.state.get_player().hp_max))
 
         # get target declaration from player if no target,
         if self.state.get_combat_status() == Combat.DECLARE:

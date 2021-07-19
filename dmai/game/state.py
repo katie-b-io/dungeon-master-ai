@@ -740,7 +740,7 @@ class State():
                         self.dm.register_trigger(self.get_entity(entity))
             else:
                 if entity != "player":
-                    self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=self.get_entity(entity).unique_name, h=hp))
+                    self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=self.get_entity(entity).unique_name, h=self.current_hp[entity]))
             return self.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
@@ -800,6 +800,8 @@ class State():
                 damage = attacker.min_damage(weapon)
 
         hp = self.take_damage(damage, attacker.unique_id)
+        if target == self.get_player() and hp: 
+            self.output_builder.append(NLG.health_update(hp, hp_max=target.hp_max))
         return
         
     ############################################################
