@@ -155,12 +155,13 @@ class State():
         self.help_player = True
 
     def prompt_player(self) -> None:
-        if self.hint_requested or (self.help_player and not self.in_combat and not self.current_conversation):
-            next_move = self.get_player().agent.get_next_move()
-            if next_move:
-                logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
-                self.suggested_next_move = {"utter": next_move, "state": True}
-                self.output_builder.append(next_move)
+        if not self.game_ended:
+            if self.hint_requested or (self.help_player and not self.in_combat and not self.current_conversation):
+                next_move = self.get_player().agent.get_next_move()
+                if next_move:
+                    logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
+                    self.suggested_next_move = {"utter": next_move, "state": True}
+                    self.output_builder.append(next_move)
         self.hint_requested = False
         self.help_player = False
 

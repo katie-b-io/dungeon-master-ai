@@ -131,6 +131,8 @@ class Roll(Action):
                 player = self.state.get_entity()
                 damage = player.damage_roll()
                 hp = max(0, self.state.take_damage(damage, "player", entity=target.unique_id))
+                if self.state.game_ended:
+                    return
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:
                     return True
