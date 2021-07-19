@@ -832,7 +832,9 @@ class DM:
             (item_type, item) = self._get_target(nlu_entities)
             if item and item_type == "puzzle":
                 # trigger explore
+                logger.debug("(SESSION {s}) {e} is picking up {i}".format(s=self.state.session.session_id, e=entity, i=item))
                 picked_up = self.actions.investigate(item, target_type=item_type)
+                return picked_up
         if not item:
             picked_up = False
             self.output_builder.append(NLG.no_item())
@@ -931,10 +933,10 @@ class DM:
         logger.debug("(SESSION {s}) DM.ale".format(s=self.state.session.session_id))
         if nlu_entities:
             drink = self._get_drink(nlu_entities)[1]
-            if drink != "ale":
-                self.output_builder.append("They only serve ale here!")
         if self.state.get_current_room().ale:
             logger.debug("(SESSION {s}) Player is getting an ale".format(s=self.state.session.session_id))
+            if drink != "ale":
+                self.output_builder.append("They only serve ale here!")
             if self.state.ales > 2:
                 # this is a gameover state
                 self.output_builder.append(NLG.drunk_end_game())
