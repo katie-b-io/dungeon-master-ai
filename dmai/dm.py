@@ -891,7 +891,6 @@ class DM:
             if not self.state.get_possible_door_targets():
                 self.output_builder.append(NLG.no_door_targets("force"))
             else:
-                self.state.set_expected_entities(["door", "location"])
                 self.output_builder.append(
                     NLG.no_door_target("force", self.state.get_formatted_possible_door_targets())
                 )

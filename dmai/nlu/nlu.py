@@ -116,7 +116,12 @@ class NLU():
             print("intent: " + intent)
         if entities:
             print(entities)
-            
+
+        logger.debug("(SESSION {s}) Expected entities: {i}".format(s=self.state.session.session_id, i=str(self.state.expected_entities)))
+        logger.debug("(SESSION {s}) Expected intent: {i}".format(s=self.state.session.session_id, i=str(self.state.expected_intent)))
+        logger.debug("(SESSION {s}) Stored intent: {i}".format(s=self.state.session.session_id, i=str(self.state.stored_intent)))
+        logger.debug("(SESSION {s}) Suggested next move: {i}".format(s=self.state.session.session_id, i=str(self.state.suggested_next_move["utter"])))
+
         # check if there's expected entities
         if self.state.expected_entities:
             hits = [entity for entity in entities if entity["entity"] in self.state.expected_entities]
@@ -126,7 +131,7 @@ class NLU():
                     intent = self.state.expected_intent[0]
                 elif self.state.stored_intent:
                     intent = self.state.stored_intent["intent"]
-                    self.state.clear_expected_entities()
+            self.state.clear_expected_entities()
                 
         # check if there's an expected intent
         elif self.state.expected_intent:
