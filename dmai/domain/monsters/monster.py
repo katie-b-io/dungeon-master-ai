@@ -228,12 +228,10 @@ class Monster(NPC, MonsterAgent):
     
     def increment(self) -> None:
         """Method to increment number of turns player and monster in same room"""
-        logger.debug("Incrementing")
         if self.state.is_alive(self.unique_id):
             location = self.state.get_current_room_id(self.unique_id)
             if location == self.state.get_current_room_id():
                 self.state.monster_turn_counter[self.unique_id] += 1
-                logger.debug("Turns for {m}: {i}".format(m=self.unique_id, i=self.state.monster_turn_counter[self.unique_id]))
                 if not self.unique_id in self.state.monsters_will_attack and (self.state.monster_turn_counter[self.unique_id] == self.attack_player_after_n_moves):
                     self.state.monsters_will_attack.append(self.unique_id)
 
