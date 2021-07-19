@@ -363,6 +363,8 @@ nlu:
     - i [stroke](verb) [anvil](npc)
     - [cuddle](verb) the [cat](npc)
     - i [listen](verb)
+    - i [listen](verb) to the voices
+    - [listen](verb) in to the voices
 
 - intent: negotiate
   examples: |
