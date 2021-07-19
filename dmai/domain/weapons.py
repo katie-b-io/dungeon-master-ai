@@ -21,11 +21,12 @@ class Weapons:
         weapon_id = next(iter(self.weapons))
         weapon_count = self.weapons[weapon_id]
 
-        if weapon_count > 0:
-            self.equip_weapon(weapon_id, "right_hand")
-        if weapon_count > 1 or self.has_property(weapon_id, "two_handed"):
-            # equip the weapon to second hand if able
-            self.equip_weapon(weapon_id, "left_hand")
+        if self.state.turns <= 1:
+            if weapon_count > 0:
+                self.equip_weapon(weapon_id, "right_hand")
+            if weapon_count > 1 or self.has_property(weapon_id, "two_handed"):
+                # equip the weapon to second hand if able
+                self.equip_weapon(weapon_id, "left_hand")
 
     def __repr__(self) -> str:
         return "Weapons:\n{a}".format(a=self.weapons)

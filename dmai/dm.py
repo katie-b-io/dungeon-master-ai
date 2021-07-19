@@ -673,6 +673,7 @@ class DM:
         if not weapon:
             equipped = False
             self.output_builder.append(NLG.no_weapon(unequip=False))
+            self.state.set_expected_entities(["weapon"])
         else:
             logger.debug("(SESSION {s}) {e} is equipping {q}".format(s=self.state.session.session_id, e=entity, q=weapon))
             equipped = self.actions.equip(weapon, entity)
