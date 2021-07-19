@@ -142,7 +142,7 @@ class TestActions(unittest.TestCase):
     
     def test_equip_good_weapon(self) -> None:
         entity = "player"
-        weapon = "javelin"
+        weapon = "greataxe"
         self.actions.unequip()
         equipped = self.actions.equip(weapon, entity)
         self.assertEqual(equipped, True)
