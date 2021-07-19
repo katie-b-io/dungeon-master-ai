@@ -136,7 +136,8 @@ class NLU():
                     # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
                     intents = [self.state.get_dm().player_intent_map[intent]["desc"] for intent in self.state.expected_intent]
                     intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
-                    self.output_builder.append("I was expecting you to {i}".format(i=intent_str))
+                    self.output_builder.append("I was expecting you to {i}.".format(i=intent_str))
+                    logger.debug("(SESSION {s}) Intent being processed: None".format(s=self.state.session.session_id))
                     return (None, {"nlu_entities": entities})
         
         # check if there's a suggested next move
@@ -147,10 +148,14 @@ class NLU():
         # check if in combat before allowing any player utterance
         if self.state.in_combat:
             if self.state.get_combat_status() == Combat.ATTACK_ROLL:
+                logger.debug("(SESSION {s}) Intent being processed: attack".format(s=self.state.session.session_id))
                 return ("attack", {"nlu_entities": entities})
             else:
+                logger.debug("(SESSION {s}) Intent being processed: roll".format(s=self.state.session.session_id))
                 return ("roll", {"nlu_entities": entities})
         
+        logger.debug("(SESSION {s}) Intent being processed: {i}".format(s=self.state.session.session_id, i=str(intent)))
+
         if intent == "no_intent":
             return ("no_intent", {})
         if intent == "move":
