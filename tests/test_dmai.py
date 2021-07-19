@@ -77,7 +77,11 @@ class TestDM(unittest.TestCase):
 
     def test_hint(self) -> None:
         self.dm.input("", utter_type="test")
-        self.assertEqual(True, self.dm.hint())
+        self.assertEqual(True, self.dm.hint([]))
+
+    def test_hint_with_entities(self) -> None:
+        self.dm.input("", utter_type="test")
+        self.assertEqual(True, self.dm.hint([{"entity": "location", "confidence": 1, "value": "inns_cellar"}]))
 
     def test__get_destination_location(self) -> None:
         nlu_entities = [{"entity": "location", "confidence": 1, "value": "inns_cellar"}]
@@ -268,9 +272,6 @@ class TestDM(unittest.TestCase):
         
     def test_equip_weapon_good(self) -> None:
         self.dm.unequip()
-        self.assertEqual(True, self.dm.equip(weapon="javelin"))
-        self.assertEqual(True, self.dm.equip(weapon="javelin"))
-        self.dm.unequip()
         self.assertEqual(True, self.dm.equip(weapon="greataxe"))
 
     def test_equip_weapon_bad(self) -> None:
@@ -281,7 +282,7 @@ class TestDM(unittest.TestCase):
     def test_equip_nlu_entities_good(self) -> None:
         self.dm.unequip()
         nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "javelin"}]
-        self.assertEqual(True, self.dm.equip(nlu_entities=nlu_entities))
+        self.assertEqual(False, self.dm.equip(nlu_entities=nlu_entities))
         self.dm.unequip()
         nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "greataxe"}]
         self.assertEqual(True, self.dm.equip(nlu_entities=nlu_entities))
@@ -307,8 +308,8 @@ class TestDM(unittest.TestCase):
     def test_unequip_nlu_entities_good(self) -> None:
         nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "greataxe"}]
         self.assertEqual(True, self.dm.unequip(nlu_entities=nlu_entities))
-        self.dm.equip(weapon="javelin")
-        nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "javelin"}]
+        self.dm.equip(weapon="greataxe")
+        nlu_entities = [{"entity": "weapon", "confidence": 1, "value": "greataxe"}]
         self.assertEqual(True, self.dm.unequip(nlu_entities=nlu_entities))
         
     def test_unequip_nlu_entities_bad(self) -> None:

@@ -182,35 +182,9 @@ class Player(PlayerAgent):
         char_str += "{l:<20} {v:<30}\n".format(l="Current hit points:",
                                                v=self.state.get_current_hp())
 
-        # Abilities
-        char_str += div
-        char_str += "{l:<20} {v:<30}\n".format(l="Abilities:",
-                                               v="Modifier (score)")
-        for (ability, name) in Abilities.get_all_abilities():
-            char_str += "{l:<20} {v:<30}\n".format(
-                l=name + ":", v=self.character.get_formatted_ability(ability))
-
-        # Saving throws
-        char_str += div
-        char_str += "{l:<20} {v:<30}\n".format(l="Saving throws:",
-                                               v="Modifier (proficiency)")
-        for (ability, name) in Abilities.get_all_abilities():
-            char_str += "{l:<20} {v:<30}\n".format(
-                l=name + ":",
-                v=self.character.get_formatted_saving_throw(ability))
-
-        # Skills
-        char_str += div
-        char_str += "{l:<20} {v:<30}\n".format(
-            l="Skills:", v="Modifier (proficiency/expertise)")
-        for (skill, name) in Skills.get_all_skills():
-            char_str += "{l:<20} {v:<30}\n".format(
-                l=name + ":",
-                v=self.character.get_formatted_skill_modifier(skill))
-
         # Attacks
         char_str += div
-        char_str += "{l:<20}\n".format(l="Attacks (equipped):")
+        char_str += "{l:<20}\n".format(l="Weapons (equipped):")
         for (weapon, name) in self.character.get_all_weapons():
             if self.character.is_equipped(weapon): 
                 name = "{n} (equipped)".format(n=name)
@@ -235,15 +209,41 @@ class Player(PlayerAgent):
         char_str += "Items:\n"
         char_str += "{e}\n".format(e=self.character.get_formatted_items())
 
+        # Abilities
+        char_str += div
+        char_str += "{l:<20} {v:<30}\n".format(l="Abilities:",
+                                               v="Modifier (score)")
+        for (ability, name) in Abilities.get_all_abilities():
+            char_str += "{l:<20} {v:<30}\n".format(
+                l=name + ":", v=self.character.get_formatted_ability(ability))
+
+        # Skills
+        char_str += div
+        char_str += "{l:<20} {v:<30}\n".format(
+            l="Skills:", v="Modifier (proficiency/expertise)")
+        for (skill, name) in Skills.get_all_skills():
+            char_str += "{l:<20} {v:<30}\n".format(
+                l=name + ":",
+                v=self.character.get_formatted_skill_modifier(skill))
+                
+        # Saving throws
+        # char_str += div
+        # char_str += "{l:<20} {v:<30}\n".format(l="Saving throws:",
+        #                                        v="Modifier (proficiency)")
+        # for (ability, name) in Abilities.get_all_abilities():
+        #     char_str += "{l:<20} {v:<30}\n".format(
+        #         l=name + ":",
+        #         v=self.character.get_formatted_saving_throw(ability))
+
         # # Money
         # char_str += div
         # char_str += "Money:\n"
         # char_str += "{m}\n".format(m=self.character.get_formatted_money())
 
         # Languages
-        char_str += div
-        char_str += "Languages:\n"
-        char_str += "{l}\n".format(l=self.character.get_formatted_languages())
+        # char_str += div
+        # char_str += "Languages:\n"
+        # char_str += "{l}\n".format(l=self.character.get_formatted_languages())
 
         # # Proficiencies
         # char_str += div

@@ -235,10 +235,10 @@ class Puzzle(ABC):
     def investigate_success_func(self, option: str) -> None:
         """Method to construct investigate success function"""
         logger.debug("(SESSION {s}) Puzzle.investigate_success_func: {p}".format(s=self.state.session.session_id, p=self.id))
-        solve = True
+        solve = False
         if not self.id in self.state.solved_puzzles:
             logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
-            if self.investigate[option]["say"]:
+            if "say" in self.investigate[option]:
                 self.output_builder.append(self.investigate[option]["say"])
             if "result" in self.investigate[option] and self.investigate[option]["result"]:
                 result = self.investigate[option]["result"]
@@ -246,20 +246,30 @@ class Puzzle(ABC):
                     room1 = self.id.split("---")[0]
                     room2 = self.id.split("---")[1]
                     self.state.unlock_door(room1, room2)
+                    solve = True
                 elif result == "add_to_inventory":
                     item_data = self.__dict__
                     self.state.get_player().character.items.add_item(self.id, item_data=item_data)
+                    solve = True
                 elif result == "explore":
                     if self.investigate[option]["id"]:
                         explore_id = self.investigate[option]["id"]
                         puzzle = self.state.get_current_room().puzzles.get_puzzle(self.investigate[option]["id"])
                         if self.state.puzzle_trigger_map[explore_id]["explore"][option]:
-                            solve = False
                             puzzle.explore_success_func(option)
                 elif result == "good_ending":
                     self.output_builder.append(self.state.get_dm().get_good_ending())
                     self.state.gameover()
                     return
+                elif self.type == "trap":
+                    self.state.puzzle_trigger_map[self.id]["solution"][option] = False
+                    result = self.investigate[option]["result"]
+                    # TODO support non-monster results
+                    if self.state.get_entity(result):
+                        self.state.set_current_status(result, "alive")
+                        self.state.combat(result, "player")
+            else:
+                solve = True
             if solve:
                 self.solve()
         logger.debug("(SESSION {s}) Returning from Puzzle.investigate_success_func: {p}".format(s=self.state.session.session_id, p=self.id))

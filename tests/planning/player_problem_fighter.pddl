@@ -12,7 +12,7 @@
         ; Rooms
         stout_meal_inn - room
         inns_cellar - room
-        storage_room - room
+        dungeon_entrance - room
         burial_chamber - room
         western_corridor - room
         antechamber - room
@@ -101,11 +101,11 @@
         ; Monsters
         (at giant_rat1 inns_cellar)
         (at giant_rat2 inns_cellar)
-        (at goblin1 storage_room)
+        (at goblin1 dungeon_entrance)
         (at goblin2 antechamber)
         (at goblin3 antechamber)
         (at skeleton1 burial_chamber)
-        (at zombie1 storage_room)
+        (at zombie1 dungeon_entrance)
         (alive giant_rat1)
         (alive giant_rat2)
         (alive goblin2)
@@ -119,12 +119,12 @@
         ; Rooms
         (connected door1 stout_meal_inn inns_cellar)
         (connected door1 inns_cellar stout_meal_inn)
-        (connected door2 inns_cellar storage_room)
-        (connected door2 storage_room stout_meal_inn)
-        (connected door3 storage_room burial_chamber)
-        (connected door3 burial_chamber storage_room)
-        (connected door4 storage_room western_corridor)
-        (connected door4 western_corridor storage_room)
+        (connected door2 inns_cellar dungeon_entrance)
+        (connected door2 dungeon_entrance stout_meal_inn)
+        (connected door3 dungeon_entrance burial_chamber)
+        (connected door3 burial_chamber dungeon_entrance)
+        (connected door4 dungeon_entrance western_corridor)
+        (connected door4 western_corridor dungeon_entrance)
         (connected door5 western_corridor antechamber)
         (connected door5 antechamber western_corridor)
         (connected door6 antechamber southern_corridor)
@@ -134,10 +134,10 @@
         (at door1 stout_meal_inn)
         (at door1 inns_cellar)
         (at door2 inns_cellar)
-        (at door2 storage_room)
-        (at door3 storage_room)
+        (at door2 dungeon_entrance)
+        (at door3 dungeon_entrance)
         (at door3 burial_chamber)
-        (at door4 storage_room)
+        (at door4 dungeon_entrance)
         (at door4 western_corridor)
         (at door5 western_corridor)
         (at door5 antechamber)
@@ -150,7 +150,7 @@
         (locked door6)
         (locked door7)
         (dark inns_cellar)
-        (dark storage_room)
+        (dark dungeon_entrance)
         (dark burial_chamber)
         (dark western_corridor)
         (dark antechamber)

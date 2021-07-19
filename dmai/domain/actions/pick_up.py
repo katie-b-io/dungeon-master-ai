@@ -56,9 +56,6 @@ class PickUp(Action):
         # check if pick up can happen
         (picked_up, reason) = self._can_pick_up()
         if picked_up:
-            # TODO check if picking up item will end game
-            # self.output_builder.append(self.state.get_dm().get_bad_ending())
-            # self.state.gameover()
             picked_up = self.state.get_player().character.items.add_item(self.item)
             if picked_up:
                 self.state.get_current_room(self.entity).took_item(self.item)

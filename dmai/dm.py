@@ -525,11 +525,13 @@ class DM:
         self.state.nag_player()
         return True
 
-    def hint(self, **kwargs) -> bool:
+    def hint(self, nlu_entities: dict) -> bool:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.hint".format(s=self.state.session.session_id))
+        if self._get_noun(nlu_entities)[1] or self._get_verb(nlu_entities)[1]:
+            self.output_builder.append("I can only tell you what I think you should do next.")
         self.state.nag_player(hint=True)
         return True
 
@@ -673,6 +675,7 @@ class DM:
         if not weapon:
             equipped = False
             self.output_builder.append(NLG.no_weapon(unequip=False))
+            self.state.set_expected_entities(["weapon"])
         else:
             logger.debug("(SESSION {s}) {e} is equipping {q}".format(s=self.state.session.session_id, e=entity, q=weapon))
             equipped = self.actions.equip(weapon, entity)
@@ -831,7 +834,9 @@ class DM:
             (item_type, item) = self._get_target(nlu_entities)
             if item and item_type == "puzzle":
                 # trigger explore
+                logger.debug("(SESSION {s}) {e} is picking up {i}".format(s=self.state.session.session_id, e=entity, i=item))
                 picked_up = self.actions.investigate(item, target_type=item_type)
+                return picked_up
         if not item:
             picked_up = False
             self.output_builder.append(NLG.no_item())
@@ -891,7 +896,6 @@ class DM:
             if not self.state.get_possible_door_targets():
                 self.output_builder.append(NLG.no_door_targets("force"))
             else:
-                self.state.set_expected_entities(["door", "location"])
                 self.output_builder.append(
                     NLG.no_door_target("force", self.state.get_formatted_possible_door_targets())
                 )
@@ -931,10 +935,10 @@ class DM:
         logger.debug("(SESSION {s}) DM.ale".format(s=self.state.session.session_id))
         if nlu_entities:
             drink = self._get_drink(nlu_entities)[1]
-            if drink != "ale":
-                self.output_builder.append("They only serve ale here!")
         if self.state.get_current_room().ale:
             logger.debug("(SESSION {s}) Player is getting an ale".format(s=self.state.session.session_id))
+            if drink != "ale":
+                self.output_builder.append("They only serve ale here!")
             if self.state.ales > 2:
                 # this is a gameover state
                 self.output_builder.append(NLG.drunk_end_game())

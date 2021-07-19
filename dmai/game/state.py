@@ -122,6 +122,7 @@ class State():
         self.equipment_quantity = {}
         # monster turn counter
         self.monster_turn_counter = {}
+        self.monsters_will_attack = []
     
     def set_char_class(self, char_class: str) -> None:
         self.char_class = char_class
@@ -154,12 +155,13 @@ class State():
         self.help_player = True
 
     def prompt_player(self) -> None:
-        if self.hint_requested or (self.help_player and not self.in_combat and not self.current_conversation):
-            next_move = self.get_player().agent.get_next_move()
-            if next_move:
-                logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
-                self.suggested_next_move = {"utter": next_move, "state": True}
-                self.output_builder.append(next_move)
+        if not self.game_ended:
+            if self.hint_requested or (self.help_player and (not self.in_combat or not self.current_conversation)):
+                next_move = self.get_player().agent.get_next_move()
+                if next_move:
+                    logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
+                    self.suggested_next_move = {"utter": next_move, "state": True}
+                    self.output_builder.append(next_move)
         self.hint_requested = False
         self.help_player = False
 
@@ -180,7 +182,7 @@ class State():
         else:
             self.set_target(target, attacker)
             self.set_expected_intent(["roll"])
-            self.output_builder.append(NLG.perform_attack_roll())
+            self.output_builder.append(NLG.perform_attack_roll(self.get_entity_name(target)))
             self.progress_combat_status()
                 
     def combat_with_door(self, target: str) -> None:
@@ -737,6 +739,9 @@ class State():
                     # deregister triggers
                     if hasattr(self.get_entity(entity), "trigger"):
                         self.dm.register_trigger(self.get_entity(entity))
+            else:
+                if entity != "player":
+                    self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=self.get_entity_name(entity), h=self.current_hp[entity]))
             return self.current_hp[entity]
         except KeyError:
             msg = "Entity not recognised: {e}".format(e=entity)
@@ -745,12 +750,13 @@ class State():
     def kill_monster(self, entity: str) -> None:
         # player has killed a monster
         name = self.get_entity_name(entity)
-        self.output_builder.append("You killed {n}!".format(n=name))
         self.set_current_status(entity, "dead")
         self.clear_target()
         self.initiative_order.remove(entity)
         if len(self.initiative_order) == 1:
             self.end_fight()
+        else:
+            self.output_builder.append("You killed {n}!".format(n=name))
     
     def end_fight(self) -> None:
         self.output_builder.append(NLG.won_fight())
@@ -771,7 +777,7 @@ class State():
 
         # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
         if target == self.get_player():
-            if self.get_current_hp() <= 0.5*self.get_player().hp_max:
+            if self.get_current_hp() <= 0.75*self.get_player().hp_max:
                 roll = attacker.attack_roll(weapon)
                 if roll < attack_roll:
                     attack_roll = roll
@@ -791,11 +797,13 @@ class State():
 
         # if player is being attacked and health is at or below 50%, deal less damage
         if target == self.get_player():
+            if self.get_current_hp() <= 3:
+                damage = 1
             if self.get_current_hp() <= 0.5*self.get_player().hp_max:
                 damage = attacker.min_damage(weapon)
 
         hp = self.take_damage(damage, attacker.unique_id)
-        if target == self.get_player() and hp:
+        if target == self.get_player() and hp: 
             self.output_builder.append(NLG.health_update(hp, hp_max=target.hp_max))
         return
         

@@ -76,10 +76,11 @@ class Roll(Action):
                 player = self.state.get_entity()
                 damage = player.damage_roll()
                 hp = self.state.take_door_damage(damage, target)
-                self.output_builder.append("You dealt {d} damage to {t} door (hp is now {h})".format(d=damage, t=self.state.get_room_name(target), h=hp))
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat_with_door:
                     return True
+                else:
+                    self.output_builder.append("Roll to damage it again!")
         elif self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)
             target = self.state.door_target
@@ -99,7 +100,7 @@ class Roll(Action):
             # this is handled by AttackDoor._attack()
             pass
 
-        # get attack roll from player
+        # get damage roll from player
         if self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             if self.state.door_target:
                 # now return the utterance for getting the next roll
@@ -117,7 +118,7 @@ class Roll(Action):
             first_turn = True
             self.state.set_initiative_order()
             self.output_builder.append(
-                NLG.entity_turn(self.state.get_entity_name(self.state.get_currently_acting_entity()))
+                NLG.first_turn(self.state.get_entity_name(self.state.get_currently_acting_entity()))
             )
         
         # make sure the player can enter input when not waiting
@@ -131,12 +132,13 @@ class Roll(Action):
                 player = self.state.get_entity()
                 damage = player.damage_roll()
                 hp = max(0, self.state.take_damage(damage, "player", entity=target.unique_id))
-                self.output_builder.append("You dealt {d} damage to {m} (hp is now {h})".format(d=damage, m=target.unique_name, h=hp))
+                if self.state.game_ended:
+                    return
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat:
                     return True
-            if not first_turn:
-                self.output_builder.append("Okay, now the monsters get to have their turn!")
+                if not first_turn:
+                    self.output_builder.append("Okay, now the monsters get to have their turn!")
             self.state.pause()
         elif self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)

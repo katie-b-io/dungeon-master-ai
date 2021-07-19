@@ -168,7 +168,7 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(False, self.fighter.stop_using_equipment(equipment2))
 
     def test_can_equip_good(self) -> None:
-        weapon = "javelin"
+        weapon = "greataxe"
         self.fighter.unequip_weapon()
         self.assertEqual(True, self.fighter.can_equip(weapon)[0])
 
@@ -200,10 +200,8 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(False, self.fighter.is_equipped(weapon2))
 
     def test_equip_weapon_good(self) -> None:
-        weapon1 = "javelin"
-        weapon2 = "greataxe"
+        weapon1 = "greataxe"
         self.assertEqual(True, self.fighter.equip_weapon(weapon1))
-        self.assertEqual(True, self.fighter.equip_weapon(weapon2))
 
     def test_equip_weapon_bad(self) -> None:
         weapon1 = "rubber_duck"
@@ -212,10 +210,8 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(False, self.fighter.equip_weapon(weapon2))
 
     def test_unequip_weapon_good(self) -> None:
-        weapon1 = "javelin"
-        weapon2 = "greataxe"
-        self.assertEqual(False, self.fighter.unequip_weapon(weapon1))
-        self.assertEqual(True, self.fighter.unequip_weapon(weapon2))
+        weapon1 = "greataxe"
+        self.assertEqual(True, self.fighter.unequip_weapon(weapon1))
 
     def test_unequip_weapon_bad(self) -> None:
         weapon1 = "rubber_duck"

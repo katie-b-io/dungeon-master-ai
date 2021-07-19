@@ -540,9 +540,10 @@ class PlanningActions():
 
             "open_door_with_ability": {
                 "action": "open_door_with_ability",
-                "string": "Maybe you should use {a} to open the door.",
+                "string": "Maybe you should use {a} to open the door to the {d}.",
                 "string_param_indices": {
-                    "a": 2
+                    "a": 2,
+                    "d": 5
                 },
                 "pddl": """
         ; Player wants to open a door with an ability/skill

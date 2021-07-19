@@ -198,30 +198,30 @@ class NLG(metaclass=NLGMeta):
         else:
             p = ""
         if not reason:
-            return "You cannot move to {room}. {p}".format(room=room, p=p)
+            return "You cannot move to the {room}. {p}".format(room=room, p=p)
         elif reason == "same":
-            return "You cannot move to {room} because you're already there! {p}".format(
+            return "You cannot move to the {room} because you're already there! {p}".format(
                 room=room, p=p)
         elif reason == "locked":
-            return "You cannot move to {room} because the way is locked! {p}".format(
+            return "You cannot move to the {room} because the way is locked! {p}".format(
                 room=room, p=p)
         elif reason == "not connected":
-            return "You cannot move to {room} because it's not connected to this room. {p}".format(
+            return "You cannot move to the {room} because it's not connected to this room. {p}".format(
                 room=room, p=p)
         elif reason == "no visibility":
-            return "You cannot move to {room} because it's too dark for you to find the way!".format(
+            return "You cannot move to the {room} because it's too dark for you to find the way!".format(
                 room=room, p=p)
         elif reason == "no quest":
-            return "You cannot move to {room} because you haven't spoken to Corvus or accepted the quest!".format(
+            return "You cannot move to the {room} because you haven't spoken to Corvus or accepted the quest!".format(
                 room=room, p=p)
         elif reason == "must kill":
-            return "You cannot move to {room} because there are monsters in here you must deal with!".format(
+            return "You cannot move to the {room} because there are monsters in here you must deal with!".format(
                 room=room)
         elif reason == "unknown destination":
-            return "You cannot move to unknown room: {room}! {p}".format(
+            return "You cannot move to the unknown room: {room}! {p}".format(
                 room=room, p=p)
         else:
-            return "You cannot move to {room}, although, I'm not sure why not... {p}".format(
+            return "You cannot move to the {room}, although, I'm not sure why not... {p}".format(
                 room=room, p=p)
 
     @classmethod
@@ -432,11 +432,12 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
 
     @classmethod
-    def entity_turn(cls, entity: str) -> str:
+    def first_turn(cls, entity: str) -> str:
         """Return the utterance for telling the player whose turn it is"""
-        entity = "your" if entity == "player" else "{e}'s".format(e=entity)
+        entity = "You" if entity == "player" else "{e}".format(e=entity)
+        g = "go" if entity == "player" else "goes"
         utters = [
-            "It's {e} turn...".format(e=entity)
+            "{e} {g} first.".format(e=entity, g=g)
         ]
         return random.choice(utters)
     
@@ -449,18 +450,23 @@ class NLG(metaclass=NLGMeta):
         return random.choice(utters)
     
     @classmethod
-    def perform_attack_roll(cls) -> str:
+    def perform_attack_roll(cls, target: str = None) -> str:
         """Return the utterance for getting player to perform attack roll"""
-        utters = [
-            "Make your attack roll"
-        ]
+        if target:
+            utters = [
+            "Make your attack roll against {t}.".format(t=target)
+            ]
+        else:
+            utters = [
+                "Make your attack roll."
+            ]
         return random.choice(utters)
 
     @classmethod
     def perform_damage_roll(cls) -> str:
         """Return the utterance for getting player to perform damage roll"""
         utters = [
-            "Make your damage roll"
+            "Make your damage roll."
         ]
         return random.choice(utters)
     
@@ -471,8 +477,8 @@ class NLG(metaclass=NLGMeta):
         attacker = "You" if attacker == "player" else attacker
         utters = [
             "{a} attacked {t}!".format(a=attacker, t=target),
-            "{a} launched an assault on {t}".format(a=attacker, t=target),
-            "{a} struck at {t}".format(a=attacker, t=target),
+            "{a} launched an assault on {t}.".format(a=attacker, t=target),
+            "{a} struck at {t}.".format(a=attacker, t=target),
         ]
         return random.choice(utters)
 
@@ -544,7 +550,7 @@ class NLG(metaclass=NLGMeta):
         """Method to return the utterance for winning a fight"""
         utters = [
             "You won the battle, congratulations!",
-            "You put up a good fight and it paid off",
+            "You put up a good fight and it paid off!",
             "Awesome, they won't be bothering you again!"
         ]
         return random.choice(utters)
@@ -845,7 +851,7 @@ class NLG(metaclass=NLGMeta):
         if allow_repeat:
             r = "You could try again or do something different."
         else:
-            r = "You're going to have to try something else."
+            r = ""
         utters = [
             "You didn't do it. {r}".format(r=r),
             "That didn't work. {r}".format(r=r),

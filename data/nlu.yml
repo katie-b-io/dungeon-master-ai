@@ -63,6 +63,9 @@ nlu:
     - I'll have a look
     - sure, why not
     - do that
+    - alright, for you corvus
+    - alright, seeing as we are old friends
+    - onwards
 
 - intent: deny
   examples: |
@@ -97,6 +100,7 @@ nlu:
     - damage
     - initiative
     - roll initiative
+    - rooollll
     - initiative roll
     - attack roll
     - damage roll
@@ -135,7 +139,7 @@ nlu:
     - maneuver to the [inn's cellar](location)
     - go to the [inn](location)
     - move to the [cellar](location)
-    - go to the [storage room](location)
+    - go to the [dungeon entrance](location)
     - move to the [burial chamber](location)
     - go to the [western corridor](location)
     - move to the [southern corridor](location)
@@ -148,18 +152,20 @@ nlu:
     - go [up stairs](location)
     - move [up the stairs](location)
     - move to the [antechamber](location)
+    - move to the [antechamer](location)
+    - move to the [antichamber](location)
     - go to the [inn](location)
     - proceed to the [stout meal inn](location)
     - go [upstairs](location)
-    - go to the [storage room](location)
+    - go to the [dungeon entrance](location)
     - go through the [hole](location)
     - head through the [hole](location) in the wall
     - go through the [tunnel](location)
     - go through the [tunnel](location) in the eastern wall
     - walk into [hole](location)
-    - head to [storage](location)
-    - travel to [store room](location)
-    - progress to [store](location)
+    - head to [dungeon entrance](location)
+    - travel to [dungeon entrance](location)
+    - progress to [dungeon](location)
     - go to the [burial chamber](location)
     - move to the [chamber](location)
     - run to the [western corridor](location)
@@ -167,6 +173,9 @@ nlu:
     - cross to the [south corridor](location)
     - cross to the [crypt](location)
     - maneuver to [baradin's crypt](location)
+    - exit to the [western corridor](location)
+    - enter the [burial chamber](location)
+    - i go towards [the voices](location)
     - go to [baradin crypt](location)
     - walk towards the [giant rats](monster)
     - go to the [zombie](monster)
@@ -228,7 +237,7 @@ nlu:
     - search around
     - search [goblin body](monster)
     - is there anything here?
-    - examine the [storage room](location)
+    - examine the [dungeon entrance](location)
     - investigate [antechamber](location)
     - look around the [cellar](location)
     - explore [baradin's crypt](location)
@@ -236,7 +245,7 @@ nlu:
     - examine [burial chamber](location)
     - investigate the [southern corridor](location)
     - investigate [stout meal inn](location)
-    - check out the [storage room](location)
+    - check out the [dungeon entrance](location)
     - check [inn](location)
     - checkout [burial chamber](location)
     - checkout the [cellar](location)
@@ -298,10 +307,12 @@ nlu:
     - examine the [vault](puzzle)
     - look inside [vault](puzzle)
     - examine [vaults](puzzle)
-    - examine the [skull](scenery)
-    - admire the [large grinning skull](scenery)
-    - investigate the [grinning skull](scenery)
-    - look at the [large skull](scenery)
+    - investigate the [skull engraving](puzzle)
+    - examine the [skull](puzzle)
+    - look at the [engraving](puzzle)
+    - admire the [large grinning skull](puzzle)
+    - investigate the [grinning skull](puzzle)
+    - look at the [large skull](puzzle)
     - look at the [sconces](scenery)
     - examine [sconce](scenery)
     - look at [table](scenery)
@@ -315,6 +326,7 @@ nlu:
     - examine the [candles](scenery)
     - look at the [candle](scenery)
     - look at [bronze warhammer](scenery)
+    - examine the [bronse warhammer](scenery)
     - examine the [sarcophagus](puzzle)
     - look at the [warhammer](puzzle)
     - investigate the [dwarven warrior](puzzle)
@@ -350,7 +362,7 @@ nlu:
     - i [pet](verb) [anvil](npc)
     - i [stroke](verb) [anvil](npc)
     - [cuddle](verb) the [cat](npc)
-    - i [listen](verb) to the voices
+    - i [listen](verb)
 
 - intent: negotiate
   examples: |
@@ -460,7 +472,6 @@ nlu:
     - I hit the [western](location) [door](door)
     - I destroy the [mural](scenery)
     - I bash the [barrel](scenery)
-    - I attack the [skull](scenery)
     - wreck the [painting](scenery)
     - kick the [table](scenery) over
     - maybe you should attack [giant rat](monster) [1](id)
@@ -593,6 +604,7 @@ nlu:
     - use the [bronze key](item)
     - I want to use the [bronze key](item)
     - unlock the door with the [bronze key](item)
+    - use the [bronse key](item)
     - use the [key](item)
     - I want to use the [key](item)
     - unlock the door with the [key](item)
@@ -766,8 +778,8 @@ nlu:
     - force open the [vault lid](puzzle)
     - force the [vault](puzzle) open
     - force [lid](puzzle)
-    - maybe you should use strength to open the door
-    - maybe you should force the door open
+    - maybe you should use strength to open the [door](door) to the [western corridor](location)
+    - maybe you should force the [door](door) open
 
 - intent: ability_check
   examples: |
@@ -938,6 +950,8 @@ nlu:
     - pick up [thrower](puzzle)
     - take the [warhammer](puzzle)
     - get [war hammer](puzzle)
+    - loot [emerald](puzzle)
+    - loot the [emerald](puzzle)
 
 - synonym: stout_meal_inn
   examples: |
@@ -960,12 +974,11 @@ nlu:
     - down the stairs
     - cellar inn
 
-- synonym: storage_room
+- synonym: dungeon_entrance
   examples: |
-    - storage room
-    - storage
-    - store room
-    - store
+    - dungeon entrance
+    - dungeon
+    - entrance
     - hole
     - tunnel
 
@@ -980,6 +993,13 @@ nlu:
     - west corridor
     - western
     - west
+
+- synonym: antechamber
+  examples: |
+    - antechamber
+    - antechamer
+    - antichamber
+    - the voices
 
 - synonym: southern_corridor
   examples: |
@@ -1237,6 +1257,7 @@ nlu:
 - synonym: bronze_key
   examples: |
     - bronze key
+    - bronse key
 
 - synonym: ale
   examples: |
@@ -1254,6 +1275,15 @@ nlu:
     - vault lid
     - lid
 
+- synonym: skull_engraving
+  examples: |
+    - skull engraving
+    - large grinning skull
+    - large skull
+    - grinning skull
+    - skull
+    - engraving
+
 - synonym: altar
   examples: |
     - altar
@@ -1269,6 +1299,7 @@ nlu:
 - synonym: bronze_warhammer
   examples: |
     - bronze warhammer
+    - bronse warhammer
 
 - synonym: dwarven_thrower
   examples: |
@@ -1278,6 +1309,7 @@ nlu:
     - warhammer
     - war hammer
     - sarcophagus
+    - emerald
     
 - synonym: money
   examples: |

@@ -20,7 +20,7 @@ class TestPuzzle(unittest.TestCase):
         self.output_builder = OutputBuilder()
         self.state = State(self.output_builder)
         puzzle_data = {
-            "id": "storage_room---western_corridor",
+            "id": "dungeon_entrance---western_corridor",
             "type": "door",
             "name": "Portcullis",
             "solutions": {

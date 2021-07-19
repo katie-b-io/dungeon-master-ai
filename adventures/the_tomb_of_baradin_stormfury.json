@@ -29,7 +29,7 @@
             "must_kill": false,
             "attack_player_after_n_moves": -1,
             "dialogue": {
-                "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-jumper, ventured in there yesterday and hasn't been seen since. There's a little silver in it for you of course! What do you say, do you accept the quest?\"",
+                "gives_quest": "He says: \"Could you check out the cellar, we seem to be having a rat problem. My cat, Anvil-Jumper, ventured in there yesterday and hasn't been seen since. There's a little silver in it for you of course! What do you say, do you accept the quest?\"",
                 "quest_prompt": "Corvus says: \"Do you accept the quest?\"",
                 "payment": "He says: \"10 silver pieces per rat.\"",
                 "no_negotiation": "Corvus is your old friend and doing you a favour by offering you this job, he says: \"10 silver pieces per rat, seeing as we're old friends.\"",
@@ -37,7 +37,7 @@
                 "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 10 silver pieces per rat is more than fair.\"\"",
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
-                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats and he hands over the promised reward. After telling him about the hole in the eastern wall he gets excited and says \"Baradin Stormfury! There's a legend that the resting place of the great dwarven warrior Baradin Stormfury lies below this inn.\". He goes behind the bar, searching various shelves and small boxes before exclaiming \"Aha! Here it is.\". He brings back an elaborate bronze key with a dwarven face engraved on it, which he hands to you. \"My family have been keeping hold of this for generations, please take it and see what you discover beyond the cellar.\". You may now want to investigate the storage room accessible through the hole in the eastern wall of the cellar.",
+                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats and he hands over the promised reward. After telling him about the hole in the eastern wall he gets excited and says \"Baradin Stormfury! There's a legend that the resting place of the great dwarven warrior Baradin Stormfury lies below this inn.\". He goes behind the bar, searching various shelves and small boxes before exclaiming \"Aha! Here it is.\". He brings back an elaborate bronze key with a dwarven face engraved on it, which he hands to you. \"My family have been keeping hold of this for generations, please take it and see what you discover beyond the cellar.\". You may now want to investigate the dungeon entrance accessible through the hole in the eastern wall of the cellar if you haven't already.",
                 "end_after_quest": "You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!",
                 "fallback": "Corvus is busy preparing the inn for the day's customers and gives you a distracted smile before returning to his work.",
                 "attacked_by_player": "Not known for reasonable, measured behaviour you irrationally lashed out at Corvus. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
@@ -123,7 +123,7 @@
             "treasure": [],
             "visibility": true,
             "text": {
-                "enter": "On this particularly cold morning you find yourself at the Stout Meal Inn, a fine establishment known for it's fantastic ales. This tavern is very large, with a long central hearth that helps to keep the cold at bay against the thick stone walls. Bundles of herbs dangle from the wooden rafters, filling the space with a plethora of fragrant aromas. The tavern floor is empty apart from a lone figure. Corvus Stouthammer, the wrinkly whitebearded dwarf proprietor prepares the inn for the day's patrons, polishing the top of a nearby table to a brilliant sheen. There is a doorway down to the cellar behind the bar. As you come closer Corvus' attention comes to you and he stops polishing. He turns to you with a slight smile under his beard and welcomes you, saying: \"About time you showed up!\".\nWhat do you do?",
+                "enter": "On this particularly cold morning you find yourself at the Stout Meal Inn, a fine establishment known for it's fantastic ales. This tavern is very large, with a long central hearth that helps to keep the cold at bay against the thick stone walls. Bundles of herbs dangle from the wooden rafters, filling the space with a plethora of fragrant aromas.\nThe tavern floor is empty apart from a lone figure. Corvus Stouthammer, the wrinkly whitebearded dwarf proprietor prepares the inn for the day's patrons, polishing the top of a nearby table to a brilliant sheen. There is a doorway down to the cellar behind the bar. As you come closer Corvus' attention comes to you and he stops polishing. He turns to you with a slight smile under his beard and welcomes you, saying: \"About time you showed up!\".\nWhat do you do?",
                 "description": "Homely tavern with a few tables, a well stocked bar and a whitebearded dwarf preparing the room for the day's visitors.",
                 "no_visibility_description": "Homely tavern with a few tables, a well stocked bar and a whitebearded dwarf preparing the room for the day's visitors."
             }
@@ -139,7 +139,7 @@
                     "locked": false,
                     "broken": false
                 },
-                "storage_room": {
+                "dungeon_entrance": {
                     "locked": false,
                     "broken": false
                 }
@@ -177,12 +177,12 @@
                 "visibility": "You see a terrible scene in front of you. Anvil-Jumper the cat is sitting on top of one of the barrels in the north-east corner of the room, meowing pathetically at the giant rats who are entirely indifferent to his plight. There are two giant rats in the cellar tearing through the food supplies. The rats have burst through a 5 ft by 5 ft hole in the eastern wall of the cellar.",
                 "description": "Dark and damp cellar.",
                 "no_visibility_description": "The room is too dark to see anything.",
-                "fight_ends": "You vanquished the giant rats! With a swish of his tail, Anvil-Jumper leaps from the barrel and dashes upstairs. Corvus will be pleased, you can return to him to receive your handsome reward. It may be worth investigating this room further to see if you find anything of value."
+                "fight_ends": "You vanquished the giant rats! With a swish of his tail, Anvil-Jumper leaps from the barrel and dashes upstairs. Corvus will be pleased, you should return to him to tell him the good news and receive your handsome reward. It also may be worth investigating this room further to see if you find anything of value after speaking to him."
             }
         },
-        "storage_room": {
-            "id": "storage_room",
-            "name": "Storage Room",
+        "dungeon_entrance": {
+            "id": "dungeon_entrance",
+            "name": "Dungeon Entrance",
             "init": false,
             "visited": false,
             "ale": false,
@@ -234,8 +234,8 @@
                 }
             },
             "puzzles": {
-                "storage_room---western_corridor": {
-                    "id": "storage_room---western_corridor",
+                "dungeon_entrance---western_corridor": {
+                    "id": "dungeon_entrance---western_corridor",
                     "type": "door",
                     "name": "Portcullis",
                     "solutions": {
@@ -268,8 +268,8 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises. Some 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs. There are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. One exit leads to the Burial Chamber and another exit leads to the Western Chamber, but it's blocked by a lowered portcullis. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about. The source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
-                "description": "It's a storage room.",
+                "enter": "You advance into the dark tunnel left by the rats. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises.\nSome 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs.\nThere are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. One exit leads to the Burial Chamber and another exit leads to the Western Chamber, but it's blocked by a lowered portcullis. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about.\nThe source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
+                "description": "It's a dark room decorated with skulls, it smells of death.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "You slew the foul zombie!",
                 "monster_attack": "The zombie slowly becomes aware of your presence and begins to shamble over to you, arms outstretched, groaning hungrily."
@@ -282,7 +282,7 @@
             "visited": false,
             "ale": false,
             "connections": {
-                "storage_room": {
+                "dungeon_entrance": {
                     "locked": false,
                     "broken": false
                 }
@@ -312,21 +312,12 @@
                     "type": "trap",
                     "name": "Vault",
                     "description": "Six stone vaults stand along the western wall.",
-                    "solutions": {
-                        "str": {
-                            "description": "force lid",
-                            "ability": "str",
-                            "dc": 15,
-                            "say": "You manage to heave the vault lid off and as you do, a skeleton lunges and out and attacks you!",
-                            "result": "skeleton_1"
-                        }
-                    },
+                    "solutions": {},
                     "explore": {},
                     "investigate": {
                         "pick_up": {
                             "id": "silver_key",
                             "description": "A simple silver key.",
-                            "say": "You examine a closed vault and think it might be able to be forced open.",
                             "result": "explore",
                             "explore_id": "pick_up"
                         }
@@ -345,6 +336,23 @@
                         }
                     },
                     "investigate": {}
+                },
+                "skull_engraving": {
+                    "id": "skull_engraving",
+                    "type": "trap",
+                    "name": "Skull Engraving",
+                    "description": "It's a large engraving of a grinning skull.",
+                    "solutions": {},
+                    "explore": {},
+                    "investigate": {
+                        "investigation": {
+                            "description": "investigate engraving",
+                            "skill": "investigation",
+                            "dc": 10,
+                            "say": "You investigate the wicked looking engraving. You notice an imperfection in the engraving and as your hand brushes over it you hear a rumble behind you as a vault lid swings open. A skeleton lunges out and attacks you!",
+                            "result": "skeleton_1"
+                        }
+                    }
                 },
                 "altar": {
                     "id": "altar",
@@ -369,10 +377,10 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "On the western wall of the room you can see six unmarked stone vault doors. The one furthest from you lies open. On the eastern wall there's a large grinning skull engraved in the centre. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
-                "description": "You see a ceremonial altar, six unmarked stone vault doors and a large skull engraving.",
+                "enter": "On the western wall of the room you can see six unmarked stone vaults. The one furthest from you lies open. On the eastern wall there's a large grinning skull engraved in the centre. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
+                "description": "You see a ceremonial altar, six unmarked stone vaults and a large skull engraving.",
                 "no_visibility_description": "The room is too dark to see anything.",
-                "fight_ends": "Phew, that was a close one! It might be worth having a look around the room if you haven't already, but be careful!"
+                "fight_ends": "Phew, that was a close one! It might be worth having a look at the skeleton or around the room."
             }
         },
         "western_corridor": {
@@ -382,7 +390,7 @@
             "visited": false,
             "ale": false,
             "connections": {
-                "storage_room": {
+                "dungeon_entrance": {
                     "locked": true,
                     "broken": false
                 },
@@ -397,7 +405,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "You make your way deeper into the dungeon, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side. There are sconces with torches on the pillars but they are all unlit. You can see a light in the antechamber at the end of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance. You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the antechamber appear to be speaking in hushed voices and it's hard to distinguish what they are saying from here.",
+                "enter": "You make your way deeper into the dungeon, descending down a set of dusty old stone stairs. The steps are cracked but safe enough. Mid-way through your descent you notice a soft cold breeze brushing against your face. The steps end in a 10-feet wide dark corridor. The walls are decorated with pillars in regular intervals on either side.\nYou can see a light in the antechamber at the end of the corridor, some 75-feet away. Most likely torchlight, it is dim and causes the shadows to dance around in the distance. You can hear a quiet conversation between two humanoids echoing beyond the corridor. Whatever creatures await in the antechamber appear to be speaking in hushed voices and it's hard to distinguish what they are saying from here.",
                 "description": "It's a long dusty corridor.",
                 "no_visibility_description": "The room is too dark to see anything."
             }
@@ -563,7 +571,7 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "This large room is occupied by a single open sarcophagus without a lid. The sarcophagus is tilted upwards at an angle so that its contents are visible as you enter the room. Inside the sarcophagus lie the skeletal remains of a dwarven warrior in a dusty metal armor. The warrior is holding a warhammer. The warhammer's head is made of white stone and framed with gold. An emerald is in the centre of the hammer head. The warhammer appears completely clean and free of dust and cobwebs, almost as if it was placed there moments and not centuries ago. There are dwarven runes inscribed around the perimeter of the sarcophagus, on the along the top of each side. Large iron candle holders sit on either side of the sarcophagus with five melted candles on each. Fire braziers adorn the western and eastern walls of the room. On the southern wall, behind the sarcophagus, there is a large round engraving of a hammer in front of an anvil.",
+                "enter": "This large room is occupied by a single open sarcophagus without a lid. The sarcophagus is tilted upwards at an angle so that its contents are visible as you enter the room. Inside the sarcophagus lie the skeletal remains of a dwarven warrior in a dusty metal armor. The warrior is holding a warhammer.\nThe warhammer's head is made of white stone and framed with gold. An emerald is in the centre of the hammer head. The warhammer appears completely clean and free of dust and cobwebs, almost as if it was placed there moments and not centuries ago. There are dwarven runes inscribed around the perimeter of the sarcophagus, on the along the top of each side.\nLarge iron candle holders sit on either side of the sarcophagus with five melted candles on each. Fire braziers adorn the western and eastern walls of the room. On the southern wall, behind the sarcophagus, there is a large round engraving of a hammer in front of an anvil.",
                 "description": "It's a large room with a single open sarcophagus without a lid.",
                 "no_visibility_description": "The room is too dark to see anything."
             }

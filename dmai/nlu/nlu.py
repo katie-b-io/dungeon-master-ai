@@ -116,7 +116,12 @@ class NLU():
             print("intent: " + intent)
         if entities:
             print(entities)
-            
+
+        logger.debug("(SESSION {s}) Expected entities: {i}".format(s=self.state.session.session_id, i=str(self.state.expected_entities)))
+        logger.debug("(SESSION {s}) Expected intent: {i}".format(s=self.state.session.session_id, i=str(self.state.expected_intent)))
+        logger.debug("(SESSION {s}) Stored intent: {i}".format(s=self.state.session.session_id, i=str(self.state.stored_intent)))
+        logger.debug("(SESSION {s}) Suggested next move: {i}".format(s=self.state.session.session_id, i=str(self.state.suggested_next_move["utter"])))
+
         # check if there's expected entities
         if self.state.expected_entities:
             hits = [entity for entity in entities if entity["entity"] in self.state.expected_entities]
@@ -126,7 +131,7 @@ class NLU():
                     intent = self.state.expected_intent[0]
                 elif self.state.stored_intent:
                     intent = self.state.stored_intent["intent"]
-                    self.state.clear_expected_entities()
+            self.state.clear_expected_entities()
                 
         # check if there's an expected intent
         elif self.state.expected_intent:
@@ -136,7 +141,8 @@ class NLU():
                     # TODO this also seems a little broken when input is not recognised and player corrects themselves to roll initiative
                     intents = [self.state.get_dm().player_intent_map[intent]["desc"] for intent in self.state.expected_intent]
                     intent_str = Text.properly_format_list(intents, last_delimiter=" or ")
-                    self.output_builder.append("I was expecting you to {i}".format(i=intent_str))
+                    self.output_builder.append("I was expecting you to {i}.".format(i=intent_str))
+                    logger.debug("(SESSION {s}) Intent being processed: None".format(s=self.state.session.session_id))
                     return (None, {"nlu_entities": entities})
         
         # check if there's a suggested next move
@@ -147,10 +153,14 @@ class NLU():
         # check if in combat before allowing any player utterance
         if self.state.in_combat:
             if self.state.get_combat_status() == Combat.ATTACK_ROLL:
+                logger.debug("(SESSION {s}) Intent being processed: attack".format(s=self.state.session.session_id))
                 return ("attack", {"nlu_entities": entities})
             else:
+                logger.debug("(SESSION {s}) Intent being processed: roll".format(s=self.state.session.session_id))
                 return ("roll", {"nlu_entities": entities})
         
+        logger.debug("(SESSION {s}) Intent being processed: {i}".format(s=self.state.session.session_id, i=str(intent)))
+
         if intent == "no_intent":
             return ("no_intent", {})
         if intent == "move":
@@ -162,7 +172,7 @@ class NLU():
         if intent == "stop_using":
             return ("stop_using", {"nlu_entities": entities})
         if intent == "hint":
-            return ("hint", {})
+            return ("hint", {"nlu_entities": entities})
         if intent == "equip":
             return ("equip", {"nlu_entities": entities})
         if intent == "unequip":
