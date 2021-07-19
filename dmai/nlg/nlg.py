@@ -477,8 +477,8 @@ class NLG(metaclass=NLGMeta):
         attacker = "You" if attacker == "player" else attacker
         utters = [
             "{a} attacked {t}!".format(a=attacker, t=target),
-            "{a} launched an assault on {t}".format(a=attacker, t=target),
-            "{a} struck at {t}".format(a=attacker, t=target),
+            "{a} launched an assault on {t}.".format(a=attacker, t=target),
+            "{a} struck at {t}.".format(a=attacker, t=target),
         ]
         return random.choice(utters)
 
@@ -550,7 +550,7 @@ class NLG(metaclass=NLGMeta):
         """Method to return the utterance for winning a fight"""
         utters = [
             "You won the battle, congratulations!",
-            "You put up a good fight and it paid off",
+            "You put up a good fight and it paid off!",
             "Awesome, they won't be bothering you again!"
         ]
         return random.choice(utters)

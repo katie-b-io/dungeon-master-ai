@@ -137,9 +137,7 @@
             ]
         },
         "weapons": {
-            "greataxe": 1,
-            "javelin": 3,
-            "crossbow_light": 1
+            "greataxe": 1
         },
         "armor": {
             "chain_mail": 1
