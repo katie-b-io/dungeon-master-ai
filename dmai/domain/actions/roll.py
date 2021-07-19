@@ -76,10 +76,11 @@ class Roll(Action):
                 player = self.state.get_entity()
                 damage = player.damage_roll()
                 hp = self.state.take_door_damage(damage, target)
-                self.output_builder.append("You dealt {d} damage to {t} door (hp is now {h})".format(d=damage, t=self.state.get_room_name(target), h=hp))
                 # end the fight if we're not in combat any more
                 if not self.state.in_combat_with_door:
                     return True
+                else:
+                    self.output_builder.append("Roll to damage it again!")
         elif self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             # process the last player input (attack roll)
             target = self.state.door_target
@@ -99,7 +100,7 @@ class Roll(Action):
             # this is handled by AttackDoor._attack()
             pass
 
-        # get attack roll from player
+        # get damage roll from player
         if self.state.get_combat_status() == Combat.DAMAGE_ROLL:
             if self.state.door_target:
                 # now return the utterance for getting the next roll
