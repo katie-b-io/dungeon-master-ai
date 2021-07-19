@@ -63,6 +63,9 @@ nlu:
     - I'll have a look
     - sure, why not
     - do that
+    - alright, for you corvus
+    - alright, seeing as we are old friends
+    - onwards
 
 - intent: deny
   examples: |
@@ -97,6 +100,7 @@ nlu:
     - damage
     - initiative
     - roll initiative
+    - rooollll
     - initiative roll
     - attack roll
     - damage roll
@@ -148,6 +152,8 @@ nlu:
     - go [up stairs](location)
     - move [up the stairs](location)
     - move to the [antechamber](location)
+    - move to the [antechamer](location)
+    - move to the [antichamber](location)
     - go to the [inn](location)
     - proceed to the [stout meal inn](location)
     - go [upstairs](location)
@@ -167,6 +173,9 @@ nlu:
     - cross to the [south corridor](location)
     - cross to the [crypt](location)
     - maneuver to [baradin's crypt](location)
+    - exit to the [western corridor](location)
+    - enter the [burial chamber](location)
+    - i go towards [the voices](location)
     - go to [baradin crypt](location)
     - walk towards the [giant rats](monster)
     - go to the [zombie](monster)
@@ -315,6 +324,7 @@ nlu:
     - examine the [candles](scenery)
     - look at the [candle](scenery)
     - look at [bronze warhammer](scenery)
+    - examine the [bronse warhammer](scenery)
     - examine the [sarcophagus](puzzle)
     - look at the [warhammer](puzzle)
     - investigate the [dwarven warrior](puzzle)
@@ -350,7 +360,7 @@ nlu:
     - i [pet](verb) [anvil](npc)
     - i [stroke](verb) [anvil](npc)
     - [cuddle](verb) the [cat](npc)
-    - i [listen](verb) to the voices
+    - i [listen](verb)
 
 - intent: negotiate
   examples: |
@@ -593,6 +603,7 @@ nlu:
     - use the [bronze key](item)
     - I want to use the [bronze key](item)
     - unlock the door with the [bronze key](item)
+    - use the [bronse key](item)
     - use the [key](item)
     - I want to use the [key](item)
     - unlock the door with the [key](item)
@@ -766,8 +777,8 @@ nlu:
     - force open the [vault lid](puzzle)
     - force the [vault](puzzle) open
     - force [lid](puzzle)
-    - maybe you should use strength to open the door
-    - maybe you should force the door open
+    - maybe you should use strength to open the [door](door) to the [western corridor](location)
+    - maybe you should force the [door](door) open
 
 - intent: ability_check
   examples: |
@@ -938,6 +949,8 @@ nlu:
     - pick up [thrower](puzzle)
     - take the [warhammer](puzzle)
     - get [war hammer](puzzle)
+    - loot [emerald](puzzle)
+    - loot the [emerald](puzzle)
 
 - synonym: stout_meal_inn
   examples: |
@@ -980,6 +993,13 @@ nlu:
     - west corridor
     - western
     - west
+
+- synonym: antechamber
+  examples: |
+    - antechamber
+    - antechamer
+    - antichamber
+    - the voices
 
 - synonym: southern_corridor
   examples: |
@@ -1237,6 +1257,7 @@ nlu:
 - synonym: bronze_key
   examples: |
     - bronze key
+    - bronse key
 
 - synonym: ale
   examples: |
@@ -1269,6 +1290,7 @@ nlu:
 - synonym: bronze_warhammer
   examples: |
     - bronze warhammer
+    - bronse warhammer
 
 - synonym: dwarven_thrower
   examples: |
@@ -1278,6 +1300,7 @@ nlu:
     - warhammer
     - war hammer
     - sarcophagus
+    - emerald
     
 - synonym: money
   examples: |
