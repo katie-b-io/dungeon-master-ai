@@ -525,11 +525,13 @@ class DM:
         self.state.nag_player()
         return True
 
-    def hint(self, **kwargs) -> bool:
+    def hint(self, nlu_entities: dict) -> bool:
         """Use the player AI to get the next possible move.
         Appends the hint to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.hint".format(s=self.state.session.session_id))
+        if self._get_noun(nlu_entities)[1] or self._get_verb(nlu_entities)[1]:
+            self.output_builder.append("I can only tell you what I think you should do next.")
         self.state.nag_player(hint=True)
         return True
 

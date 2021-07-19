@@ -172,7 +172,7 @@ class NLU():
         if intent == "stop_using":
             return ("stop_using", {"nlu_entities": entities})
         if intent == "hint":
-            return ("hint", {})
+            return ("hint", {"nlu_entities": entities})
         if intent == "equip":
             return ("equip", {"nlu_entities": entities})
         if intent == "unequip":

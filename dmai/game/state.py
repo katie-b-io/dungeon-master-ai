@@ -156,7 +156,7 @@ class State():
 
     def prompt_player(self) -> None:
         if not self.game_ended:
-            if self.hint_requested or (self.help_player and not self.in_combat and not self.current_conversation):
+            if self.hint_requested or (self.help_player and (not self.in_combat or not self.current_conversation)):
                 next_move = self.get_player().agent.get_next_move()
                 if next_move:
                     logger.debug("(SESSION {s}) Prompting player".format(s=self.session.session_id))
@@ -777,7 +777,7 @@ class State():
 
         # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
         if target == self.get_player():
-            if self.get_current_hp() <= 0.5*self.get_player().hp_max:
+            if self.get_current_hp() <= 0.75*self.get_player().hp_max:
                 roll = attacker.attack_roll(weapon)
                 if roll < attack_roll:
                     attack_roll = roll
@@ -797,6 +797,8 @@ class State():
 
         # if player is being attacked and health is at or below 50%, deal less damage
         if target == self.get_player():
+            if self.get_current_hp() <= 3:
+                damage = 1
             if self.get_current_hp() <= 0.5*self.get_player().hp_max:
                 damage = attacker.min_damage(weapon)
 
