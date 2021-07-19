@@ -73,6 +73,10 @@ class Roleplay(Action):
             # if entity is monster or npc
             if self.target_type == "monster" or self.target_type == "npc":
                 self.output_builder.append(NLG.roleplay(verb=self.verb, target=self.target, player_utter=self.player_utter))
+            elif self.verb == "pray" and self.target == "altar":
+                if self.state.get_current_room().puzzles.get_puzzle("altar"):
+                    self.state.bless()
+                    self.output_builder.append(NLG.blessed())
             elif self.target_type:
                 # check description of room to see if target's here
                 room_desc = self.state.get_current_room().get_all_text_array()

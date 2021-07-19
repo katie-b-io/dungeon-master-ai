@@ -119,6 +119,30 @@ nlu:
     - [d12](die)
     - [d20](die)
     - [d100](die)
+    - roll [charisma](ability)
+    - roll [constitution](ability)
+    - roll [dexterity](ability)
+    - roll [intelligence](ability)
+    - roll [strength](ability)
+    - roll [wisdom](ability)
+    - roll [acrobatics](skill)
+    - roll [animal handling](skill)
+    - roll [arcana](skill)
+    - roll [athletics](skill)
+    - roll [deception](skill)
+    - roll [history](skill)
+    - roll [insight](skill)
+    - roll [intimidation](skill)
+    - roll [investigation](skill)
+    - roll [medicine](skill)
+    - roll [nature](skill)
+    - roll [perception](skill)
+    - roll [performance](skill)
+    - roll [persuasion](skill)
+    - roll [religion](skill)
+    - roll [sleight of hand](skill)
+    - roll [stealth](skill)
+    - roll [survival](skill)
 
 - intent: move
   examples: |
@@ -356,7 +380,7 @@ nlu:
     - i [get](verb) on the [bench](scenery)
     - i [grab](verb) some [herbs](scenery)
     - i [warm](verb) myself by the [hearth](scenery)
-    - i [grab](verb) the [mural](scenary)
+    - i [grab](verb) the [mural](scenery)
     - i [grab](verb) an [instrument](scenery)
     - i [go] behind the [bar](scenery)
     - i [pet](verb) [anvil](npc)
@@ -365,6 +389,8 @@ nlu:
     - i [listen](verb)
     - i [listen](verb) to the voices
     - [listen](verb) in to the voices
+    - [pray](verb) at the [altar](puzzle)
+    - i [pray](verb) at the [altar](puzzle)
 
 - intent: negotiate
   examples: |
@@ -419,7 +445,7 @@ nlu:
     - attack [second](id) [rat](monster)
     - attack [third](id) [rat](monster)
     - attack [fourth](id) [rat](monster)
-    - bust the [goblin](monster)
+    - bust the [gobline](monster)
     - clock [primary](id) [goblin](monster)
     - club [secondary](id) [goblin](monster)
     - combat [initial](id) [goblin](monster)
@@ -1045,6 +1071,7 @@ nlu:
     - goblin
     - goblins
     - goblin body
+    - gobline
 
 - synonym: skeleton
   examples: |

@@ -196,10 +196,15 @@ class Character(ABC):
 
     def get_signed_attack_bonus(self, weapon_id: str) -> str:
         """Method to return the signed attack bonus for specified weapon"""
-        return Text.get_signed_value(
-            self.get_damage_modifier(weapon_id) + self.proficiency_bonus
-        )
-
+        if self.state.blessed:
+            return Text.get_signed_value(
+                self.get_damage_modifier(weapon_id) + self.proficiency_bonus + 2
+            )
+        else:
+            return Text.get_signed_value(
+                self.get_damage_modifier(weapon_id) + self.proficiency_bonus
+            )
+            
     def get_damage_modifier(self, weapon_id: str) -> str:
         """Method to return the damage modifier for specified weapon"""
         ability = self.weapons.get_damage_ability(weapon_id)

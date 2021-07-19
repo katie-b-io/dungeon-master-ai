@@ -638,7 +638,11 @@ class NLG(metaclass=NLGMeta):
         ]
         return utters[ales]
 
-
+    @classmethod
+    def blessed(cls) -> str:
+        """Return the utterance for being blessed"""
+        return "The room is momentarily bathed in divine light and you feel empowered by a blessing from the kindly deity. Your attacks will now find their target more often."
+    
     ############################################################
     # Query utterances
     @classmethod
