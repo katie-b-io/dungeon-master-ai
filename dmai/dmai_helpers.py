@@ -27,9 +27,18 @@ def init(root_path: str, rasa_host: str = "localhost", rasa_port: int = 5005, sa
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome to the Dungeon Master AI!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         )
         ui.game.output_builder.append(
-            "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis."
+            "This is an MSc project created by Katie Baker at Heriot-Watt University. You are reminded not to input any identifying or confidential information. This interaction will be logged for analysis. By continuing past this point you confirm you consent to participating in the study and have signed the consent form at https://forms.office.com/r/EY4Wu6pAJE."
         )
         ui.game.output_builder.append("Your unique ID for filling in the questionnaire is {s}. Please make a note of it.".format(s=session_id))
+        ui.game.output_builder.append(
+            "You will enter text into the field below to interact with the DMAI and issues commands. You can use the the dice roller button in the bottom left corner when the game starts for rolling dice when requested to."
+        )
+        ui.game.output_builder.append(
+            "Use the thumbs up and thumbs down buttons for rating responses by the DMAI. You don't need to rate every response, just responses that you particularly like or dislike."
+        )
+        ui.game.output_builder.append(
+            "Refer to the character sheet and player's guide for additional information about your character and the game respectively."
+        )
         ui.game.output_builder.append(
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n{t}".format(t=NLG.get_title(ui.game.dm.adventure.title)))
         ui.game.output_builder.append("> Press enter to continue...")
@@ -83,7 +92,7 @@ def gameover(output_builder: OutputBuilder, session: str = "") -> None:
         output_builder.append(
             "Thanks for playing! Don't forget to complete your feedback, in fact, why don't you do it now? :-)"
         )
-        output_builder.append("Your unique ID for filling in the questionnaire is {s}.".format(s=session))
+        output_builder.append("Your unique ID for filling in the questionnaire is {s}. The questionnaire can be found at https://forms.office.com/r/qXwE5Jz3s3.".format(s=session))
         return output_builder.format()
 
 
