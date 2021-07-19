@@ -851,7 +851,7 @@ class NLG(metaclass=NLGMeta):
         if allow_repeat:
             r = "You could try again or do something different."
         else:
-            r = "You're going to have to try something else."
+            r = ""
         utters = [
             "You didn't do it. {r}".format(r=r),
             "That didn't work. {r}".format(r=r),

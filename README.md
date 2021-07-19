@@ -13,7 +13,7 @@ The dependencies can then be installed with poetry:
 ### Running on the command line
 To run the DMAI in interactive mode:
 
-`python ./dungeon_master.py -i`
+`python ./dungeon-master.py -i`
 
 ### Command line arguments
 

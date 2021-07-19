@@ -238,7 +238,7 @@ class Puzzle(ABC):
         solve = False
         if not self.id in self.state.solved_puzzles:
             logger.debug("(SESSION {s}) {p} not in state.solved_puzzles".format(s=self.state.session.session_id, p=self.id))
-            if self.investigate[option]["say"]:
+            if "say" in self.investigate[option]:
                 self.output_builder.append(self.investigate[option]["say"])
             if "result" in self.investigate[option] and self.investigate[option]["result"]:
                 result = self.investigate[option]["result"]
@@ -261,6 +261,13 @@ class Puzzle(ABC):
                     self.output_builder.append(self.state.get_dm().get_good_ending())
                     self.state.gameover()
                     return
+                elif self.type == "trap":
+                    self.state.puzzle_trigger_map[self.id]["solution"][option] = False
+                    result = self.investigate[option]["result"]
+                    # TODO support non-monster results
+                    if self.state.get_entity(result):
+                        self.state.set_current_status(result, "alive")
+                        self.state.combat(result, "player")
             else:
                 solve = True
             if solve:

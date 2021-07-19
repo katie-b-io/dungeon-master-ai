@@ -341,15 +341,15 @@
                     "id": "skull_engraving",
                     "type": "trap",
                     "name": "Skull Engraving",
-                    "description": "It's a large engraving of a grinning skull",
+                    "description": "It's a large engraving of a grinning skull.",
                     "solutions": {},
                     "explore": {},
                     "investigate": {
-                        "skeleton_1": {
+                        "investigation": {
                             "description": "investigate engraving",
                             "skill": "investigation",
                             "dc": 10,
-                            "say": "You investigate the wicked looking graving. As you as your hand touches the skull you hear a rumble behind you as a vault lid swings open. A skeleton lunges out and attacks you!",
+                            "say": "You investigate the wicked looking engraving. You notice an imperfection in the engraving and as your hand brushes over it you hear a rumble behind you as a vault lid swings open. A skeleton lunges out and attacks you!",
                             "result": "skeleton_1"
                         }
                     }
@@ -380,7 +380,7 @@
                 "enter": "On the western wall of the room you can see six unmarked stone vaults. The one furthest from you lies open. On the eastern wall there's a large grinning skull engraved in the centre. On the southern wall there is a ceremonial stone altar decorated with a hammer in front of an anvil.",
                 "description": "You see a ceremonial altar, six unmarked stone vaults and a large skull engraving.",
                 "no_visibility_description": "The room is too dark to see anything.",
-                "fight_ends": "Phew, that was a close one! It might be worth having a look around the room if you haven't already."
+                "fight_ends": "Phew, that was a close one! It might be worth having a look at the skeleton or around the room."
             }
         },
         "western_corridor": {
