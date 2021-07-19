@@ -530,7 +530,8 @@
                 "enter": "This 40-feet-long corridor is bare except for a door to the south. A large bronze warhammer has been engraved on the door. It looks elaborate and incredibly sturdy, there is a single key hole on the left side of the door.",
                 "description": "It's a corridor with an elaborate engraved door at the end.",
                 "no_visibility_description": "The room is too dark to see anything.",
-                "attack_attempt_failed": "You strike at the door with all your might until you're exhausted, but the day appears entirely undamaged as if reinforced with magic. Having exhausted all your options, your only course of action is to report your findings back to Corvus."
+                "no_solution": "You strike at the door with all your might until you're exhausted, but the door appears entirely undamaged as if reinforced with magic. Having exhausted all your options, your only course of action is to report your findings back to Corvus.",
+                "has_solution": "You strike at the door with all your might until you're exhausted, but the door appears entirely undamaged as if reinforced with magic. You might have another solution on you..."
             }
         },
         "baradins_crypt": {

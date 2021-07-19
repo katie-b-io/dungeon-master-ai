@@ -300,4 +300,9 @@ class Puzzle(ABC):
                 if self.get_solution("unlock"):
                     return True
         return False
-        
+    
+    def has_key_solution(self) -> bool:
+        if self.solutions["unlock"]["item"] in self.state.item_quantity:
+            return True
+        else:
+            return False

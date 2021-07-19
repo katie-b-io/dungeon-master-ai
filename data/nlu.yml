@@ -199,6 +199,7 @@ nlu:
     - maneuver to [baradin's crypt](location)
     - exit to the [western corridor](location)
     - enter the [burial chamber](location)
+    - i go to [the voices](location)
     - i go towards [the voices](location)
     - go to [baradin crypt](location)
     - walk towards the [giant rats](monster)
