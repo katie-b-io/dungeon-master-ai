@@ -62,7 +62,6 @@ class Monster(NPC, MonsterAgent):
         self.unique_id = unique_id
         self.must_kill = False
         self.attack_player_after_n_moves = -1
-        self.will_attack_player = False
 
         # set unique name
         self.unique_name = unique_name
@@ -185,7 +184,8 @@ class Monster(NPC, MonsterAgent):
     def set_attack_player_after_n_moves(self, attack_player_after_n_moves: int) -> None:
         """Method to set attack_player_after_n_moves."""
         self.attack_player_after_n_moves = attack_player_after_n_moves
-        self.will_attack_player = attack_player_after_n_moves == 0
+        if attack_player_after_n_moves == 0:
+            self.state.monsters_will_attack.append(self.unique_id)
 
     def get_all_attack_ids(self) -> list:
         """Method to get all attack IDs of monster"""
@@ -217,7 +217,7 @@ class Monster(NPC, MonsterAgent):
         """Method to attack player"""
         if self.state.is_alive(self.unique_id):
             if not self.state.expected_intent:
-                if self.will_attack_player:
+                if self.unique_id in self.state.monsters_will_attack:
                     location = self.state.get_current_room(self.unique_id)
                     if location == self.state.get_current_room():
                         if not self.state.in_combat:
@@ -228,12 +228,14 @@ class Monster(NPC, MonsterAgent):
     
     def increment(self) -> None:
         """Method to increment number of turns player and monster in same room"""
+        logger.debug("Incrementing")
         if self.state.is_alive(self.unique_id):
             location = self.state.get_current_room_id(self.unique_id)
             if location == self.state.get_current_room_id():
                 self.state.monster_turn_counter[self.unique_id] += 1
-                if not self.will_attack_player and (self.state.monster_turn_counter[self.unique_id] == self.attack_player_after_n_moves):
-                    self.will_attack_player = True
+                logger.debug("Turns for {m}: {i}".format(m=self.unique_id, i=self.state.monster_turn_counter[self.unique_id]))
+                if not self.unique_id in self.state.monsters_will_attack and (self.state.monster_turn_counter[self.unique_id] == self.attack_player_after_n_moves):
+                    self.state.monsters_will_attack.append(self.unique_id)
 
     def trigger(self) -> None:
         """Method to perform any actions or print any new text if conditions met"""

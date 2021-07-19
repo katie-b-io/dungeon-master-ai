@@ -231,7 +231,7 @@ class PlanningMonster(PlanningAgent):
                 init.append(["equipped", monster.unique_id, attack])
 
             # Combat
-            if monster.will_attack_player:
+            if monster.unique_id in self.state.monsters_will_attack:
                 # TODO check if player is visible to monster
                 init.append(["must_kill", "player"])
             else:

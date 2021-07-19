@@ -122,6 +122,7 @@ class State():
         self.equipment_quantity = {}
         # monster turn counter
         self.monster_turn_counter = {}
+        self.monsters_will_attack = []
     
     def set_char_class(self, char_class: str) -> None:
         self.char_class = char_class
