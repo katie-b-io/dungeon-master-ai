@@ -198,30 +198,30 @@ class NLG(metaclass=NLGMeta):
         else:
             p = ""
         if not reason:
-            return "You cannot move to {room}. {p}".format(room=room, p=p)
+            return "You cannot move to the {room}. {p}".format(room=room, p=p)
         elif reason == "same":
-            return "You cannot move to {room} because you're already there! {p}".format(
+            return "You cannot move to the {room} because you're already there! {p}".format(
                 room=room, p=p)
         elif reason == "locked":
-            return "You cannot move to {room} because the way is locked! {p}".format(
+            return "You cannot move to the {room} because the way is locked! {p}".format(
                 room=room, p=p)
         elif reason == "not connected":
-            return "You cannot move to {room} because it's not connected to this room. {p}".format(
+            return "You cannot move to the {room} because it's not connected to this room. {p}".format(
                 room=room, p=p)
         elif reason == "no visibility":
-            return "You cannot move to {room} because it's too dark for you to find the way!".format(
+            return "You cannot move to the {room} because it's too dark for you to find the way!".format(
                 room=room, p=p)
         elif reason == "no quest":
-            return "You cannot move to {room} because you haven't spoken to Corvus or accepted the quest!".format(
+            return "You cannot move to the {room} because you haven't spoken to Corvus or accepted the quest!".format(
                 room=room, p=p)
         elif reason == "must kill":
-            return "You cannot move to {room} because there are monsters in here you must deal with!".format(
+            return "You cannot move to the {room} because there are monsters in here you must deal with!".format(
                 room=room)
         elif reason == "unknown destination":
-            return "You cannot move to unknown room: {room}! {p}".format(
+            return "You cannot move to the unknown room: {room}! {p}".format(
                 room=room, p=p)
         else:
-            return "You cannot move to {room}, although, I'm not sure why not... {p}".format(
+            return "You cannot move to the {room}, although, I'm not sure why not... {p}".format(
                 room=room, p=p)
 
     @classmethod

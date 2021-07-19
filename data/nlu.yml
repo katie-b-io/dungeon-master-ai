@@ -139,7 +139,7 @@ nlu:
     - maneuver to the [inn's cellar](location)
     - go to the [inn](location)
     - move to the [cellar](location)
-    - go to the [storage room](location)
+    - go to the [dungeon entrance](location)
     - move to the [burial chamber](location)
     - go to the [western corridor](location)
     - move to the [southern corridor](location)
@@ -157,15 +157,15 @@ nlu:
     - go to the [inn](location)
     - proceed to the [stout meal inn](location)
     - go [upstairs](location)
-    - go to the [storage room](location)
+    - go to the [dungeon entrance](location)
     - go through the [hole](location)
     - head through the [hole](location) in the wall
     - go through the [tunnel](location)
     - go through the [tunnel](location) in the eastern wall
     - walk into [hole](location)
-    - head to [storage](location)
-    - travel to [store room](location)
-    - progress to [store](location)
+    - head to [dungeon entrance](location)
+    - travel to [dungeon entrance](location)
+    - progress to [dungeon](location)
     - go to the [burial chamber](location)
     - move to the [chamber](location)
     - run to the [western corridor](location)
@@ -237,7 +237,7 @@ nlu:
     - search around
     - search [goblin body](monster)
     - is there anything here?
-    - examine the [storage room](location)
+    - examine the [dungeon entrance](location)
     - investigate [antechamber](location)
     - look around the [cellar](location)
     - explore [baradin's crypt](location)
@@ -245,7 +245,7 @@ nlu:
     - examine [burial chamber](location)
     - investigate the [southern corridor](location)
     - investigate [stout meal inn](location)
-    - check out the [storage room](location)
+    - check out the [dungeon entrance](location)
     - check [inn](location)
     - checkout [burial chamber](location)
     - checkout the [cellar](location)
@@ -974,12 +974,11 @@ nlu:
     - down the stairs
     - cellar inn
 
-- synonym: storage_room
+- synonym: dungeon_entrance
   examples: |
-    - storage room
-    - storage
-    - store room
-    - store
+    - dungeon entrance
+    - dungeon
+    - entrance
     - hole
     - tunnel
 

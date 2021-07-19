@@ -37,9 +37,9 @@ class TestActions(unittest.TestCase):
         self.game.output_builder.clear()
         entity = "player"
         self.game.state.set_current_room(entity, "western_corridor")
-        moved  = self.actions.move(entity, "storage_room")
+        moved  = self.actions.move(entity, "dungeon_entrance")
         self.assertEqual(moved, False)
-        self.assertEqual("You cannot move to Storage Room because the way is locked! You should figure out a way to get through or you could go to the Antechamber.\n", self.game.output_builder.format())
+        self.assertEqual("You cannot move to the Dungeon Entrance because the way is locked! You should figure out a way to get through or you could go to the Antechamber.\n", self.game.output_builder.format())
         
     def test__can_move_must_kill_monsters(self) -> None:
         entity = "player"
@@ -78,7 +78,7 @@ class TestActions(unittest.TestCase):
         
     def test__can_move_locked(self) -> None:
         entity = "player"
-        destination = "storage_room"
+        destination = "dungeon_entrance"
         self.game.state.set_current_room(entity, "western_corridor")
         self.game.state.light_torch()
         self.game.state.quest()

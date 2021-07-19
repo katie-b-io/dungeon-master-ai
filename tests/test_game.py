@@ -161,7 +161,7 @@ class TestState(unittest.TestCase):
         self.assertEqual(True, self.game.state.travel_allowed(current, destination))
 
     def test_travel_allowed_broken_door(self) -> None:
-        current = "storage_room"
+        current = "dungeon_entrance"
         destination = "burial_chamber"
         self.game.state.break_door(current, destination)
         self.assertEqual(True, self.game.state.travel_allowed(current, destination))
@@ -251,7 +251,7 @@ class TestAdventure(unittest.TestCase):
             self.adventure.get_room(room)
     
     def test_get_all_rooms(self) -> None:
-        room_ids = ["stout_meal_inn", "inns_cellar", "storage_room", "burial_chamber", "western_corridor", "antechamber", "southern_corridor", "baradins_crypt"]
+        room_ids = ["stout_meal_inn", "inns_cellar", "dungeon_entrance", "burial_chamber", "western_corridor", "antechamber", "southern_corridor", "baradins_crypt"]
         rooms = self.adventure.get_all_rooms()
         self.assertListEqual(room_ids, [room.id for room in rooms])
     

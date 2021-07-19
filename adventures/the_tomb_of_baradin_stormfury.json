@@ -37,7 +37,7 @@
                 "bad_negotiation": "He looks at you with narrowing eyes and says: \"I don't think so friend, 10 silver pieces per rat is more than fair.\"\"",
                 "accepts_quest": "He says: \"Cheers to that! I knew you'd help me out, you can get to the cellar by going downstairs, through the door behind the bar.\"",
                 "turns_down_quest": "He says: \"That's a shame, I'll just have to clear out the rats myself...\". After exchanging a few pleasantries, you leave the Stout Meal Inn leaving Corvus to investigate the cellar alone. He is mortally wounded by a giant rat after trying to rescue Anvil-Jumper from the monster.",
-                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats and he hands over the promised reward. After telling him about the hole in the eastern wall he gets excited and says \"Baradin Stormfury! There's a legend that the resting place of the great dwarven warrior Baradin Stormfury lies below this inn.\". He goes behind the bar, searching various shelves and small boxes before exclaiming \"Aha! Here it is.\". He brings back an elaborate bronze key with a dwarven face engraved on it, which he hands to you. \"My family have been keeping hold of this for generations, please take it and see what you discover beyond the cellar.\". You may now want to investigate the storage room accessible through the hole in the eastern wall of the cellar if you haven't already.",
+                "turn_in_quest": "You tell Corvus the good news about clearing out the giant rats and he hands over the promised reward. After telling him about the hole in the eastern wall he gets excited and says \"Baradin Stormfury! There's a legend that the resting place of the great dwarven warrior Baradin Stormfury lies below this inn.\". He goes behind the bar, searching various shelves and small boxes before exclaiming \"Aha! Here it is.\". He brings back an elaborate bronze key with a dwarven face engraved on it, which he hands to you. \"My family have been keeping hold of this for generations, please take it and see what you discover beyond the cellar.\". You may now want to investigate the dungeon entrance accessible through the hole in the eastern wall of the cellar if you haven't already.",
                 "end_after_quest": "You share a drink together and then take your leave, with a slightly heavier coin purse. Some time later a couple of goblins creep up from the cellar. They catch Corvus unawares and murder him. If only you'd investigated the tunnel in the cellar you could have killed the goblins before they got Corvus!",
                 "fallback": "Corvus is busy preparing the inn for the day's customers and gives you a distracted smile before returning to his work.",
                 "attacked_by_player": "Not known for reasonable, measured behaviour you irrationally lashed out at Corvus. The elderly dwarf had no time to defend himself, but let out a shout as he succumbed to his injury. Overheard by the city guard, you were promptly captured and currently languish in a miserable cell in the Greyforge city jail, awaiting trial."
@@ -139,7 +139,7 @@
                     "locked": false,
                     "broken": false
                 },
-                "storage_room": {
+                "dungeon_entrance": {
                     "locked": false,
                     "broken": false
                 }
@@ -180,9 +180,9 @@
                 "fight_ends": "You vanquished the giant rats! With a swish of his tail, Anvil-Jumper leaps from the barrel and dashes upstairs. Corvus will be pleased, you should return to him to tell him the good news and receive your handsome reward. It also may be worth investigating this room further to see if you find anything of value after speaking to him."
             }
         },
-        "storage_room": {
-            "id": "storage_room",
-            "name": "Storage Room",
+        "dungeon_entrance": {
+            "id": "dungeon_entrance",
+            "name": "Dungeon Entrance",
             "init": false,
             "visited": false,
             "ale": false,
@@ -234,8 +234,8 @@
                 }
             },
             "puzzles": {
-                "storage_room---western_corridor": {
-                    "id": "storage_room---western_corridor",
+                "dungeon_entrance---western_corridor": {
+                    "id": "dungeon_entrance---western_corridor",
                     "type": "door",
                     "name": "Portcullis",
                     "solutions": {
@@ -268,8 +268,8 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "You crawl into the dark tunnel. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises.\nSome 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs.\nThere are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. One exit leads to the Burial Chamber and another exit leads to the Western Chamber, but it's blocked by a lowered portcullis. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about.\nhe source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
-                "description": "It's a storage room.",
+                "enter": "You advance into the dark tunnel left by the rats. Your footsteps echo in its narrow walls as each step crushes the gravel that lines the floor. In the distance you can hear disturbing wet crunching noises.\nSome 25 feet of a downward squeeze through the narrow dirty passage you emerge in a larger chamber that's not part of the cellar. The air in this area is cold, dry and stale and reeks of death. The architecture of this room is completely different to the cellar of the inn. The walls and floor of this square room are lined with dark gray stone slabs.\nThere are rows of decorative skulls lining the walls 1 foot from the floor and 1 foot from the ceiling. One exit leads to the Burial Chamber and another exit leads to the Western Chamber, but it's blocked by a lowered portcullis. There are stone benches in front of the northern and western walls and instruments of various shapes, sizes and materials are strewn about.\nThe source of the disturbing noises is a zombie hunched over the far corner of the room. A smaller goblin form appears to be lying motionless in front of the hunched one.",
+                "description": "It's a dark room decorated with skulls, it smells of death.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "You slew the foul zombie!",
                 "monster_attack": "The zombie slowly becomes aware of your presence and begins to shamble over to you, arms outstretched, groaning hungrily."
@@ -282,7 +282,7 @@
             "visited": false,
             "ale": false,
             "connections": {
-                "storage_room": {
+                "dungeon_entrance": {
                     "locked": false,
                     "broken": false
                 }
@@ -390,7 +390,7 @@
             "visited": false,
             "ale": false,
             "connections": {
-                "storage_room": {
+                "dungeon_entrance": {
                     "locked": true,
                     "broken": false
                 },
