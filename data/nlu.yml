@@ -307,10 +307,12 @@ nlu:
     - examine the [vault](puzzle)
     - look inside [vault](puzzle)
     - examine [vaults](puzzle)
-    - examine the [skull](scenery)
-    - admire the [large grinning skull](scenery)
-    - investigate the [grinning skull](scenery)
-    - look at the [large skull](scenery)
+    - investigate the [skull engraving](puzzle)
+    - examine the [skull](puzzle)
+    - look at the [engraving](puzzle)
+    - admire the [large grinning skull](puzzle)
+    - investigate the [grinning skull](puzzle)
+    - look at the [large skull](puzzle)
     - look at the [sconces](scenery)
     - examine [sconce](scenery)
     - look at [table](scenery)
@@ -470,7 +472,6 @@ nlu:
     - I hit the [western](location) [door](door)
     - I destroy the [mural](scenery)
     - I bash the [barrel](scenery)
-    - I attack the [skull](scenery)
     - wreck the [painting](scenery)
     - kick the [table](scenery) over
     - maybe you should attack [giant rat](monster) [1](id)
@@ -1274,6 +1275,15 @@ nlu:
     - vaults
     - vault lid
     - lid
+
+- synonym: skull_engraving
+  examples: |
+    - skull engraving
+    - large grinning skull
+    - large skull
+    - grinning skull
+    - skull
+    - engraving
 
 - synonym: altar
   examples: |

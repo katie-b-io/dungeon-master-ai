@@ -312,21 +312,12 @@
                     "type": "trap",
                     "name": "Vault",
                     "description": "Six stone vaults stand along the western wall.",
-                    "solutions": {
-                        "str": {
-                            "description": "force lid",
-                            "ability": "str",
-                            "dc": 15,
-                            "say": "You manage to heave the vault lid off and as you do, a skeleton lunges and out and attacks you!",
-                            "result": "skeleton_1"
-                        }
-                    },
+                    "solutions": {},
                     "explore": {},
                     "investigate": {
                         "pick_up": {
                             "id": "silver_key",
                             "description": "A simple silver key.",
-                            "say": "You examine a closed vault and think it might be able to be forced open.",
                             "result": "explore",
                             "explore_id": "pick_up"
                         }
@@ -345,6 +336,23 @@
                         }
                     },
                     "investigate": {}
+                },
+                "skull_engraving": {
+                    "id": "skull_engraving",
+                    "type": "trap",
+                    "name": "Skull Engraving",
+                    "description": "It's a large engraving of a grinning skull",
+                    "solutions": {},
+                    "explore": {},
+                    "investigate": {
+                        "skeleton_1": {
+                            "description": "investigate engraving",
+                            "skill": "investigation",
+                            "dc": 10,
+                            "say": "You investigate the wicked looking graving. As you as your hand touches the skull you hear a rumble behind you as a vault lid swings open. A skeleton lunges out and attacks you!",
+                            "result": "skeleton_1"
+                        }
+                    }
                 },
                 "altar": {
                     "id": "altar",
