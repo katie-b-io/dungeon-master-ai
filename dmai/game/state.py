@@ -775,7 +775,7 @@ class State():
         target = self.get_entity(target)
         attack_roll = attacker.attack_roll(weapon)
 
-        # if player is being attacked and health is at or below 50%, implement disadvantage on rolls
+        # if player is being attacked and health is at or below 75%, implement disadvantage on rolls
         if target == self.get_player():
             if self.get_current_hp() <= 0.75*self.get_player().hp_max:
                 roll = attacker.attack_roll(weapon)
@@ -799,7 +799,7 @@ class State():
         if target == self.get_player():
             if self.get_current_hp() <= 3:
                 damage = 1
-            if self.get_current_hp() <= 0.5*self.get_player().hp_max:
+            elif self.get_current_hp() <= 0.5*self.get_player().hp_max:
                 damage = attacker.min_damage(weapon)
 
         hp = self.take_damage(damage, attacker.unique_id)
