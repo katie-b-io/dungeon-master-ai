@@ -615,6 +615,17 @@ class DM:
         else:
             if target_type == "door":
                 logger.debug("(SESSION {s}) {a} is attacking door {t}".format(s=self.state.session.session_id, a=attacker, t=target))
+                # check if door only has key solution
+                door = "{r1}---{r2}".format(r1=self.state.get_current_room_id(), r2=target)
+                puzzle = self.state.get_current_room().puzzles.get_puzzle(door)
+                if puzzle and puzzle.only_key_solution():
+                    if puzzle.has_key_solution():
+                        self.output_builder.append(self.state.get_current_room().text["has_solution"]["text"])
+                        return
+                    else:
+                        # only one solution, read the attack door fail
+                        self.output_builder.append(self.state.get_current_room().text["no_solution"]["text"])
+                        return
                 attacked = self.actions.attack_door(attacker, target)
             else:
                 # check if the player tried to use equipment, item or scenery to attack target
@@ -900,6 +911,18 @@ class DM:
                     NLG.no_door_target("force", self.state.get_formatted_possible_door_targets())
                 )
         else:
+            if target_type == "door":
+                # check if door only has key solution
+                door = "{r1}---{r2}".format(r1=self.state.get_current_room_id(), r2=target)
+                puzzle = self.state.get_current_room().puzzles.get_puzzle(door)
+                if puzzle and puzzle.only_key_solution():
+                    if puzzle.has_key_solution():
+                        self.output_builder.append(self.state.get_current_room().text["has_solution"]["text"])
+                        return
+                    else:
+                        # only one solution, read the attack door fail
+                        self.output_builder.append(self.state.get_current_room().text["no_solution"]["text"])
+                        return
             logger.debug("(SESSION {s}) {e} is forcing door {t}".format(s=self.state.session.session_id, e=entity, t=target))
             forced = self.actions.ability_check("str", entity, target, target_type)
         return forced

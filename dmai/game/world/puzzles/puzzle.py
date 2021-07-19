@@ -293,3 +293,16 @@ class Puzzle(ABC):
             "solution": self.solution_success_func
         }
         return func_map[func]
+
+    def only_key_solution(self) -> bool:
+        if not self.explore and not self.investigate:
+            if len(self.get_all_solutions()) == 1:
+                if self.get_solution("unlock"):
+                    return True
+        return False
+    
+    def has_key_solution(self) -> bool:
+        if self.solutions["unlock"]["item"] in self.state.item_quantity:
+            return True
+        else:
+            return False

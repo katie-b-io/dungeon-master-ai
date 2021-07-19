@@ -97,6 +97,7 @@ class State():
         self.hint_requested = False
         self.help_player = False
         self.suggested_next_move = {"utter": "", "state": False}
+        self.blessed = False
         # npc triggers
         self.npc_trigger_map = {}
         # room connection map
@@ -262,6 +263,9 @@ class State():
     def stop_talking(self) -> None:
         self.talking = False
     
+    def bless(self) -> None:
+        self.blessed = True
+        
     def set_dm(self, dm) -> None:
         logger.debug("(SESSION {s}) State.set_dm".format(s=self.session.session_id))
         self.dm = dm
