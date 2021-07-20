@@ -751,7 +751,7 @@ class DM:
         Appends the text to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.affirm".format(s=self.state.session.session_id))
-        if not self.state.suggested_next_move["state"] and self.state.received_quest and not self.state.questing:
+        if not self.state.suggested_next_move["state"] and self.state.received_quest and not self.state.questing and self.state.current_conversation:
             logger.debug("(SESSION {s}) Accepted quest".format(s=self.state.session.session_id))
             npc = self.npcs.get_entity(self.state.current_conversation)
             self.output_builder.append(npc.dialogue["accepts_quest"])
@@ -770,7 +770,7 @@ class DM:
         Appends the text to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.deny".format(s=self.state.session.session_id))
-        if self.state.roleplaying and self.state.received_quest and not self.state.questing:
+        if self.state.roleplaying and self.state.received_quest and not self.state.questing and self.state.current_conversation:
             # this is a game end condition
             npc = self.npcs.get_entity(self.state.current_conversation)
             self.output_builder.append(npc.dialogue["turns_down_quest"])
@@ -887,6 +887,7 @@ class DM:
         Appends the text to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.inventory".format(s=self.state.session.session_id))
+        query = None
         if nlu_entities:
             (query_type, query) = self._get_query(nlu_entities)
         if query:
@@ -894,17 +895,18 @@ class DM:
                 item_collection = self.state.get_player().character.items
                 self.output_builder.append(item_collection.get_all_formatted())
             elif query == "weapon" or query == "weapons":
+                
                 weapons = [weapon[0] for weapon in self.state.get_player().character.get_all_weapons()]
                 if len(weapons) == 0:
-                    return "You are carrying no weapons."
-                return "You are carrying a {w}".format(w=Text.properly_format_list(weapons))
+                    self.output_builder.append("You are carrying no weapons.")
+                self.output_builder.append("You are carrying a {w}.".format(w=Text.properly_format_list(weapons)))
             elif query == "equipment" or query == "equipments":
                 if len(self.state.get_player().character.equipment.get_all()):
-                    return self.state.get_player().character.get_formatted_equipment()
+                    self.output_builder.append(self.state.get_player().character.get_formatted_equipment())
                 else:
-                    return "You have no equipment."
+                    self.output_builder.append("You have no equipment.")
         else:
-            return "Check your character sheet for your complete inventory or ask me what items, weapons or equipment you have."
+            self.output_builder.append("Check your character sheet for your complete inventory or ask me what items, weapons or equipment you have.")
                 
         return True
 
