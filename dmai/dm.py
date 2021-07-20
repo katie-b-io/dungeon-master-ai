@@ -6,6 +6,7 @@ from dmai.nlg.nlg import NLG
 from dmai.nlu.nlu import NLU
 from dmai.game.npcs.npc_collection import NPCCollection
 from dmai.utils.output_builder import OutputBuilder
+from dmai.utils.text import Text
 from dmai.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -505,9 +506,9 @@ class DM:
                 return ("drink", entity["value"])
         return (None, None)
 
-    def _get_verb(self, nlu_entities: dict) -> str:
+    def _get_verb(self, nlu_entities: dict) -> tuple:
         """Extract a verb from NLU entities dictionary.
-        Returns a string with item"""
+        Returns a tuple with verb"""
         for entity in nlu_entities:
             if (
                 entity["entity"] == "verb"
@@ -516,6 +517,17 @@ class DM:
                 return ("verb", entity["value"])
         return (None, None)
 
+    def _get_query(self, nlu_entities: dict) -> tuple:
+        """Extract a query from NLU entities dictionary.
+        Returns tuple with the query"""
+        for entity in nlu_entities:
+            if (
+                entity["entity"] == "query"
+                and entity["confidence"] >= self.ENTITY_CONFIDENCE
+            ):
+                return ("query", entity["value"])
+        return (None, None)
+    
     def no_intent(self, **kwargs) -> bool:
         """Can't determine the player intent.
         Appends the hint to output with the self.output_builder.
@@ -848,6 +860,10 @@ class DM:
                 logger.debug("(SESSION {s}) {e} is picking up {i}".format(s=self.state.session.session_id, e=entity, i=item))
                 picked_up = self.actions.investigate(item, target_type=item_type)
                 return picked_up
+            elif item and item_type == "scenery":
+                logger.debug("(SESSION {s}) {e} is picking up {i}".format(s=self.state.session.session_id, e=entity, i=item))
+                self.output_builder.append("This is really part of the scenery, so isn't very interesting")
+                return False
         if not item:
             picked_up = False
             self.output_builder.append(NLG.no_item())
@@ -866,13 +882,30 @@ class DM:
         self.output_builder.append(NLG.health_update(hp, hp_max=player.hp_max))
         return True
 
-    def inventory(self, **kwargs) -> bool:
+    def inventory(self, nlu_entities: dict = {}) -> bool:
         """Player wants a inventory update.
         Appends the text to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.inventory".format(s=self.state.session.session_id))
-        item_collection = self.state.get_player().character.items
-        self.output_builder.append(item_collection.get_all_formatted())
+        if nlu_entities:
+            (query_type, query) = self._get_query(nlu_entities)
+        if query:
+            if query == "item" or query == "items":
+                item_collection = self.state.get_player().character.items
+                self.output_builder.append(item_collection.get_all_formatted())
+            elif query == "weapon" or query == "weapons":
+                weapons = [weapon[0] for weapon in self.state.get_player().character.get_all_weapons()]
+                if len(weapons) == 0:
+                    return "You are carrying no weapons."
+                return "You are carrying a {w}".format(w=Text.properly_format_list(weapons))
+            elif query == "equipment" or query == "equipments":
+                if len(self.state.get_player().character.equipment.get_all()):
+                    return self.state.get_player().character.get_formatted_equipment()
+                else:
+                    return "You have no equipment."
+        else:
+            return "Check your character sheet for your complete inventory or ask me what items, weapons or equipment you have."
+                
         return True
 
     def force(self, target: str = None, entity: str = None, nlu_entities: dict = {}) -> bool:
@@ -960,7 +993,7 @@ class DM:
             drink = self._get_drink(nlu_entities)[1]
         if self.state.get_current_room().ale:
             logger.debug("(SESSION {s}) Player is getting an ale".format(s=self.state.session.session_id))
-            if drink != "ale":
+            if drink and drink != "ale":
                 self.output_builder.append("They only serve ale here!")
             if self.state.ales > 2:
                 # this is a gameover state
