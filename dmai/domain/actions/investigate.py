@@ -108,10 +108,20 @@ class Investigate(Action):
                 target = self.state.get_room_name(self.target)
             except UnrecognisedRoomError:
                 target = self.target
+                self.output_builder.append("I'm not sure what door you want to investigate.")
+                return False
+
             if target == "door":
                 self.output_builder.append("It's just a door.")
             else:
                 self.output_builder.append("This door goes to the {t}.".format(t=target))
+                room = self.state.get_current_room()
+                puzzle_id = "{r1}---{r2}".format(r1=room.id, r2=self.target)
+                puzzle = room.puzzles.get_puzzle(puzzle_id)
+                if puzzle:
+                    if puzzle.id not in self.state.solved_puzzles:
+                        if "describe" in puzzle.investigate:
+                            self.output_builder.append(puzzle.investigate["describe"]["say"])
             return True
         
         if self.target_type == "item":
