@@ -577,6 +577,10 @@ class DM:
         """Attempt an attack by attacker against target determined by NLU or specified.
         Returns whether the attack was successful."""
         logger.debug("(SESSION {s}) DM.attack".format(s=self.state.session.session_id))
+        target_type = None
+        equipment_type = None
+        item_type = None
+        scenery_type = None
         if not attacker:
             attacker = "player"
         if not target and nlu_entities:
@@ -727,6 +731,7 @@ class DM:
         """Attempt to converse with a target determined by NLU or specified.
         Returns whether the action was successful."""
         logger.debug("(SESSION {s}) DM.converse".format(s=self.state.session.session_id))
+        target_type = None
         if not target and nlu_entities:
             (target_type, target) = self._get_target(nlu_entities)
         elif not target and not nlu_entities:
@@ -882,14 +887,15 @@ class DM:
         self.output_builder.append(NLG.health_update(hp, hp_max=player.hp_max))
         return True
 
-    def inventory(self, nlu_entities: dict = {}) -> bool:
+    def inventory(self, query: str = None, nlu_entities: dict = {}) -> bool:
         """Player wants a inventory update.
         Appends the text to output with the self.output_builder.
         """
         logger.debug("(SESSION {s}) DM.inventory".format(s=self.state.session.session_id))
-        query = None
         if nlu_entities:
             (query_type, query) = self._get_query(nlu_entities)
+        else:
+            query_type = None
         if query:
             if query == "item" or query == "items":
                 item_collection = self.state.get_player().character.items
@@ -986,7 +992,7 @@ class DM:
             self.output_builder.append("You can do a skill check when I ask you to.")
             return True
 
-    def ale(self, nlu_entities: dict = {}) -> bool:
+    def ale(self, drink: str = None, nlu_entities: dict = {}) -> bool:
         """Player wants to attempt to drink some ale.
         Appends the text to output with the self.output_builder.
         """
@@ -1008,12 +1014,10 @@ class DM:
         else:
             self.output_builder.append("You wish you could get an ale here!")
             
-    def roleplay(self, nlu_entities: dict = None) -> bool:
+    def roleplay(self, verb: str = None, target: str = None, nlu_entities: dict = None) -> bool:
         """Attempt to roleplay.
         Returns whether the action was successful."""
         logger.debug("(SESSION {s}) DM.roleplay".format(s=self.state.session.session_id))
-        verb = None
-        target = None
         target_type = None
         if nlu_entities:
             (verb_type, verb) = self._get_verb(nlu_entities)
@@ -1028,7 +1032,7 @@ class DM:
             roleplay = self.actions.roleplay(verb, target, self._player_utter, target_type)
         return roleplay
     
-    def negotiate(self, **kwargs) -> bool:
+    def negotiate(self, npc: str = None, **kwargs) -> bool:
         """Attempt to negotiate.
         Returns whether the action was successful."""
         logger.debug("(SESSION {s}) DM.negotiate".format(s=self.state.session.session_id))
@@ -1046,7 +1050,7 @@ class DM:
             self.state.nag_player()
         return True
     
-    def rescue(self, **kwargs) -> bool:
+    def rescue(self, npc: str = None, **kwargs) -> bool:
         """Attempt to rescue.
         Returns whether the action was successful."""
         logger.debug("(SESSION {s}) DM.rescue".format(s=self.state.session.session_id))
