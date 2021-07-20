@@ -801,9 +801,9 @@ class State():
 
         # if player is being attacked and health is at or below 50%, deal less damage
         if target == self.get_player():
-            if self.get_current_hp() <= 3:
+            if self.get_current_hp() <= 0.25*self.get_player().hp_max:
                 damage = 1
-            elif self.get_current_hp() <= 0.5*self.get_player().hp_max:
+            elif self.get_current_hp() <= 0.75*self.get_player().hp_max:
                 damage = attacker.min_damage(weapon)
 
         hp = self.take_damage(damage, attacker.unique_id)
