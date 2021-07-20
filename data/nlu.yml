@@ -53,6 +53,8 @@ nlu:
     - correct
     - okay
     - sure
+    - fine
+    - hurrah
     - I accept
     - accept
     - alright
@@ -314,6 +316,7 @@ nlu:
     - investigate [stone slabs](scenery)
     - admire [slabs](scenery)
     - look at [instrument](scenery)
+    - look at [skulls](scenery)
     - inspect [altar](puzzle)
     - admire [altar](puzzle)
     - check [altar](puzzle)
@@ -333,12 +336,12 @@ nlu:
     - look inside [vault](puzzle)
     - examine [vaults](puzzle)
     - investigate the [skull engraving](puzzle)
-    - examine the [skull](puzzle)
     - admire the [large grinning skull](puzzle)
     - investigate the [grinning skull](puzzle)
     - look at the [large skull](puzzle)
+    - examine the [engraving](puzzle)
+    - look at the [skull](puzzle)
     - look at the [sconces](scenery)
-    - examine the [engraving](scenery)
     - examine [sconce](scenery)
     - look at [table](scenery)
     - investigate [bar](scenery)
@@ -928,8 +931,21 @@ nlu:
     - what's in my inventory?
     - what am I carrying?
     - what stuff do I have?
-    - what items do I have?
-    - what items are in my inventory?
+    - what [items](query) do I have?
+    - what [items](query) do I carry?
+    - what [items](query) am I carrying?
+    - what [items](query) do I have?
+    - what [items](query) are in my inventory?
+    - what [equipment](query) do I have?
+    - what [equipment](query) do I carry?
+    - what [equipment](query) am I carrying?
+    - what [equipment](query) do I have?
+    - what [equipment](query) are in my inventory?
+    - what [weapons](query) do I have?
+    - what [weapons](query) do I carry?
+    - what [weapons](query) am I carrying?
+    - what [weapons](query) do I have?
+    - what [weapons](query) are in my inventory?
 
 - intent: sense
   examples: |
@@ -982,6 +998,12 @@ nlu:
     - get [war hammer](puzzle)
     - loot [emerald](puzzle)
     - loot the [emerald](puzzle)
+    - pick up [instrument](scenery)
+    - pick up [table](scenery)
+    - pick up [barrel](scenery)
+    - pick up [bench](scenery)
+    - pick up [herbs](scenery)
+    - pick up [candle](scenery)
 
 - synonym: stout_meal_inn
   examples: |
@@ -1312,6 +1334,7 @@ nlu:
     - large grinning skull
     - large skull
     - grinning skull
+    - engraving
     - skull
 
 - synonym: altar

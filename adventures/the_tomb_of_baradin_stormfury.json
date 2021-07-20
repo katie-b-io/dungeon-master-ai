@@ -262,7 +262,11 @@
                             "result": "open_door"
                         }
                     },
-                    "investigate": {}
+                    "investigate": {
+                        "describe": {
+                            "say": "It's a portcullis with an unseen locking mechanism. Well applied use of force or simply attacking it ought to do the trick."
+                        }
+                    }
                 }
             },
             "treasure": [],
@@ -478,14 +482,18 @@
                         }
                     },
                     "explore": {},
-                    "investigate": {}
+                    "investigate": {
+                        "describe": {
+                            "say": "It's a reinforced door with a silver keyhole. Well applied use of force or simply attacking it ought to do the trick."
+                        }
+                    }
                 }
             },
             "treasure": [],
             "visibility": true,
             "text": {
-                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron with a singular small silver key hole which leads to the southern corridor.\nThe source of the hushed conversation becomes apparent as you approach this room. Two goblins are having an animated discussion in a language you can’t understand. They have amber skin, flat faces, broad noses, pointed ears, wide mouths and small, sharp fangs. They stand upright with arms that hang down almost to their knees. They are wearing scrappy looking leather armour and each wields a rusting scimitar and a bow. One of them carries a lit torch that illuminates the room.\nAs you approach they jump in surprise and draw their scimitars as they move to attack.",
-                "description": "It's a circular room with intricate murals of the silver dragon, Rizoarithra. There's a silver key hole in the southern door.",
+                "enter": "The circular room beyond the corridor has four stone benches against the walls. The floor is decorated with a badly damaged mosaic that has lost most of its original colour and luster. The walls are decorated with intricate painted murals depicting a silver dragon flying over a mountain in a blue sky as different dwarf clans converge toward the mountain. The name \"Rizoarithra, Our Protector\" is inscribed next to the dragon. There is a wooden door reinforced with iron with a singular small silver keyhole which leads to the southern corridor.\nThe source of the hushed conversation becomes apparent as you approach this room. Two goblins are having an animated discussion in a language you can’t understand. They have amber skin, flat faces, broad noses, pointed ears, wide mouths and small, sharp fangs. They stand upright with arms that hang down almost to their knees. They are wearing scrappy looking leather armour and each wields a rusting scimitar and a bow. One of them carries a lit torch that illuminates the room.\nAs you approach they jump in surprise and draw their scimitars as they move to attack.",
+                "description": "It's a circular room with intricate murals of the silver dragon, Rizoarithra. There's a silver keyhole in the southern door.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "fight_ends": "Well done for vanquishing your foes! Onwards towards the quest's end."
             }
@@ -521,13 +529,17 @@
                         }
                     },
                     "explore": {},
-                    "investigate": {}
+                    "investigate": {
+                        "describe": {
+                            "say": "It's an elaborate and sturdy door with a bronze keyhole."
+                        }
+                    }
                 }
             },
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "This 40-feet-long corridor is bare except for a door to the south. You come to the door, which looks incredibly sturdy. In contrast to the dusty corridor, it is in immaculate condition. There is a single bronze key hole on the left side of the door.",
+                "enter": "This 40-feet-long corridor is bare except for a door to the south. You come to the door, which looks incredibly sturdy. In contrast to the dusty corridor, it is in immaculate condition. There is a single bronze keyhole on the left side of the door.",
                 "description": "It's a corridor with a sturdy door at the end.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "no_solution": "You strike at the door with all your might until you're exhausted, but the door appears entirely undamaged as if reinforced with magic. Having exhausted all your options, your only course of action is to report your findings back to Corvus.",

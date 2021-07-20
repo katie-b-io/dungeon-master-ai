@@ -196,7 +196,7 @@ class NLU():
         if intent == "health":
             return ("health", {})
         if intent == "inventory":
-            return ("inventory", {})
+            return ("inventory", {"nlu_entities": entities})
         if intent == "force":
             return ("force", {"nlu_entities": entities})
         if intent == "ability_check":
