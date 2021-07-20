@@ -862,7 +862,7 @@ class DM:
                 return picked_up
             elif item and item_type == "scenery":
                 logger.debug("(SESSION {s}) {e} is picking up {i}".format(s=self.state.session.session_id, e=entity, i=item))
-                self.output_builder.append("This is really part of the scenery, so isn't very interesting")
+                self.output_builder.append("This is really part of the scenery, so isn't very interesting.")
                 return False
         if not item:
             picked_up = False

@@ -316,7 +316,6 @@ nlu:
     - investigate [stone slabs](scenery)
     - admire [slabs](scenery)
     - look at [instrument](scenery)
-    - look at [skull](scenery)
     - look at [skulls](scenery)
     - inspect [altar](puzzle)
     - admire [altar](puzzle)
@@ -340,8 +339,9 @@ nlu:
     - admire the [large grinning skull](puzzle)
     - investigate the [grinning skull](puzzle)
     - look at the [large skull](puzzle)
+    - examine the [engraving](puzzle)
+    - look at the [skull](puzzle)
     - look at the [sconces](scenery)
-    - examine the [engraving](scenery)
     - examine [sconce](scenery)
     - look at [table](scenery)
     - investigate [bar](scenery)
@@ -1004,7 +1004,6 @@ nlu:
     - pick up [bench](scenery)
     - pick up [herbs](scenery)
     - pick up [candle](scenery)
-    - pick up [skull](scenery)
 
 - synonym: stout_meal_inn
   examples: |
@@ -1335,6 +1334,8 @@ nlu:
     - large grinning skull
     - large skull
     - grinning skull
+    - engraving
+    - skull
 
 - synonym: altar
   examples: |
