@@ -295,10 +295,11 @@ class Puzzle(ABC):
         return func_map[func]
 
     def only_key_solution(self) -> bool:
-        if not self.explore and not self.investigate:
-            if len(self.get_all_solutions()) == 1:
-                if self.get_solution("unlock"):
-                    return True
+        if not self.explore or (len(self.explore) == 1 and "describe" in self.explore):
+            if not self.investigate or (len(self.investigate) == 1 and "describe" in self.investigate):
+                if len(self.get_all_solutions()) == 1:
+                    if self.get_solution("unlock"):
+                        return True
         return False
     
     def has_key_solution(self) -> bool:
