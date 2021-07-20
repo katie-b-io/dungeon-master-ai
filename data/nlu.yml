@@ -334,11 +334,11 @@ nlu:
     - examine [vaults](puzzle)
     - investigate the [skull engraving](puzzle)
     - examine the [skull](puzzle)
-    - look at the [engraving](puzzle)
     - admire the [large grinning skull](puzzle)
     - investigate the [grinning skull](puzzle)
     - look at the [large skull](puzzle)
     - look at the [sconces](scenery)
+    - examine the [engraving](scenery)
     - examine [sconce](scenery)
     - look at [table](scenery)
     - investigate [bar](scenery)
@@ -354,6 +354,7 @@ nlu:
     - examine the [bronse warhammer](scenery)
     - examine the [sarcophagus](puzzle)
     - look at the [warhammer](puzzle)
+    - examine the [warrior](puzzle)
     - investigate the [dwarven warrior](puzzle)
     - maybe you should explore the room
     - maybe you should investigate [goblin](monster) [1](id)
@@ -1312,7 +1313,6 @@ nlu:
     - large skull
     - grinning skull
     - skull
-    - engraving
 
 - synonym: altar
   examples: |
@@ -1340,6 +1340,7 @@ nlu:
     - war hammer
     - sarcophagus
     - emerald
+    - warrior
     
 - synonym: money
   examples: |

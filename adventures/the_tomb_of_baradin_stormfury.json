@@ -527,8 +527,8 @@
             "treasure": [],
             "visibility": false,
             "text": {
-                "enter": "This 40-feet-long corridor is bare except for a door to the south. A large bronze warhammer has been engraved on the door. It looks elaborate and incredibly sturdy, there is a single key hole on the left side of the door.",
-                "description": "It's a corridor with an elaborate engraved door at the end.",
+                "enter": "This 40-feet-long corridor is bare except for a door to the south. You come to the door, which looks incredibly sturdy. In contrast to the dusty corridor, it is in immaculate condition. There is a single bronze key hole on the left side of the door.",
+                "description": "It's a corridor with a sturdy door at the end.",
                 "no_visibility_description": "The room is too dark to see anything.",
                 "no_solution": "You strike at the door with all your might until you're exhausted, but the door appears entirely undamaged as if reinforced with magic. Having exhausted all your options, your only course of action is to report your findings back to Corvus.",
                 "has_solution": "You strike at the door with all your might until you're exhausted, but the door appears entirely undamaged as if reinforced with magic. You might have another solution on you..."
