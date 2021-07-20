@@ -999,6 +999,8 @@ nlu:
     - get [war hammer](puzzle)
     - loot [emerald](puzzle)
     - loot the [emerald](puzzle)
+    - steal the [emerald](puzzle)
+    - steal the [warhammer](puzzle)
     - pick up [instrument](scenery)
     - pick up [table](scenery)
     - pick up [barrel](scenery)
