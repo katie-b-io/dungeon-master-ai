@@ -749,6 +749,7 @@ nlu:
 
 - intent: ale
   examples: |
+    - ale
     - have a drink
     - have an ale
     - and another
