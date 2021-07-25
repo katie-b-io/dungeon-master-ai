@@ -65,7 +65,7 @@ nlu:
     - I'll have a look
     - sure, why not
     - do that
-    - alright, for you corvus
+    - alright, for you [corvus](npc)
     - alright, seeing as we are old friends
     - onwards
 
@@ -149,15 +149,15 @@ nlu:
 - intent: move
   examples: |
     - move to the next room
-    - advance to the door
+    - advance to the [door](door)
     - move into the neighbouring room
-    - crawl through the door
+    - crawl through the [door](door)
     - progress to the next room
     - go there
     - go
     - relocate over there
     - proceed to the next room
-    - I want to run through the door
+    - I want to run through the [door](door)
     - I want to step through the doorway
     - I travel to the next room
     - I walk to the next room
@@ -420,6 +420,7 @@ nlu:
     - convince [corvus](npc) to give me more money[money](money)
 
 - intent: rescue
+  examples: |
     - i save the [cat](npc)
     - rescue [anvil](npc)
     - i attempt to rescue [anvil-jumper](npc)
@@ -633,18 +634,18 @@ nlu:
     - Use [potion](item)
     - use the [silver key](item)
     - I want to use the [silver key](item)
-    - unlock the door with the [silver key](item)
+    - unlock the [door](door) with the [silver key](item)
     - use the [bronze key](item)
     - I want to use the [bronze key](item)
-    - unlock the door with the [bronze key](item)
+    - unlock the [door](door) with the [bronze key](item)
     - use the [bronse key](item)
     - use the [key](item)
     - I want to use the [key](item)
-    - unlock the door with the [key](item)
+    - unlock the [door](door) with the [key](item)
     - use the [key](item) on the [door](door)
     - maybe you should light a [torch](equipment)
     - maybe you should use [potion of healing](item)
-    - maybe you should use the [silver key](item) to open the door
+    - maybe you should use the [silver key](item) to open the [door](door)
 
 - intent: stop_using
   examples: |
@@ -729,7 +730,7 @@ nlu:
     - say to the [goblin](monster)
     - say to the [giant rat](monster)
     - say to the [skeleton](monster)
-    - say to the [zombie]
+    - say to the [zombie](monster)
     - maybe you should talk to [corvus](npc)
 
 - intent: question_npc
@@ -775,8 +776,8 @@ nlu:
     - glass of [rum](drink)
     - ask for a [beer](drink)
     - ask for an [ale](drink)
-    - ask corvus for a [beer](drink)
-    - ask corvus for an [ale](drink)
+    - ask [corvus](npc) for a [beer](drink)
+    - ask [corvus](npc) for an [ale](drink)
     - order an [ale](drink)
 
 - intent: force
